@@ -1,0 +1,405 @@
+@mixin monospaceFont {
+    font-family: 'Consolas', 'Menlo', 'Ubuntu Mono', monospace;
+    word-spacing: -3px;
+}
+
+// если в тултипе появляется скролл (при большом количестве строк и после фиксации), необходимо изменить паддинги
+// некоторых элементов на ширину скроллбара, за счёт этого, в идеальном случае (когда среди строк появившихся после
+// фиксации тултипа нет строки с шириной превышающей максимальную ширину одной из строк видимых до фиксации ) мы можем
+// избежать "прыжка"  ширины контейнера. Так как поведение скроллбаров в Safari (скроллбар не изменяет ширину контейнера)
+// и в других браузерах (где появившийся скроллбар добавляет свою ширину к контейнеру) необходимы отдельные стили для
+// Safari
+
+.chartkit-highcharts-tooltip-container {
+    &_type_timeline {
+        width: 100%;
+        height: 100%;
+    }
+
+    &._tooltip-with-scroll {
+        ._tooltip-header td:last-child {
+            padding-right: calc(#{18px} + var(--scrollbar-width, #{15px}));
+        }
+
+        ._tooltip-footer td:last-child {
+            padding-right: calc(#{18px} + var(--scrollbar-width, #{15px}));
+        }
+    }
+
+    &._tooltip-with-scroll-in-safari {
+        ._tooltip-row td:last-child {
+            padding-right: calc(#{18px} + var(--scrollbar-width, #{15px}));
+        }
+
+        ._tooltip-rows__summ-tr td:last-child {
+            padding-right: calc(#{18px} + var(--scrollbar-width, #{15px}));
+        }
+    }
+}
+
+._tooltip {
+    border-radius: 5px;
+    background: var(--tooltip-bg);
+    background-color: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    font-size: 12px;
+    overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.15);
+
+    &_split-tooltip {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding-bottom: 12px;
+
+        table {
+            table-layout: fixed;
+        }
+
+        ._tooltip-rows__table tbody {
+            display: table-row-group;
+        }
+    }
+
+    // специфичный отступ для iPhone-ов со скруглёнными углами
+    // если css функция max не поддерживается - блок стилей не выполнится и будет применён padding заданный выше
+    // https://webkit.org/blog/7929/designing-websites-for-iphone-x/
+    @supports (padding: max(0px)) {
+        &_split-tooltip {
+            padding-bottom: Max(12px, env(safe-area-inset-bottom));
+        }
+    }
+
+    table {
+        width: 100%;
+
+        td {
+            box-sizing: border-box;
+        }
+
+        td:last-child {
+            text-align: right;
+        }
+    }
+
+    &-fake-row {
+        height: 5px;
+
+        &-heightless {
+            height: 0;
+
+            td {
+                padding: 0;
+            }
+        }
+
+        td:first-child {
+            width: 28px;
+        }
+    }
+
+    &-row {
+        width: 100%;
+
+        td:first-child {
+            padding-left: 14px;
+        }
+
+        td:last-child {
+            padding-right: 18px;
+        }
+
+        td {
+            padding: 2px 4px;
+
+            &._tooltip-rows__value-td,
+            &._tooltip-rows__diff-td {
+                padding-bottom: 1px;
+            }
+        }
+    }
+
+    &-selected-row {
+        font-weight: 600;
+    }
+
+    &-comment-row {
+        td:last-child {
+            padding-right: 18px;
+        }
+    }
+
+    &-right__td {
+        padding-right: 14px;
+
+        &_with-split-tooltip {
+            border: none;
+        }
+    }
+
+    &-date {
+        padding: 10px 14px 4px;
+        max-width: 450px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 13px;
+        font-weight: bold;
+
+        &-dayofweek {
+            display: inline-block;
+
+            &_weekend {
+                color: #ff0000;
+            }
+        }
+    }
+
+    &-rows {
+        &__table {
+            border-spacing: 0;
+            width: 10px;
+
+            &-footer {
+                display: table;
+                width: 100%;
+            }
+
+            thead {
+                display: table;
+                width: 100%;
+
+                &._tooltip-header tr:not(._tooltip-fake-row):first-child td {
+                    padding-top: 6px;
+                    padding-bottom: 6px;
+                    border-bottom: 1px solid var(--tooltip-grid-line);
+                }
+            }
+
+            tbody {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+
+                &._tooltip-footer {
+                    width: 100%;
+                    display: table;
+                }
+
+                &._tooltip-list {
+                    overflow-x: hidden;
+
+                    ._tooltip-row-dark-bg {
+                        background-color: var(--tooltip-alternate-bg);
+                    }
+                }
+
+                ._hidden-rows-sum {
+                    &._hidden-rows-sum-dark-bg {
+                        background-color: var(--tooltip-alternate-bg);
+                    }
+
+                    td {
+                        padding-top: 2px;
+                        padding-bottom: 2px;
+                    }
+                }
+
+                td._hidden-rows-number {
+                    text-align: left;
+                    padding-right: 20px;
+                }
+
+                td._hidden-rows-value {
+                    @include monospaceFont;
+                }
+            }
+        }
+
+        &__bubble {
+            &-div {
+                display: inline-block;
+                width: 12px;
+                height: 6px;
+                margin-left: 1px;
+                margin-bottom: 1px;
+                border-radius: 1px;
+            }
+        }
+
+        &__shape-div {
+            width: 38px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        &__shape-td {
+            height: 20px;
+        }
+
+        &__percent-td {
+            @include monospaceFont;
+
+            padding-left: 12px;
+            white-space: nowrap;
+        }
+
+        &__diff-td {
+            @include monospaceFont;
+
+            padding-left: 3px;
+            padding-right: 3px;
+            white-space: nowrap;
+        }
+
+        &__comment-left {
+            &-td {
+                position: relative;
+            }
+
+            &-div {
+                left: 2px;
+                position: absolute;
+                top: -7px;
+                bottom: 6px;
+                width: 10px;
+            }
+        }
+
+        &__comment-div {
+            position: relative;
+            padding-left: 14px;
+            text-align: left;
+            font-size: 10px;
+            width: auto;
+            white-space: normal;
+            letter-spacing: 0.2px;
+            font-weight: normal;
+            line-height: 1.3;
+            color: #aaaaaa;
+        }
+
+        &__bubble-td {
+            width: 28px;
+        }
+
+        &__value-td {
+            @include monospaceFont;
+
+            white-space: nowrap;
+            padding-left: 12px;
+
+            &_selected {
+                text-decoration: underline;
+            }
+        }
+
+        &__name-td {
+            text-align: left;
+            white-space: nowrap;
+            padding-left: 10px;
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &_selected {
+                text-decoration: underline;
+            }
+        }
+
+        &__summ-td {
+            padding: 6px 0 6px 3px;
+            color: var(--tooltip-text-complementary);
+            font-size: 12px;
+            border-top: 1px solid var(--tooltip-grid-line);
+
+            &-value {
+                @include monospaceFont;
+            }
+
+            &:first-child {
+                padding-left: 15px;
+                text-align: left;
+            }
+
+            &:last-child {
+                padding-right: 18px;
+                text-align: right;
+            }
+        }
+    }
+
+    &-left {
+        &__td {
+            vertical-align: top;
+        }
+    }
+
+    &-right {
+        &__td {
+            vertical-align: top;
+            opacity: 0.9;
+            border-left: 1px solid var(--tooltip-grid-line);
+            white-space: normal;
+            font-size: 8pt;
+            position: relative;
+            min-width: 120px;
+            max-width: 150px;
+            padding-left: 10px;
+        }
+
+        &__holiday {
+            &-div {
+                padding-bottom: 5px;
+                display: flex;
+                align-items: center;
+                text-align: left;
+            }
+
+            &-emoji {
+                font-size: 20px;
+            }
+
+            &-region {
+                color: #ffffff;
+                letter-spacing: 1px;
+                display: inline-block;
+                padding-left: 5px;
+            }
+        }
+
+        &__traf-div {
+            text-align: left;
+            border-top: 3px solid;
+            padding-top: 3px;
+            font-size: 10px;
+            line-height: 1.3;
+            white-space: pre-line;
+            padding-bottom: 10px;
+            margin-top: 9px;
+            word-break: break-word;
+
+            &_for-split-tooltip {
+                color: var(--split-tooltip-color);
+                padding-left: 8px;
+                border-top: none;
+                border-left: 2px solid;
+                margin-left: 6px;
+                margin-top: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+                margin-bottom: 5px;
+            }
+
+            &:not(:first-child) {
+                margin-top: 7px;
+            }
+        }
+
+        &__margin-bot {
+            margin-bottom: 7px;
+        }
+    }
+}
