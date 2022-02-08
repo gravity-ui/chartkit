@@ -1,4 +1,5 @@
 import './tooltip.scss';
+import {escapeHTML} from './helpers/escapeHTML';
 
 export const SERIES_NAME_DATA_ATTRIBUTE = 'data-series-name';
 export const SERIES_IDX_DATA_ATTRIBUTE = 'data-series-idx';
@@ -208,7 +209,7 @@ const renderColorCell = (line: TooltipLine) =>
 
 const renderNameCell = (line: TooltipLine) =>
     `<td class="${TOOLTIP_ROW_NAME_CLASS_NANE}">
-        ${line.hideSeriesName ? '' : line.seriesName}
+        ${line.hideSeriesName ? '' : escapeHTML(line.seriesName)}
     </td>`;
 
 const renderPercentCell = (line: TooltipLine) =>
@@ -286,7 +287,7 @@ const renderRow = (
     const needRenderComment = allowComment && hasComment;
     const fullCellsRenderers = cellsRenderers.slice();
 
-    const rowKey = `${String(rowIndex) || ''}-${String(line.seriesName)
+    const rowKey = `${String(rowIndex) || ''}-${String(escapeHTML(line.seriesName))
         .slice(0, 20)
         .replace(/(\r\n|\n|\r)/gm, '')}`;
 
