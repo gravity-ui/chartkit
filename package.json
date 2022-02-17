@@ -9,6 +9,9 @@
   "files": [
     "build"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "yagr": "^1.3.7",
     "moment": "^2.19.2",
