@@ -1,6 +1,6 @@
 {
   "name": "@yandex-cloud/chartkit",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Library for rendering Yandex Charts scripts",
   "license": "MIT",
   "repository": "git@github.com:yandex-cloud/ChartKit.git",
