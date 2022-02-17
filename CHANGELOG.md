@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.1](https://www.github.com/yandex-cloud/ChartKit/compare/v0.1.0...v0.1.1) (2022-02-17)
+
+
+### Bug Fixes
+
+* add publishConfig ([5cfdfff](https://www.github.com/yandex-cloud/ChartKit/commit/5cfdfffbdcafb8baeb05338ef07dd3a602c51797))
+
 ## 0.1.0 (2022-02-17)
 
 
