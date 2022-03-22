@@ -5,7 +5,7 @@ Library for rendering Yandex Charts scripts
 ## Install
 
 ```bash
-npm i yandex-cloud/chartkit
+npm i @yandex-cloud/chartkit
 ```
 
 ## Mock data
