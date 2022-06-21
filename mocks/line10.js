@@ -6,21 +6,21 @@ const line10 = {
         ],
         graphs: [
             {
-                id: 0,
+                id: '0',
                 name: 'Serie 1',
                 color: '#6c59c2',
                 visible: true,
                 data: [25, 52, 89, 72, 39, 49, 82, 59, 36, 5],
             },
             {
-                id: 1,
+                id: '1',
                 name: 'Serie 2',
                 color: '#6e8188',
                 visible: true,
                 data: [37, 6, 51, 10, 65, 35, 72, 0, 94, 54],
             },
             {
-                id: 2,
+                id: '2',
                 name: 'Serie 3',
                 color: '#e21576',
                 visible: true,
