@@ -16,7 +16,7 @@ import {
     MinimalValidConfig,
 } from 'yagr';
 
-import {YagrWidgetProps} from '../../../types';
+import {YagrWidgetProps} from '../types';
 
 import {formatTooltip, TooltipData, TooltipLine} from './tooltip/tooltip';
 import {synchronizeTooltipTablesCellsWidth} from './synchronizeTooltipTablesCellsWidth';
@@ -115,7 +115,7 @@ const getXAxisFormatter =
         });
     };
 
-export const YagrWidget = (props: YagrWidgetProps) => {
+const YagrWidget = (props: YagrWidgetProps) => {
     const yagrRef = React.useRef<YagrComponent>(null);
 
     React.useEffect(() => {
@@ -264,3 +264,5 @@ export const YagrWidget = (props: YagrWidgetProps) => {
         />
     );
 };
+
+export default YagrWidget;

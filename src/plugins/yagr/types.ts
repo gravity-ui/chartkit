@@ -1,10 +1,5 @@
-import Yagr from 'yagr';
 import type {RawSerieData, YagrConfig} from 'yagr';
-
-export type OnLoadData = {
-    widget?: Yagr | null;
-    widgetRendering?: number | null;
-};
+import type {ChartKitLang, ChartKitOnLoadData} from '../../types';
 
 export type YagrWidgetData = {
     data: {
@@ -12,7 +7,7 @@ export type YagrWidgetData = {
         timeline: number[];
     };
     libraryConfig: Partial<YagrConfig>;
-    sources: Record<
+    sources?: Record<
         number,
         {
             data: {
@@ -24,15 +19,7 @@ export type YagrWidgetData = {
 
 export type YagrWidgetProps = {
     id: string;
-    lang: 'ru' | 'en';
     data: YagrWidgetData;
-    onLoad?: (data?: OnLoadData) => void;
-};
-
-export type ChartKitProps = {
-    id: string;
-    type: 'yagr';
-    data: YagrWidgetData;
-    lang: 'en' | 'ru';
-    onLoad?: (data: OnLoadData) => void;
+    lang?: ChartKitLang;
+    onLoad?: (data?: ChartKitOnLoadData<'yagr'>) => void;
 };
