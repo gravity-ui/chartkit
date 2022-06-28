@@ -1,4 +1,6 @@
-const line10 = {
+import type {YagrWidgetData} from '../../types';
+
+export const line10: YagrWidgetData = {
     data: {
         timeline: [
             1636838612441, 1636925012441, 1637011412441, 1637097812441, 1637184212441,
@@ -28,16 +30,6 @@ const line10 = {
             },
         ],
     },
-    timings: {
-        configResolving: 1,
-        dataFetching: 1,
-        jsExecution: 1,
-    },
-    sources: {
-        data: {
-            program: 'some',
-        },
-    },
     libraryConfig: {
         chart: {
             type: 'line',
@@ -66,7 +58,6 @@ const line10 = {
         },
         tooltip: {
             enabled: true,
-            total: true,
             boundClassName: '.wrapper',
             tracking: 'sticky',
             className: 'chartkit-theme_common',
@@ -74,9 +65,4 @@ const line10 = {
         legend: {},
         processing: {},
     },
-    config: {},
-    params: {},
-    controls: null,
 };
-
-export default line10;
