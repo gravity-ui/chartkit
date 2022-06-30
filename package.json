@@ -64,8 +64,8 @@
     "@yandex-cloud/uikit": "^1.4.1"
   },
   "scripts": {
-    "test:jest": "jest",
-    "test:jestWatch": "jest --watchAll",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
     "clean": "gulp clean",
     "start": "start-storybook -p 7007",
     "build": "gulp",
