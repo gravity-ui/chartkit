@@ -1,11 +1,15 @@
 import React from 'react';
 import {settings} from '../libs';
-import {getRandomCKId} from '../utils';
+import {block, getRandomCKId} from '../utils';
 import type {ChartkitType, ChartKitProps} from '../types';
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 
+import '@yandex-cloud/uikit/styles/styles.scss';
+import '../styles/theme.scss';
 import './ChartKit.scss';
+
+const b = block();
 
 export const ChartKit = <T extends ChartkitType>(props: ChartKitProps<T>) => {
     const {id = getRandomCKId(), type, data, onLoad, ...restProps} = props;
@@ -22,7 +26,15 @@ export const ChartKit = <T extends ChartkitType>(props: ChartKitProps<T>) => {
     return (
         <ErrorBoundary>
             <React.Suspense fallback={<Loader />}>
-                <ChartComponent id={id} lang={lang} data={data} onLoad={onLoad} {...restProps} />
+                <div className={b()}>
+                    <ChartComponent
+                        id={id}
+                        lang={lang}
+                        data={data}
+                        onLoad={onLoad}
+                        {...restProps}
+                    />
+                </div>
             </React.Suspense>
         </ErrorBoundary>
     );
