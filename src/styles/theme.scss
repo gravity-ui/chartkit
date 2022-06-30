@@ -1,0 +1,15 @@
+@import './variables';
+
+.#{$ns}-theme {
+    --scrollbar-width: var(--yc-scrollbar-width);
+
+    --tooltip-grid-line: var(--yc-color-line-generic);
+    --tooltip-text: var(--yc-color-text-primary);
+    --tooltip-bg: var(--yc-color-infographics-tooltip-bg);
+    --tooltip-alternate-bg: var(--yc-color-base-generic);
+    --tooltip-text-complementary: var(--yc-color-text-complementary);
+    --split-tooltip-color: var(--yc-color-text-secondary);
+
+    --error-title-text: var(--yc-color-text-primary);
+    --error-message-text: var(--yc-color-text-misc);
+}

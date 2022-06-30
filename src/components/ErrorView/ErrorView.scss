@@ -1,4 +1,8 @@
-.chartkit-error {
+@import '../../styles/variables';
+
+$block: '.#{$ns}-error';
+
+#{$block} {
     display: flex;
     flex-direction: column;
     width: 100%;
