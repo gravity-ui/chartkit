@@ -1,0 +1,8 @@
+{
+  "common": {
+    "error": "Error",
+    "error-unknown-extension": "Unknown chart type",
+    "tooltip-sum": "Sum",
+    "tooltip-rest": "Rest"
+  }
+}

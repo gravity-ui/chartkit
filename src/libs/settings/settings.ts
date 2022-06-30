@@ -1,5 +1,6 @@
 import moment from 'moment';
-import {ChartKitPlugin, ChartKitLang} from '../../types';
+import {i18nFactory} from '../../i18n';
+import type {ChartKitPlugin, ChartKitLang} from '../../types';
 
 type Settings = {
     plugins: ChartKitPlugin[];
@@ -24,6 +25,7 @@ const updateLocale = (args: {lang: ChartKitLang; locale?: moment.LocaleSpecifica
     const {lang, locale} = args;
     moment.updateLocale(lang, locale);
     moment.locale(lang);
+    i18nFactory.setLang(lang);
 };
 
 class ChartKitSettings {

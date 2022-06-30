@@ -1,5 +1,7 @@
-import './tooltip.scss';
+import {i18n} from '../../../../i18n';
 import {escapeHTML} from './helpers/escapeHTML';
+
+import './tooltip.scss';
 
 export const SERIES_NAME_DATA_ATTRIBUTE = 'data-series-name';
 export const SERIES_IDX_DATA_ATTRIBUTE = 'data-series-idx';
@@ -9,8 +11,6 @@ export const TOOLTIP_ROW_CLASS_NAME = '_tooltip-row';
 export const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
 export const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
 export const TOOLTIP_FOOTER_CLASS_NAME = '_tooltip-footer';
-
-import {dict} from '../../../../dict/dict';
 
 /* eslint-disable complexity */
 type Tooltip = any;
@@ -227,7 +227,7 @@ const renderDiffCell = (line: TooltipLine) =>
         ${line.diff ? ` (${line.diff})` : ''}
     </td>`;
 
-function renderAdditionalSection(data: TooltipData, splitTooltip = false, colspanNumber = 1) {
+const renderAdditionalSection = (data: TooltipData, splitTooltip = false, colspanNumber = 1) => {
     return `<td class="_tooltip-right__td ${
         splitTooltip ? '_tooltip-right__td_with-split-tooltip' : ''
     }" colspan="${colspanNumber || 1}">
@@ -270,7 +270,7 @@ function renderAdditionalSection(data: TooltipData, splitTooltip = false, colspa
                     : ''
             }
         </td>`;
-}
+};
 
 const renderRow = (
     line: TooltipLine,
@@ -379,12 +379,11 @@ const renderRow = (
         }`;
 };
 
-export function formatTooltip(data: TooltipData, tooltip: Tooltip) {
+export const formatTooltip = (data: TooltipData, tooltip: Tooltip) => {
     const {splitTooltip, activeRowAlwaysFirstInTooltip} = data;
     const selectedLineIndex = data.lines.findIndex(({selectedSeries}) => selectedSeries);
     const selectedLine = data.lines[selectedLineIndex];
     const lines = data.lines.slice(0, (tooltip.lastVisibleRowIndex || data.lines.length) + 1);
-    const locale = tooltip.options.locale;
 
     const cellsRenderers = [];
     cellsRenderers.push(renderColorCell);
@@ -500,7 +499,7 @@ export function formatTooltip(data: TooltipData, tooltip: Tooltip) {
                                             <td colspan="${
                                                 cellsRenderers.length - 1
                                             }" class="_hidden-rows-number">
-                                                ${dict(locale, 'tooltip-rest')} ${
+                                                ${i18n('common', 'tooltip-rest')} ${
                                               data.hiddenRowsNumber
                                           }
                                             </td>
@@ -518,7 +517,7 @@ export function formatTooltip(data: TooltipData, tooltip: Tooltip) {
                                         ? `<tr class="_tooltip-rows__summ-tr">
                                             <td class="_tooltip-rows__summ-td" colspan="${
                                                 cellsRenderers.length - 1
-                                            }">${dict(locale, 'tooltip-sum')}</td>
+                                            }">${i18n('common', 'tooltip-sum')}</td>
                                             <td class="_tooltip-rows__summ-td _tooltip-rows__summ-td-value">
                                                 ${data.sum}
                                             </td>
@@ -539,4 +538,4 @@ export function formatTooltip(data: TooltipData, tooltip: Tooltip) {
         </tr>
     </table>
 </div>`;
-}
+};

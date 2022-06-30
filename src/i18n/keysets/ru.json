@@ -1,0 +1,8 @@
+{
+  "common": {
+    "error": "Ошибка",
+    "error-unknown-extension": "Неизвестный тип чарта",
+    "tooltip-sum": "Сумма",
+    "tooltip-rest": "Остальные"
+  }
+}
