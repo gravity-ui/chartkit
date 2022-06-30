@@ -1,6 +1,7 @@
 import React from 'react';
+import block from 'bem-cn-lite';
 import {settings} from '../libs';
-import {block, getRandomCKId} from '../utils';
+import {getRandomCKId} from '../utils';
 import type {ChartkitType, ChartKitProps} from '../types';
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
@@ -9,7 +10,7 @@ import '@yandex-cloud/uikit/styles/styles.scss';
 import '../styles/theme.scss';
 import './ChartKit.scss';
 
-const b = block();
+const b = block('chartkit');
 
 export const ChartKit = <T extends ChartkitType>(props: ChartKitProps<T>) => {
     const {id = getRandomCKId(), type, data, onLoad, ...restProps} = props;
