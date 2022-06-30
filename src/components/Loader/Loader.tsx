@@ -1,10 +1,10 @@
 import React from 'react';
+import block from 'bem-cn-lite';
 import {Loader as BaseLoader, LoaderProps as BaseLoaderProps} from '@yandex-cloud/uikit';
-import {block} from '../../utils';
 
 import './Loader.scss';
 
-const b = block('loader');
+const b = block('chartkit-loader');
 
 type LoaderProps = BaseLoaderProps;
 

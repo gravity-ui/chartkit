@@ -1,8 +1,4 @@
-@import '../../styles/variables';
-
-$block: '.#{$ns}-loader';
-
-#{$block} {
+.chartkit-loader {
     display: flex;
     align-items: center;
     justify-content: center;

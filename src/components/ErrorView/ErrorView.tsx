@@ -1,11 +1,11 @@
 import React from 'react';
+import block from 'bem-cn-lite';
 import {dict} from '../../dict/dict';
 import {settings} from '../../libs';
-import {block} from '../../utils';
 
 import './ErrorView.scss';
 
-const b = block('error');
+const b = block('chartkit-error');
 
 export const ErrorView = () => {
     const lang = settings.get('lang');
