@@ -1,33 +1,9 @@
-import React from 'react';
 import {MINIMAL_VIEWPORTS} from '@storybook/addon-viewport';
-import {withTheme} from './decorators/withTheme';
-import {withMobile} from './decorators/withMobile';
-import {withLang} from './decorators/withLang';
-import {ThemeProvider, MobileProvider} from '@yandex-cloud/uikit';
+import {withContext} from './contextDecorator';
 
 import '@yandex-cloud/uikit/styles/styles.scss';
 
-const withContextProvider = (Story, context) => {
-    const theme = context.globals.theme;
-
-    // dark theme for documentation hack
-    context.parameters.backgrounds.default = theme;
-    context.globals.backgrounds = {
-        value: theme === 'light' ? 'white' : 'black',
-    };
-
-    context.globals.background = theme;
-
-    return (
-        <ThemeProvider theme={theme}>
-            <MobileProvider>
-                <Story {...context} />
-            </MobileProvider>
-        </ThemeProvider>
-    );
-};
-
-export const decorators = [withTheme, withMobile, withLang, withContextProvider];
+export const decorators = [withContext];
 
 export const parameters = {
     jsx: {showFunctions: true},
