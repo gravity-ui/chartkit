@@ -1,11 +1,7 @@
-import './polyfills';
-
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
-
 import {useThemeValue} from '@yandex-cloud/uikit';
-
 import YagrComponent from 'yagr/dist/react';
 import {
     YagrConfig,
@@ -15,21 +11,21 @@ import {
     ValueFormatter,
     MinimalValidConfig,
 } from 'yagr';
-
-import {YagrWidgetProps} from '../types';
-
+import {ChartKitEvent} from '../../../constants';
+import type {YagrWidgetProps} from '../types';
 import {formatTooltip, TooltipData, TooltipLine} from './tooltip/tooltip';
 import {synchronizeTooltipTablesCellsWidth} from './synchronizeTooltipTablesCellsWidth';
+import './polyfills';
 
 import './YagrWidget.scss';
 
-function calcOption<T>(d: T | {[key in string]: T} | undefined) {
+const calcOption = <T,>(d: T | {[key in string]: T} | undefined) => {
     return typeof d === 'object'
         ? Object.values(d).reduce((_, t) => {
               return t;
           })
         : d;
-}
+};
 
 /*
  * Default tooltip renderer.
@@ -117,22 +113,6 @@ const getXAxisFormatter =
 
 const YagrWidget = (props: YagrWidgetProps) => {
     const yagrRef = React.useRef<YagrComponent>(null);
-
-    React.useEffect(() => {
-        const onWindowResize = () => {
-            if (yagrRef.current?.chart) {
-                const chart = yagrRef.current.chart;
-                const root = chart.root;
-                const height = root.offsetHeight;
-                const width = root.offsetWidth;
-                chart.uplot.setSize({width, height});
-                chart.uplot.redraw();
-            }
-        };
-        const debouncedOnWindowResize = debounce(onWindowResize, 50);
-        window.addEventListener('resize', debouncedOnWindowResize);
-        return () => window.removeEventListener('resize', debouncedOnWindowResize);
-    }, []);
 
     const {data, libraryConfig} = props.data;
     const {id, onLoad} = props;
@@ -251,6 +231,28 @@ const YagrWidget = (props: YagrWidgetProps) => {
               .filter(Boolean)
               .join(', ') || id
         : id;
+
+    const onWindowResize = React.useCallback(() => {
+        if (yagrRef.current?.chart) {
+            const chart = yagrRef.current.chart;
+            const root = chart.root;
+            const height = root.offsetHeight;
+            const width = root.offsetWidth;
+            chart.uplot.setSize({width, height});
+            chart.uplot.redraw();
+        }
+    }, []);
+
+    React.useEffect(() => {
+        const debouncedOnWindowResize = debounce(onWindowResize, 50);
+        window.addEventListener('resize', debouncedOnWindowResize);
+        window.addEventListener(ChartKitEvent.REFLOW, debouncedOnWindowResize);
+
+        return () => {
+            window.removeEventListener('resize', debouncedOnWindowResize);
+            window.removeEventListener(ChartKitEvent.REFLOW, debouncedOnWindowResize);
+        };
+    }, [onWindowResize]);
 
     return (
         <YagrComponent

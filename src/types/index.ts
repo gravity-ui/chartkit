@@ -4,6 +4,10 @@ export type ChartKitLang = 'ru' | 'en';
 
 export type ChartkitType = keyof ChartkitWidget;
 
+export type ChartKitRef = {
+    reflow: (detail?: unknown) => void;
+};
+
 export type ChartKitOnLoadData<T extends ChartkitType> = {
     widget?: ChartkitWidget[T]['widget'];
     widgetRendering?: number;
