@@ -2,8 +2,7 @@ import React from 'react';
 import block from 'bem-cn-lite';
 import {settings} from '../libs';
 import {getRandomCKId} from '../utils';
-import {ChartKitEvent} from '../constants';
-import type {ChartkitType, ChartKitRef, ChartKitProps} from '../types';
+import type {ChartkitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '../types';
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 
@@ -15,6 +14,7 @@ const b = block('chartkit');
 
 export const ChartKit = React.forwardRef<ChartKitRef | undefined, ChartKitProps<ChartkitType>>(
     (props, ref) => {
+        const widgetRef = React.useRef<ChartKitWidgetRef>();
         const {id = getRandomCKId(), type, data, onLoad, ...restProps} = props;
         const lang = settings.get('lang');
         const plugins = settings.get('plugins');
@@ -29,14 +29,10 @@ export const ChartKit = React.forwardRef<ChartKitRef | undefined, ChartKitProps<
         React.useImperativeHandle(
             ref,
             () => ({
-                reflow(detail) {
-                    document.dispatchEvent(
-                        new CustomEvent(ChartKitEvent.REFLOW, {
-                            detail,
-                            bubbles: true,
-                            cancelable: true,
-                        }),
-                    );
+                reflow(details) {
+                    if (widgetRef.current?.reflow) {
+                        widgetRef.current.reflow(details);
+                    }
                 },
             }),
             [],
@@ -47,6 +43,7 @@ export const ChartKit = React.forwardRef<ChartKitRef | undefined, ChartKitProps<
                 <React.Suspense fallback={<Loader />}>
                     <div className={b()}>
                         <ChartComponent
+                            ref={widgetRef}
                             id={id}
                             lang={lang}
                             data={data}
