@@ -1,11 +1,7 @@
-import './polyfills';
-
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
-
 import {useThemeValue} from '@yandex-cloud/uikit';
-
 import YagrComponent from 'yagr/dist/react';
 import {
     YagrConfig,
@@ -15,21 +11,21 @@ import {
     ValueFormatter,
     MinimalValidConfig,
 } from 'yagr';
-
-import {YagrWidgetProps} from '../types';
-
+import {ChartKitWidgetRef} from '../../../types';
+import type {YagrWidgetProps} from '../types';
 import {formatTooltip, TooltipData, TooltipLine} from './tooltip/tooltip';
 import {synchronizeTooltipTablesCellsWidth} from './synchronizeTooltipTablesCellsWidth';
+import './polyfills';
 
 import './YagrWidget.scss';
 
-function calcOption<T>(d: T | {[key in string]: T} | undefined) {
+const calcOption = <T,>(d: T | {[key in string]: T} | undefined) => {
     return typeof d === 'object'
         ? Object.values(d).reduce((_, t) => {
               return t;
           })
         : d;
-}
+};
 
 /*
  * Default tooltip renderer.
@@ -115,11 +111,129 @@ const getXAxisFormatter =
         });
     };
 
-const YagrWidget = (props: YagrWidgetProps) => {
-    const yagrRef = React.useRef<YagrComponent>(null);
+const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetProps>(
+    (props, forwardedRef) => {
+        const yagrRef = React.useRef<YagrComponent>(null);
 
-    React.useEffect(() => {
-        const onWindowResize = () => {
+        const {data, libraryConfig} = props.data;
+        const {id, onLoad} = props;
+        const theme = useThemeValue() as YagrConfig['settings']['theme'];
+
+        const handlers: Record<string, null | ((event: MouseEvent) => void)> = {
+            mouseMove: null,
+            mouseDown: null,
+        };
+
+        const checkFocus = (tooltip: HTMLElement) => (event: MouseEvent) => {
+            const yagr = yagrRef?.current?.chart;
+            if (!yagr) {
+                return;
+            }
+
+            const target = event.target as HTMLElement | null;
+            const seriesIdx =
+                target && tooltip.contains(target) && target.tagName === 'TD'
+                    ? target.parentElement?.dataset['seriesIdx']
+                    : undefined;
+
+            const serie = seriesIdx ? yagr.uplot.series[Number(seriesIdx)] : null;
+
+            yagr.focus(serie ? serie.id : null, true);
+        };
+
+        const detectClickOutside =
+            (
+                tooltip: HTMLElement,
+                actions: {
+                    pin: (state: boolean) => void;
+                    hide: () => void;
+                },
+            ) =>
+            (event: MouseEvent) => {
+                const yagr = yagrRef?.current?.chart;
+                if (!yagr) {
+                    return;
+                }
+                const target = event.target;
+
+                if (target instanceof Element) {
+                    const isClickInsideTooltip = target && tooltip.contains(target);
+                    const isClickOnUplotOver =
+                        target && yagr.root.querySelector('.u-over')?.contains(target);
+
+                    if (!isClickInsideTooltip && !isClickOnUplotOver) {
+                        actions.pin(false);
+                        actions.hide();
+                    }
+                }
+            };
+
+        const config: Partial<YagrConfig> & MinimalValidConfig = {
+            ...libraryConfig,
+            timeline: data.timeline,
+            series: data.graphs,
+        };
+
+        config.settings = {
+            locale: props.lang,
+            theme,
+            ...(config.settings || {}),
+        };
+
+        if (config.tooltip?.enabled !== false) {
+            config.tooltip = config.tooltip || {};
+            config.tooltip.render = config.tooltip?.render || renderTooltip;
+            config.tooltip.className = 'chartkit-theme';
+
+            config.tooltip.onStateChange = (tooltip, {action, actions}) => {
+                switch (action) {
+                    case 'pin': {
+                        handlers.mouseMove = checkFocus(tooltip);
+                        handlers.mouseDown = detectClickOutside(tooltip, actions);
+                        document.addEventListener('mousemove', handlers.mouseMove);
+                        document.addEventListener('mousedown', handlers.mouseDown);
+                        break;
+                    }
+                    case 'unpin': {
+                        if (handlers.mouseMove) {
+                            document.removeEventListener('mousemove', handlers.mouseMove);
+                            handlers.mouseMove = null;
+                        }
+                        if (handlers.mouseDown) {
+                            document.removeEventListener('mousedown', handlers.mouseDown);
+                            handlers.mouseDown = null;
+                        }
+                        break;
+                    }
+                    case 'render': {
+                        synchronizeTooltipTablesCellsWidth(tooltip);
+                    }
+                }
+            };
+        }
+
+        config.axes = config.axes || {};
+        const xAxis = config.axes[defaults.DEFAULT_X_SCALE];
+        if (xAxis && !xAxis.values) {
+            xAxis.values = getXAxisFormatter(config.settings.timeMultiplier);
+        }
+
+        if (!xAxis) {
+            config.axes[defaults.DEFAULT_X_SCALE] = {
+                values: getXAxisFormatter(config.settings.timeMultiplier),
+            };
+        }
+
+        const debugFileName = props.data.sources
+            ? Object.values(props.data.sources)
+                  .map((source) => {
+                      return source?.data?.program;
+                  })
+                  .filter(Boolean)
+                  .join(', ') || id
+            : id;
+
+        const onWindowResize = React.useCallback(() => {
             if (yagrRef.current?.chart) {
                 const chart = yagrRef.current.chart;
                 const root = chart.root;
@@ -128,141 +242,39 @@ const YagrWidget = (props: YagrWidgetProps) => {
                 chart.uplot.setSize({width, height});
                 chart.uplot.redraw();
             }
-        };
-        const debouncedOnWindowResize = debounce(onWindowResize, 50);
-        window.addEventListener('resize', debouncedOnWindowResize);
-        return () => window.removeEventListener('resize', debouncedOnWindowResize);
-    }, []);
+        }, []);
 
-    const {data, libraryConfig} = props.data;
-    const {id, onLoad} = props;
-    const theme = useThemeValue() as YagrConfig['settings']['theme'];
+        React.useImperativeHandle(
+            forwardedRef,
+            () => ({
+                reflow() {
+                    onWindowResize();
+                },
+            }),
+            [onWindowResize],
+        );
 
-    const handlers: Record<string, null | ((event: MouseEvent) => void)> = {
-        mouseMove: null,
-        mouseDown: null,
-    };
+        React.useEffect(() => {
+            const debouncedOnWindowResize = debounce(onWindowResize, 50);
+            window.addEventListener('resize', debouncedOnWindowResize);
 
-    const checkFocus = (tooltip: HTMLElement) => (event: MouseEvent) => {
-        const yagr = yagrRef?.current?.chart;
-        if (!yagr) {
-            return;
-        }
+            return () => {
+                window.removeEventListener('resize', debouncedOnWindowResize);
+            };
+        }, [onWindowResize]);
 
-        const target = event.target as HTMLElement | null;
-        const seriesIdx =
-            target && tooltip.contains(target) && target.tagName === 'TD'
-                ? target.parentElement?.dataset['seriesIdx']
-                : undefined;
-
-        const serie = seriesIdx ? yagr.uplot.series[Number(seriesIdx)] : null;
-
-        yagr.focus(serie ? serie.id : null, true);
-    };
-
-    const detectClickOutside =
-        (
-            tooltip: HTMLElement,
-            actions: {
-                pin: (state: boolean) => void;
-                hide: () => void;
-            },
-        ) =>
-        (event: MouseEvent) => {
-            const yagr = yagrRef?.current?.chart;
-            if (!yagr) {
-                return;
-            }
-            const target = event.target;
-
-            if (target instanceof Element) {
-                const isClickInsideTooltip = target && tooltip.contains(target);
-                const isClickOnUplotOver =
-                    target && yagr.root.querySelector('.u-over')?.contains(target);
-
-                if (!isClickInsideTooltip && !isClickOnUplotOver) {
-                    actions.pin(false);
-                    actions.hide();
+        return (
+            <YagrComponent
+                ref={yagrRef}
+                id={id}
+                config={config}
+                onChartLoad={(chart, {renderTime}) =>
+                    onLoad && onLoad({...props.data, widget: chart, widgetRendering: renderTime})
                 }
-            }
-        };
-
-    const config: Partial<YagrConfig> & MinimalValidConfig = {
-        ...libraryConfig,
-        timeline: data.timeline,
-        series: data.graphs,
-    };
-
-    config.settings = {
-        locale: props.lang,
-        theme,
-        ...(config.settings || {}),
-    };
-
-    if (config.tooltip?.enabled !== false) {
-        config.tooltip = config.tooltip || {};
-        config.tooltip.render = config.tooltip?.render || renderTooltip;
-        config.tooltip.className = 'chartkit-theme';
-
-        config.tooltip.onStateChange = (tooltip, {action, actions}) => {
-            switch (action) {
-                case 'pin': {
-                    handlers.mouseMove = checkFocus(tooltip);
-                    handlers.mouseDown = detectClickOutside(tooltip, actions);
-                    document.addEventListener('mousemove', handlers.mouseMove);
-                    document.addEventListener('mousedown', handlers.mouseDown);
-                    break;
-                }
-                case 'unpin': {
-                    if (handlers.mouseMove) {
-                        document.removeEventListener('mousemove', handlers.mouseMove);
-                        handlers.mouseMove = null;
-                    }
-                    if (handlers.mouseDown) {
-                        document.removeEventListener('mousedown', handlers.mouseDown);
-                        handlers.mouseDown = null;
-                    }
-                    break;
-                }
-                case 'render': {
-                    synchronizeTooltipTablesCellsWidth(tooltip);
-                }
-            }
-        };
-    }
-
-    config.axes = config.axes || {};
-    const xAxis = config.axes[defaults.DEFAULT_X_SCALE];
-    if (xAxis && !xAxis.values) {
-        xAxis.values = getXAxisFormatter(config.settings.timeMultiplier);
-    }
-
-    if (!xAxis) {
-        config.axes[defaults.DEFAULT_X_SCALE] = {
-            values: getXAxisFormatter(config.settings.timeMultiplier),
-        };
-    }
-
-    const debugFileName = props.data.sources
-        ? Object.values(props.data.sources)
-              .map((source) => {
-                  return source?.data?.program;
-              })
-              .filter(Boolean)
-              .join(', ') || id
-        : id;
-
-    return (
-        <YagrComponent
-            ref={yagrRef}
-            id={id}
-            config={config}
-            onChartLoad={(chart, {renderTime}) =>
-                onLoad && onLoad({...props.data, widget: chart, widgetRendering: renderTime})
-            }
-            debug={{filename: debugFileName}}
-        />
-    );
-};
+                debug={{filename: debugFileName}}
+            />
+        );
+    },
+);
 
 export default YagrWidget;

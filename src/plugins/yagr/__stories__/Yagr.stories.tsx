@@ -4,6 +4,7 @@ import {Button} from '@yandex-cloud/uikit';
 import {settings} from '../../../libs';
 import {YagrPlugin} from '../../../plugins';
 import {ChartKit} from '../../../components/ChartKit';
+import type {ChartKitRef} from '../../../types';
 import {line10} from './mocks/line10';
 
 export default {
@@ -15,6 +16,7 @@ settings.set({plugins: [YagrPlugin]});
 
 const Template: Story<any> = () => {
     const [shown, setShown] = React.useState(false);
+    const chartkitRef = React.useRef<ChartKitRef>();
 
     if (!shown) {
         return <Button onClick={() => setShown(true)}>Show chart</Button>;
@@ -22,7 +24,7 @@ const Template: Story<any> = () => {
 
     return (
         <div style={{height: 300, width: '100%'}}>
-            <ChartKit id="1" type="yagr" data={line10} />
+            <ChartKit ref={chartkitRef} id="1" type="yagr" data={line10} />
         </div>
     );
 };
