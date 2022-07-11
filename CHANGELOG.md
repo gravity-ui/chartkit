@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0](https://github.com/yandex-cloud/chartkit/compare/v0.1.1...v0.2.0) (2022-07-11)
+
+
+### Features
+
+* add cn lib ([#10](https://github.com/yandex-cloud/chartkit/issues/10)) ([796bdda](https://github.com/yandex-cloud/chartkit/commit/796bdda22fbf69ea8fc37965486e358ea3779a7e))
+* add i18n ([#13](https://github.com/yandex-cloud/chartkit/issues/13)) ([3f0204b](https://github.com/yandex-cloud/chartkit/commit/3f0204bb949aeb596632b3479d7e5ee130d91225))
+* add reflow handler ([#15](https://github.com/yandex-cloud/chartkit/issues/15)) ([80210af](https://github.com/yandex-cloud/chartkit/commit/80210af775ca7476f107f6ecc2ae9983baa9a8e3))
+* add yagr plugin types export ([#17](https://github.com/yandex-cloud/chartkit/issues/17)) ([6e4cf1d](https://github.com/yandex-cloud/chartkit/commit/6e4cf1dc5cc584a9bda99b39122f489ed35f90e2))
+* change lib structure ([#7](https://github.com/yandex-cloud/chartkit/issues/7)) ([dfb6ed8](https://github.com/yandex-cloud/chartkit/commit/dfb6ed839fd49a13006e75bca77abfd43849653b))
+
+
+### Bug Fixes
+
+* change cn workflow ([#12](https://github.com/yandex-cloud/chartkit/issues/12)) ([aba5148](https://github.com/yandex-cloud/chartkit/commit/aba5148237aa0dd0bfd89744c77e30ebbcbcb90e))
+* downgrade i18n to v0.5.0 ([#16](https://github.com/yandex-cloud/chartkit/issues/16)) ([454985a](https://github.com/yandex-cloud/chartkit/commit/454985a6c339775ebc0a96d77a20792b31b305c7))
+* move all storybook decorators into one ([#14](https://github.com/yandex-cloud/chartkit/issues/14)) ([de1e8e9](https://github.com/yandex-cloud/chartkit/commit/de1e8e90325142e41ece8edc785119440b49fa0c))
+
 ### [0.1.1](https://www.github.com/yandex-cloud/ChartKit/compare/v0.1.0...v0.1.1) (2022-02-17)
 
 
