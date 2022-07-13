@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/yandex-cloud/chartkit/compare/v0.2.0...v0.3.0) (2022-07-13)
+
+
+### Features
+
+* add root types export ([#18](https://github.com/yandex-cloud/chartkit/issues/18)) ([06265a1](https://github.com/yandex-cloud/chartkit/commit/06265a10f518836ac63f2b847e73dd19b3e2e8ca))
+
 ## [0.2.0](https://github.com/yandex-cloud/chartkit/compare/v0.1.1...v0.2.0) (2022-07-11)
 
 
