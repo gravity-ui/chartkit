@@ -34,17 +34,24 @@ task('copy-js-declarations', () => {
     return src(['src/**/*.d.ts']).pipe(dest(path.resolve(BUILD_DIR)));
 });
 
+task('copy-i18n', () => {
+    return src(['src/**/*.json']).pipe(dest(path.resolve(BUILD_DIR)));
+});
+
 task('styles-components', () => {
-    return src('src/components/**/*.scss')
+    return src('src/**/*.scss')
         .pipe(
             sass({
                 includePaths: ['node_modules'],
             }),
         )
         .pipe(sass().on('error', sass.logError))
-        .pipe(dest(path.resolve(BUILD_DIR, 'components')));
+        .pipe(dest(path.resolve(BUILD_DIR)));
 });
 
-task('build', series(['clean', 'compile-to-esm', 'copy-js-declarations', 'styles-components']));
+task(
+    'build',
+    series(['clean', 'compile-to-esm', 'copy-js-declarations', 'copy-i18n', 'styles-components']),
+);
 
 task('default', series(['build']));

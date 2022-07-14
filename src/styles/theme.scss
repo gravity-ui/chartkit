@@ -1,6 +1,4 @@
-@import './variables';
-
-.#{$ns}-theme {
+.chartkit-theme {
     --scrollbar-width: var(--yc-scrollbar-width);
 
     --tooltip-grid-line: var(--yc-color-line-generic);
