@@ -1,4 +1,4 @@
-export interface ChartkitWidget {}
+import type {ChartkitWidget} from './widget';
 
 export type ChartKitLang = 'ru' | 'en';
 
@@ -28,3 +28,5 @@ export type ChartKitPlugin = {
     type: ChartkitType;
     renderer: React.LazyExoticComponent<any>;
 };
+
+export type {ChartkitWidget};
