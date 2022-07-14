@@ -1,4 +1,5 @@
 import {ChartKit} from './components/ChartKit';
+import {settings} from './libs';
 
 export type {
     ChartKitLang,
@@ -10,5 +11,7 @@ export type {
     ChartkitType,
     ChartkitWidget,
 } from './types';
+
+export {settings};
 
 export default ChartKit;
