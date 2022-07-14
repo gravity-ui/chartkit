@@ -9,7 +9,7 @@ type Settings = {
 };
 type SettingKey = keyof Settings;
 
-const DEFAULT_LOCALE_SPECIFICATION: moment.LocaleSpecification = {week: {dow: 1, doy: 7}};
+export const DEFAULT_LOCALE_SPECIFICATION: moment.LocaleSpecification = {week: {dow: 1, doy: 7}};
 
 const removeUndefinedValues = <T extends Record<string, any>>(data: T) => {
     return Object.entries(data).reduce((acc, [key, value]) => {
