@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/yandex-cloud/chartkit/compare/v0.3.1...v0.4.0) (2022-07-18)
+
+
+### Features
+
+* add onError property ([#24](https://github.com/yandex-cloud/chartkit/issues/24)) ([0b51f19](https://github.com/yandex-cloud/chartkit/commit/0b51f195612cb80ab8e40b5d115eb7650f986888))
+
 ## [0.3.1](https://github.com/yandex-cloud/chartkit/compare/v0.3.0...v0.3.1) (2022-07-14)
 
 
