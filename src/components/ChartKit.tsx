@@ -12,7 +12,7 @@ import './ChartKit.scss';
 
 const b = block('chartkit');
 
-const Component = React.forwardRef<ChartKitRef | undefined, ChartKitProps<ChartkitType>>(
+const ChartKitComponent = React.forwardRef<ChartKitRef | undefined, ChartKitProps<ChartkitType>>(
     (props, ref) => {
         const widgetRef = React.useRef<ChartKitWidgetRef>();
         const {id = getRandomCKId(), type, data, onLoad, onError, ...restProps} = props;
@@ -57,4 +57,4 @@ const Component = React.forwardRef<ChartKitRef | undefined, ChartKitProps<Chartk
     },
 );
 
-export const ChartKit = React.memo(Component);
+export const ChartKit = React.memo(ChartKitComponent);
