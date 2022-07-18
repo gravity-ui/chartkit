@@ -12,10 +12,10 @@ import './ChartKit.scss';
 
 const b = block('chartkit');
 
-export const ChartKit = React.forwardRef<ChartKitRef | undefined, ChartKitProps<ChartkitType>>(
+const ChartKitComponent = React.forwardRef<ChartKitRef | undefined, ChartKitProps<ChartkitType>>(
     (props, ref) => {
         const widgetRef = React.useRef<ChartKitWidgetRef>();
-        const {id = getRandomCKId(), type, data, onLoad, ...restProps} = props;
+        const {id = getRandomCKId(), type, data, onLoad, onError, ...restProps} = props;
         const lang = settings.get('lang');
         const plugins = settings.get('plugins');
         const plugin = plugins.find((iteratedPlugin) => iteratedPlugin.type === type);
@@ -39,7 +39,7 @@ export const ChartKit = React.forwardRef<ChartKitRef | undefined, ChartKitProps<
         );
 
         return (
-            <ErrorBoundary>
+            <ErrorBoundary onError={onError}>
                 <React.Suspense fallback={<Loader />}>
                     <div className={b()}>
                         <ChartComponent
@@ -56,3 +56,5 @@ export const ChartKit = React.forwardRef<ChartKitRef | undefined, ChartKitProps<
         );
     },
 );
+
+export const ChartKit = React.memo(ChartKitComponent);

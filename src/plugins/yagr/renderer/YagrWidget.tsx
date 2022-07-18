@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
 import {useThemeValue} from '@yandex-cloud/uikit';
-import YagrComponent from 'yagr/dist/react';
+import YagrComponent, {YagrChartProps} from 'yagr/dist/react';
 import {
     YagrConfig,
     TooltipRow,
@@ -233,6 +233,13 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
                   .join(', ') || id
             : id;
 
+        const handleChartLoading: NonNullable<YagrChartProps['onChartLoad']> = React.useCallback(
+            (chart, {renderTime}) => {
+                onLoad?.({...data, widget: chart, widgetRendering: renderTime});
+            },
+            [onLoad, data],
+        );
+
         const onWindowResize = React.useCallback(() => {
             if (yagrRef.current?.chart) {
                 const chart = yagrRef.current.chart;
@@ -268,9 +275,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
                 ref={yagrRef}
                 id={id}
                 config={config}
-                onChartLoad={(chart, {renderTime}) =>
-                    onLoad && onLoad({...props.data, widget: chart, widgetRendering: renderTime})
-                }
+                onChartLoad={handleChartLoading}
                 debug={{filename: debugFileName}}
             />
         );
