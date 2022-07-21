@@ -1,8 +1,10 @@
 {
   "common": {
-    "error": "Ошибка",
-    "error-unknown-extension": "Неизвестный тип чарта",
     "tooltip-sum": "Сумма",
     "tooltip-rest": "Остальные"
+  },
+  "error": {
+    "label_unknown-plugin": "Неизвестный тип плагина \"{{type}}\"",
+    "label_unknown-error": "Неизвестная ошибка"
   }
 }

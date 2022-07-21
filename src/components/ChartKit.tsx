@@ -1,7 +1,8 @@
 import React from 'react';
 import block from 'bem-cn-lite';
-import {settings} from '../libs';
-import {getRandomCKId} from '../utils';
+import {i18n} from '../i18n';
+import {ChartKitError, settings} from '../libs';
+import {getRandomCKId, typedMemo} from '../utils';
 import type {ChartkitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '../types';
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
@@ -12,49 +13,64 @@ import './ChartKit.scss';
 
 const b = block('chartkit');
 
-const ChartKitComponent = React.forwardRef<ChartKitRef | undefined, ChartKitProps<ChartkitType>>(
-    (props, ref) => {
-        const widgetRef = React.useRef<ChartKitWidgetRef>();
-        const {id = getRandomCKId(), type, data, onLoad, onError, ...restProps} = props;
-        const lang = settings.get('lang');
-        const plugins = settings.get('plugins');
-        const plugin = plugins.find((iteratedPlugin) => iteratedPlugin.type === type);
+type ChartKitComponentProps<T extends ChartkitType> = Omit<ChartKitProps<T>, 'onError'> & {
+    instanceRef?: React.ForwardedRef<ChartKitRef | undefined>;
+};
 
-        if (!plugin) {
-            return null;
-        }
+const ChartKitComponent = <T extends ChartkitType>(props: ChartKitComponentProps<T>) => {
+    const widgetRef = React.useRef<ChartKitWidgetRef>();
+    const {instanceRef, id = getRandomCKId(), type, data, onLoad, ...restProps} = props;
+    const lang = settings.get('lang');
+    const plugins = settings.get('plugins');
+    const plugin = plugins.find((iteratedPlugin) => iteratedPlugin.type === type);
 
-        const ChartComponent = plugin.renderer;
+    if (!plugin) {
+        throw new ChartKitError({message: i18n('error', 'label_unknown-plugin', {type})});
+    }
 
-        React.useImperativeHandle(
-            ref,
-            () => ({
-                reflow(details) {
-                    if (widgetRef.current?.reflow) {
-                        widgetRef.current.reflow(details);
-                    }
-                },
-            }),
-            [],
-        );
+    const ChartComponent = plugin.renderer;
 
-        return (
-            <ErrorBoundary onError={onError}>
-                <React.Suspense fallback={<Loader />}>
-                    <div className={b()}>
-                        <ChartComponent
-                            ref={widgetRef}
-                            id={id}
-                            lang={lang}
-                            data={data}
-                            onLoad={onLoad}
-                            {...restProps}
-                        />
-                    </div>
-                </React.Suspense>
-            </ErrorBoundary>
-        );
-    },
-);
+    React.useImperativeHandle(
+        instanceRef,
+        () => ({
+            reflow(details) {
+                if (widgetRef.current?.reflow) {
+                    widgetRef.current.reflow(details);
+                }
+            },
+        }),
+        [],
+    );
 
-export const ChartKit = React.memo(ChartKitComponent);
+    return (
+        <React.Suspense fallback={<Loader />}>
+            <div className={b()}>
+                <ChartComponent
+                    ref={widgetRef}
+                    id={id}
+                    lang={lang}
+                    data={data}
+                    onLoad={onLoad}
+                    {...restProps}
+                />
+            </div>
+        </React.Suspense>
+    );
+};
+
+const ChartKitComponentWithErrorBoundary = React.forwardRef<
+    ChartKitRef | undefined,
+    ChartKitProps<ChartkitType>
+>((props, ref) => {
+    const {onError, ...componentProps} = props;
+
+    return (
+        <ErrorBoundary onError={onError}>
+            <ChartKitComponent instanceRef={ref} {...componentProps} />
+        </ErrorBoundary>
+    );
+}) /* https://stackoverflow.com/a/58473012 */ as <T extends ChartkitType>(
+    props: ChartKitProps<T> & {ref?: React.ForwardedRef<ChartKitRef | undefined>},
+) => ReturnType<typeof ChartKitComponent>;
+
+export const ChartKit = typedMemo(ChartKitComponentWithErrorBoundary);
