@@ -1,16 +1,13 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {i18n} from '../../i18n';
+import type {ChartKitError} from '../../libs';
 
-import './ErrorView.scss';
+type Props = {
+    error: ChartKitError | Error;
+};
 
-const b = block('chartkit-error');
+export const ErrorView = ({error}: Props) => {
+    const message = error.message || i18n('error', 'label_unknown-error');
 
-export const ErrorView = () => {
-    return (
-        <div className={b()}>
-            <div className={b('title')}>{i18n('common', 'error')}</div>
-            <div className={b('message')}>{i18n('common', 'error-unknown-extension')}</div>
-        </div>
-    );
+    return <div>{message}</div>;
 };

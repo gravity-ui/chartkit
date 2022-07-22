@@ -1,4 +1,5 @@
 import React from 'react';
+import type {ChartKitError} from '../../libs';
 import type {ChartKitOnError} from '../../types';
 import {ErrorView} from '../ErrorView/ErrorView';
 
@@ -7,7 +8,7 @@ type Props = {
 };
 
 type State = {
-    error?: Error;
+    error?: ChartKitError | Error;
 };
 
 export class ErrorBoundary extends React.Component<Props, State> {
@@ -28,8 +29,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
     }
 
     render() {
-        if (this.state.error) {
-            return <ErrorView />;
+        const {error} = this.state;
+
+        if (error) {
+            return <ErrorView error={error} />;
         }
 
         return this.props.children;
