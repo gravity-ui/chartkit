@@ -5,8 +5,9 @@ export type ChartKitErrorArgs = {
 };
 
 export const CHARTKIT_ERROR_CODE = {
-    UNKNOWN: 'ERR.CK.UNKNOWN_ERROR',
     NO_DATA: 'ERR.CK.NO_DATA',
+    UNKNOWN: 'ERR.CK.UNKNOWN_ERROR',
+    UNKNOWN_PLUGIN: 'ERR.CK.UNKNOWN_PLUGIN',
 };
 
 export class ChartKitError extends Error {

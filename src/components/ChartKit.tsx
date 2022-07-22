@@ -1,7 +1,7 @@
 import React from 'react';
 import block from 'bem-cn-lite';
 import {i18n} from '../i18n';
-import {ChartKitError, settings} from '../libs';
+import {CHARTKIT_ERROR_CODE, ChartKitError, settings} from '../libs';
 import {getRandomCKId, typedMemo} from '../utils';
 import type {ChartkitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '../types';
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
@@ -25,7 +25,10 @@ const ChartKitComponent = <T extends ChartkitType>(props: ChartKitComponentProps
     const plugin = plugins.find((iteratedPlugin) => iteratedPlugin.type === type);
 
     if (!plugin) {
-        throw new ChartKitError({message: i18n('error', 'label_unknown-plugin', {type})});
+        throw new ChartKitError({
+            code: CHARTKIT_ERROR_CODE.UNKNOWN_PLUGIN,
+            message: i18n('error', 'label_unknown-plugin', {type}),
+        });
     }
 
     const ChartComponent = plugin.renderer;
