@@ -19,12 +19,15 @@ export type ChartKitOnLoadData<T extends ChartkitType> = {
 
 export type ChartKitOnError = (data: {error: any}) => void;
 
+export type ChartKitFormatNumber = (value: number, options?: unknown) => string;
+
 export type ChartKitProps<T extends ChartkitType> = {
     type: T;
     data: ChartkitWidget[T]['data'];
     id?: string;
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
     onError?: ChartKitOnError;
+    formatNumber?: ChartKitFormatNumber;
 } & {[key in keyof Omit<ChartkitWidget[T], 'data' | 'widget'>]: ChartkitWidget[T][key]};
 
 export type ChartKitPlugin = {

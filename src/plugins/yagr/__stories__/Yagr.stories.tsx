@@ -12,13 +12,12 @@ export default {
     component: ChartKit,
 } as Meta;
 
-settings.set({plugins: [YagrPlugin]});
-
 const Template: Story<any> = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
 
     if (!shown) {
+        settings.set({plugins: [YagrPlugin]});
         return <Button onClick={() => setShown(true)}>Show chart</Button>;
     }
 

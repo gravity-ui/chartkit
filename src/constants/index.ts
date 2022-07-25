@@ -1,0 +1,1 @@
+export {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from './common';

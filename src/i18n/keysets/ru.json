@@ -4,6 +4,7 @@
     "tooltip-rest": "Остальные"
   },
   "error": {
+    "label_no-data": "Нет данных",
     "label_unknown-plugin": "Неизвестный тип плагина \"{{type}}\"",
     "label_unknown-error": "Неизвестная ошибка"
   }

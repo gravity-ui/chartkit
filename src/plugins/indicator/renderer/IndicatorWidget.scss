@@ -1,0 +1,66 @@
+.chartkit-indicator {
+    $class: &;
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__content {
+        width: 100%;
+        overflow: auto;
+    }
+
+    &__item {
+        padding: 15px;
+        font-size: inherit;
+        box-sizing: border-box;
+
+        &_nowrap {
+            #{$class}__item-title {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+
+        &_size_s #{$class}__item-title {
+            font-size: 13px;
+        }
+
+        &_size_s #{$class}__item-value {
+            font-size: 24px;
+        }
+
+        &_size_l #{$class}__item-title {
+            font-size: 20px;
+        }
+
+        &_size_l #{$class}__item-value {
+            font-size: 64px;
+        }
+
+        &_size_xl #{$class}__item-title {
+            font-size: 24px;
+        }
+
+        &_size_xl #{$class}__item-value {
+            font-size: 80px;
+        }
+    }
+
+    &__item-title {
+        font-weight: 500;
+        line-height: 1.2;
+        color: var(--yc-color-text-primary);
+        font-size: 16px;
+        padding-bottom: 0.125em;
+    }
+
+    &__item-value {
+        font-weight: 500;
+        line-height: 1.2;
+        font-size: 48px;
+        white-space: nowrap;
+    }
+}

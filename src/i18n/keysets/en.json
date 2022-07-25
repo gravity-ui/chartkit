@@ -4,6 +4,7 @@
     "tooltip-rest": "Rest"
   },
   "error": {
+    "label_no-data": "No data",
     "label_unknown-plugin": "Unknown plugin type \"{{type}}\"",
     "label_unknown-error": "Unknown error"
   }
