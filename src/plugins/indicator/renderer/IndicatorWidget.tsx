@@ -12,7 +12,7 @@ import './IndicatorWidget.scss';
 const b = block('chartkit-indicator');
 
 const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, IndicatorWidgetProps>(
-    // _ref needs to avoid this warning:
+    // _ref needs to avoid this React warning:
     // "forwardRef render functions accept exactly two parameters: props and ref"
     (props, _ref) => {
         const {
