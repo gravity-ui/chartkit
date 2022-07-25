@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.0](https://github.com/yandex-cloud/chartkit/compare/v0.4.0...v0.5.0) (2022-07-25)
+
+
+### Features
+
+* add chartkit-error ([#28](https://github.com/yandex-cloud/chartkit/issues/28)) ([8342073](https://github.com/yandex-cloud/chartkit/commit/83420738dd431fa1ce2b96f18631f84ca36ed4af))
+* add indicator chart ([#30](https://github.com/yandex-cloud/chartkit/issues/30)) ([4f465de](https://github.com/yandex-cloud/chartkit/commit/4f465de3afdee721f96868d975f3aee647177f76))
+* change error handling ([#29](https://github.com/yandex-cloud/chartkit/issues/29)) ([993958a](https://github.com/yandex-cloud/chartkit/commit/993958a68e1c4376e037bd006d6b19f013b58cfb))
+
+
+### Bug Fixes
+
+* remove react-dom from peer dependencies ([#26](https://github.com/yandex-cloud/chartkit/issues/26)) ([22b6525](https://github.com/yandex-cloud/chartkit/commit/22b6525c767104e56cc51cf5dee5340253f7c080))
+
 ## [0.4.0](https://github.com/yandex-cloud/chartkit/compare/v0.3.1...v0.4.0) (2022-07-18)
 
 
