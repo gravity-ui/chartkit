@@ -12,7 +12,7 @@ export const CHARTKIT_ERROR_CODE = {
 
 export class ChartKitError extends Error {
     readonly code: number | string;
-    readonly isChartKitError = true;
+    readonly isCustomError = true;
 
     constructor({
         originalError,
@@ -31,5 +31,5 @@ export class ChartKitError extends Error {
 }
 
 export const isChartKitError = (error: unknown): error is ChartKitError => {
-    return error instanceof Error && 'isChartKitError' in error;
+    return error instanceof Error && 'isCustomError' in error;
 };

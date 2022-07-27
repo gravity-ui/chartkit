@@ -1,5 +1,6 @@
 import React from 'react';
 import block from 'bem-cn-lite';
+import {isEmpty} from 'lodash';
 import {i18n} from '../../../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from '../../../constants';
@@ -18,14 +19,14 @@ const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, Indicato
         const {
             onLoad,
             formatNumber,
-            data: {data, defaultColor},
+            data: {data = [], defaultColor},
         } = props;
 
         React.useEffect(() => {
             onLoad?.();
         }, []);
 
-        if (!data) {
+        if (isEmpty(data)) {
             throw new ChartKitError({
                 code: CHARTKIT_ERROR_CODE.NO_DATA,
                 message: i18n('error', 'label_no-data'),
