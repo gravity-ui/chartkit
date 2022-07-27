@@ -19,7 +19,7 @@ export type ChartKitOnLoadData<T extends ChartkitType> = {
 
 export type ChartKitOnError = (data: {error: any}) => void;
 
-export type ChartKitFormatNumber = (value: number, options?: any) => string;
+export type ChartKitFormatNumber = <T = any>(value: number, options?: T) => string;
 
 export type ChartKitProps<T extends ChartkitType> = {
     type: T;
