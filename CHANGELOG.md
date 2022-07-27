@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/yandex-cloud/chartkit/compare/v0.5.0...v0.5.1) (2022-07-27)
+
+
+### Bug Fixes
+
+* error handling fixes ([#31](https://github.com/yandex-cloud/chartkit/issues/31)) ([e20fb9d](https://github.com/yandex-cloud/chartkit/commit/e20fb9df1d811efa08a8a68110b1a6819a384af4))
+
 ## [0.5.0](https://github.com/yandex-cloud/chartkit/compare/v0.4.0...v0.5.0) (2022-07-25)
 
 
