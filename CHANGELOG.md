@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/yandex-cloud/chartkit/compare/v0.5.1...v0.5.2) (2022-07-28)
+
+
+### Bug Fixes
+
+* Indicator onLoad invocation fixes ([#34](https://github.com/yandex-cloud/chartkit/issues/34)) ([95fafc3](https://github.com/yandex-cloud/chartkit/commit/95fafc381bbafe47173f802310a67e7ced243d80))
+
 ## [0.5.1](https://github.com/yandex-cloud/chartkit/compare/v0.5.0...v0.5.1) (2022-07-27)
 
 
