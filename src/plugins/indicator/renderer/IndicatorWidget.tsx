@@ -22,9 +22,10 @@ const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, Indicato
             data: {data = [], defaultColor},
         } = props;
 
-        React.useEffect(() => {
+        React.useLayoutEffect(() => {
+            // TODO: swap to onRender after https://github.com/yandex-cloud/chartkit/issues/33
             onLoad?.();
-        }, []);
+        });
 
         if (isEmpty(data)) {
             throw new ChartKitError({
