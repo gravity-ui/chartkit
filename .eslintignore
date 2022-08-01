@@ -1,1 +1,3 @@
 build
+node_modules
+src/i18n/keysets
