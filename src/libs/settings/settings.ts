@@ -23,7 +23,11 @@ const removeUndefinedValues = <T extends Record<string, any>>(data: T) => {
 
 const updateLocale = (args: {lang: ChartKitLang; locale?: moment.LocaleSpecification}) => {
     const {lang, locale} = args;
-    moment.updateLocale(lang, locale);
+
+    if (locale) {
+        moment.updateLocale(lang, locale);
+    }
+
     moment.locale(lang);
     i18nFactory.setLang(lang);
 };
