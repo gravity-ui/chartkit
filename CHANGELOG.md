@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.4](https://github.com/yandex-cloud/chartkit/compare/v0.5.3...v0.5.4) (2022-08-08)
+
+
+### Bug Fixes
+
+* add Yagr type export ([#42](https://github.com/yandex-cloud/chartkit/issues/42)) ([a8b9475](https://github.com/yandex-cloud/chartkit/commit/a8b94755bbb0d42652db3e4266e0ca04481ad99f))
+* npm vulnerabilities fixes ([#40](https://github.com/yandex-cloud/chartkit/issues/40)) ([1509bcf](https://github.com/yandex-cloud/chartkit/commit/1509bcf87a50d9281c3ea47074c694db429ad5d4))
+
 ## [0.5.3](https://github.com/yandex-cloud/chartkit/compare/v0.5.2...v0.5.3) (2022-08-01)
 
 
