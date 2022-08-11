@@ -8,7 +8,6 @@ import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 
 import '@yandex-cloud/uikit/styles/styles.scss';
-import '../styles/theme.scss';
 import './ChartKit.scss';
 
 const b = block('chartkit');

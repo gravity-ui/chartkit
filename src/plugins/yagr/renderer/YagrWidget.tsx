@@ -183,7 +183,8 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
         if (config.tooltip?.enabled !== false) {
             config.tooltip = config.tooltip || {};
             config.tooltip.render = config.tooltip?.render || renderTooltip;
-            config.tooltip.className = 'chartkit-theme';
+            // "className" property prevent default yagr styles adding
+            config.tooltip.className = 'chartkit-yagr-tooltip';
 
             config.tooltip.onStateChange = (tooltip, {action, actions}) => {
                 switch (action) {
