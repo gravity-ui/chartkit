@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/yandex-cloud/chartkit/compare/v0.5.4...v0.6.0) (2022-08-12)
+
+
+### Features
+
+* remove uikit css variables proxing ([#43](https://github.com/yandex-cloud/chartkit/issues/43)) ([4d5131e](https://github.com/yandex-cloud/chartkit/commit/4d5131e0d77270e44bef94f0ba05c9fc5c317704))
+
 ## [0.5.4](https://github.com/yandex-cloud/chartkit/compare/v0.5.3...v0.5.4) (2022-08-08)
 
 
