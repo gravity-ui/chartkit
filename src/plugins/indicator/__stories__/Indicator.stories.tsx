@@ -2,7 +2,7 @@ import React from 'react';
 import {Meta, Story} from '@storybook/react';
 import {withKnobs, boolean, color as colorKnob, radios, text} from '@storybook/addon-knobs';
 import {cloneDeep} from 'lodash';
-import {Button} from '@yandex-cloud/uikit';
+import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
 import {ChartKit} from '../../../components/ChartKit';
 import type {ChartKitRef} from '../../../types';

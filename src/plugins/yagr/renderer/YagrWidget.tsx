@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
-import {useThemeValue} from '@yandex-cloud/uikit';
+import {useThemeValue} from '@gravity-ui/uikit';
 import YagrComponent, {YagrChartProps} from 'yagr/dist/react';
 import {
     YagrConfig,

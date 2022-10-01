@@ -5,13 +5,13 @@ React component used to render charts based on any sources you need
 ## Install
 
 ```shell
-npm i --save-dev @yandex-cloud/chartkit @yandex-cloud/uikit @yandex-cloud/i18n
+npm i --save-dev @yandex-cloud/chartkit @gravity-ui/uikit @yandex-cloud/i18n
 ```
 
 ## Usage
 
 ```typescript
-import {ThemeProvider} from '@yandex-cloud/uikit';
+import {ThemeProvider} from '@gravity-ui/uikit';
 import ChartKit, {settings} from '@yandex-cloud/chartkit';
 import {YagrPlugin, YagrWidgetData} from '@yandex-cloud/chartkit/build/plugins';
 

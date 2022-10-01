@@ -1,7 +1,7 @@
 import {MINIMAL_VIEWPORTS} from '@storybook/addon-viewport';
 import {withContext} from './contextDecorator';
 
-import '@yandex-cloud/uikit/styles/styles.scss';
+import '@gravity-ui/uikit/styles/styles.scss';
 
 export const decorators = [withContext];
 
