@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/yandex-cloud/chartkit/compare/v0.6.0...v0.7.0) (2022-10-01)
+
+
+### Features
+
+* use gravity-ui/uikit instead of yandex-cloud/uikit ([#46](https://github.com/yandex-cloud/chartkit/issues/46)) ([afb2300](https://github.com/yandex-cloud/chartkit/commit/afb230036bb26573159e5f03e0972653b6692d86))
+
 ## [0.6.0](https://github.com/yandex-cloud/chartkit/compare/v0.5.4...v0.6.0) (2022-08-12)
 
 
