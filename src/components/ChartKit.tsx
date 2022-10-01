@@ -7,7 +7,7 @@ import type {ChartkitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 
-import '@yandex-cloud/uikit/styles/styles.scss';
+import '@gravity-ui/uikit/styles/styles.scss';
 import './ChartKit.scss';
 
 const b = block('chartkit');

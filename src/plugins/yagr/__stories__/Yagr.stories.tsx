@@ -1,6 +1,6 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react';
-import {Button} from '@yandex-cloud/uikit';
+import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
 import {YagrPlugin} from '../../../plugins';
 import {ChartKit} from '../../../components/ChartKit';

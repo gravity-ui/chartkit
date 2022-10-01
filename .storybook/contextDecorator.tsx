@@ -1,6 +1,6 @@
 import React from 'react';
 import {Story as StoryType, StoryContext} from '@storybook/react';
-import {ThemeProvider, MobileProvider, useTheme, useMobile} from '@yandex-cloud/uikit';
+import {ThemeProvider, MobileProvider, useTheme, useMobile} from '@gravity-ui/uikit';
 import {settings} from '../src/libs';
 
 export function withContext(Story: StoryType, context: StoryContext) {

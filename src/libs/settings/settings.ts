@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {configure} from '@gravity-ui/uikit';
 import {i18nFactory} from '../../i18n';
 import type {ChartKitPlugin, ChartKitLang} from '../../types';
 
@@ -29,6 +30,7 @@ const updateLocale = (args: {lang: ChartKitLang; locale?: moment.LocaleSpecifica
     }
 
     moment.locale(lang);
+    configure({lang});
     i18nFactory.setLang(lang);
 };
 
