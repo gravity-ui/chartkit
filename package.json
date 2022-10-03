@@ -18,6 +18,10 @@
     "yagr": "1.3.7"
   },
   "devDependencies": {
+    "@gravity-ui/eslint-config": "^1.0.2",
+    "@gravity-ui/prettier-config": "^1.0.1",
+    "@gravity-ui/stylelint-config": "^1.0.1",
+    "@gravity-ui/tsconfig": "^1.0.0",
     "@gravity-ui/uikit": "^3.0.2",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-knobs": "^6.4.0",
@@ -29,11 +33,7 @@
     "@types/react": "^17.0.48",
     "@types/react-dom": "^17.0.17",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@yandex-cloud/eslint-config": "^1.1.0",
     "@yandex-cloud/i18n": "^0.5.0",
-    "@yandex-cloud/prettier-config": "^1.0.0",
-    "@yandex-cloud/stylelint-config": "^1.2.0",
-    "@yandex-cloud/tsconfig": "^1.0.0",
     "eslint": "^8.11.0",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
