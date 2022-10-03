@@ -1,19 +1,19 @@
-# @yandex-cloud/chartkit &middot; [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![npm package](https://img.shields.io/npm/v/@yandex-cloud/chartkit)](https://www.npmjs.com/package/@yandex-cloud/chartkit)
+# @gravity-ui/chartkit &middot; [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE) [![npm package](https://img.shields.io/npm/v/@gravity-ui/chartkit)](https://www.npmjs.com/package/@gravity-ui/chartkit)
 
 React component used to render charts based on any sources you need
 
 ## Install
 
 ```shell
-npm i --save-dev @yandex-cloud/chartkit @gravity-ui/uikit @yandex-cloud/i18n
+npm i --save-dev @gravity-ui/chartkit @gravity-ui/uikit @gravity-ui/i18n
 ```
 
 ## Usage
 
 ```typescript
 import {ThemeProvider} from '@gravity-ui/uikit';
-import ChartKit, {settings} from '@yandex-cloud/chartkit';
-import {YagrPlugin, YagrWidgetData} from '@yandex-cloud/chartkit/build/plugins';
+import ChartKit, {settings} from '@gravity-ui/chartkit';
+import {YagrPlugin, YagrWidgetData} from '@gravity-ui/chartkit/build/plugins';
 
 settings.set({plugins: [YagrPlugin]});
 

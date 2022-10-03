@@ -23,7 +23,7 @@ const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, Indicato
         } = props;
 
         React.useLayoutEffect(() => {
-            // TODO: swap to onRender after https://github.com/yandex-cloud/chartkit/issues/33
+            // TODO: swap to onRender after https://github.com/gravity-ui/chartkit/issues/33
             onLoad?.();
         });
 
