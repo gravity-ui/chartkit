@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/gravity-ui/chartkit/compare/v0.7.0...v0.7.1) (2022-10-03)
+
+
+### Bug Fixes
+
+* move to gravity-ui configs ([#48](https://github.com/gravity-ui/chartkit/issues/48)) ([620587b](https://github.com/gravity-ui/chartkit/commit/620587b41febade698f12e67506aab683934e7b3))
+
 ## [0.7.0](https://github.com/yandex-cloud/chartkit/compare/v0.6.0...v0.7.0) (2022-10-01)
 
 
