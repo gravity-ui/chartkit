@@ -1,9 +1,9 @@
 {
-  "name": "@yandex-cloud/chartkit",
+  "name": "@gravity-ui/chartkit",
   "version": "0.7.1",
-  "description": "Library for rendering Yandex Charts scripts",
+  "description": "React component used to render charts based on any sources you need",
   "license": "MIT",
-  "repository": "git@github.com:yandex-cloud/ChartKit.git",
+  "repository": "git@github.com:gravity-ui/ChartKit.git",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
   "files": [
