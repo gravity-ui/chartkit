@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.8.0](https://github.com/gravity-ui/chartkit/compare/v0.7.2...v0.8.0) (2022-10-04)
+
+
+### Features
+
+* move to @gravity-ui/i18n ([#45](https://github.com/gravity-ui/chartkit/issues/45)) ([ad401d8](https://github.com/gravity-ui/chartkit/commit/ad401d85bf50ab4ceb0ae8a837c4b11cd36a4acd))
+
+
+### Bug Fixes
+
+* add ChartKitOnError type export ([#54](https://github.com/gravity-ui/chartkit/issues/54)) ([7660be7](https://github.com/gravity-ui/chartkit/commit/7660be756cd3ec1057aa9fd4bb45226c9632e80f))
+
 ## [0.7.2](https://github.com/gravity-ui/chartkit/compare/v0.7.1...v0.7.2) (2022-10-03)
 
 
