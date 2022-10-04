@@ -5,7 +5,7 @@ React component used to render charts based on any sources you need
 ## Install
 
 ```shell
-npm i --save-dev @gravity-ui/chartkit @gravity-ui/uikit @gravity-ui/i18n
+npm i --save-dev @gravity-ui/chartkit @gravity-ui/uikit
 ```
 
 ## Usage
