@@ -4,6 +4,7 @@ import {settings} from './libs';
 export type {
     ChartKitLang,
     ChartKitOnLoadData,
+    ChartKitOnError,
     ChartKitPlugin,
     ChartKitProps,
     ChartKitRef,
