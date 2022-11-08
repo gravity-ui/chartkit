@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/gravity-ui/chartkit/compare/v0.8.0...v0.9.0) (2022-11-08)
+
+
+### Features
+
+* add isMobile property ([#57](https://github.com/gravity-ui/chartkit/issues/57)) ([a2e87ed](https://github.com/gravity-ui/chartkit/commit/a2e87edf1d05705fb92c2571b5a71496c48d9215))
+
 ## [0.8.0](https://github.com/gravity-ui/chartkit/compare/v0.7.2...v0.8.0) (2022-10-04)
 
 
