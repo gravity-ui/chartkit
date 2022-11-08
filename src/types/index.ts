@@ -25,7 +25,6 @@ export type ChartKitProps<T extends ChartkitType> = {
     type: T;
     data: ChartkitWidget[T]['data'];
     id?: string;
-    isMobile?: boolean;
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
     onError?: ChartKitOnError;
     formatNumber?: ChartKitFormatNumber;

@@ -18,7 +18,7 @@ type ChartKitComponentProps<T extends ChartkitType> = Omit<ChartKitProps<T>, 'on
 
 const ChartKitComponent = <T extends ChartkitType>(props: ChartKitComponentProps<T>) => {
     const widgetRef = React.useRef<ChartKitWidgetRef>();
-    const {instanceRef, id = getRandomCKId(), type, data, onLoad, isMobile, ...restProps} = props;
+    const {instanceRef, id = getRandomCKId(), type, data, onLoad, ...restProps} = props;
     const lang = settings.get('lang');
     const plugins = settings.get('plugins');
     const plugin = plugins.find((iteratedPlugin) => iteratedPlugin.type === type);
@@ -46,7 +46,7 @@ const ChartKitComponent = <T extends ChartkitType>(props: ChartKitComponentProps
 
     return (
         <React.Suspense fallback={<Loader />}>
-            <div className={b({mobile: isMobile})}>
+            <div className={b()}>
                 <ChartComponent
                     ref={widgetRef}
                     id={id}
