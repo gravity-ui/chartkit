@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
-import {useThemeValue} from '@gravity-ui/uikit';
+import {useThemeType} from '@gravity-ui/uikit';
 import YagrComponent, {YagrChartProps} from 'yagr/dist/react';
 import {
     YagrConfig,
@@ -117,7 +117,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
 
         const {data, libraryConfig} = props.data;
         const {id, onLoad} = props;
-        const theme = useThemeValue() as YagrConfig['settings']['theme'];
+        const theme = useThemeType() as YagrConfig['settings']['theme'];
 
         const handlers: Record<string, null | ((event: MouseEvent) => void)> = {
             mouseMove: null,
