@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.1](https://github.com/gravity-ui/chartkit/compare/v0.9.0...v0.9.1) (2022-11-14)
+
+
+### Bug Fixes
+
+* fix yagr theme ininitialization ([7247873](https://github.com/gravity-ui/chartkit/commit/724787380b8d81f6dfdaae1f6e5c1b806af32e3c))
+* fix yagr theme initialization ([#59](https://github.com/gravity-ui/chartkit/issues/59)) ([7247873](https://github.com/gravity-ui/chartkit/commit/724787380b8d81f6dfdaae1f6e5c1b806af32e3c))
+
 ## [0.9.0](https://github.com/gravity-ui/chartkit/compare/v0.8.0...v0.9.0) (2022-11-08)
 
 
