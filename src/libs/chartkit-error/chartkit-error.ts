@@ -8,6 +8,7 @@ export const CHARTKIT_ERROR_CODE = {
     NO_DATA: 'ERR.CK.NO_DATA',
     UNKNOWN: 'ERR.CK.UNKNOWN_ERROR',
     UNKNOWN_PLUGIN: 'ERR.CK.UNKNOWN_PLUGIN',
+    TOO_MANY_LINES: 'ERR.CK.TOO_MANY_LINES',
 };
 
 export class ChartKitError extends Error {

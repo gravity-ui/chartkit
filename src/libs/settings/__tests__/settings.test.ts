@@ -9,7 +9,7 @@ const resetSettings = () =>
 describe('libs/settings', () => {
     it('Default locale should be equal DEFAULT_LOCALE_SPECIFICATION', () => {
         const result = settings.get('locale');
-        expect(result).toBe(DEFAULT_LOCALE_SPECIFICATION);
+        expect(result).toStrictEqual(DEFAULT_LOCALE_SPECIFICATION);
     });
 
     it('Default lang should be equal to en', () => {

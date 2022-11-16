@@ -1,13 +1,19 @@
 import moment from 'moment';
+import get from 'lodash/get';
+import merge from 'lodash/merge';
 import {configure} from '@gravity-ui/uikit';
 import {i18nFactory} from '../../i18n';
-import type {ChartKitPlugin, ChartKitLang} from '../../types';
+import type {ChartKitPlugin, ChartKitLang, ChartKitHolidays} from '../../types';
 
-type Settings = {
+interface Settings {
     plugins: ChartKitPlugin[];
     lang: ChartKitLang;
     locale?: moment.LocaleSpecification;
-};
+    extra?: {
+        holidays?: ChartKitHolidays;
+    };
+}
+
 type SettingKey = keyof Settings;
 
 export const DEFAULT_LOCALE_SPECIFICATION: moment.LocaleSpecification = {week: {dow: 1, doy: 7}};
@@ -41,7 +47,7 @@ class ChartKitSettings {
     };
 
     get<T extends SettingKey>(key: T) {
-        return this.settings[key];
+        return get(this.settings, key);
     }
 
     set(updates: Partial<Settings>) {
@@ -53,10 +59,7 @@ class ChartKitSettings {
             updateLocale({lang, locale});
         }
 
-        this.settings = {
-            ...this.settings,
-            ...filteredUpdates,
-        };
+        this.settings = merge(this.settings, filteredUpdates);
     }
 }
 

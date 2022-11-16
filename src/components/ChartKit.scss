@@ -6,3 +6,26 @@
         max-height: 3000px;
     }
 }
+
+.chartkit-theme_common {
+    --highcarts-navigator-border: var(--yc-color-line-generic);
+    --highcarts-navigator-track: var(--yc-color-base-generic);
+    --highcarts-navigator-body: var(--yc-color-scroll-handle);
+    --highcharts-series-border: var(--yc-color-base-background);
+    --highcharts-grid-line: var(--yc-color-line-generic);
+    --highcharts-axis-line: var(--yc-color-line-generic);
+    --highcharts-tick: var(--yc-color-line-generic);
+    --highcharts-title: var(--yc-color-text-primary);
+    --highcharts-axis-labels: var(--yc-color-text-secondary);
+    --highcharts-data-labels: var(--yc-color-text-complementary);
+    --highcharts-plot-line-label: var(--yc-color-text-complementary);
+    --highcharts-legend-item: var(--yc-color-text-secondary);
+    --highcharts-legend-item-hover: var(--yc-color-text-primary);
+    --highcharts-legend-item-hidden: var(--yc-color-text-hint);
+    --highcharts-floating-bg: var(--yc-color-infographics-tooltip-bg);
+    --highcharts-tooltip-text: var(--yc-color-text-primary);
+    --highcharts-tooltip-bg: var(--highcharts-floating-bg);
+    --highcharts-tooltip-alternate-bg: var(--yc-color-base-generic);
+    --highcharts-tooltip-text-complementary: var(--yc-color-text-complementary);
+    --highcharts-holiday-band: var(--yc-color-base-generic);
+}
