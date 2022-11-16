@@ -46,7 +46,7 @@ const ChartKitComponent = <T extends ChartkitType>(props: ChartKitComponentProps
 
     return (
         <React.Suspense fallback={<Loader />}>
-            <div className={b({mobile: isMobile})}>
+            <div className={b({mobile: isMobile}, 'chartkit-theme_common')}>
                 <ChartComponent
                     ref={widgetRef}
                     id={id}
@@ -63,7 +63,7 @@ const ChartKitComponent = <T extends ChartkitType>(props: ChartKitComponentProps
 const ChartKitComponentWithErrorBoundary = React.forwardRef<
     ChartKitRef | undefined,
     ChartKitProps<ChartkitType>
->((props, ref) => {
+>(function ChartKitComponentWithErrorBoundary(props, ref) {
     const {onError, ...componentProps} = props;
 
     return (

@@ -1,4 +1,4 @@
 {
-    "extends": ["@gravity-ui/eslint-config", "@gravity-ui/eslint-config/prettier"],
+    "extends": ["@gravity-ui/eslint-config", "@gravity-ui/eslint-config/client"],
     "root": true
 }

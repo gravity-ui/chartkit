@@ -1,5 +1,7 @@
 import type {ChartkitWidget} from './widget';
 
+export type {ChartKitHolidays} from './misc';
+
 export type ChartKitLang = 'ru' | 'en';
 
 export type ChartkitType = keyof ChartkitWidget;
