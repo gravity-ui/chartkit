@@ -110,7 +110,7 @@ export class HighchartsComponent extends React.PureComponent<HighchartsWidgetPro
         );
     }
 
-    forceReflow = () => {
+    reflow = () => {
         if (this.chartComponent.current) {
             this.chartComponent.current.chart.reflow();
         }
@@ -151,7 +151,7 @@ export class HighchartsComponent extends React.PureComponent<HighchartsWidgetPro
                 this.props.onLoad({widget: data.widget});
             }
 
-            window.requestAnimationFrame(this.forceReflow);
+            window.requestAnimationFrame(this.reflow);
         }
     }
 }
