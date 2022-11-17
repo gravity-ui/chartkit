@@ -2,8 +2,9 @@ import React from 'react';
 import Highcharts, {ChartCallbackFunction, Options, Chart} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import get from 'lodash/get';
+import type {ChartKitProps} from '../../../../types';
 import {settings} from '../../../../libs';
-import type {HighchartsWidgetData, HighchartsWidgetProps, StringParams} from '../../types';
+import type {HighchartsWidgetData, StringParams} from '../../types';
 import {getGraph} from '../helpers/graph';
 import {initHighchartsModules} from '../helpers/init-highcharts-modules';
 import {withSplitPane} from './withSplitPane/withSplitPane';
@@ -11,6 +12,8 @@ import {withSplitPane} from './withSplitPane/withSplitPane';
 import './HighchartsComponent.scss';
 
 const HighcharsReactWithSplitPane = withSplitPane(HighchartsReact);
+
+type Props = ChartKitProps<'highcharts'>;
 
 type State = {
     prevData: HighchartsWidgetData | null;
@@ -21,8 +24,12 @@ type State = {
 
 initHighchartsModules();
 
-export class HighchartsComponent extends React.PureComponent<HighchartsWidgetProps, State> {
-    static getDerivedStateFromProps(nextProps: HighchartsWidgetProps, prevState: State) {
+export class HighchartsComponent extends React.PureComponent<Props, State> {
+    static defaultProps: Partial<Props> = {
+        hoistConfigError: true,
+    };
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
         const isCurrentTooltipSplitted = get(prevState, 'options.tooltip.splitTooltip');
         const tooltipTypeWasChanged = isCurrentTooltipSplitted !== nextProps.splitTooltip;
 
@@ -64,8 +71,14 @@ export class HighchartsComponent extends React.PureComponent<HighchartsWidgetPro
                 isError: false,
             };
         } catch (error) {
-            if (nextProps.onError) {
-                nextProps.onError({error});
+            const {hoistConfigError, onError} = nextProps;
+
+            if (onError && !hoistConfigError) {
+                onError({error});
+            }
+
+            if (hoistConfigError) {
+                throw error;
             }
 
             return {isError: true};
@@ -96,7 +109,11 @@ export class HighchartsComponent extends React.PureComponent<HighchartsWidgetPro
         const {isError, options} = this.state;
         const Component = this.props.splitTooltip ? HighcharsReactWithSplitPane : HighchartsReact;
 
-        return isError ? null : (
+        if (isError) {
+            return null;
+        }
+
+        return (
             <Component
                 key={Math.random()}
                 options={options}
