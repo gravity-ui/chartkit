@@ -1,4 +1,4 @@
-import type {ChartKitOnError, ChartKitOnLoadData} from '../../../types';
+import type {Highcharts} from './lib';
 import type {ChartKitComment} from './comments';
 import type {DrillDownConfig, StringParams} from './misc';
 
@@ -48,15 +48,4 @@ export type HighchartsWidgetData = {
     params?: StringParams;
     comments?: ChartKitComment[];
     sideMarkdown?: string;
-};
-
-export type HighchartsWidgetProps = {
-    id: string;
-    data: HighchartsWidgetData;
-    isMobile?: boolean;
-    nonBodyScroll?: boolean;
-    splitTooltip?: boolean;
-    onLoad?: (data?: ChartKitOnLoadData<'highcharts'>) => void;
-    onChange?: (data1: any, data2: any, data3: any) => void;
-    onError?: ChartKitOnError;
 };

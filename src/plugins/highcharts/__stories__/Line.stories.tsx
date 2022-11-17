@@ -23,7 +23,14 @@ const Template: Story<any> = () => {
 
     return (
         <div style={{height: 300, width: '100%'}}>
-            <ChartKit ref={chartkitRef} id="1" type="highcharts" data={data} />
+            <ChartKit
+                ref={chartkitRef}
+                id="1"
+                type="highcharts"
+                data={data}
+                hoistConfigError={false}
+                onError={() => console.log('onError invoked')}
+            />
         </div>
     );
 };
