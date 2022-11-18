@@ -1,5 +1,3 @@
-import type {ChartKitFormatNumber} from '../../types';
-
 export type IndicatorWidgetDataItem = {
     content: {
         current: {
@@ -15,10 +13,4 @@ export type IndicatorWidgetDataItem = {
 export type IndicatorWidgetData = {
     data?: IndicatorWidgetDataItem[];
     defaultColor?: string;
-};
-
-export type IndicatorWidgetProps = {
-    data: IndicatorWidgetData;
-    onLoad?: () => void;
-    formatNumber?: ChartKitFormatNumber;
 };

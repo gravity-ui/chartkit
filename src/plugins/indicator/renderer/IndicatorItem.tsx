@@ -1,13 +1,14 @@
 import React from 'react';
 import block from 'bem-cn-lite';
-import type {IndicatorWidgetProps, IndicatorWidgetDataItem} from '../types';
+import type {ChartKitProps} from '../../../types';
+import type {IndicatorWidgetDataItem} from '../types';
 
 const b = block('chartkit-indicator');
 
 export const IndicatorItem = (
     props: IndicatorWidgetDataItem & {
         defaultColor?: string;
-        formatNumber?: IndicatorWidgetProps['formatNumber'];
+        formatNumber?: ChartKitProps<'indicator'>['formatNumber'];
     },
 ) => {
     const {formatNumber, content, color, defaultColor, size, title, nowrap} = props;
