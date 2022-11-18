@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.10.0](https://github.com/gravity-ui/chartkit/compare/v0.9.1...v0.10.0) (2022-11-18)
+
+
+### Features
+
+* add highcharts plugin ([#61](https://github.com/gravity-ui/chartkit/issues/61)) ([9329ede](https://github.com/gravity-ui/chartkit/commit/9329edeaba8c4ef84b1fc30bb7196ba350dc3abd))
+
+
+### Bug Fixes
+
+* **Highcharts plaugin:** fix error handling and reflow method ([#63](https://github.com/gravity-ui/chartkit/issues/63)) ([ba4f2ad](https://github.com/gravity-ui/chartkit/commit/ba4f2ada96ae642a93ebd203438463f72883e245))
+* yagr & indicator types fixes ([#64](https://github.com/gravity-ui/chartkit/issues/64)) ([479c552](https://github.com/gravity-ui/chartkit/commit/479c552f5ce1890451f3f104fc8efb730f2baf67))
+
 ## [0.9.1](https://github.com/gravity-ui/chartkit/compare/v0.9.0...v0.9.1) (2022-11-14)
 
 
