@@ -10,7 +10,6 @@
 
 ### Bug Fixes
 
-* **Highcharts plaugin:** fix error handling and reflow method ([#63](https://github.com/gravity-ui/chartkit/issues/63)) ([ba4f2ad](https://github.com/gravity-ui/chartkit/commit/ba4f2ada96ae642a93ebd203438463f72883e245))
 * yagr & indicator types fixes ([#64](https://github.com/gravity-ui/chartkit/issues/64)) ([479c552](https://github.com/gravity-ui/chartkit/commit/479c552f5ce1890451f3f104fc8efb730f2baf67))
 
 ## [0.9.1](https://github.com/gravity-ui/chartkit/compare/v0.9.0...v0.9.1) (2022-11-14)
@@ -18,7 +17,6 @@
 
 ### Bug Fixes
 
-* fix yagr theme ininitialization ([7247873](https://github.com/gravity-ui/chartkit/commit/724787380b8d81f6dfdaae1f6e5c1b806af32e3c))
 * fix yagr theme initialization ([#59](https://github.com/gravity-ui/chartkit/issues/59)) ([7247873](https://github.com/gravity-ui/chartkit/commit/724787380b8d81f6dfdaae1f6e5c1b806af32e3c))
 
 ## [0.9.0](https://github.com/gravity-ui/chartkit/compare/v0.8.0...v0.9.0) (2022-11-08)
