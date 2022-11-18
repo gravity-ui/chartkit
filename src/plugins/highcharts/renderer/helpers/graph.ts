@@ -2,7 +2,7 @@ import type {ChartKitHolidays} from '../../../../types';
 import type {
     Highcharts,
     HighchartsWidgetData,
-    ChartKitComment,
+    HighchartsComment,
     ExtendedHChart,
     XAxisItem,
 } from '../../types';
@@ -18,7 +18,7 @@ import './graph.scss';
 type GetGraphArgs = {
     options: ConfigOptions;
     data: HighchartsWidgetData['data'];
-    comments?: ChartKitComment[];
+    comments?: HighchartsComment[];
     holidays?: ChartKitHolidays;
     isMobile?: boolean;
 };

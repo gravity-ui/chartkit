@@ -1,5 +1,5 @@
 import type {Highcharts} from './lib';
-import type {ChartKitComment} from './comments';
+import type {HighchartsComment} from './comments';
 import type {DrillDownConfig, StringParams} from './misc';
 
 type GraphWidgetSeriesOptions = Highcharts.SeriesOptionsType & {
@@ -22,7 +22,7 @@ export type HighchartsWidgetData = {
         | {
               graphs: GraphWidgetSeriesOptions[];
           }
-    ) & {comments?: ChartKitComment[]};
+    ) & {comments?: HighchartsComment[]};
     config: {
         hideComments?: boolean;
         hideHolidaysBands?: boolean;
@@ -46,6 +46,6 @@ export type HighchartsWidgetData = {
     };
     libraryConfig: Highcharts.Options;
     params?: StringParams;
-    comments?: ChartKitComment[];
+    comments?: HighchartsComment[];
     sideMarkdown?: string;
 };
