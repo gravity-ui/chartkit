@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/gravity-ui/chartkit/compare/v0.10.1...v0.11.0) (2022-11-18)
+
+
+### Features
+
+* types improvements ([#67](https://github.com/gravity-ui/chartkit/issues/67)) ([33b4f07](https://github.com/gravity-ui/chartkit/commit/33b4f07a24abdfde52005ddbbf17fb7a25817beb))
+
 ## [0.10.1](https://github.com/gravity-ui/chartkit/compare/v0.10.0...v0.10.1) (2022-11-18)
 
 
