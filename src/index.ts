@@ -9,8 +9,8 @@ export type {
     ChartKitProps,
     ChartKitRef,
     ChartKitWidgetRef,
-    ChartkitType,
-    ChartkitWidget,
+    ChartKitType,
+    ChartKitWidget,
 } from './types';
 
 export {settings};

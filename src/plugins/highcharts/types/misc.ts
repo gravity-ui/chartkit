@@ -1,4 +1,4 @@
-import type {ChartKitComment} from './comments';
+import type {HighchartsComment} from './comments';
 
 export type StringParams = Record<string, string | string[]>;
 
@@ -14,9 +14,9 @@ export type XAxisItem = Highcharts.Axis & {
 
 export type ExtendedHChart = Highcharts.Chart & {
     userOptions: Highcharts.Options & {
-        _internalComments: ChartKitComment[];
-        _externalComments: ChartKitComment[];
-        _getComments: () => ChartKitComment[];
+        _internalComments: HighchartsComment[];
+        _externalComments: HighchartsComment[];
+        _getComments: () => HighchartsComment[];
     };
     xAxis: XAxisItem[];
     navigator?: Highcharts.Options['navigator'];

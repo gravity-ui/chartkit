@@ -52,4 +52,4 @@ interface CommentFlagX extends CommentBase {
     };
 }
 
-export type ChartKitComment = CommentDotXY | CommentBandX | CommentLineX | CommentFlagX;
+export type HighchartsComment = CommentDotXY | CommentBandX | CommentLineX | CommentFlagX;

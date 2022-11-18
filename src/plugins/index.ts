@@ -3,4 +3,4 @@ export type {Yagr, YagrWidgetData} from './yagr/types';
 export {IndicatorPlugin} from './indicator';
 export type {IndicatorWidgetData} from './indicator/types';
 export {HighchartsPlugin} from './highcharts';
-export type {Highcharts, HighchartsWidgetData} from './highcharts/types';
+export type {Highcharts, HighchartsWidgetData, HighchartsComment} from './highcharts/types';

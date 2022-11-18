@@ -3,7 +3,7 @@ import block from 'bem-cn-lite';
 import {i18n} from '../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError, settings} from '../libs';
 import {getRandomCKId, typedMemo} from '../utils';
-import type {ChartkitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '../types';
+import type {ChartKitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '../types';
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 
@@ -12,11 +12,11 @@ import './ChartKit.scss';
 
 const b = block('chartkit');
 
-type ChartKitComponentProps<T extends ChartkitType> = Omit<ChartKitProps<T>, 'onError'> & {
+type ChartKitComponentProps<T extends ChartKitType> = Omit<ChartKitProps<T>, 'onError'> & {
     instanceRef?: React.ForwardedRef<ChartKitRef | undefined>;
 };
 
-const ChartKitComponent = <T extends ChartkitType>(props: ChartKitComponentProps<T>) => {
+const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps<T>) => {
     const widgetRef = React.useRef<ChartKitWidgetRef>();
     const {instanceRef, id = getRandomCKId(), type, data, onLoad, isMobile, ...restProps} = props;
     const lang = settings.get('lang');
@@ -62,14 +62,14 @@ const ChartKitComponent = <T extends ChartkitType>(props: ChartKitComponentProps
 
 const ChartKitComponentWithErrorBoundary = React.forwardRef<
     ChartKitRef | undefined,
-    ChartKitProps<ChartkitType>
+    ChartKitProps<ChartKitType>
 >(function ChartKitComponentWithErrorBoundary(props, ref) {
     return (
         <ErrorBoundary onError={props.onError}>
             <ChartKitComponent instanceRef={ref} {...props} />
         </ErrorBoundary>
     );
-}) /* https://stackoverflow.com/a/58473012 */ as <T extends ChartkitType>(
+}) /* https://stackoverflow.com/a/58473012 */ as <T extends ChartKitType>(
     props: ChartKitProps<T> & {ref?: React.ForwardedRef<ChartKitRef | undefined>},
 ) => ReturnType<typeof ChartKitComponent>;
 
