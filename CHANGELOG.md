@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/gravity-ui/chartkit/compare/v0.10.0...v0.10.1) (2022-11-18)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** add Highcharts lib type export ([#65](https://github.com/gravity-ui/chartkit/issues/65)) ([de24a26](https://github.com/gravity-ui/chartkit/commit/de24a264197441b21261438808838e5fbd0a8402))
+
 ## [0.10.0](https://github.com/gravity-ui/chartkit/compare/v0.9.1...v0.10.0) (2022-11-18)
 
 
