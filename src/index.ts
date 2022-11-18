@@ -9,7 +9,7 @@ export type {
     ChartKitProps,
     ChartKitRef,
     ChartKitWidgetRef,
-    ChartkitType,
+    ChartKitType,
     ChartKitWidget,
 } from './types';
 
