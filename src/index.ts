@@ -10,7 +10,7 @@ export type {
     ChartKitRef,
     ChartKitWidgetRef,
     ChartkitType,
-    ChartkitWidget,
+    ChartKitWidget,
 } from './types';
 
 export {settings};
