@@ -11,6 +11,7 @@ export interface ChartkitWidget {
     indicator: {
         data: IndicatorWidgetData;
         widget: never;
+        formatNumber?: <T = any>(value: number, options?: T) => string;
     };
     highcharts: {
         data: HighchartsWidgetData;
