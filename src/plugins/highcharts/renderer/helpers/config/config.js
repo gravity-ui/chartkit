@@ -630,10 +630,10 @@ function getTooltip(tooltip, options, comments, holidays) {
         if (region !== 'tot') {
             json.region = region;
         }
-        if (holidays.holiday[region][pointTimestamp]) {
+        if (holidays?.holiday[region][pointTimestamp]) {
             json.holiday = true;
             json.holidayText = holidays.holiday[region][pointTimestamp];
-        } else if (holidays.weekend[region][pointTimestamp]) {
+        } else if (holidays?.weekend[region][pointTimestamp]) {
             json.weekend = true;
         }
 
