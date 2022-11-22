@@ -116,7 +116,7 @@ const statesForLine = {
 const options = {
     chart: {
         zoomType: 'xy',
-        backgroundColor: 'transparent',
+        backgroundColor: 'var(--highcharts-chart-background)',
         className: 'chartkit-highcharts',
     },
     title: {
@@ -186,7 +186,7 @@ const options = {
     },
     plotOptions: {
         series: {
-            borderColor: 'var(--highcharts-series-border)',
+            borderColor: 'var(--highcharts-chart-background)',
             label: {
                 enabled: false,
             },
@@ -216,15 +216,7 @@ const options = {
             statesForLine,
         ),
         areaspline: first,
-        bar: Object.assign(
-            {
-                borderWidth: 0,
-                pointWidth: 4,
-            },
-            first,
-            wizardGraphDataLabels,
-            notChangeOpacityForInactive,
-        ),
+        bar: Object.assign({}, first, wizardGraphDataLabels, notChangeOpacityForInactive),
         column: Object.assign({}, first, wizardGraphDataLabels, notChangeOpacityForInactive),
         line: Object.assign({}, first, wizardGraphDataLabels, statesForLine),
         spline: first,
