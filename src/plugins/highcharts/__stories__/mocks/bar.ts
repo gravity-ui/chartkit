@@ -181,8 +181,6 @@ export const data: HighchartsWidgetData = {
         plotOptions: {
             bar: {
                 stacking: 'normal',
-                // @ts-ignore
-                pointWidth: null,
             },
             column: {
                 dataGrouping: {
