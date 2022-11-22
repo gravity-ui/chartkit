@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/gravity-ui/chartkit/compare/v0.11.1...v0.12.0) (2022-11-22)
+
+
+### Features
+
+* add support border color setting ([defdcf7](https://github.com/gravity-ui/chartkit/commit/defdcf768d33fe11f9de8dc14a1e9561c034f6ea))
+
 ## [0.11.1](https://github.com/gravity-ui/chartkit/compare/v0.11.0...v0.11.1) (2022-11-21)
 
 
