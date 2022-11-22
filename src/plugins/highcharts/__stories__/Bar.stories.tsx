@@ -7,7 +7,7 @@ import {settings} from '../../../libs';
 import {HighchartsPlugin} from '../index';
 import {defaultChartKitPropsControlsState} from './constants/story-settings';
 import holidays from './mocks/holidays';
-import {data} from './mocks/column';
+import {data} from './mocks/bar';
 
 export default {
     title: 'Plugins/Highcharts/Column',
@@ -35,16 +35,18 @@ const Template: Story<any> = (args: {theme: 'light' | 'dark'}) => {
 
     return (
         <ThemeProvider theme={args.theme}>
-            <ChartKit
-                ref={chartkitRef}
-                id="1"
-                type="highcharts"
-                data={data}
-                hoistConfigError={false}
-                onError={() => console.log('onError invoked')}
-            />
+            <div style={{height: '600px', width: '100%'}}>
+                <ChartKit
+                    ref={chartkitRef}
+                    id="1"
+                    type="highcharts"
+                    data={data}
+                    hoistConfigError={false}
+                    onError={() => console.log('onError invoked')}
+                />
+            </div>
         </ThemeProvider>
     );
 };
 
-export const Column = Template.bind({});
+export const Bar = Template.bind({});
