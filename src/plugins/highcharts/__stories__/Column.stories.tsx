@@ -40,7 +40,6 @@ const Template: Story<any> = (args: {theme: 'light' | 'light-hc' | 'dark' | 'dar
                 id="1"
                 type="highcharts"
                 data={data}
-                hoistConfigError={false}
                 onError={() => console.log('onError invoked')}
             />
         </ThemeProvider>

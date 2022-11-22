@@ -10,7 +10,7 @@ import holidays from './mocks/holidays';
 import {data} from './mocks/bar';
 
 export default {
-    title: 'Plugins/Highcharts/Column',
+    title: 'Plugins/Highcharts/Bar',
     component: ChartKit,
     args: {
         theme: 'light',
@@ -41,7 +41,6 @@ const Template: Story<any> = (args: {theme: 'light' | 'light-hc' | 'dark' | 'dar
                     id="1"
                     type="highcharts"
                     data={data}
-                    hoistConfigError={false}
                     onError={() => console.log('onError invoked')}
                 />
             </div>
