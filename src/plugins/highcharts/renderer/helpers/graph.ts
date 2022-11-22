@@ -46,7 +46,7 @@ function getGraph({options, data, comments, isMobile, holidays}: GetGraphArgs) {
             }
 
             chart.userOptions._getComments = () =>
-                chart.userOptions._internalComments.concat(chart.userOptions._externalComments);
+                chart.userOptions?._internalComments.concat(chart.userOptions?._externalComments);
 
             let needRedraw = false;
 
