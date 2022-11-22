@@ -5,7 +5,6 @@
 
 ### Bug Fixes
 
-* **Highcharts plugin:** fix tooltip golidays handling ([9bc3f8c](https://github.com/gravity-ui/chartkit/commit/9bc3f8c7a62d3b269626be87a46de1d8a6949f57))
 * **Highcharts plugin:** fix tooltip holidays handling ([#69](https://github.com/gravity-ui/chartkit/issues/69)) ([9bc3f8c](https://github.com/gravity-ui/chartkit/commit/9bc3f8c7a62d3b269626be87a46de1d8a6949f57))
 
 ## [0.11.0](https://github.com/gravity-ui/chartkit/compare/v0.10.1...v0.11.0) (2022-11-18)
