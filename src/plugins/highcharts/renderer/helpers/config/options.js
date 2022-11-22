@@ -116,7 +116,7 @@ const statesForLine = {
 const options = {
     chart: {
         zoomType: 'xy',
-        backgroundColor: 'var(--highcharts-chart-background)',
+        backgroundColor: 'transparent',
         className: 'chartkit-highcharts',
     },
     title: {
@@ -186,7 +186,7 @@ const options = {
     },
     plotOptions: {
         series: {
-            borderColor: 'var(--highcharts-chart-background)',
+            borderColor: 'var(--highcharts-series-border)',
             label: {
                 enabled: false,
             },
