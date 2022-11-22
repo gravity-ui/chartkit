@@ -17,14 +17,14 @@ export default {
     },
     argTypes: {
         theme: {
-            options: ['light', 'dark'],
+            options: ['light', 'light-hc', 'dark', 'dark-hc'],
             control: {type: 'radio'},
         },
         ...defaultChartKitPropsControlsState,
     },
 } as Meta;
 
-const Template: Story<any> = (args: {theme: 'light' | 'dark'}) => {
+const Template: Story<any> = (args: {theme: 'light' | 'light-hc' | 'dark' | 'dark-hc'}) => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
 
