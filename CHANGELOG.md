@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.1](https://github.com/gravity-ui/chartkit/compare/v0.12.0...v0.12.1) (2022-11-22)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** remove style for chart background color ([#73](https://github.com/gravity-ui/chartkit/issues/73)) ([481b2f5](https://github.com/gravity-ui/chartkit/commit/481b2f5fe07d818f37ba220f70fbad14690b39ba))
+
 ## [0.12.0](https://github.com/gravity-ui/chartkit/compare/v0.11.1...v0.12.0) (2022-11-22)
 
 
