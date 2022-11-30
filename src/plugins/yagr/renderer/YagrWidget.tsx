@@ -13,10 +13,9 @@ import {
     MinimalValidConfig,
 } from 'yagr';
 import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
-import {settings} from '../../../libs';
+import {settings, CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import {formatTooltip, TooltipData, TooltipLine} from './tooltip/tooltip';
 import {synchronizeTooltipTablesCellsWidth} from './synchronizeTooltipTablesCellsWidth';
-import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 
 import './polyfills';
 
