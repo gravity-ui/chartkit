@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.2](https://github.com/gravity-ui/chartkit/compare/v0.12.1...v0.12.2) (2022-11-30)
+
+
+### Bug Fixes
+
+* **ChartKit:** id not to be new on every render ([#76](https://github.com/gravity-ui/chartkit/issues/76)) ([230a992](https://github.com/gravity-ui/chartkit/commit/230a992fe99a176bbf85cbef363ccac45db7b3b4))
+
 ## [0.12.1](https://github.com/gravity-ui/chartkit/compare/v0.12.0...v0.12.1) (2022-11-22)
 
 
