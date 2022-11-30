@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
+import isEmpty from 'lodash/isEmpty';
 import {useThemeType} from '@gravity-ui/uikit';
 import YagrComponent, {YagrChartProps} from 'yagr/dist/react';
 import {
@@ -15,6 +16,8 @@ import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
 import {settings} from '../../../libs';
 import {formatTooltip, TooltipData, TooltipLine} from './tooltip/tooltip';
 import {synchronizeTooltipTablesCellsWidth} from './synchronizeTooltipTablesCellsWidth';
+import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
+
 import './polyfills';
 
 import './YagrWidget.scss';
@@ -119,6 +122,13 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
     const {data, libraryConfig} = props.data;
     const {id, onLoad} = props;
     const theme = useThemeType() as YagrConfig['settings']['theme'];
+
+    if (!data || isEmpty(data)) {
+        throw new ChartKitError({
+            code: CHARTKIT_ERROR_CODE.NO_DATA,
+            message: i18n('error', 'label_no-data'),
+        });
+    }
 
     const handlers: Record<string, null | ((event: MouseEvent) => void)> = {
         mouseMove: null,
