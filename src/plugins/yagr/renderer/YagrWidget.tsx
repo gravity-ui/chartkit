@@ -12,6 +12,7 @@ import {
     ValueFormatter,
     MinimalValidConfig,
 } from 'yagr';
+import {i18n} from '../../../i18n';
 import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
 import {settings, CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import {formatTooltip, TooltipData, TooltipLine} from './tooltip/tooltip';
