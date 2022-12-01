@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.3](https://github.com/gravity-ui/chartkit/compare/v0.12.2...v0.12.3) (2022-12-01)
+
+
+### Bug Fixes
+
+* **Yagr:** added common no-data case handling ([#78](https://github.com/gravity-ui/chartkit/issues/78)) ([100efaa](https://github.com/gravity-ui/chartkit/commit/100efaaff20e03048146ca084ee91c2be2568640))
+
 ## [0.12.2](https://github.com/gravity-ui/chartkit/compare/v0.12.1...v0.12.2) (2022-11-30)
 
 
