@@ -8,12 +8,20 @@ React component used to render charts based on any sources you need
 npm i --save-dev @gravity-ui/chartkit @gravity-ui/uikit
 ```
 
+Make sure you have `@gravity-ui/uikit` styles enabled in your project.
+
+```typescript
+import '@gravity-ui/uikit/styles/styles.scss';
+```
+
 ## Usage
 
 ```typescript
 import {ThemeProvider} from '@gravity-ui/uikit';
 import ChartKit, {settings} from '@gravity-ui/chartkit';
 import {YagrPlugin, YagrWidgetData} from '@gravity-ui/chartkit/build/plugins';
+
+import '@gravity-ui/uikit/styles/styles.scss';
 
 settings.set({plugins: [YagrPlugin]});
 

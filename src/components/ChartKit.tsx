@@ -7,7 +7,6 @@ import type {ChartKitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 
-import '@gravity-ui/uikit/styles/styles.scss';
 import './ChartKit.scss';
 
 const b = block('chartkit');
