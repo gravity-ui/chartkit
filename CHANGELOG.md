@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/gravity-ui/chartkit/compare/v0.12.3...v0.13.0) (2022-12-05)
+
+
+### Features
+
+* remove direct import @gravity-ui/uikit styles in ChartKit component ([#80](https://github.com/gravity-ui/chartkit/issues/80)) ([49642d7](https://github.com/gravity-ui/chartkit/commit/49642d7cfbd358a399ead674b2d3a040b05bf669))
+
 ## [0.12.3](https://github.com/gravity-ui/chartkit/compare/v0.12.2...v0.12.3) (2022-12-01)
 
 
