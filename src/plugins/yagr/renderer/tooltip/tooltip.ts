@@ -1,204 +1,19 @@
+/* eslint complexity: 0 */
+
 import {i18n} from '../../../../i18n';
 import {escapeHTML} from './helpers/escapeHTML';
+import type {TooltipData, TooltipExtraData, TooltipLine, RowRenderingConfig} from './types';
 
 import './tooltip.scss';
 
-export const SERIES_NAME_DATA_ATTRIBUTE = 'data-series-name';
-export const SERIES_IDX_DATA_ATTRIBUTE = 'data-series-idx';
-export const TOOLTIP_CONTAINER_CLASS_NAME = '_tooltip';
-export const TOOLTIP_ROW_NAME_CLASS_NANE = '_tooltip-rows__name-td';
-export const TOOLTIP_ROW_CLASS_NAME = '_tooltip-row';
-export const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
-export const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
-export const TOOLTIP_FOOTER_CLASS_NAME = '_tooltip-footer';
-
-/* eslint-disable complexity */
-type Tooltip = any;
-
-export interface TooltipData {
-    /**
-     * Массив строк выводящихся в тултипе (см. TooltipLine)
-     */
-    lines: Array<TooltipLine>;
-
-    /**
-     * массив комментариев (задаются в диалоге комментариев)
-     */
-    xComments?: Array<{
-        /**
-         * текст комментария
-         */
-        text: string;
-        /**
-         * цвет отображающийся над комментарием
-         */
-        color: string;
-    }>;
-
-    /**
-     * текст комментария (задаётся через manageTooltipConfig)
-     */
-    commentDateText?: string;
-
-    /**
-     * флаг, указывающий что нужно всегда дублировать активную строку выводя её поверх основного списка (дефолтное
-     * поведение - активная строка выводится поверх основного списка только если "не поместилась" в тултип)
-     */
-    activeRowAlwaysFirstInTooltip?: boolean;
-
-    /**
-     *  флаг, указыващий что чарт отображается в режиме split tooltip
-     */
-    splitTooltip?: boolean;
-
-    /**
-     * текст хедера тултипа
-     */
-    tooltipHeader?: string;
-
-    /**
-     * флаг, указывающий, что в тултипе выводится колонка с названием строки
-     */
-    shared?: boolean;
-
-    /**
-     * флаг, указывающий, что в тултипе выводится колонка с процентным значением
-     */
-    withPercent?: boolean;
-
-    /**
-     * флаг, указывающий, что в тултипе выводится колонка с diff-ом
-     */
-    useCompareFrom?: boolean;
-
-    /**
-     * флаг, указывающий, что в тултипе выводится блок с информацией о праздничном дне
-     */
-    holiday?: boolean;
-
-    /**
-     * название праздничного дня
-     */
-    holidayText?: string;
-
-    /**
-     * регион для которого актуален праздничный день
-     */
-    region?: string;
-
-    /**
-     * сумма значений выводящихся в тултипе строк
-     */
-    sum?: number | string;
-
-    /**
-     * количество скрытых строк "не поместившихся" в тултип
-     */
-    hiddenRowsNumber: number;
-
-    /**
-     * сумма значений скрытых ("не поместившихся" в тултип) строк
-     */
-    hiddenRowsSum?: number | string;
-}
-
-export interface TooltipLine {
-    /**
-     * цвет выводящийся в соответсвующей ячейке
-     */
-    seriesColor: string;
-
-    /**
-     * название измерения выводящееся в соответсвующей ячейке
-     */
-    seriesName: string;
-
-    /**
-     * индекс линии
-     */
-    seriesIdx?: number;
-
-    /**
-     * флаг, указывающий, должно ли отображаться название строки
-     */
-    hideSeriesName?: boolean;
-
-    /**
-     * процентное значение выводящееся в соответвующей ячейке
-     */
-    percentValue?: number | string;
-
-    /**
-     * значение diff-а выводящееся в соответвующей ячейке
-     */
-    diff?: string;
-
-    /**
-     * отформатированное числовое значение для текущего измерения выводящееся в соответствующей ячейке
-     */
-    value: string;
-
-    /**
-     * Комментарий к строке (отображается под соответствующей строкой), задаётся через manageTooltipConfig
-     */
-    commentText?: string;
-
-    /**
-     * Комментарий к строке (отображается под соответствующей строкой), задаётся через диалог комментариев
-     */
-    xyCommentText?: string;
-
-    /**
-     * флаг, указывающий, что данная строка активна
-     */
-    selectedSeries?: boolean;
-
-    /**
-     * кастомный рендер соответсвующей строки (строка с текстом либо html разметкой)
-     */
-    customRender?: string;
-
-    /**
-     * объект, где ключи - индексы ячеек, контент которых должен быть заменён, значения - функции возвращающие
-     * строку (с текстом либо html разметкой) которая будет вставлена в ячейку на соответствующем индексе
-     */
-    replaceCellAt?: Record<number, (line: TooltipLine) => string>;
-
-    /**
-     * объект, где ключи - индексы на которые будут вставлены новые ячейки (ячейка ранее располагавшаяся на этом
-     * индексе и последующие за ней будут сдвинуты), значения - функции возвращающие строку (с текстом либо html
-     * разметкой) которая будет вставлена в добавившуюся ячейку
-     */
-    insertCellAt?: Record<number, (line: TooltipLine) => string>;
-}
-
-interface RowRenderingConfig {
-    /**
-     * массив функций возвращающих контент ячеек данной строки
-     */
-    cellsRenderers: Array<(line: TooltipLine) => string>;
-    /**
-     * флаг, указывающий, что это активная строка
-     */
-    isSelectedLine?: boolean;
-    /**
-     * флаг, указывающий, что к данной строке разрешён вывод комментариев
-     */
-    allowComment?: boolean;
-    /**
-     * флаг, указывающий, что данная строка имеет тёмный фон
-     */
-    withDarkBackground?: boolean;
-    /**
-     * флаг, указывающий, что данная строка - единственная в тултипе
-     */
-    isSingleLine?: boolean;
-
-    /**
-     * индекс строки в тултипе
-     */
-    rowIndex?: number;
-}
+const SERIES_NAME_DATA_ATTRIBUTE = 'data-series-name';
+const SERIES_IDX_DATA_ATTRIBUTE = 'data-series-idx';
+const TOOLTIP_CONTAINER_CLASS_NAME = '_tooltip';
+const TOOLTIP_ROW_NAME_CLASS_NANE = '_tooltip-rows__name-td';
+const TOOLTIP_ROW_CLASS_NAME = '_tooltip-row';
+const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
+const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
+const TOOLTIP_FOOTER_CLASS_NAME = '_tooltip-footer';
 
 const renderEmptyCell = () => '<td />';
 
@@ -379,7 +194,7 @@ const renderRow = (
         }`;
 };
 
-export const formatTooltip = (data: TooltipData, tooltip: Tooltip) => {
+export const formatTooltip = (data: TooltipData, tooltip: TooltipExtraData) => {
     const {splitTooltip, activeRowAlwaysFirstInTooltip} = data;
     const selectedLineIndex = data.lines.findIndex(({selectedSeries}) => selectedSeries);
     const selectedLine = data.lines[selectedLineIndex];
@@ -436,9 +251,9 @@ export const formatTooltip = (data: TooltipData, tooltip: Tooltip) => {
     }
 
     return `
-<div class="${tooltipContainerClassNames}" style="${
-        tooltip.preFixationHeight ? `height: ${tooltip.preFixationHeight}px; ` : ''
-    }max-height: ${splitTooltip ? 'auto' : `${windowHeight}px`}">
+<div class="${tooltipContainerClassNames}" style="max-height: ${
+        splitTooltip ? 'auto' : `${windowHeight}px`
+    }">
     ${
         data.tooltipHeader
             ? `<div title="${(
