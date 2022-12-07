@@ -1,7 +1,7 @@
 import moment from 'moment';
-import {TooltipRow, TooltipRenderOptions, ValueFormatter} from 'yagr';
-import {formatTooltip} from './tooltip';
+import type {TooltipRow, TooltipRenderOptions, ValueFormatter} from '../../types';
 import type {TooltipData, TooltipLine} from './types';
+import {formatTooltip} from './tooltip';
 
 const calcOption = <T>(d: T | {[key in string]: T} | undefined) => {
     return typeof d === 'object'
