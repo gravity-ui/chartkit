@@ -11,7 +11,7 @@ export const line10: YagrWidgetData = {
                 id: '0',
                 name: 'Serie 1',
                 color: '#6c59c2',
-                data: [25, 52, 89, 72, 39, 49, 82, 59, 36, 5],
+                data: [40, 52, 89, 72, 39, 49, 82, 59, 36, 5],
             },
             {
                 id: '1',
