@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.0](https://github.com/gravity-ui/chartkit/compare/v0.13.0...v1.0.0) (2022-12-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* update yagr to v2 ([#82](https://github.com/gravity-ui/chartkit/issues/82))
+
+### Features
+
+* update yagr to v2 ([#82](https://github.com/gravity-ui/chartkit/issues/82)) ([ae3c347](https://github.com/gravity-ui/chartkit/commit/ae3c3471bc7bb0d4a2d5af850bac1ecb4eb8e3bb))
+
+
+### chore
+
+* bump major ([966c40b](https://github.com/gravity-ui/chartkit/commit/966c40b89d4795acbadb798fcd1e2031481d76a2))
+
 ## [0.13.0](https://github.com/gravity-ui/chartkit/compare/v0.12.3...v0.13.0) (2022-12-05)
 
 
