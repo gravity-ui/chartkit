@@ -57,9 +57,7 @@ export const line10: YagrWidgetData = {
         },
         tooltip: {
             show: true,
-            boundClassName: '.wrapper',
             tracking: 'sticky',
-            className: 'chartkit-theme_common',
         },
         legend: {},
         processing: {},

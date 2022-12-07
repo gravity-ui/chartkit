@@ -1,8 +1,18 @@
 import moment from 'moment';
-import type {default as Yagr} from 'yagr';
+import merge from 'lodash/merge';
+import {defaults} from 'yagr';
+import {settings} from '../../../libs';
+import type {Yagr, YagrWidgetData, YagrTheme, YagrChartOptions, MinimalValidConfig} from '../types';
+import {renderTooltip} from './tooltip';
 
 const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
 const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
+
+type ShapeYagrConfigArgs = {
+    data: YagrWidgetData['data'];
+    libraryConfig: YagrWidgetData['libraryConfig'];
+    theme: YagrTheme;
+};
 
 export const synchronizeTooltipTablesCellsWidth = (tooltipContainer: HTMLElement) => {
     const tHeadNode = tooltipContainer.querySelector(`.${TOOLTIP_HEADER_CLASS_NAME}`);
@@ -105,7 +115,7 @@ export const detectClickOutside =
         }
     };
 
-export const getXAxisFormatter =
+const getXAxisFormatter =
     (msm = 1) =>
     (_: unknown, ticks: number[]) => {
         const range = (ticks[ticks.length - 1] - ticks[0]) / msm;
@@ -119,3 +129,48 @@ export const getXAxisFormatter =
             return d.format(range < 300 ? 'HH:mm:ss' : 'HH:mm');
         });
     };
+
+export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig => {
+    const {data, libraryConfig, theme} = args;
+    const config: MinimalValidConfig = {
+        ...libraryConfig,
+        timeline: data.timeline,
+        series: data.graphs,
+    };
+
+    const chart: YagrChartOptions = {
+        appereance: {
+            locale: settings.get('lang'),
+            theme,
+        },
+    };
+
+    merge(chart, config.chart);
+
+    config.chart = chart;
+
+    if (config.tooltip?.show) {
+        config.tooltip = config.tooltip || {};
+        config.tooltip.render = config.tooltip?.render || renderTooltip;
+
+        if (!config.tooltip.className) {
+            // "className" property prevent default yagr styles adding
+            config.tooltip.className = 'chartkit-yagr-tooltip';
+        }
+    }
+
+    config.axes = config.axes || {};
+    const xAxis = config.axes[defaults.DEFAULT_X_SCALE];
+
+    if (xAxis && !xAxis.values) {
+        xAxis.values = getXAxisFormatter(config.chart.timeMultiplier);
+    }
+
+    if (!xAxis) {
+        config.axes[defaults.DEFAULT_X_SCALE] = {
+            values: getXAxisFormatter(config.chart.timeMultiplier),
+        };
+    }
+
+    return config;
+};
