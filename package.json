@@ -18,7 +18,7 @@
     "highcharts-react-official": "^3.0.0",
     "lodash": "^4.17.21",
     "react-split-pane": "^0.1.92",
-    "yagr": "^2.0.1"
+    "yagr": "^2.1.0"
   },
   "devDependencies": {
     "@gravity-ui/eslint-config": "^1.0.2",
