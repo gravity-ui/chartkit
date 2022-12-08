@@ -1,5 +1,5 @@
 export {YagrPlugin} from './yagr';
-export type {Yagr, YagrWidgetData} from './yagr/types';
+export * from './yagr/types';
 export {IndicatorPlugin} from './indicator';
 export type {IndicatorWidgetData} from './indicator/types';
 export {HighchartsPlugin} from './highcharts';

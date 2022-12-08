@@ -1,6 +1,7 @@
-import type {default as YagrLib, RawSerieData, YagrConfig} from 'yagr';
+import type {RawSerieData, YagrConfig} from 'yagr';
 
-export type Yagr = YagrLib;
+export type {default as Yagr} from 'yagr';
+export * from 'yagr/dist/types';
 
 export type YagrWidgetData = {
     data: {
