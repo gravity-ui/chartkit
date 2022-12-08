@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/gravity-ui/chartkit/compare/v1.0.0...v1.1.0) (2022-12-08)
+
+
+### Features
+
+* useWidgetData fixes ([54c47af](https://github.com/gravity-ui/chartkit/commit/54c47afb0c519fe8d500d993069e4c660c04550e))
+
 ## [1.0.0](https://github.com/gravity-ui/chartkit/compare/v0.13.0...v1.0.0) (2022-12-07)
 
 ### ⚠ BREAKING CHANGES
