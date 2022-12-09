@@ -1,6 +1,6 @@
 import moment from 'moment';
 import merge from 'lodash/merge';
-import {defaults} from 'yagr';
+import {defaults} from '@gravity-ui/yagr';
 import {settings} from '../../../libs';
 import type {Yagr, YagrWidgetData, YagrTheme, YagrChartOptions, MinimalValidConfig} from '../types';
 import {renderTooltip} from './tooltip';

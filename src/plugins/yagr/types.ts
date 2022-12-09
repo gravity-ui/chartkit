@@ -1,7 +1,7 @@
-import type {RawSerieData, YagrConfig} from 'yagr';
+import type {RawSerieData, YagrConfig} from '@gravity-ui/yagr';
 
-export type {default as Yagr} from 'yagr';
-export * from 'yagr/dist/types';
+export type {default as Yagr} from '@gravity-ui/yagr';
+export * from '@gravity-ui/yagr/dist/types';
 
 export type YagrWidgetData = {
     data: {
