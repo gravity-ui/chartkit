@@ -26,8 +26,11 @@ export type HighchartsWidgetData = {
     config: {
         hideComments?: boolean;
         hideHolidaysBands?: boolean;
-        disableExternalComments?: boolean;
         hideHolidays?: boolean;
+        hideLegend?: boolean;
+        /** @deprecated use `hideLegend` instead */
+        showLegend?: boolean;
+        disableExternalComments?: boolean;
         normalizeDiv?: boolean;
         normalizeSub?: boolean;
         withoutLineLimit?: boolean;
