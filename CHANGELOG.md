@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/gravity-ui/chartkit/compare/v1.2.0...v1.3.0) (2022-12-09)
+
+
+### Features
+
+* **Highcharts:** add CkHighchartsSeriesOptionsType type ([#92](https://github.com/gravity-ui/chartkit/issues/92)) ([36b9d75](https://github.com/gravity-ui/chartkit/commit/36b9d75779fdde4ef98e8de5db3fbb515dc44662))
+
+
+### Bug Fixes
+
+* **Highcharts:** fix widget config type ([#89](https://github.com/gravity-ui/chartkit/issues/89)) ([988c074](https://github.com/gravity-ui/chartkit/commit/988c074ead25027e9d7e2c5ec0443c8d428ae35c))
+
 ## [1.2.0](https://github.com/gravity-ui/chartkit/compare/v1.1.0...v1.2.0) (2022-12-09)
 
 
