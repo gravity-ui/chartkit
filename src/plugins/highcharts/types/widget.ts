@@ -2,7 +2,7 @@ import type {Highcharts} from './lib';
 import type {HighchartsComment} from './comments';
 import type {DrillDownConfig, StringParams} from './misc';
 
-type GraphWidgetSeriesOptions = Highcharts.SeriesOptionsType & {
+export type CkHighchartsSeriesOptionsType = Highcharts.SeriesOptionsType & {
     title?: string;
     sname?: string;
     fname?: string;
@@ -10,17 +10,17 @@ type GraphWidgetSeriesOptions = Highcharts.SeriesOptionsType & {
 
 export type HighchartsWidgetData = {
     data: (
-        | GraphWidgetSeriesOptions[]
+        | CkHighchartsSeriesOptionsType[]
         | {
-              graphs: GraphWidgetSeriesOptions[];
+              graphs: CkHighchartsSeriesOptionsType[];
               categories_ms: number[];
           }
         | {
-              graphs: GraphWidgetSeriesOptions[];
+              graphs: CkHighchartsSeriesOptionsType[];
               categories: string[];
           }
         | {
-              graphs: GraphWidgetSeriesOptions[];
+              graphs: CkHighchartsSeriesOptionsType[];
           }
     ) & {comments?: HighchartsComment[]};
     config: {
