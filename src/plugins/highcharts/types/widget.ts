@@ -30,6 +30,11 @@ export type HighchartsWidgetData = {
         hideLegend?: boolean;
         /** @deprecated use `hideLegend` instead */
         showLegend?: boolean;
+        /**
+         * Percentage value displayed in tooltip.
+         * Relevant in case of initialized [stacking](https://api.highcharts.com/highcharts/plotOptions.column.stacking) property only.
+         */
+        showPercentInTooltip?: boolean;
         disableExternalComments?: boolean;
         normalizeDiv?: boolean;
         normalizeSub?: boolean;
