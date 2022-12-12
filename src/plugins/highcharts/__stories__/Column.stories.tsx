@@ -35,13 +35,7 @@ const Template: Story<any> = (args: {theme: 'light' | 'light-hc' | 'dark' | 'dar
 
     return (
         <ThemeProvider theme={args.theme}>
-            <ChartKit
-                ref={chartkitRef}
-                id="1"
-                type="highcharts"
-                data={data}
-                onError={() => console.log('onError invoked')}
-            />
+            <ChartKit ref={chartkitRef} type="highcharts" data={data} />
         </ThemeProvider>
     );
 };

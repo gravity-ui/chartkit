@@ -2,13 +2,13 @@ import React from 'react';
 import {Meta, Story} from '@storybook/react';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
-import {HighchartsPlugin} from '../../../plugins';
+import {HighchartsPlugin} from '../..';
 import {ChartKit} from '../../../components/ChartKit';
 import type {ChartKitRef} from '../../../types';
-import {data} from './mocks/line';
+import {data} from './mocks/pie';
 
 export default {
-    title: 'Plugins/Highcharts/Line',
+    title: 'Plugins/Highcharts/Pie',
     component: ChartKit,
 } as Meta;
 
@@ -23,8 +23,8 @@ const Template: Story<any> = () => {
 
     return (
         <div style={{height: 300, width: '100%'}}>
-            <ChartKit ref={chartkitRef} type="highcharts" data={data} splitTooltip={true} />
+            <ChartKit ref={chartkitRef} type="highcharts" data={data} />
         </div>
     );
 };
-export const Line = Template.bind({});
+export const Pie = Template.bind({});
