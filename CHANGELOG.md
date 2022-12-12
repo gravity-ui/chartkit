@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/gravity-ui/chartkit/compare/v1.4.0...v1.4.1) (2022-12-12)
+
+
+### Bug Fixes
+
+* fix Hide all and Show all button ([#95](https://github.com/gravity-ui/chartkit/issues/95)) ([4e404e6](https://github.com/gravity-ui/chartkit/commit/4e404e626ad20f455c05ec958b828b7a193b8f9b))
+
 ## [1.4.0](https://github.com/gravity-ui/chartkit/compare/v1.3.0...v1.4.0) (2022-12-09)
 
 
