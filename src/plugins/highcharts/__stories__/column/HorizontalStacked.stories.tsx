@@ -1,12 +1,12 @@
 import React from 'react';
 import {Story, Meta} from '@storybook/react';
 import {Button} from '@gravity-ui/uikit';
-import {ChartKit} from '../../../components/ChartKit';
-import {ChartKitRef} from '../../../types';
-import {settings} from '../../../libs';
-import {HighchartsPlugin} from '../index';
-import holidays from './mocks/holidays';
-import {data} from './mocks/column';
+import {ChartKit} from '../../../../components/ChartKit';
+import {ChartKitRef} from '../../../../types';
+import {settings} from '../../../../libs';
+import {HighchartsPlugin} from '../../index';
+import holidays from '../mocks/holidays';
+import {data} from '../mocks/column-hor-stacked';
 
 export default {
     title: 'Plugins/Highcharts/Column',
@@ -23,10 +23,10 @@ const Template: Story<any> = () => {
     }
 
     return (
-        <div style={{height: 300, width: '100%'}}>
+        <div style={{height: '300px', width: '100%'}}>
             <ChartKit ref={chartkitRef} type="highcharts" data={data} />
         </div>
     );
 };
 
-export const Column = Template.bind({});
+export const HorizontalStacked = Template.bind({});
