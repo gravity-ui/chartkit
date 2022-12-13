@@ -1,6 +1,9 @@
+/* eslint callback-return: 0 */
+
 import React from 'react';
 import block from 'bem-cn-lite';
 import {get, debounce} from 'lodash';
+import {getRandomCKId} from '../../../../../utils';
 import type {Highcharts} from '../../../types';
 import {chartTypesWithoutCrosshair} from '../../helpers/config/config';
 import {StyledSplitPane} from '../StyledSplitPane/StyledSplitPane';
@@ -85,11 +88,17 @@ enum PaneSplits {
     HORIZONTAL = 'horizontal',
 }
 
-interface WithSplitPaneState {
+type WithSplitPaneState = {
     paneSplit: PaneSplits;
     maxPaneSize: undefined | number;
     paneSize: undefined | number;
-}
+    /**
+     * Chart component key.
+     * Used to rerender chart after initializing and avoid bug with
+     * [halo](https://api.highcharts.com/highcharts/series.pie.states.hover.halo) displaying.
+     */
+    componentKey: string;
+};
 
 export const withSplitPane = <ComposedComponentProps extends {}>(
     ComposedComponent: React.ComponentType<ComposedComponentProps>,
@@ -116,6 +125,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
                 window.innerWidth > window.innerHeight
                     ? PaneSplits.VERTICAL
                     : PaneSplits.HORIZONTAL,
+            componentKey: getRandomCKId(),
         };
 
         tooltipContainerRef = React.createRef<HTMLDivElement>();
@@ -157,7 +167,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
             );
         }
 
-        setInitialState = (waitForFirstRedraw = false) => {
+        private setInitialState = (waitForFirstRedraw = false) => {
             // @ts-ignore
             if (!this.props.forwardedRef.current) {
                 return;
@@ -177,21 +187,19 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
 
             if (this.state.paneSplit === PaneSplits.HORIZONTAL) {
                 this.setInitialPaneSize(callback);
+            } else if (waitForFirstRedraw) {
+                chart.afterRedrawCallback = callback;
             } else {
-                if (waitForFirstRedraw) {
-                    chart.afterRedrawCallback = callback;
-                } else {
-                    callback();
-                }
+                callback();
             }
         };
 
-        afterCreateCallback = (chart: Highcharts.Chart) => {
+        private afterCreateCallback = (chart: Highcharts.Chart) => {
             chart.tooltip.splitTooltip = true;
             chart.tooltip.getTooltipContainer = this.getTooltipContainer;
         };
 
-        setInitialPaneSize = (callback: () => void) => {
+        private setInitialPaneSize = (callback: () => void) => {
             if (!this.tooltipContainerRef.current || !this.rootRef.current) {
                 return;
             }
@@ -210,6 +218,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
                 {
                     paneSize: paneSize > maxPaneSize ? maxPaneSize : paneSize,
                     maxPaneSize,
+                    componentKey: getRandomCKId(),
                 },
                 () => {
                     this.reflow();
@@ -218,7 +227,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
             );
         };
 
-        handleOrientationChange = () => {
+        private handleOrientationChange = () => {
             const handleResizeAfterOrientationChange = () => {
                 const deviceWidth = window.innerWidth;
                 const deviceHeight = window.innerHeight;
@@ -241,7 +250,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
             window.addEventListener('resize', handleResizeAfterOrientationChange);
         };
 
-        reflow = () => {
+        private reflow = () => {
             // @ts-ignore
             if (this.props.forwardedRef.current) {
                 // @ts-ignore
@@ -249,7 +258,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
             }
         };
 
-        handlePaneChange = (size: number) => {
+        private handlePaneChange = (size: number) => {
             this.setState({paneSize: size});
 
             // @ts-ignore
@@ -270,12 +279,12 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
             }
         };
 
-        getTooltipContainer = () => {
+        private getTooltipContainer = () => {
             return this.tooltipContainerRef.current;
         };
 
-        renderHorizontal() {
-            const {paneSize, maxPaneSize} = this.state;
+        private renderHorizontal() {
+            const {paneSize, maxPaneSize, componentKey} = this.state;
             const thirdOfViewport = window.innerHeight / 3;
 
             return (
@@ -288,6 +297,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
                     paneOneRender={() => (
                         <ComposedComponent
                             {...this.props}
+                            key={componentKey}
                             ref={this.props.forwardedRef}
                             callback={this.afterCreateCallback}
                         />
@@ -297,8 +307,10 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
             );
         }
 
-        renderVertical() {
+        private renderVertical() {
+            const {componentKey} = this.state;
             const paneSize = window.innerWidth * CHART_SECTION_PERCENTAGE;
+
             return (
                 <StyledSplitPane
                     split="vertical"
@@ -307,6 +319,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
                     paneOneRender={() => (
                         <ComposedComponent
                             {...this.props}
+                            key={componentKey}
                             ref={this.props.forwardedRef}
                             callback={this.afterCreateCallback}
                         />

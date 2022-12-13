@@ -1,1 +1,1 @@
-export type {default as Highcharts} from 'highcharts';
+export * as Highcharts from 'highcharts';
