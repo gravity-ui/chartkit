@@ -23,7 +23,7 @@ const Template: Story<any> = () => {
 
     return (
         <div style={{height: 300, width: '100%'}}>
-            <ChartKit ref={chartkitRef} type="highcharts" data={data} splitTooltip={true} />
+            <ChartKit ref={chartkitRef} type="highcharts" data={data} />
         </div>
     );
 };
