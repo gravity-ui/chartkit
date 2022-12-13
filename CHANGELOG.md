@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/gravity-ui/chartkit/compare/v1.4.1...v1.4.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix pie halo on mobile devices ([#97](https://github.com/gravity-ui/chartkit/issues/97)) ([3b4a0b4](https://github.com/gravity-ui/chartkit/commit/3b4a0b46ee6512b8b941ef768c85804b4daf7638))
+
 ## [1.4.1](https://github.com/gravity-ui/chartkit/compare/v1.4.0...v1.4.1) (2022-12-12)
 
 
