@@ -5,7 +5,7 @@ import {data} from '../mocks/area-range';
 import {ChartStory} from '../components/ChartStory';
 
 export default {
-    title: 'Plugins/Highcharts/AreaRange',
+    title: 'Plugins/Highcharts/Area',
     component: ChartKit,
 } as Meta;
 

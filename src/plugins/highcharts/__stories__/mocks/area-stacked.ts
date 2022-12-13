@@ -4,51 +4,6 @@ export const data: HighchartsWidgetData = {
     data: {
         graphs: [
             {
-                title: 'Accessories',
-                tooltip: {
-                    chartKitFormatting: true,
-                    chartKitPrecision: 0,
-                },
-                data: [
-                    {
-                        y: 6345,
-                        dataLabels: {
-                            enabled: false,
-                        },
-                        x: 2014,
-                        label: '',
-                    },
-                    {
-                        y: 10130,
-                        dataLabels: {
-                            enabled: false,
-                        },
-                        x: 2015,
-                        label: '',
-                    },
-                    {
-                        y: 9587,
-                        dataLabels: {
-                            enabled: false,
-                        },
-                        x: 2016,
-                        label: '',
-                    },
-                    {
-                        y: 15553,
-                        dataLabels: {
-                            enabled: false,
-                        },
-                        x: 2017,
-                        label: '',
-                    },
-                ],
-                legendTitle: 'Accessories',
-                connectNulls: false,
-                yAxis: 0,
-                color: '#4DA2F1',
-            },
-            {
                 title: 'Appliances',
                 tooltip: {
                     chartKitFormatting: true,
@@ -117,7 +72,7 @@ export const data: HighchartsWidgetData = {
                         label: '',
                     },
                     {
-                        y: 188,
+                        y: 1880,
                         dataLabels: {
                             enabled: false,
                         },
@@ -139,6 +94,7 @@ export const data: HighchartsWidgetData = {
                 color: '#8AD554',
             },
         ],
+        categories: ['2014', '2015', '2016', '2017'],
     },
     config: {
         withoutLineLimit: true,
