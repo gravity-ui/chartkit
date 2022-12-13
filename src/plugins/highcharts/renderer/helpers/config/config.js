@@ -216,6 +216,9 @@ export function buildLegend(options) {
             inactiveColor: 'var(--yc-color-base-generic-accent-disabled)',
             style: {color: 'var(--yc-color-text-primary)'},
         },
+        title: {
+            style: {color: 'var(--yc-color-text-secondary)'},
+        },
     };
 
     if (options.outsideLegend) {
