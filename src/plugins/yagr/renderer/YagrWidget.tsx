@@ -9,6 +9,7 @@ import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from
 
 import './polyfills';
 
+import '@gravity-ui/yagr/dist/index.css';
 import './YagrWidget.scss';
 
 type Props = ChartKitProps<'yagr'> & {id: string};
