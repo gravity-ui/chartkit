@@ -8,7 +8,6 @@ import {DocsDecorator} from './decorators/DocsDecorator/DocsDecorator';
 import {ThemeProvider, MobileProvider, configure, Lang} from '@gravity-ui/uikit';
 
 import '@gravity-ui/uikit/styles/styles.scss';
-import '@gravity-ui/yagr/dist/index.css';
 
 configure({
     lang: Lang.En,
