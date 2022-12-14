@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.3](https://github.com/gravity-ui/chartkit/compare/v1.4.2...v1.4.3) (2022-12-14)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix colorAxis legend title color ([#100](https://github.com/gravity-ui/chartkit/issues/100)) ([06c992a](https://github.com/gravity-ui/chartkit/commit/06c992a5a614798a475aa7c3358058ed7080c6c1))
+* **Highcharts plugin:** remove tooltip lines sorting ([#103](https://github.com/gravity-ui/chartkit/issues/103)) ([5e57035](https://github.com/gravity-ui/chartkit/commit/5e57035b7c1d572d66926c48889e8b5905399592))
+* **Yagr plugin:** add core styles import ([#104](https://github.com/gravity-ui/chartkit/issues/104)) ([4de763d](https://github.com/gravity-ui/chartkit/commit/4de763d7f502f4bacf202beddeb0e5ef27381917))
+
 ## [1.4.2](https://github.com/gravity-ui/chartkit/compare/v1.4.1...v1.4.2) (2022-12-13)
 
 
