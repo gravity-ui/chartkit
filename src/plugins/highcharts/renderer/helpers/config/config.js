@@ -1949,9 +1949,7 @@ export function prepareConfig(data, options, isMobile, holidays) {
                 );
 
                 if (serieHasIntersectionWithOthers) {
-                    if (hasPositiveValues && !hasNegativeValues) {
-                        serie.stack = 'positive';
-                    } else if (!hasPositiveValues && hasNegativeValues) {
+                    if (!hasPositiveValues && hasNegativeValues) {
                         serie.stack = 'negative';
                     }
                 }
