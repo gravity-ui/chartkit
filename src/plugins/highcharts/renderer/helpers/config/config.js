@@ -1948,12 +1948,8 @@ export function prepareConfig(data, options, isMobile, holidays) {
                     false,
                 );
 
-                if (serieHasIntersectionWithOthers) {
-                    if (hasPositiveValues && !hasNegativeValues) {
-                        serie.stack = 'positive';
-                    } else if (!hasPositiveValues && hasNegativeValues) {
-                        serie.stack = 'negative';
-                    }
+                if (serieHasIntersectionWithOthers && !hasPositiveValues && hasNegativeValues) {
+                    serie.stack = 'negative';
                 }
             }
         });
