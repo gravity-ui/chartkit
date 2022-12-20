@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/gravity-ui/chartkit/compare/v1.5.0...v1.5.1) (2022-12-20)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** add merging serie stack name if it already exists ([#107](https://github.com/gravity-ui/chartkit/issues/107)) ([fa73b55](https://github.com/gravity-ui/chartkit/commit/fa73b5554a491f20c109416d979e74c3b9d7e2c3))
+
 ## [1.5.0](https://github.com/gravity-ui/chartkit/compare/v1.4.3...v1.5.0) (2022-12-19)
 
 
