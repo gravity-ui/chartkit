@@ -4,6 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import get from 'lodash/get';
 import type {ChartKitProps} from '../../../../types';
 import {settings} from '../../../../libs';
+import {markChartPerformance, getChartPerformanceDuration, getRandomCKId} from '../../../../utils';
 import type {HighchartsWidgetData, StringParams} from '../../types';
 import {getGraph} from '../helpers/graph';
 import {initHighchartsModules} from '../helpers/init-highcharts-modules';
@@ -92,6 +93,8 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         isError: false,
     };
 
+    private id?: string;
+
     private chartComponent = React.createRef<{
         chart: Highcharts.Chart;
         container: React.RefObject<HTMLDivElement>;
@@ -112,6 +115,8 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         if (isError) {
             return null;
         }
+
+        markChartPerformance(this.getId(true));
 
         return (
             <Component
@@ -152,6 +157,13 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         }
     };
 
+    private getId(refresh = false) {
+        if (refresh) {
+            this.id = getRandomCKId();
+        }
+        return `${this.props.id}_${this.id}`;
+    }
+
     private onLoad() {
         if (!this.state.isError && !this.props.splitTooltip) {
             const data = {
@@ -164,8 +176,10 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
                 this.state.callback(data.widget);
             }
 
+            const widgetRendering = getChartPerformanceDuration(this.getId());
+
             if (this.props.onLoad) {
-                this.props.onLoad({widget: data.widget});
+                this.props.onLoad({widget: data.widget, widgetRendering});
             }
 
             window.requestAnimationFrame(this.reflow);
