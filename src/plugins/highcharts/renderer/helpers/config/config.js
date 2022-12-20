@@ -1949,7 +1949,7 @@ export function prepareConfig(data, options, isMobile, holidays) {
                 );
 
                 if (serieHasIntersectionWithOthers && !hasPositiveValues && hasNegativeValues) {
-                    serie.stack = 'negative';
+                    serie.stack = serie.stack ? `${serie.stack}__negative` : 'negative';
                 }
             }
         });
