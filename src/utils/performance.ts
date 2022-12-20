@@ -13,12 +13,5 @@ export const getChartPerformanceDuration = (name: string) => {
         return entry.duration;
     }
 
-    console.warn(
-        'ChartKit',
-        'Performance',
-        'getDuration',
-        `Measure name '${measureName}' does not exist`,
-    );
-
     return undefined;
 };
