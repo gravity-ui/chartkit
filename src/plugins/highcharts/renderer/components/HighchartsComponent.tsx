@@ -125,7 +125,7 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         const needRenderCallback =
             this.props.onRender && !this.state.isError && !this.props.splitTooltip;
         if (needRenderCallback) {
-            this.props.onRender({
+            this.props.onRender?.({
                 renderTime: getChartPerformanceDuration(this.getId()),
             });
             return;
