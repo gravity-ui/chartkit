@@ -122,12 +122,12 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
     }
 
     componentDidUpdate() {
-        if (this.props.onRender) {
-            if (!this.state.isError && !this.props.splitTooltip) {
-                this.props.onRender({
-                    renderTime: getChartPerformanceDuration(this.getId()),
-                });
-            }
+        const needRenderCallback =
+            this.props.onRender && !this.state.isError && !this.props.splitTooltip;
+        if (needRenderCallback) {
+            this.props.onRender({
+                renderTime: getChartPerformanceDuration(this.getId()),
+            });
             return;
         }
         this.onLoad();

@@ -39,7 +39,7 @@ export type ChartKitProps<T extends ChartKitType> = {
     id?: string;
     isMobile?: boolean;
     /**
-     * @depricated: please use onRender & onChartLoad instead
+     * @depricated please use onRender & onChartLoad instead
      * @param data
      */
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
@@ -47,12 +47,12 @@ export type ChartKitProps<T extends ChartKitType> = {
      * called on each render
      * @param data
      */
-    onRender?: (data?: ChartKitOnRenderData) => void;
+    onRender?: (data: ChartKitOnRenderData) => void;
     /**
      * called on chart mount
      * @param data
      */
-    onChartLoad?: (data?: ChartKitOnChartLoad) => void;
+    onChartLoad?: (data: ChartKitOnChartLoad) => void;
 
     onError?: ChartKitOnError;
 } & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
