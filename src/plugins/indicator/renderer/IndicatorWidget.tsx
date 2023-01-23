@@ -17,6 +17,8 @@ const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKit
     function IndicatorWidgetInner(props, _ref) {
         const {
             onLoad,
+            onRender,
+            onChartLoad,
             formatNumber,
             data: {data = [], defaultColor},
         } = props;
@@ -24,7 +26,12 @@ const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKit
         React.useLayoutEffect(() => {
             // TODO: swap to onRender after https://github.com/gravity-ui/chartkit/issues/33
             onLoad?.();
+            onRender?.(); // TODO renderTime ?
         });
+
+        React.useLayoutEffect(() => {
+            onChartLoad?.({widget: null});
+        }, []);
 
         if (isEmpty(data)) {
             throw new ChartKitError({

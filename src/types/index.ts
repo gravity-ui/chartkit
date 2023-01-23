@@ -1,3 +1,7 @@
+import React from 'react';
+import type Highcharts from 'highcharts';
+import type YagrChartComponent from '@gravity-ui/yagr/dist/react';
+
 import type {ChartKitWidget} from './widget';
 
 export type {ChartKitHolidays} from './misc';
@@ -19,6 +23,14 @@ export type ChartKitOnLoadData<T extends ChartKitType> = {
     widgetRendering?: number;
 };
 
+export type ChartKitOnRenderData = {
+    renderTime?: number;
+};
+
+export type ChartKitOnChartLoad = {
+    widget?: YagrChartComponent['chart'] | Highcharts.Chart | null;
+};
+
 export type ChartKitOnError = (data: {error: any}) => void;
 
 export type ChartKitProps<T extends ChartKitType> = {
@@ -26,7 +38,22 @@ export type ChartKitProps<T extends ChartKitType> = {
     data: ChartKitWidget[T]['data'];
     id?: string;
     isMobile?: boolean;
+    /**
+     * @depricated: please use onRender & onChartLoad instead
+     * @private
+     */
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
+    /**
+     * called on each render
+     * @param data
+     */
+    onRender?: (data?: ChartKitOnRenderData) => void;
+    /**
+     * called on mount
+     * @param data
+     */
+    onChartLoad?: (data?: ChartKitOnChartLoad) => void;
+
     onError?: ChartKitOnError;
 } & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
 

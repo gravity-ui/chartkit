@@ -101,11 +101,35 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
     }>();
 
     componentDidMount() {
-        this.onLoad();
+        if (this.props.onChartLoad) {
+            if (!this.state.isError && !this.props.splitTooltip) {
+                const widget = this.chartComponent.current
+                    ? this.chartComponent.current.chart
+                    : null;
+
+                if (this.state.callback && widget) {
+                    this.state.callback(widget);
+                }
+
+                this.props.onChartLoad?.({
+                    widget,
+                });
+            }
+        } else {
+            this.onLoad();
+        }
     }
 
     componentDidUpdate() {
-        this.onLoad();
+        if (this.props.onRender) {
+            if (!this.state.isError && !this.props.splitTooltip) {
+                this.props.onRender({
+                    renderTime: getChartPerformanceDuration(this.getId()),
+                });
+            }
+        } else {
+            this.onLoad();
+        }
     }
 
     render() {
@@ -164,6 +188,10 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         return `${this.props.id}_${this.id}`;
     }
 
+    /**
+     * @depricated: please use onRender & onChartLoad instead
+     * @private
+     */
     private onLoad() {
         if (!this.state.isError && !this.props.splitTooltip) {
             const data = {
