@@ -1,3 +1,5 @@
+import React from 'react';
+
 import type {ChartKitWidget} from './widget';
 
 export type {ChartKitHolidays} from './misc';
@@ -19,6 +21,14 @@ export type ChartKitOnLoadData<T extends ChartKitType> = {
     widgetRendering?: number;
 };
 
+export type ChartKitOnRenderData = {
+    renderTime?: number;
+};
+
+export type ChartKitOnChartLoad<T extends ChartKitType> = {
+    widget?: ChartKitWidget[T]['widget'] | null;
+};
+
 export type ChartKitOnError = (data: {error: any}) => void;
 
 export type ChartKitProps<T extends ChartKitType> = {
@@ -26,7 +36,22 @@ export type ChartKitProps<T extends ChartKitType> = {
     data: ChartKitWidget[T]['data'];
     id?: string;
     isMobile?: boolean;
+    /**
+     * @depricated please use onRender & onChartLoad instead
+     * @param data
+     */
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
+    /**
+     * called on each render
+     * @param data
+     */
+    onRender?: (data: ChartKitOnRenderData) => void;
+    /**
+     * called on chart mount
+     * @param data
+     */
+    onChartLoad?: (data: ChartKitOnChartLoad<T>) => void;
+
     onError?: ChartKitOnError;
 } & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
 

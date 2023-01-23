@@ -101,10 +101,35 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
     }>();
 
     componentDidMount() {
-        this.onLoad();
+        if (!this.props.onChartLoad) {
+            this.onLoad();
+            return;
+        }
+
+        const needCallbacks = !this.state.isError && !this.props.splitTooltip;
+        if (!needCallbacks) {
+            return;
+        }
+        const widget = this.chartComponent.current ? this.chartComponent.current.chart : null;
+
+        if (this.state.callback && widget) {
+            this.state.callback(widget);
+        }
+
+        this.props.onChartLoad?.({
+            widget,
+        });
     }
 
     componentDidUpdate() {
+        const needRenderCallback =
+            this.props.onRender && !this.state.isError && !this.props.splitTooltip;
+        if (needRenderCallback) {
+            this.props.onRender?.({
+                renderTime: getChartPerformanceDuration(this.getId()),
+            });
+            return;
+        }
         this.onLoad();
     }
 

@@ -19,6 +19,8 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
         id,
         data: {data},
         onLoad,
+        onRender,
+        onChartLoad,
     } = props;
     const yagrRef = React.useRef<YagrComponent>(null);
 
@@ -34,6 +36,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
     const handleChartLoading: NonNullable<YagrChartProps['onChartLoad']> = React.useCallback(
         (chart, {renderTime}) => {
             onLoad?.({...data, widget: chart, widgetRendering: renderTime});
+            onRender?.({renderTime});
         },
         [onLoad, data],
     );
@@ -94,6 +97,10 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
             }
         });
     });
+
+    React.useLayoutEffect(() => {
+        onChartLoad?.({widget: yagrRef.current?.chart});
+    }, []);
 
     return (
         <YagrComponent
