@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/gravity-ui/chartkit/compare/v1.5.2...v1.6.0) (2023-01-23)
+
+
+### Features
+
+* add onRender & onChartLoad calbacks ([#111](https://github.com/gravity-ui/chartkit/issues/111)) ([f23c008](https://github.com/gravity-ui/chartkit/commit/f23c008c5c049c813e6704edb1654c90707d00af))
+
 ## [1.5.2](https://github.com/gravity-ui/chartkit/compare/v1.5.1...v1.5.2) (2022-12-20)
 
 
