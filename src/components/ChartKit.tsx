@@ -17,7 +17,17 @@ type ChartKitComponentProps<T extends ChartKitType> = Omit<ChartKitProps<T>, 'on
 
 const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps<T>) => {
     const widgetRef = React.useRef<ChartKitWidgetRef>();
-    const {instanceRef, id: propsId, type, data, onLoad, isMobile, ...restProps} = props;
+    const {
+        instanceRef,
+        id: propsId,
+        type,
+        data,
+        onLoad,
+        onRender,
+        onChartLoad,
+        isMobile,
+        ...restProps
+    } = props;
 
     const ckId = React.useMemo(() => getRandomCKId(), []);
     const id = propsId || ckId;
@@ -56,6 +66,8 @@ const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps
                     lang={lang}
                     data={data}
                     onLoad={onLoad}
+                    onRender={onRender}
+                    onChartLoad={onChartLoad}
                     {...restProps}
                 />
             </div>

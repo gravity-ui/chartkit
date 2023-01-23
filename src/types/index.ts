@@ -40,7 +40,7 @@ export type ChartKitProps<T extends ChartKitType> = {
     isMobile?: boolean;
     /**
      * @depricated: please use onRender & onChartLoad instead
-     * @private
+     * @param data
      */
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
     /**
@@ -49,7 +49,7 @@ export type ChartKitProps<T extends ChartKitType> = {
      */
     onRender?: (data?: ChartKitOnRenderData) => void;
     /**
-     * called on mount
+     * called on chart mount
      * @param data
      */
     onChartLoad?: (data?: ChartKitOnChartLoad) => void;

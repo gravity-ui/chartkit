@@ -101,23 +101,24 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
     }>();
 
     componentDidMount() {
-        if (this.props.onChartLoad) {
-            if (!this.state.isError && !this.props.splitTooltip) {
-                const widget = this.chartComponent.current
-                    ? this.chartComponent.current.chart
-                    : null;
-
-                if (this.state.callback && widget) {
-                    this.state.callback(widget);
-                }
-
-                this.props.onChartLoad?.({
-                    widget,
-                });
-            }
-        } else {
+        if (!this.props.onChartLoad) {
             this.onLoad();
+            return;
         }
+
+        const needCallbacks = !this.state.isError && !this.props.splitTooltip;
+        if (!needCallbacks) {
+            return;
+        }
+        const widget = this.chartComponent.current ? this.chartComponent.current.chart : null;
+
+        if (this.state.callback && widget) {
+            this.state.callback(widget);
+        }
+
+        this.props.onChartLoad?.({
+            widget,
+        });
     }
 
     componentDidUpdate() {
@@ -127,9 +128,9 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
                     renderTime: getChartPerformanceDuration(this.getId()),
                 });
             }
-        } else {
-            this.onLoad();
+            return;
         }
+        this.onLoad();
     }
 
     render() {
@@ -188,10 +189,6 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         return `${this.props.id}_${this.id}`;
     }
 
-    /**
-     * @depricated: please use onRender & onChartLoad instead
-     * @private
-     */
     private onLoad() {
         if (!this.state.isError && !this.props.splitTooltip) {
             const data = {
