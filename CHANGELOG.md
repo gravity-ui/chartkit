@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.1](https://github.com/gravity-ui/chartkit/compare/v1.6.0...v1.6.1) (2023-01-24)
+
+
+### Bug Fixes
+
+* add export type for onChartLoad & onRender ([#117](https://github.com/gravity-ui/chartkit/issues/117)) ([e8b4f58](https://github.com/gravity-ui/chartkit/commit/e8b4f586335581df82f13b3f476afb0316e6e598))
+* add types export ([e8b4f58](https://github.com/gravity-ui/chartkit/commit/e8b4f586335581df82f13b3f476afb0316e6e598))
+
 ## [1.6.0](https://github.com/gravity-ui/chartkit/compare/v1.5.2...v1.6.0) (2023-01-23)
 
 
