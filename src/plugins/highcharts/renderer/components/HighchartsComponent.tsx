@@ -128,6 +128,13 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
             this.props.onRender?.({
                 renderTime: getChartPerformanceDuration(this.getId()),
             });
+
+            const widget = this.chartComponent.current ? this.chartComponent.current.chart : null;
+
+            if (this.state.callback && widget) {
+                this.state.callback(widget);
+            }
+
             return;
         }
         this.onLoad();
