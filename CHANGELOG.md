@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.2](https://github.com/gravity-ui/chartkit/compare/v1.6.1...v1.6.2) (2023-01-24)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix tooltip behaviour ([#119](https://github.com/gravity-ui/chartkit/issues/119)) ([5dffcc3](https://github.com/gravity-ui/chartkit/commit/5dffcc3224b415a2e64fe331a4a72a4f90266ae2))
+* **Highcharts plugin:** fix tooltip behaviour for onChartLoad & onRender callbacks ([5dffcc3](https://github.com/gravity-ui/chartkit/commit/5dffcc3224b415a2e64fe331a4a72a4f90266ae2))
+
 ## [1.6.1](https://github.com/gravity-ui/chartkit/compare/v1.6.0...v1.6.1) (2023-01-24)
 
 
