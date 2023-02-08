@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.3](https://github.com/gravity-ui/chartkit/compare/v1.6.2...v1.6.3) (2023-02-08)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix updating point x value ([#121](https://github.com/gravity-ui/chartkit/issues/121)) ([0ffe89f](https://github.com/gravity-ui/chartkit/commit/0ffe89fb9f6112166765dd997cf549c6ca2665d9))
+
 ## [1.6.2](https://github.com/gravity-ui/chartkit/compare/v1.6.1...v1.6.2) (2023-01-24)
 
 
