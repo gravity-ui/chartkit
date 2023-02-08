@@ -70,7 +70,10 @@ function getGraph({options, data, comments, isMobile, holidays}: GetGraphArgs) {
                             (index === data.length - 1 || data[index + 1].y == null)
                         ) {
                             point.update(
-                                {marker: {enabled: true}} as Highcharts.PointOptionsType,
+                                {
+                                    marker: {enabled: true},
+                                    x: point.x,
+                                } as Highcharts.PointOptionsType,
                                 false,
                                 false,
                             );
