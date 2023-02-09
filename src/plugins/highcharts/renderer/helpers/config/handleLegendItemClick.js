@@ -1,24 +1,31 @@
 import {drawComments, hideComments} from '../comments/drawing';
 import {isNavigatorSeries} from './utils';
 
+const getUniqueSerieName = (serie) => {
+    return `${serie.name}__${serie.index}`;
+};
+
 const needSetVisible = (serieName, serieVisible, chartSeries) => {
     if (!serieVisible) {
         return false;
     }
 
     const hasAnotherVisibleSeries = chartSeries
-        .filter((serie) => serie.options.showInLegend !== false && serie.name !== serieName)
+        .filter(
+            (serie) =>
+                serie.options.showInLegend !== false && getUniqueSerieName(serie) !== serieName,
+        )
         .some((serie) => serie.visible);
 
     return serieVisible && !hasAnotherVisibleSeries;
 };
 
 const updateSeries = (serie, chart, chartSeries, type) => {
-    const serieName = serie.name;
+    const serieName = getUniqueSerieName(serie);
     switch (type) {
         case 'extended': {
             chartSeries.forEach((item) => {
-                if (item.name === serieName) {
+                if (getUniqueSerieName(item) === serieName) {
                     item.setVisible(!item.visible, false);
                 }
             });
@@ -27,10 +34,10 @@ const updateSeries = (serie, chart, chartSeries, type) => {
         }
 
         case 'default': {
-            const visible = needSetVisible(serie.name, serie.visible, chartSeries);
+            const visible = needSetVisible(getUniqueSerieName(serie), serie.visible, chartSeries);
 
             chartSeries.forEach((item) => {
-                if (item.name === serieName) {
+                if (getUniqueSerieName(item) === serieName) {
                     item.setVisible(true, false);
                 } else {
                     item.setVisible(visible, false);
