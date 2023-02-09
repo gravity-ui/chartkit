@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.4](https://github.com/gravity-ui/chartkit/compare/v1.6.3...v1.6.4) (2023-02-09)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix on legend item click when it has duplicate name ([#123](https://github.com/gravity-ui/chartkit/issues/123)) ([005b9d2](https://github.com/gravity-ui/chartkit/commit/005b9d20d0613f3e98d487c8c72c50ec713870ec))
+
 ## [1.6.3](https://github.com/gravity-ui/chartkit/compare/v1.6.2...v1.6.3) (2023-02-08)
 
 
