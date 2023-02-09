@@ -9,7 +9,7 @@ export default {
 } as Meta;
 
 const Template: Story<any> = () => {
-    return <ChartStory height={500} data={data} />;
+    return <ChartStory height="500px" data={data} />;
 };
 
 export const ComboChart = Template.bind({});
