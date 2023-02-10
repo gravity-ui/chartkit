@@ -4,6 +4,7 @@ export const data: HighchartsWidgetData = {
     data: {
         graphs: [
             {
+                id: 'uniq-1',
                 title: 'Office Supplies',
                 tooltip: {
                     chartKitFormatting: true,
@@ -92,6 +93,7 @@ export const data: HighchartsWidgetData = {
                 type: 'line',
             },
             {
+                id: 'uniq-2',
                 title: 'Technology',
                 tooltip: {
                     chartKitFormatting: true,
@@ -138,6 +140,7 @@ export const data: HighchartsWidgetData = {
                 type: 'line',
             },
             {
+                id: 'uniq-3',
                 title: 'Furniture',
                 tooltip: {
                     chartKitFormatting: true,
@@ -198,6 +201,7 @@ export const data: HighchartsWidgetData = {
                 type: 'line',
             },
             {
+                id: 'uniq-4',
                 title: 'Furniture',
                 tooltip: {
                     chartKitFormatting: true,
@@ -258,6 +262,7 @@ export const data: HighchartsWidgetData = {
                 stack: 'c44bfc70-a7a5-11ed-96a0-9bb7dddec993__',
             },
             {
+                id: 'uniq-5',
                 title: 'Office Supplies',
                 tooltip: {
                     chartKitFormatting: true,
@@ -346,6 +351,7 @@ export const data: HighchartsWidgetData = {
                 stack: 'c44bfc70-a7a5-11ed-96a0-9bb7dddec993__',
             },
             {
+                id: 'uniq-6',
                 title: 'Technology',
                 tooltip: {
                     chartKitFormatting: true,

@@ -4,8 +4,8 @@ import Highcharts from 'highcharts';
 
 type LegendItemClickType = 'extended' | 'default';
 
-const getUniqueSeriesName = (series: Highcharts.Series) => {
-    return `${series.name}__${series.index}`;
+const getSeriesIdentifier = (series: Highcharts.Series): string => {
+    return (series.userOptions.id as string | undefined) || series.name;
 };
 
 const needSetVisible = (
@@ -20,7 +20,7 @@ const needSetVisible = (
     const hasAnotherVisibleSeries = chartSeries
         .filter(
             (series) =>
-                series.options.showInLegend !== false && getUniqueSeriesName(series) !== seriesName,
+                series.options.showInLegend !== false && getSeriesIdentifier(series) !== seriesName,
         )
         .some((series) => series.visible);
 
@@ -32,11 +32,11 @@ const updateSeries = (
     chartSeries: Highcharts.Series[],
     type: LegendItemClickType,
 ) => {
-    const clickedSeriesName = getUniqueSeriesName(series);
+    const clickedSeriesName = getSeriesIdentifier(series);
     switch (type) {
         case 'extended': {
             chartSeries.forEach((item) => {
-                if (getUniqueSeriesName(item) === clickedSeriesName) {
+                if (getSeriesIdentifier(item) === clickedSeriesName) {
                     item.setVisible(!item.visible, false);
                 }
             });
@@ -46,13 +46,13 @@ const updateSeries = (
 
         case 'default': {
             const visible = needSetVisible(
-                getUniqueSeriesName(series),
+                getSeriesIdentifier(series),
                 series.visible,
                 chartSeries,
             );
 
             chartSeries.forEach((item) => {
-                if (getUniqueSeriesName(item) === clickedSeriesName) {
+                if (getSeriesIdentifier(item) === clickedSeriesName) {
                     item.setVisible(true, false);
                 } else {
                     item.setVisible(visible, false);
