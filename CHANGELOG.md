@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.5](https://github.com/gravity-ui/chartkit/compare/v1.6.4...v1.6.5) (2023-02-10)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix optional id usage for series identifier ([#125](https://github.com/gravity-ui/chartkit/issues/125)) ([f08b414](https://github.com/gravity-ui/chartkit/commit/f08b4145360db78c9efc6bd056772cd9f21a5fdb))
+
 ## [1.6.4](https://github.com/gravity-ui/chartkit/compare/v1.6.3...v1.6.4) (2023-02-09)
 
 
