@@ -36,10 +36,6 @@ export type ChartKitProps<T extends ChartKitType> = {
     data: ChartKitWidget[T]['data'];
     id?: string;
     isMobile?: boolean;
-    /**
-     * @depricated please use onRender & onChartLoad instead
-     * @param data
-     */
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
     /**
      * called on each render
