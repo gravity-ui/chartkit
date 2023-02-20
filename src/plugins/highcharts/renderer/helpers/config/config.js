@@ -1424,7 +1424,7 @@ function fixTooltipOnClick(event, {options}) {
 }
 
 function adjustDonutFontSize(chart, chartSeries, innerWidth, totals) {
-    if (!totals) {
+    if (!totals || !chart || !chartSeries) {
         return;
     }
     const MIN_ACCEPTABLE_INNER_SIZE = 400;
