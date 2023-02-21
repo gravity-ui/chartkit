@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.6](https://github.com/gravity-ui/chartkit/compare/v1.6.5...v1.6.6) (2023-02-21)
+
+
+### Bug Fixes
+
+* add check if chart exists before adjust font size ([#128](https://github.com/gravity-ui/chartkit/issues/128)) ([451e3c1](https://github.com/gravity-ui/chartkit/commit/451e3c119858adffc02fede05eb9f91407b6e31c))
+
 ## [1.6.5](https://github.com/gravity-ui/chartkit/compare/v1.6.4...v1.6.5) (2023-02-10)
 
 
