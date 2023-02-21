@@ -6,6 +6,7 @@ import merge from 'lodash/merge';
 import mergeWith from 'lodash/mergeWith';
 import get from 'lodash/get';
 import clamp from 'lodash/clamp';
+import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
 import throttle from 'lodash/throttle';
 import pick from 'lodash/pick';
@@ -1424,7 +1425,7 @@ function fixTooltipOnClick(event, {options}) {
 }
 
 function adjustDonutFontSize(chart, chartSeries, innerWidth, totals) {
-    if (!totals || !chart || !chartSeries) {
+    if (!totals || isEmpty(chart) || isEmpty(chartSeries)) {
         return;
     }
     const MIN_ACCEPTABLE_INNER_SIZE = 400;
