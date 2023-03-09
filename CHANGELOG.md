@@ -5,12 +5,10 @@
 
 ### ⚠ BREAKING CHANGES
 
-* update uikit up to 4
 * update uikit up to 4 ([#133](https://github.com/gravity-ui/chartkit/issues/133))
 
 ### Features
 
-* update uikit up to 4 ([8ae0c8d](https://github.com/gravity-ui/chartkit/commit/8ae0c8d179273a448de8f670dfe1b3f2314c0523))
 * update uikit up to 4 ([#133](https://github.com/gravity-ui/chartkit/issues/133)) ([8ae0c8d](https://github.com/gravity-ui/chartkit/commit/8ae0c8d179273a448de8f670dfe1b3f2314c0523))
 
 ## [1.6.7](https://github.com/gravity-ui/chartkit/compare/v1.6.6...v1.6.7) (2023-02-21)
