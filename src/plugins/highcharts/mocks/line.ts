@@ -86,7 +86,6 @@ export const data: HighchartsWidgetData = {
     },
     config: {
         precision: 2,
-        linesLimit: 1,
         hideHolidaysBands: true,
         enableSum: true,
         hideHolidays: false,

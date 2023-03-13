@@ -32,14 +32,26 @@ export type HighchartsWidgetData = {
         showLegend?: boolean;
         /**
          * Percentage value displayed in tooltip.
+         *
          * Relevant in case of initialized [stacking](https://api.highcharts.com/highcharts/plotOptions.column.stacking) property only.
          */
         showPercentInTooltip?: boolean;
         disableExternalComments?: boolean;
         normalizeDiv?: boolean;
         normalizeSub?: boolean;
+        /**
+         * Used to ignore `linesLimit` option
+         */
         withoutLineLimit?: boolean;
         precision?: number;
+        /**
+         * Lines (series) count limit.
+         *
+         * If you have lines more than `limit`, your chart will throw an error 'ERR.CK.TOO_MANY_LINES'.
+         *
+         * Ingnored in case of `withoutLineLimit: true`. Default: 50.
+         */
+        linesLimit?: number;
         title?: string;
         subtitle?: string;
         highstock?: {

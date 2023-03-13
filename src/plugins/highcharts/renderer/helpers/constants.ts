@@ -27,3 +27,5 @@ export enum NavigatorLinesMode {
     All = 'all',
     Selected = 'selected',
 }
+
+export const DEFAULT_LINES_LIMIT = 50;

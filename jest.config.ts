@@ -4,6 +4,9 @@ const cfg: Config.InitialOptions = {
     verbose: true,
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
+    transform: {
+        '^.+\\.(js|ts)?$': 'ts-jest',
+    },
     modulePathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/node_modules/'],
     moduleNameMapper: {
         '^.+\\.(css|scss)$': '<rootDir>/test-utils/style.mock.ts',
