@@ -3,7 +3,7 @@ import {Button} from '@gravity-ui/uikit';
 import {ChartKitRef} from '../../../../types';
 import {settings} from '../../../../libs';
 import {HighchartsPlugin} from '../../index';
-import holidays from '../mocks/holidays';
+import holidays from '../../mocks/holidays';
 import {ChartKit} from '../../../../components/ChartKit';
 import {HighchartsWidgetData} from '../../types';
 

@@ -1,5 +1,5 @@
 import type {Chart, SeriesZonesOptionsObject, BBoxObject, OffsetObject} from 'highcharts';
-import type {HighchartsWidgetData} from '../../types';
+import type {HighchartsWidgetData} from '../types';
 
 /**
  * Get the X coordinate of the intersection of the two lines 1-2 and 3-4.

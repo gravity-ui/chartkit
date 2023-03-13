@@ -1,4 +1,4 @@
-import {HighchartsWidgetData} from '../../types';
+import {HighchartsWidgetData} from '../types';
 
 export const data: HighchartsWidgetData = {
     data: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Story, Meta} from '@storybook/react';
 import {ChartKit} from '../../../../components/ChartKit';
-import {data} from '../mocks/column-hor-stacked';
+import {data} from '../../mocks/column-hor-stacked';
 import {ChartStory} from '../components/ChartStory';
 
 export default {
