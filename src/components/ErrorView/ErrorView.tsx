@@ -7,7 +7,8 @@ type Props = {
 };
 
 export const ErrorView = ({error}: Props) => {
-    const message = error.message || i18n('error', 'label_unknown-error');
+    const code = 'code' in error && error.code;
+    const message = error.message || code || i18n('error', 'label_unknown-error');
 
     return <div>{message}</div>;
 };

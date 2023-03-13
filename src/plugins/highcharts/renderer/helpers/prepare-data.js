@@ -1,6 +1,7 @@
 import moment from 'moment';
 import lodashMin from 'lodash/min';
 import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
+import {DEFAULT_LINES_LIMIT} from './constants';
 
 function prepareValue(value, firstValue, options) {
     if (value === null) {
@@ -96,6 +97,8 @@ function removeHolidays(data, options, holidays) {
 
 // eslint-disable-next-line complexity
 export function prepareData(data, options, holidays) {
+    const limit = options.linesLimit || DEFAULT_LINES_LIMIT;
+
     if (
         !data ||
         (typeof data === 'object' && !Object.keys(data).length) ||
@@ -109,7 +112,7 @@ export function prepareData(data, options, holidays) {
     }
 
     if (data.graphs) {
-        if (data.graphs.length > 50 && !options.withoutLineLimit) {
+        if (data.graphs.length > limit && !options.withoutLineLimit) {
             throw new ChartKitError({code: CHARTKIT_ERROR_CODE.TOO_MANY_LINES});
         }
 

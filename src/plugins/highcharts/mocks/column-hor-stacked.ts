@@ -1,4 +1,4 @@
-import {HighchartsWidgetData} from '../../types';
+import {HighchartsWidgetData} from '../types';
 
 export const data: HighchartsWidgetData = {
     data: {
@@ -153,7 +153,7 @@ export const data: HighchartsWidgetData = {
     },
     libraryConfig: {
         chart: {
-            type: 'column',
+            type: 'bar',
             zoomType: 'xy',
         },
         xAxis: {
@@ -179,8 +179,10 @@ export const data: HighchartsWidgetData = {
         },
         tooltip: {},
         plotOptions: {
-            column: {
+            bar: {
                 stacking: 'normal',
+            },
+            column: {
                 dataGrouping: {
                     enabled: false,
                 },

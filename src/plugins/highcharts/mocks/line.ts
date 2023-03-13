@@ -1,4 +1,4 @@
-import type {HighchartsWidgetData} from '../../types';
+import type {HighchartsWidgetData} from '../types';
 
 export const data: HighchartsWidgetData = {
     data: {
@@ -85,10 +85,9 @@ export const data: HighchartsWidgetData = {
         categories: ['Furniture', 'Office Supplies', 'Technology'],
     },
     config: {
-        withoutLineLimit: true,
+        precision: 2,
         hideHolidaysBands: true,
         enableSum: true,
-        precision: 2,
         hideHolidays: false,
         normalizeDiv: false,
         normalizeSub: false,
