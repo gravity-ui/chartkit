@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/gravity-ui/chartkit/compare/v2.0.0...v2.1.0) (2023-03-13)
+
+
+### Features
+
+* **Highcharts:** add linesLimit property to HighchartsWidgetData.config ([#135](https://github.com/gravity-ui/chartkit/issues/135)) ([91d16a3](https://github.com/gravity-ui/chartkit/commit/91d16a32aad00fb683c68f3f39a6477f14f18c33))
+
 ## [2.0.0](https://github.com/gravity-ui/chartkit/compare/v1.6.7...v2.0.0) (2023-03-09)
 
 
