@@ -1753,6 +1753,20 @@ export function prepareConfig(data, options, isMobile, holidays) {
                     return Highcharts.Axis.prototype.defaultLabelFormatter.call(this);
                 },
             },
+            events: {
+                setExtremes: function () {
+                    // There is no better way to align zoom button text
+                    // Callback setExtremes used because of it obligatory invocation on every zoom event
+                    // setTimeout used because of absence resetZoomButton node in dom on first zoom event
+                    setTimeout(() => {
+                        const text = this.chart.resetZoomButton?.text;
+
+                        if (text) {
+                            text.translate(0, -6);
+                        }
+                    }, 0);
+                },
+            },
         },
         yAxis: {
             crosshair: options.splitTooltip

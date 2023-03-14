@@ -48,11 +48,15 @@ Highcharts.setOptions({
         resetZoomButton: {
             relativeTo: 'chart',
             theme: {
-                width: 16,
-                height: 16,
+                r: 6,
+                width: 12,
+                height: 12,
                 'text-align': 'center',
                 opacity: '0.8',
                 cursor: 'pointer',
+                style: {
+                    fontSize: '20px',
+                },
             },
             position: {
                 y: 30,
