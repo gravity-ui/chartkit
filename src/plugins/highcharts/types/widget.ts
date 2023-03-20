@@ -1,12 +1,38 @@
 import type {Highcharts} from './lib';
 import type {HighchartsComment} from './comments';
 import type {DrillDownConfig, StringParams} from './misc';
+import type {TooltipData, TooltipLine} from '../renderer/helpers/tooltip/types';
 
 export type CkHighchartsSeriesOptionsType = Highcharts.SeriesOptionsType & {
     title?: string;
     sname?: string;
     fname?: string;
 };
+
+export type HighchartsManageTooltipConfigOptions = {
+    count: number;
+    lines: TooltipLine[];
+    shared: boolean;
+    this: {
+        x: string;
+        y: number;
+        points: Highcharts.Point[];
+    };
+    activeRowAlwaysFirstInTooltip?: boolean;
+    hiddenRowsNumber?: number;
+    hiddenRowsSum?: string;
+    splitTooltip?: boolean;
+    tooltipHeader?: string;
+    unsafe?: boolean;
+    useCompareFrom?: boolean;
+    withPercent?: boolean;
+    xComments?: TooltipData['xComments'];
+};
+
+export type HighchartsManageTooltipConfig = (
+    options: HighchartsManageTooltipConfigOptions,
+    chart: Highcharts.Chart,
+) => HighchartsManageTooltipConfigOptions;
 
 export type HighchartsWidgetData = {
     data: (
@@ -63,6 +89,10 @@ export type HighchartsWidgetData = {
         drillDown?: DrillDownConfig;
         enableSum?: boolean;
         unsafe?: boolean;
+        /**
+         * Used to modify tooltip data
+         */
+        manageTooltipConfig?: HighchartsManageTooltipConfig;
     };
     libraryConfig: Highcharts.Options;
     params?: StringParams;
