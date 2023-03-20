@@ -1226,7 +1226,7 @@ function fixTooltip(tooltip, options, event) {
             tooltip.preFixationHeight = height;
         }
 
-        tooltip.lastVisibleRowIndex = null;
+        tooltip.lastVisibleRowIndex = undefined;
         tooltip.update({
             style: {
                 ...tooltip.style,
