@@ -91,6 +91,13 @@ export const data: HighchartsWidgetData = {
         hideHolidays: false,
         normalizeDiv: false,
         normalizeSub: false,
+        manageTooltipConfig: (config) => {
+            config.lines.forEach((line, index) => {
+                line.commentText = `Some comment ${index + 1}`;
+            });
+
+            return config;
+        },
     },
     libraryConfig: {
         chart: {

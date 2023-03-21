@@ -249,7 +249,9 @@ export const formatTooltip = (
         cellsRenderers,
         useCompareFrom: data.useCompareFrom,
         isSelectedLine: true,
-        allowComment: selectedLineIndex > tooltip.lastVisibleRowIndex,
+        allowComment:
+            typeof tooltip.lastVisibleRowIndex === 'number' &&
+            selectedLineIndex > tooltip.lastVisibleRowIndex,
     };
 
     // @ts-ignore

@@ -267,7 +267,7 @@ function initHighcharts({isMobile}) {
 
     Highcharts.wrap(Highcharts.Tooltip.prototype, 'hide', function (proceed, ...rest) {
         if (this.lastVisibleRowIndex) {
-            this.lastVisibleRowIndex = null;
+            this.lastVisibleRowIndex = undefined;
         }
 
         if (this.scrollHandler && !this.fixed) {
@@ -311,7 +311,7 @@ function initHighcharts({isMobile}) {
 
         if ((!this.fixed || isFixation) && points) {
             if (isFixation) {
-                this.lastVisibleRowIndex = null;
+                this.lastVisibleRowIndex = undefined;
             }
 
             proceed.apply(this, [points, ...rest]);
@@ -366,7 +366,7 @@ function initHighcharts({isMobile}) {
                     `.${TOOLTIP_LIST_CLASS_NAME} .${TOOLTIP_ROW_CLASS_NAME}`,
                 );
 
-                let lastVisibleRowIndex = null;
+                let lastVisibleRowIndex;
 
                 const selectedSeriesIndex = this.chart.hoverPoints.indexOf(this.chart.hoverPoint);
 
