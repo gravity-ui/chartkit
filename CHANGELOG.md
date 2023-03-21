@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/gravity-ui/chartkit/compare/v2.1.0...v2.2.0) (2023-03-21)
+
+
+### Features
+
+* **Higcharts plugin:** add type for manageTooltipConfig ([#139](https://github.com/gravity-ui/chartkit/issues/139)) ([f781cca](https://github.com/gravity-ui/chartkit/commit/f781cca112bb1e87607d24916aa38bf44fe2abf6))
+
+
+### Bug Fixes
+
+* **Highcharts:** fix resetZoomButton styles ([#137](https://github.com/gravity-ui/chartkit/issues/137)) ([07f610e](https://github.com/gravity-ui/chartkit/commit/07f610e443f2c9a2543ac68bbff443112a1d650a))
+
 ## [2.1.0](https://github.com/gravity-ui/chartkit/compare/v2.0.0...v2.1.0) (2023-03-13)
 
 
