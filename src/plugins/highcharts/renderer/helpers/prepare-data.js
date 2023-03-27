@@ -1,5 +1,6 @@
 import moment from 'moment';
 import lodashMin from 'lodash/min';
+import {i18n} from '../../../../i18n';
 import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
 import {DEFAULT_LINES_LIMIT} from './constants';
 
@@ -108,7 +109,10 @@ export function prepareData(data, options, holidays) {
             )) ||
         (Array.isArray(data) && !data.length)
     ) {
-        throw new ChartKitError({code: CHARTKIT_ERROR_CODE.NO_DATA});
+        throw new ChartKitError({
+            code: CHARTKIT_ERROR_CODE.NO_DATA,
+            message: i18n('error', 'label_no-data'),
+        });
     }
 
     if (data.graphs) {
