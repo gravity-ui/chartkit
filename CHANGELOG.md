@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/gravity-ui/chartkit/compare/v2.2.0...v2.2.1) (2023-03-27)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** proper message for empty data ([#140](https://github.com/gravity-ui/chartkit/issues/140)) ([ee41ace](https://github.com/gravity-ui/chartkit/commit/ee41ace81ddaa88601b584273a7759dfe1dbe1c9))
+
 ## [2.2.0](https://github.com/gravity-ui/chartkit/compare/v2.1.0...v2.2.0) (2023-03-21)
 
 
