@@ -42,6 +42,9 @@ const updateSeries = (
         case 'extended': {
             chartSeries.forEach((item: Highcharts.Series | Highcharts.Point) => {
                 if (getSeriesIdentifier(item) === clickedSeriesName) {
+                    // Highcharts.Series has serVisible in types
+                    // Highcharts.Point doesn't have this method in types
+                    // but it has this method in __proto__ and it works
                     // @ts-ignore
                     item.setVisible(!item.visible, false);
                 }
