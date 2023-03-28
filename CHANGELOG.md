@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/gravity-ui/chartkit/compare/v2.2.1...v2.2.2) (2023-03-28)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix legend item click ([#142](https://github.com/gravity-ui/chartkit/issues/142)) ([a64f1b9](https://github.com/gravity-ui/chartkit/commit/a64f1b962bec45bfd2568110c1c9050fc9d75807))
+
 ## [2.2.1](https://github.com/gravity-ui/chartkit/compare/v2.2.0...v2.2.1) (2023-03-27)
 
 
