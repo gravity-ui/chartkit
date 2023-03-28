@@ -4,22 +4,27 @@ import Highcharts from 'highcharts';
 
 type LegendItemClickType = 'extended' | 'default';
 
-const getSeriesIdentifier = (series: Highcharts.Series): string => {
-    return (series.userOptions.id as string | undefined) || series.name;
+const getSeriesIdentifier = (item: Highcharts.Series | Highcharts.Point): string => {
+    if (item instanceof Highcharts.Point) {
+        return item.name;
+    }
+    return (item.userOptions.id as string | undefined) || item.name;
 };
 
 const needSetVisible = (
     seriesName: string,
     seriesVisible: boolean,
-    chartSeries: Highcharts.Series[],
+    chartSeries: Highcharts.Series[] | Highcharts.Point[],
 ) => {
     if (!seriesVisible) {
         return false;
     }
 
-    const hasAnotherVisibleSeries = chartSeries
+    // TypeScript have problems when filter/map/reduce with union type arrays.
+    // https://github.com/microsoft/TypeScript/issues/44373
+    const hasAnotherVisibleSeries = (chartSeries as (Highcharts.Point | Highcharts.Series)[])
         .filter(
-            (series) =>
+            (series: Highcharts.Series | Highcharts.Point) =>
                 series.options.showInLegend !== false && getSeriesIdentifier(series) !== seriesName,
         )
         .some((series) => series.visible);
@@ -28,15 +33,16 @@ const needSetVisible = (
 };
 
 const updateSeries = (
-    series: Highcharts.Series,
-    chartSeries: Highcharts.Series[],
+    series: Highcharts.Series | Highcharts.Point,
+    chartSeries: Highcharts.Series[] | Highcharts.Point[],
     type: LegendItemClickType,
 ) => {
     const clickedSeriesName = getSeriesIdentifier(series);
     switch (type) {
         case 'extended': {
-            chartSeries.forEach((item) => {
+            chartSeries.forEach((item: Highcharts.Series | Highcharts.Point) => {
                 if (getSeriesIdentifier(item) === clickedSeriesName) {
+                    // @ts-ignore
                     item.setVisible(!item.visible, false);
                 }
             });
@@ -51,10 +57,12 @@ const updateSeries = (
                 chartSeries,
             );
 
-            chartSeries.forEach((item) => {
+            chartSeries.forEach((item: Highcharts.Series | Highcharts.Point) => {
                 if (getSeriesIdentifier(item) === clickedSeriesName) {
+                    // @ts-ignore
                     item.setVisible(true, false);
                 } else {
+                    // @ts-ignore
                     item.setVisible(visible, false);
                 }
             });
@@ -89,14 +97,17 @@ const updateComments = (chart: Highcharts.Chart) => {
 };
 
 // https://api.highcharts.com/class-reference/Highcharts#.SeriesLegendItemClickCallbackFunction
-export const handleLegendItemClick = (event: Highcharts.SeriesLegendItemClickEventObject) => {
+export const handleLegendItemClick = (
+    event: Highcharts.SeriesLegendItemClickEventObject | Highcharts.PointLegendItemClickEventObject,
+) => {
     event.preventDefault();
 
-    const series = event.target;
-    const chart: Highcharts.Chart = series.chart ? series.chart : (series as any).series.chart;
-    const chartSeries: Highcharts.Series[] = series.chart
-        ? chart.series
-        : (series as any).series.data;
+    const series: Highcharts.Series | Highcharts.Point = event.target;
+
+    const chart: Highcharts.Chart =
+        series instanceof Highcharts.Point ? series.series.chart : series.chart;
+    const chartSeries: Highcharts.Series[] | Highcharts.Point[] =
+        series instanceof Highcharts.Point ? series.series.data : series.chart.series;
 
     if (isNavigatorSeries(series)) {
         return;
