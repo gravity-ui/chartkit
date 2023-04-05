@@ -29,6 +29,7 @@ import formatTooltip, {
     TOOLTIP_CONTAINER_CLASS_NAME,
     TOOLTIP_ROW_NAME_CLASS_NANE,
 } from '../tooltip';
+import {escapeHTML} from '../utils';
 import defaultOptions from './options';
 import {
     calculatePrecision,
@@ -1806,7 +1807,8 @@ export function prepareConfig(data, options, isMobile, holidays) {
     if (options.highcharts && options.highcharts.tooltip && options.highcharts.tooltip.formatter) {
         const formatter = options.highcharts.tooltip.formatter;
         params.tooltip.formatter = function (tooltip) {
-            return `<div class="${b()}">${formatter.call(this, tooltip)}</div>`;
+            const content = formatter.call(this, tooltip);
+            return `<div class="${b()}">${options.unsafe ? content : escapeHTML(content)}</div>`;
         };
         delete options.highcharts.tooltip.formatter;
     } else {
@@ -1827,9 +1829,9 @@ export function prepareConfig(data, options, isMobile, holidays) {
                         )))
             ) {
                 const splitTooltip = tooltip.splitTooltip;
-
+                const content = tooltip.defaultFormatter.call(this, tooltip).join('');
                 const defaultFormatter = `<div class="${b({'split-tooltip': splitTooltip})}">
-                    ${tooltip.defaultFormatter.call(this, tooltip).join('')}
+                    ${options.unsafe ? content : escapeHTML(content)}
                 </div>`;
 
                 if (splitTooltip) {

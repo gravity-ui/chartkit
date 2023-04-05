@@ -3,9 +3,9 @@
 import _escape from 'lodash/escape';
 import {i18n} from '../../../../../i18n';
 import type {Highcharts} from '../../../types';
+import {escapeHTML} from '../utils';
 import type {TooltipData, TooltipLine, RowRenderingConfig} from './types';
 import {renderShapeIcon} from './render-shape-icon';
-import {escapeHTML} from './helpers';
 
 import './tooltip.scss';
 

@@ -5,6 +5,7 @@ const config: StorybookConfig = {
     addons: [
         '@storybook/preset-scss',
         {name: '@storybook/addon-essentials', options: {backgrounds: false}},
+        {name: '@storybook/addon-knobs'},
         './theme-addon/register.tsx',
     ],
 };
