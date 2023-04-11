@@ -4,6 +4,7 @@ import {isEmpty} from 'lodash';
 import {i18n} from '../../../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from '../../../constants';
+import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../utils';
 import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
 import {IndicatorItem} from './IndicatorItem';
 
@@ -19,13 +20,24 @@ const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKit
             onLoad,
             formatNumber,
             data: {data = [], defaultColor},
+            id,
+            onRender,
         } = props;
 
+        const generatedId = React.useMemo(
+            () => `${id}_${getRandomCKId()}`,
+            [data, defaultColor, formatNumber, id],
+        );
+
+        markChartPerformance(generatedId);
+
         React.useLayoutEffect(() => {
-            // TODO: swap to onRender after https://github.com/gravity-ui/chartkit/issues/33
-            onLoad?.();
-            // TODO: add onRender with renderTime Issue #114
-        });
+            if (onRender) {
+                onRender({renderTime: getChartPerformanceDuration(generatedId)});
+                return;
+            }
+            onLoad?.({widgetRendering: getChartPerformanceDuration(generatedId)});
+        }, [onLoad, onRender, generatedId]);
 
         if (isEmpty(data)) {
             throw new ChartKitError({
