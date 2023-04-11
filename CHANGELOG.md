@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.0](https://github.com/gravity-ui/chartkit/compare/v2.2.2...v2.3.0) (2023-04-11)
+
+
+### Features
+
+* **Indicator plugin:** add onRender ([#145](https://github.com/gravity-ui/chartkit/issues/145)) ([3a044c0](https://github.com/gravity-ui/chartkit/commit/3a044c08583cd96bd08e3fb29a89c06ca9a6be18))
+* **Indicator plugin:** add renderTime ([3a044c0](https://github.com/gravity-ui/chartkit/commit/3a044c08583cd96bd08e3fb29a89c06ca9a6be18))
+
 ## [2.2.2](https://github.com/gravity-ui/chartkit/compare/v2.2.1...v2.2.2) (2023-03-28)
 
 
