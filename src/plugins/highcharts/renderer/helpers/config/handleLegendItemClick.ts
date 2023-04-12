@@ -8,6 +8,11 @@ const getSeriesIdentifier = (item: Highcharts.Series | Highcharts.Point): string
     if (item instanceof Highcharts.Point) {
         return item.name;
     }
+
+    if (isNavigatorSeries(item) && item.baseSeries) {
+        return (item.baseSeries.userOptions.id as string | undefined) || item.baseSeries.name;
+    }
+
     return (item.userOptions.id as string | undefined) || item.name;
 };
 
