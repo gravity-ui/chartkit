@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/gravity-ui/chartkit/compare/v2.3.0...v2.3.1) (2023-04-12)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** navigator series visibility on legend item click ([#148](https://github.com/gravity-ui/chartkit/issues/148)) ([ae7d38b](https://github.com/gravity-ui/chartkit/commit/ae7d38b3ffa8d4b037a762bf26f4e68b504c7886))
+
 ## [2.3.0](https://github.com/gravity-ui/chartkit/compare/v2.2.2...v2.3.0) (2023-04-11)
 
 
