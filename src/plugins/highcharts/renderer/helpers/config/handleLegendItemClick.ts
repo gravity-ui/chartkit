@@ -2,14 +2,6 @@ import {drawComments, hideComments} from '../comments/drawing';
 import {isNavigatorSeries} from './utils';
 import Highcharts from 'highcharts';
 
-// For Stock charts
-declare module 'highcharts/highcharts' {
-    interface Series {
-        baseSeries?: Series;
-        navigatorSeries?: Series;
-    }
-}
-
 type LegendItemClickType = 'extended' | 'default';
 
 const getSeriesIdentifier = (item: Highcharts.Series | Highcharts.Point): string => {

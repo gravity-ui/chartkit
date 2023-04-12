@@ -35,4 +35,10 @@ declare module 'highcharts' {
     }
 
     interface SeriesOptionsRegistry extends Record<string, Record<string, unknown>> {}
+
+    // for Stock chart from https://github.com/highcharts/highcharts/blob/master/ts/Stock/Navigator/NavigatorComposition.ts#L65
+    interface Series {
+        baseSeries?: Series;
+        navigatorSeries?: Series;
+    }
 }
