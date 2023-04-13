@@ -17,6 +17,7 @@ export type ExtendedHChart = Highcharts.Chart & {
         _internalComments: HighchartsComment[];
         _externalComments: HighchartsComment[];
         _getComments: () => HighchartsComment[];
+        _config?: {region?: string};
     };
     xAxis: XAxisItem[];
     navigator?: Highcharts.Options['navigator'];
