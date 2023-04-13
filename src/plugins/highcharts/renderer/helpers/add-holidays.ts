@@ -1,6 +1,13 @@
+import type {ChartKitHolidays} from '../../../../types';
+import type {ExtendedHChart, Highcharts} from '../../types';
+
 const HALF_DAY = 43200000;
 
-const calculateConsistentClosestPointRange = (type, closestPointRange, series) => {
+const calculateConsistentClosestPointRange = (
+    type: string,
+    closestPointRange: number,
+    series: Highcharts.Series[],
+) => {
     const isDatetimeAxis = type === 'datetime';
 
     return (
@@ -19,7 +26,7 @@ const calculateConsistentClosestPointRange = (type, closestPointRange, series) =
     );
 };
 
-export function addHolidays(chart, holidays) {
+export function addHolidays(chart: ExtendedHChart, holidays: ChartKitHolidays) {
     const {
         userOptions: {_config: {region: configRegion = 'TOT'} = {}},
         xAxis: [xAxis],
@@ -27,7 +34,7 @@ export function addHolidays(chart, holidays) {
 
     const {dataMin, dataMax, closestPointRange, series} = xAxis;
     const isConsistentClosestPointRange = calculateConsistentClosestPointRange(
-        xAxis.options.type,
+        xAxis.options.type || '',
         closestPointRange,
         series,
     );
