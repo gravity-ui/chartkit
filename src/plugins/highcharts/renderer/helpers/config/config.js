@@ -95,7 +95,7 @@ function getFormattedValueWithSuffixAndPrefix(item) {
 
 function isZoomResetButtonClick(event, chartContainer) {
     let iterationIndex = 0;
-    let element = event.path[iterationIndex];
+    let element = event.composedPath()[iterationIndex];
 
     while (element) {
         if (element === chartContainer) {
@@ -104,7 +104,7 @@ function isZoomResetButtonClick(event, chartContainer) {
             return true;
         }
 
-        element = event.path[++iterationIndex];
+        element = event.composedPath()[++iterationIndex];
     }
 
     return false;
