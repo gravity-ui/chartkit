@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/gravity-ui/chartkit/compare/v2.4.0...v2.4.1) (2023-04-19)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** Replace deprecated event.path ([#153](https://github.com/gravity-ui/chartkit/issues/153)) ([23be4a9](https://github.com/gravity-ui/chartkit/commit/23be4a96479820a69534098100140cd9a3fad45a))
+
 ## [2.4.0](https://github.com/gravity-ui/chartkit/compare/v2.3.1...v2.4.0) (2023-04-13)
 
 
