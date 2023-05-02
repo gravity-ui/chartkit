@@ -93,6 +93,12 @@ export type HighchartsWidgetData = {
          * Used to modify tooltip data
          */
         manageTooltipConfig?: HighchartsManageTooltipConfig;
+        /**
+         * Tooltip config
+         */
+        tooltip?: {
+            pinable?: boolean;
+        };
     };
     libraryConfig: Highcharts.Options;
     params?: StringParams;

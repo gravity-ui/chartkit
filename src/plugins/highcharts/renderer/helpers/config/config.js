@@ -1187,7 +1187,9 @@ export function hideFixedTooltip(tooltip, isMobile) {
 }
 
 function fixTooltip(tooltip, options, event) {
-    if (options.splitTooltip) {
+    const pinable = get(options, 'tooltip.pinable', true);
+
+    if (options.splitTooltip || !pinable) {
         return false;
     }
 
