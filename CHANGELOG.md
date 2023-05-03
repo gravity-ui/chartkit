@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/gravity-ui/chartkit/compare/v2.4.1...v2.5.0) (2023-05-03)
+
+
+### Features
+
+* **Highcharts plugin:** add config.tooltip property ([#156](https://github.com/gravity-ui/chartkit/issues/156)) ([8a8229e](https://github.com/gravity-ui/chartkit/commit/8a8229e4ee8401a8cfce4d0689a047e830d1a5e9))
+
 ## [2.4.1](https://github.com/gravity-ui/chartkit/compare/v2.4.0...v2.4.1) (2023-04-19)
 
 
