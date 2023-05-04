@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/gravity-ui/chartkit/compare/v2.5.0...v2.6.0) (2023-05-04)
+
+
+### Features
+
+* add React@18 as peer dependency ([#158](https://github.com/gravity-ui/chartkit/issues/158)) ([2991c11](https://github.com/gravity-ui/chartkit/commit/2991c1138781692451582e99d8f9c7eb51a8c9aa))
+
 ## [2.5.0](https://github.com/gravity-ui/chartkit/compare/v2.4.1...v2.5.0) (2023-05-03)
 
 
