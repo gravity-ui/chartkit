@@ -1673,6 +1673,10 @@ export function prepareConfig(data, options, isMobile, holidays) {
                         } else {
                             fixTooltipOnClick.bind(this)(event, {options});
                         }
+
+                        if (options.onSeriesClick) {
+                            options.onSeriesClick({event, series: this});
+                        }
                     },
                 },
                 point: {

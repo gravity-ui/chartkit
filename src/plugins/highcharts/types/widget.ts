@@ -90,15 +90,22 @@ export type HighchartsWidgetData = {
         enableSum?: boolean;
         unsafe?: boolean;
         /**
-         * Used to modify tooltip data
-         */
-        manageTooltipConfig?: HighchartsManageTooltipConfig;
-        /**
          * Tooltip config
          */
         tooltip?: {
             pinable?: boolean;
         };
+        /**
+         * Used to modify tooltip data
+         */
+        manageTooltipConfig?: HighchartsManageTooltipConfig;
+        /**
+         * Highcharts series click handler
+         */
+        onSeriesClick?: (args: {
+            event: Highcharts.SeriesClickEventObject;
+            series: Highcharts.Series;
+        }) => void;
     };
     libraryConfig: Highcharts.Options;
     params?: StringParams;
