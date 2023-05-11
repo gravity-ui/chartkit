@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/gravity-ui/chartkit/compare/v2.6.0...v2.7.0) (2023-05-10)
+
+
+### Features
+
+* **Highcharts plugin:** add config.onSeriesClick property ([#160](https://github.com/gravity-ui/chartkit/issues/160)) ([212ce4b](https://github.com/gravity-ui/chartkit/commit/212ce4b49693ef256ed2e46cb44d863a951020ac))
+
 ## [2.6.0](https://github.com/gravity-ui/chartkit/compare/v2.5.0...v2.6.0) (2023-05-04)
 
 
