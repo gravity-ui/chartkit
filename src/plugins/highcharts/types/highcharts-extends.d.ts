@@ -38,6 +38,8 @@ declare module 'highcharts' {
 
     // for Stock chart from https://github.com/highcharts/highcharts/blob/master/ts/Stock/Navigator/NavigatorComposition.ts#L65
     interface Series {
+        // https://github.com/highcharts/highcharts/blob/master/ts/Core/Series/Series.ts#L1023
+        getPointsCollection: () => Point[];
         xData: number[];
         baseSeries?: Series;
         navigatorSeries?: Series;

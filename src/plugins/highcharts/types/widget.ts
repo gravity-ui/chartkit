@@ -99,13 +99,6 @@ export type HighchartsWidgetData = {
          * Used to modify tooltip data
          */
         manageTooltipConfig?: HighchartsManageTooltipConfig;
-        /**
-         * Highcharts series click handler
-         */
-        onSeriesClick?: (args: {
-            event: Highcharts.SeriesClickEventObject;
-            series: Highcharts.Series;
-        }) => void;
     };
     libraryConfig: Highcharts.Options;
     params?: StringParams;
