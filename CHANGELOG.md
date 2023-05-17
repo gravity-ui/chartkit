@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.2](https://github.com/gravity-ui/chartkit/compare/v2.7.1...v2.7.2) (2023-05-17)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** add metaKey property to SeriesClickEventObject type ([#164](https://github.com/gravity-ui/chartkit/issues/164)) ([3484561](https://github.com/gravity-ui/chartkit/commit/34845618e4eec8c48e3870d4187855d39fb857e3))
+
 ## [2.7.1](https://github.com/gravity-ui/chartkit/compare/v2.7.0...v2.7.1) (2023-05-17)
 
 
