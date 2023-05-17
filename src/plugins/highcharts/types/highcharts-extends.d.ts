@@ -44,4 +44,9 @@ declare module 'highcharts' {
         baseSeries?: Series;
         navigatorSeries?: Series;
     }
+
+    interface SeriesClickEventObject {
+        // https://github.com/highcharts/highcharts/blob/818eb62b9d1a0efc3c9ec705e95b13849e2040fa/ts/Core/Series/Series.ts#L5039
+        metaKey?: boolean;
+    }
 }
