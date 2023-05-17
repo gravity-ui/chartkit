@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.1](https://github.com/gravity-ui/chartkit/compare/v2.7.0...v2.7.1) (2023-05-17)
+
+
+### Bug Fixes
+
+* remove onSeriesClick due to it uselessness ([#162](https://github.com/gravity-ui/chartkit/issues/162)) ([ca993d6](https://github.com/gravity-ui/chartkit/commit/ca993d6987f9c0a4ade0c154eb25d99a6d7e0027))
+
 ## [2.7.0](https://github.com/gravity-ui/chartkit/compare/v2.6.0...v2.7.0) (2023-05-10)
 
 
