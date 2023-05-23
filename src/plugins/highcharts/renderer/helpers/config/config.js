@@ -41,6 +41,7 @@ import {
     setNavigatorDefaultPeriod,
     numberFormat,
     getFormatOptionsFromLine,
+    checkTooltipPinningAvailability,
 } from './utils';
 import {handleLegendItemClick} from './handleLegendItemClick';
 import {getChartKitFormattedValue} from './utils/getChartKitFormattedValue';
@@ -1156,7 +1157,9 @@ export function hideFixedTooltip(tooltip, isMobile) {
 
     if (Array.isArray(tooltip.pointsOnFixedTooltip)) {
         tooltip.pointsOnFixedTooltip.forEach((point) => {
-            point.setState('');
+            if (typeof point.setState === 'function') {
+                point.setState('');
+            }
         });
     } else {
         tooltip.pointsOnFixedTooltip.setState('');
@@ -1187,9 +1190,13 @@ export function hideFixedTooltip(tooltip, isMobile) {
 }
 
 function fixTooltip(tooltip, options, event) {
-    const pinable = get(options, 'tooltip.pinable', true);
+    const availableToPin = checkTooltipPinningAvailability({
+        tooltip: options.tooltip,
+        altKey: event.altKey,
+        metaKey: event.metaKey,
+    });
 
-    if (options.splitTooltip || !pinable) {
+    if (options.splitTooltip || (!availableToPin && !tooltip.fixed)) {
         return false;
     }
 
