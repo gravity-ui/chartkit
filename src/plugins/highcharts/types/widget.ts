@@ -90,10 +90,19 @@ export type HighchartsWidgetData = {
         enableSum?: boolean;
         unsafe?: boolean;
         /**
+         * @experimental
          * Tooltip config
          */
         tooltip?: {
-            pinable?: boolean;
+            /** Pin config */
+            pin?: {
+                /** Enable tooltip`s pinning by click */
+                enabled?: boolean;
+                /** Pin tooltip with pressed alt key */
+                altKey?: boolean;
+                /** Pin tooltip with pressed meta key */
+                metaKey?: boolean;
+            };
         };
         /**
          * Used to modify tooltip data

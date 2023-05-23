@@ -5,7 +5,7 @@ export {concatStrings} from './concatStrings';
 export {getChartKitFormattedValue} from './getChartKitFormattedValue';
 export {getFormatOptionsFromLine} from './getFormatOptionsFromLine';
 export {getXAxisThresholdValue} from './getXAxisThresholdValue';
-export {isTooltipShared} from './isTooltipShared';
+export * from './tooltip';
 export {isNavigatorSeries} from './isNavigatorSeries';
 export {isSafari} from './isSafari';
 export {mergeArrayWithObject} from './mergeArrayWithObject';
