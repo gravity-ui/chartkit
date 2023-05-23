@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/gravity-ui/chartkit/compare/v2.7.2...v2.8.0) (2023-05-23)
+
+
+### Features
+
+* **Highcharts plugin:** rework tooltip pinning api ([#166](https://github.com/gravity-ui/chartkit/issues/166)) ([9ca62e4](https://github.com/gravity-ui/chartkit/commit/9ca62e4d01d62f36de0c4866e0d21728ca2aa25c))
+
 ## [2.7.2](https://github.com/gravity-ui/chartkit/compare/v2.7.1...v2.7.2) (2023-05-17)
 
 
