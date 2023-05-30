@@ -183,6 +183,9 @@ const options = {
                 color: 'var(--highcharts-data-labels)',
             },
         },
+        title: {
+            style: { color: 'var(--yc-color-text-secondary)' },
+        },
     },
     plotOptions: {
         series: {
