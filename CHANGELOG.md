@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/gravity-ui/chartkit/compare/v2.8.0...v2.8.1) (2023-05-30)
+
+
+### Bug Fixes
+
+* **options:** fixed default options for yAxis title color ([#168](https://github.com/gravity-ui/chartkit/issues/168)) ([52bf4cc](https://github.com/gravity-ui/chartkit/commit/52bf4cca79770982e9584e89c9a408086850acd5))
+
 ## [2.8.0](https://github.com/gravity-ui/chartkit/compare/v2.7.2...v2.8.0) (2023-05-23)
 
 
