@@ -184,7 +184,9 @@ const options = {
             },
         },
         title: {
-            style: { color: 'var(--yc-color-text-secondary)' },
+            style: {
+                color: 'var(--yc-color-text-secondary)',
+            },
         },
     },
     plotOptions: {
