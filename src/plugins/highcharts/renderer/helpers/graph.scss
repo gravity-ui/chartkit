@@ -7,6 +7,23 @@
     & .highcharts-plot-band_comment {
         opacity: 0.5;
     }
+
+    & .highcharts-legend {
+        & .highcharts-coloraxis-labels {
+            text {
+                // stylelint-disable-next-line declaration-no-important
+                fill: var(--yc-color-text-secondary) !important;
+                // stylelint-disable-next-line declaration-no-important
+                color: var(--yc-color-text-secondary) !important;
+            }
+        }
+
+        & .highcharts-coloraxis-grid {
+            path {
+                stroke: var(--yc-color-base-background);
+            }
+        }
+    }
 }
 
 .chartkit-tooltip {
