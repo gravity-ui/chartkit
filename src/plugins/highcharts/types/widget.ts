@@ -103,6 +103,8 @@ export type HighchartsWidgetData = {
                 /** Pin tooltip with pressed meta key */
                 metaKey?: boolean;
             };
+            /** Used to manage tooltip lines sorting */
+            sort?: TooltipData['sort'];
         };
         /**
          * Used to modify tooltip data

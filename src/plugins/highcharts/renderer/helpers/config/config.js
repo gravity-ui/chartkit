@@ -527,6 +527,8 @@ function getTooltip(tooltip, options, comments, holidays) {
             ],
             count: 1,
             shared: true,
+            unsafe: Boolean(options.unsafe),
+            sort: options?.tooltip?.sort,
         };
 
         if (typeof options.manageTooltipConfig === 'function') {
@@ -592,6 +594,7 @@ function getTooltip(tooltip, options, comments, holidays) {
         withPercent: false,
         tooltipHeader: null,
         unsafe: Boolean(options.unsafe),
+        sort: options?.tooltip?.sort,
     };
 
     if (isDatetimeXAxis) {
