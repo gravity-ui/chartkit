@@ -45,12 +45,13 @@ export type TooltipData = {
         enabled?: boolean;
         /** The sort orders. `'desc'` by default */
         order?: 'asc' | 'desc';
-        /**
-         * The iteratees to sort by key from `TooltipLine`
-         *
-         * Used `'originalValue'` if iteratee function does not specified
-         */
-        iteratee?: (line: TooltipLine) => TooltipLine[keyof TooltipLine];
+        /** The iteratees to sort by key(s) from `TooltipLine`. `'originalValue'` by default */
+        iteratee?:
+            | keyof TooltipLine
+            | keyof TooltipLine[]
+            | ((
+                  line: TooltipLine,
+              ) => TooltipLine[keyof TooltipLine] | TooltipLine[keyof TooltipLine][]);
     };
 };
 

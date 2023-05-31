@@ -9,13 +9,12 @@ export const escapeHTML = (html = '') => {
 };
 
 export const getSortedLines = (lines: TooltipLine[], sort: TooltipData['sort'] = {}) => {
-    const {enabled = false, order = 'desc', iteratee} = sort;
+    // set eneabled to true after https://github.com/gravity-ui/chartkit/issues/171
+    const {enabled = false, order = 'desc', iteratee = 'originalValue'} = sort;
 
     if (!enabled) {
         return [...lines];
     }
 
-    return typeof iteratee === 'function'
-        ? orderBy(lines, iteratee, order)
-        : orderBy(lines, 'originalValue', order);
+    return orderBy(lines, iteratee, order);
 };
