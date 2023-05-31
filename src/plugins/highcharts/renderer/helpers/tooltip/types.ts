@@ -39,6 +39,19 @@ export type TooltipData = {
     /** Sum of the values of the hidden ("not fit" in the tooltip) rows */
     hiddenRowsSum?: number | string;
     unsafe?: boolean;
+    /** Used to manage tooltip lines sorting */
+    sort?: {
+        /** Enable tooltip lines sorting. `false` by default */
+        enabled?: boolean;
+        /** The sort orders. `'desc'` by default */
+        order?: 'asc' | 'desc';
+        /**
+         * The iteratees to sort by key from `TooltipLine`
+         *
+         * Used `'originalValue'` if iteratee function does not specified
+         */
+        iteratee?: (line: TooltipLine) => TooltipLine[keyof TooltipLine];
+    };
 };
 
 export type TooltipLine = {

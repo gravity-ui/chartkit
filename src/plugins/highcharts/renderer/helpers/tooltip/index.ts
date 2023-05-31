@@ -5,7 +5,7 @@ import {i18n} from '../../../../../i18n';
 import type {Highcharts} from '../../../types';
 import type {TooltipData, TooltipLine, RowRenderingConfig} from './types';
 import {renderShapeIcon} from './render-shape-icon';
-import {escapeHTML} from './helpers';
+import {escapeHTML, getSortedLines} from './helpers';
 
 import './tooltip.scss';
 
@@ -211,9 +211,10 @@ export const formatTooltip = (
     isMobile?: boolean,
 ) => {
     const {splitTooltip, activeRowAlwaysFirstInTooltip} = data;
-    const selectedLineIndex = data.lines.findIndex(({selectedSeries}) => selectedSeries);
-    const selectedLine = data.lines[selectedLineIndex];
     const lines = data.lines.slice(0, (tooltip.lastVisibleRowIndex || data.lines.length) + 1);
+    const sortedLines = getSortedLines(lines, data.sort);
+    const selectedLineIndex = sortedLines.findIndex(({selectedSeries}) => selectedSeries);
+    const selectedLine = sortedLines[selectedLineIndex];
     const withShapes = lines.every((line) => line.seriesShape);
     const unsafe = data.unsafe;
     const tooltipHeaderRaw = data.tooltipHeader?.trim();
@@ -327,7 +328,7 @@ export const formatTooltip = (
                             </thead>`
                     }
                     <tbody class="${TOOLTIP_LIST_CLASS_NAME}">
-                        ${lines
+                        ${sortedLines
                             .map((line, index) => renderRow(line, getRowRenderConfig(index)))
                             .join('')}
                     </tbody>
