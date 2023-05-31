@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.0](https://github.com/gravity-ui/chartkit/compare/v2.8.1...v2.9.0) (2023-05-31)
+
+
+### Features
+
+* **Highcharts plugin:** add `tooltip.sort` configuration ([#170](https://github.com/gravity-ui/chartkit/issues/170)) ([0825a91](https://github.com/gravity-ui/chartkit/commit/0825a91155592d9e06dbdd452547a0c31b71c07a))
+
 ## [2.8.1](https://github.com/gravity-ui/chartkit/compare/v2.8.0...v2.8.1) (2023-05-30)
 
 
