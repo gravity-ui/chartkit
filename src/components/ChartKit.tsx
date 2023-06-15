@@ -60,8 +60,21 @@ const ChartKitComponentWithErrorBoundary = React.forwardRef<
     ChartKitRef | undefined,
     ChartKitProps<ChartKitType>
 >(function ChartKitComponentWithErrorBoundary(props, ref) {
+    const resetErrorRef = React.useRef<(() => void) | null>(null);
+    const {data} = props;
+
+    React.useEffect(() => {
+        if (resetErrorRef.current) {
+            resetErrorRef.current();
+        }
+    }, [data]);
+
+    const handleResetError = React.useCallback((resetError) => {
+        resetErrorRef.current = resetError;
+    }, []);
+
     return (
-        <ErrorBoundary onError={props.onError}>
+        <ErrorBoundary onError={props.onError} resetError={handleResetError}>
             <ChartKitComponent instanceRef={ref} {...props} />
         </ErrorBoundary>
     );

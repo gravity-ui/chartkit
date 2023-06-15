@@ -11,19 +11,25 @@ const DEFAULT_STORY_HEIGHT = '300px';
 const DEFAULT_STORY_WIDTH = '100%';
 
 export type ChartStoryProps = {
+    data: HighchartsWidgetData;
+
+    visible?: boolean;
     height?: string;
     width?: string;
-
-    data: HighchartsWidgetData;
 };
 export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) => {
     const {height, width, data} = props;
 
-    const [visible, setVisible] = React.useState(false);
+    const initRef = React.useRef(false);
+    const [visible, setVisible] = React.useState(Boolean(props.visible));
     const chartKitRef = React.useRef<ChartKitRef>();
 
-    if (!visible) {
+    if (!initRef.current) {
         settings.set({plugins: [HighchartsPlugin], extra: {holidays}});
+        initRef.current = true;
+    }
+
+    if (!visible) {
         return <Button onClick={() => setVisible(true)}>Show chart</Button>;
     }
 
