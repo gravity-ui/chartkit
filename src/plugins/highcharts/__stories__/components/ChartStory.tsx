@@ -6,6 +6,7 @@ import {HighchartsPlugin} from '../../index';
 import holidays from '../../mocks/holidays';
 import {ChartKit} from '../../../../components/ChartKit';
 import {HighchartsWidgetData} from '../../types';
+import {ErrorBoundaryRenderErrorView} from '../../../../components/ErrorBoundary/ErrorBoundary';
 
 const DEFAULT_STORY_HEIGHT = '300px';
 const DEFAULT_STORY_WIDTH = '100%';
@@ -13,9 +14,11 @@ const DEFAULT_STORY_WIDTH = '100%';
 export type ChartStoryProps = {
     data: HighchartsWidgetData;
 
+    withoutPlugin?: boolean;
     visible?: boolean;
     height?: string;
     width?: string;
+    renderErrorView?: ErrorBoundaryRenderErrorView;
 };
 export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) => {
     const {height, width, data} = props;
@@ -25,7 +28,9 @@ export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) =>
     const chartKitRef = React.useRef<ChartKitRef>();
 
     if (!initRef.current) {
-        settings.set({plugins: [HighchartsPlugin], extra: {holidays}});
+        if (!props.withoutPlugin) {
+            settings.set({plugins: [HighchartsPlugin], extra: {holidays}});
+        }
         initRef.current = true;
     }
 
@@ -40,7 +45,12 @@ export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) =>
                 width: width || DEFAULT_STORY_WIDTH,
             }}
         >
-            <ChartKit ref={chartKitRef} type="highcharts" data={data} />
+            <ChartKit
+                ref={chartKitRef}
+                type="highcharts"
+                data={data}
+                renderErrorView={props.renderErrorView}
+            />
         </div>
     );
 };

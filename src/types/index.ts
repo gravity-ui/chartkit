@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type {ChartKitWidget} from './widget';
+import type {ErrorBoundaryRenderErrorView} from '../components/ErrorBoundary/ErrorBoundary';
 
 export type {ChartKitHolidays} from './misc';
 
@@ -34,6 +35,7 @@ export type ChartKitOnError = (data: {error: any}) => void;
 export type ChartKitProps<T extends ChartKitType> = {
     type: T;
     data: ChartKitWidget[T]['data'];
+
     id?: string;
     isMobile?: boolean;
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
@@ -47,7 +49,7 @@ export type ChartKitProps<T extends ChartKitType> = {
      * @param data
      */
     onChartLoad?: (data: ChartKitOnChartLoad<T>) => void;
-
+    renderErrorView?: ErrorBoundaryRenderErrorView;
     onError?: ChartKitOnError;
 } & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
 
