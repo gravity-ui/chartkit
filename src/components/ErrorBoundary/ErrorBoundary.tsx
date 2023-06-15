@@ -5,6 +5,7 @@ import {ErrorView} from '../ErrorView/ErrorView';
 
 type Props = {
     onError?: ChartKitOnError;
+    resetError?(resetError: () => void): void;
 };
 
 type State = {
@@ -22,6 +23,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
     componentDidCatch() {
         const {error} = this.state;
+
+        this.props.resetError?.(() => {
+            this.setState({error: undefined});
+        });
 
         if (error) {
             this.props.onError?.({error});
