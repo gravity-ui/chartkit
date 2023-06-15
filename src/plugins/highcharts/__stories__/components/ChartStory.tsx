@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from '@gravity-ui/uikit';
-import {ChartKitRef} from '../../../../types';
+import {ChartKitRef, RenderError} from '../../../../types';
 import {settings} from '../../../../libs';
 import {HighchartsPlugin} from '../../index';
 import holidays from '../../mocks/holidays';
@@ -13,9 +13,11 @@ const DEFAULT_STORY_WIDTH = '100%';
 export type ChartStoryProps = {
     data: HighchartsWidgetData;
 
+    withoutPlugin?: boolean;
     visible?: boolean;
     height?: string;
     width?: string;
+    renderError?: RenderError;
 };
 export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) => {
     const {height, width, data} = props;
@@ -25,7 +27,9 @@ export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) =>
     const chartKitRef = React.useRef<ChartKitRef>();
 
     if (!initRef.current) {
-        settings.set({plugins: [HighchartsPlugin], extra: {holidays}});
+        if (!props.withoutPlugin) {
+            settings.set({plugins: [HighchartsPlugin], extra: {holidays}});
+        }
         initRef.current = true;
     }
 
@@ -40,7 +44,12 @@ export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) =>
                 width: width || DEFAULT_STORY_WIDTH,
             }}
         >
-            <ChartKit ref={chartKitRef} type="highcharts" data={data} />
+            <ChartKit
+                ref={chartKitRef}
+                type="highcharts"
+                data={data}
+                renderError={props.renderError}
+            />
         </div>
     );
 };

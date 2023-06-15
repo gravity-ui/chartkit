@@ -1,11 +1,13 @@
 import React from 'react';
 import type {ChartKitError} from '../../libs';
-import type {ChartKitOnError} from '../../types';
-import {ErrorView} from '../ErrorView/ErrorView';
+import type {ChartKitOnError, ChartKitType, ChartKitWidget, RenderError} from '../../types';
+import {getErrorMessage} from '../../utils/getErrorMessage';
+import {CHARTKIT_ERROR_CODE} from '../../libs';
 
 type Props = {
     onError?: ChartKitOnError;
-    resetError?(resetError: () => void): void;
+    data: ChartKitWidget[ChartKitType]['data'];
+    renderError?: RenderError;
 };
 
 type State = {
@@ -24,12 +26,17 @@ export class ErrorBoundary extends React.Component<Props, State> {
     componentDidCatch() {
         const {error} = this.state;
 
-        this.props.resetError?.(() => {
-            this.setState({error: undefined});
-        });
-
         if (error) {
             this.props.onError?.({error});
+        }
+    }
+
+    componentDidUpdate(prevProps: Readonly<Props>) {
+        if (prevProps.data !== this.props.data) {
+            const {error} = this.state;
+            if (error && 'code' in error && error.code === CHARTKIT_ERROR_CODE.NO_DATA) {
+                this.resetError();
+            }
         }
     }
 
@@ -37,9 +44,25 @@ export class ErrorBoundary extends React.Component<Props, State> {
         const {error} = this.state;
 
         if (error) {
-            return <ErrorView error={error} />;
+            const message = getErrorMessage(error);
+
+            if (this.props.renderError) {
+                return this.props.renderError({
+                    error,
+                    message,
+                    resetError: this.resetError,
+                });
+            }
+
+            return <div>{message}</div>;
         }
 
         return this.props.children;
     }
+
+    resetError = () => {
+        if (this.state.error) {
+            this.setState({error: undefined});
+        }
+    };
 }
