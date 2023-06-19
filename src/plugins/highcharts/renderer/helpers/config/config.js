@@ -1624,7 +1624,7 @@ export function prepareConfig(data, options, isMobile, holidays) {
                             const innerWidth = chartSeries?.center[3];
                             const formatOptions = chartSeries?.userOptions?.tooltip;
                             const value =
-                                formatDonutTotals(chartSeries.total, formatOptions) || totals;
+                                formatDonutTotals(chartSeries?.total, formatOptions) || totals;
 
                             if (innerWidth) {
                                 debouncedAdjustDonutFontSize(chart, chartSeries, innerWidth, value);
