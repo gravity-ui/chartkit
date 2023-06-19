@@ -1622,13 +1622,12 @@ export function prepareConfig(data, options, isMobile, holidays) {
                             const chart = this;
                             const chartSeries = chart.series[0];
                             const innerWidth = chartSeries?.center[3];
+                            const formatOptions = chartSeries?.userOptions?.tooltip;
+                            const value =
+                                formatDonutTotals(chartSeries.total, formatOptions) || totals;
+
                             if (innerWidth) {
-                                debouncedAdjustDonutFontSize(
-                                    chart,
-                                    chartSeries,
-                                    innerWidth,
-                                    totals,
-                                );
+                                debouncedAdjustDonutFontSize(chart, chartSeries, innerWidth, value);
                             }
                         },
                     }),

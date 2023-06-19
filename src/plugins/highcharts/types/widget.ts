@@ -44,6 +44,7 @@ export type HighchartsWidgetData = {
         | {
               graphs: CkHighchartsSeriesOptionsType[];
               categories: string[];
+              totals?: number | string;
           }
         | {
               graphs: CkHighchartsSeriesOptionsType[];
