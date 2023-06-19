@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.1](https://github.com/gravity-ui/chartkit/compare/v2.10.0...v2.10.1) (2023-06-19)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** show totals of selected series on legend click ([#176](https://github.com/gravity-ui/chartkit/issues/176)) ([ac7fe22](https://github.com/gravity-ui/chartkit/commit/ac7fe224363f7379f6dd35db0a3a682cdc7a2bc2))
+
 ## [2.10.0](https://github.com/gravity-ui/chartkit/compare/v2.9.0...v2.10.0) (2023-06-05)
 
 
