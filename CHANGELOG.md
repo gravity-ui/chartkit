@@ -6,12 +6,11 @@
 ### Features
 
 * add renderError property ([#175](https://github.com/gravity-ui/chartkit/issues/175)) ([84c03a9](https://github.com/gravity-ui/chartkit/commit/84c03a9f8516e9fb846e25a920aa82b00c660a02))
-* **main:** Add renderErrorView prop for custom render and handle errors ([15e314f](https://github.com/gravity-ui/chartkit/commit/15e314f40c378aa65c4d83055760f49fb56af539))
 
 
 ### Bug Fixes
 
-* **main:** reset "No data" error on change data ([ac0da94](https://github.com/gravity-ui/chartkit/commit/ac0da94fd21ff558a739c00b8904645d5ba006ef))
+* reset "No data" error on change data ([ac0da94](https://github.com/gravity-ui/chartkit/commit/ac0da94fd21ff558a739c00b8904645d5ba006ef))
 
 ## [2.10.1](https://github.com/gravity-ui/chartkit/compare/v2.10.0...v2.10.1) (2023-06-19)
 
