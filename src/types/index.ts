@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type {ChartKitWidget} from './widget';
+import {ChartKitError} from '../libs';
 
 export type {ChartKitHolidays} from './misc';
 
@@ -47,7 +48,7 @@ export type ChartKitProps<T extends ChartKitType> = {
      * @param data
      */
     onChartLoad?: (data: ChartKitOnChartLoad<T>) => void;
-
+    renderError?: RenderError;
     onError?: ChartKitOnError;
 } & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
 
@@ -55,5 +56,13 @@ export type ChartKitPlugin = {
     type: ChartKitType;
     renderer: React.LazyExoticComponent<any>;
 };
+
+export type RenderErrorOpts = {
+    message: string;
+    error: ChartKitError | Error;
+    resetError: () => void;
+};
+
+export type RenderError = (opts: RenderErrorOpts) => React.ReactNode;
 
 export type {ChartKitWidget};
