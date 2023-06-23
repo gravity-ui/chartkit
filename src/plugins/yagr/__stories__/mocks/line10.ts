@@ -63,3 +63,29 @@ export const line10: YagrWidgetData = {
         processing: {},
     },
 };
+
+export const getNewConfig = () => {
+    const startPoint = (Math.random() * 10 ** 5) >> 0; // eslint-disable-line no-bitwise
+    return {
+        ...line10,
+        libraryConfig: {
+            ...line10.libraryConfig,
+            title: {
+                text: 'line: random 100 pts',
+            },
+        },
+        data: {
+            timeline: new Array(100).fill(0).map((_, i) => {
+                return startPoint + i * 1000;
+            }),
+            graphs: line10.data.graphs.map((graph) => {
+                return {
+                    ...graph,
+                    data: new Array(100).fill(0).map(() => {
+                        return (Math.random() * 100) >> 0; // eslint-disable-line no-bitwise
+                    }),
+                };
+            }),
+        },
+    };
+};
