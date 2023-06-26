@@ -1,0 +1,22 @@
+# Build and publish -beta tag for @gravity-ui/chartkit
+# Runs manually in Actions tabs in github
+# Runs on any branch except main
+
+name: Release beta version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+      - uses: gravity-ui/release-action@v1
+        with:
+          github-token: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
+          npm-token: ${{ secrets.GRAVITY_UI_BOT_NPM_TOKEN }}
+          node-version: 14
+          npm-dist-tag: beta
+          prerelease: true
+          default-branch: ${{ github.ref }}
