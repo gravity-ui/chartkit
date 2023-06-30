@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.0](https://github.com/gravity-ui/chartkit/compare/v2.12.0...v2.13.0) (2023-06-30)
+
+
+### Features
+
+* **Yagr plugin:** update to v 2.2.6 ([#186](https://github.com/gravity-ui/chartkit/issues/186)) ([bddd692](https://github.com/gravity-ui/chartkit/commit/bddd6920742b398b35ce4ef6d8b78d87d50148db))
+
 ## [2.12.0](https://github.com/gravity-ui/chartkit/compare/v2.11.0...v2.12.0) (2023-06-30)
 
 
