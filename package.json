@@ -13,7 +13,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@gravity-ui/yagr": "^2.2.5",
+    "@gravity-ui/yagr": "^2.2.6",
     "bem-cn-lite": "^4.1.0",
     "highcharts": "^8.2.2",
     "highcharts-react-official": "^3.0.0",
