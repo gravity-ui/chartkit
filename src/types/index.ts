@@ -38,18 +38,16 @@ export type ChartKitProps<T extends ChartKitType> = {
     id?: string;
     isMobile?: boolean;
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
-    /**
-     * called on each render
-     * @param data
-     */
+    /** Fires on each chartkit plugin's component render */
     onRender?: (data: ChartKitOnRenderData) => void;
-    /**
-     * called on chart mount
-     * @param data
-     */
+    /** Fires on chartkit plugin's component mount */
     onChartLoad?: (data: ChartKitOnChartLoad<T>) => void;
-    renderError?: RenderError;
+    /** Fires in case of unhandled plugin's exception */
     onError?: ChartKitOnError;
+    /** Used to render user's error component */
+    renderError?: RenderError;
+    /** Used to render user's plugin loader component */
+    renderPluginLoader?: () => React.ReactNode;
 } & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
 
 export type ChartKitPlugin = {
