@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.0](https://github.com/gravity-ui/chartkit/compare/v2.11.0...v2.12.0) (2023-06-30)
+
+
+### Features
+
+* add renderPluginLoader property ([#184](https://github.com/gravity-ui/chartkit/issues/184)) ([3955d2f](https://github.com/gravity-ui/chartkit/commit/3955d2f1995fb204c16cda53e96b4eca50c2ef0e))
+
 ## [2.11.0](https://github.com/gravity-ui/chartkit/compare/v2.10.1...v2.11.0) (2023-06-20)
 
 
