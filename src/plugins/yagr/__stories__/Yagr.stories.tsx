@@ -63,5 +63,6 @@ const UpdatesTemplate: Story<any> = () => {
         </div>
     );
 };
+
 export const Line = LineTemplate.bind({});
 export const Updates = UpdatesTemplate.bind({});
