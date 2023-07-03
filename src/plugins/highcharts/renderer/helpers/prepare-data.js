@@ -1,4 +1,4 @@
-import moment from 'moment';
+import {dateTime} from '@gravity-ui/date-utils';
 import lodashMin from 'lodash/min';
 import {i18n} from '../../../../i18n';
 import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
@@ -80,7 +80,7 @@ function removeHolidays(data, options, holidays) {
     });
 
     data.categories_ms.forEach((ts, i) => {
-        const datetime = moment(ts).format('YYYYMMDD');
+        const datetime = dateTime({input: ts}).format('YYYYMMDD');
         const region = (options.region && options.region.toLowerCase()) || 'tot';
         const holiday = holidays.holiday[region][datetime] || holidays.weekend[region][datetime];
 

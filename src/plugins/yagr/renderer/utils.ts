@@ -1,5 +1,5 @@
-import moment from 'moment';
 import merge from 'lodash/merge';
+import {dateTime} from '@gravity-ui/date-utils';
 import {defaults} from '@gravity-ui/yagr';
 import {settings} from '../../../libs';
 import type {Yagr, YagrWidgetData, YagrTheme, YagrChartOptions, MinimalValidConfig} from '../types';
@@ -115,14 +115,14 @@ export const detectClickOutside =
         }
     };
 
-const getXAxisFormatter =
+export const getXAxisFormatter =
     (msm = 1) =>
     (_: unknown, ticks: number[]) => {
         const range = (ticks[ticks.length - 1] - ticks[0]) / msm;
         return ticks.map((rawValue) => {
-            const d = moment(rawValue / msm);
+            const d = dateTime({input: rawValue / msm});
 
-            if (d.hour() === 0 && d.minutes() === 0 && d.seconds() === 0) {
+            if (d.hour() === 0 && d.minute() === 0 && d.second() === 0) {
                 return d.format('DD.MM.YY');
             }
 

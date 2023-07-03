@@ -1,4 +1,5 @@
-import moment from 'moment';
+import {dateTime} from '@gravity-ui/date-utils';
+
 import type {TooltipRow, TooltipRenderOptions, ValueFormatter} from '../../types';
 import type {TooltipData, TooltipLine} from './types';
 import {formatTooltip} from './tooltip';
@@ -50,7 +51,7 @@ export const renderTooltip = (data: TooltipRenderOptions) => {
 
     const tooltipFormatOptions: TooltipData = {
         activeRowAlwaysFirstInTooltip: rows.length > 1,
-        tooltipHeader: moment(x / timeMultiplier).format('DD MMMM YYYY HH:mm:ss'),
+        tooltipHeader: dateTime({input: x / timeMultiplier}).format('DD MMMM YYYY HH:mm:ss'),
         shared: true,
         lines: rows.map(
             (row, i) =>

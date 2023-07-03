@@ -1,4 +1,3 @@
-import moment from 'moment';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import {configure} from '@gravity-ui/uikit';
@@ -8,15 +7,12 @@ import type {ChartKitPlugin, ChartKitLang, ChartKitHolidays} from '../../types';
 interface Settings {
     plugins: ChartKitPlugin[];
     lang: ChartKitLang;
-    locale?: moment.LocaleSpecification;
     extra?: {
         holidays?: ChartKitHolidays;
     };
 }
 
 type SettingKey = keyof Settings;
-
-export const DEFAULT_LOCALE_SPECIFICATION: moment.LocaleSpecification = {week: {dow: 1, doy: 7}};
 
 const removeUndefinedValues = <T extends Record<string, any>>(data: T) => {
     return Object.entries(data).reduce((acc, [key, value]) => {
@@ -28,14 +24,7 @@ const removeUndefinedValues = <T extends Record<string, any>>(data: T) => {
     }, {} as T);
 };
 
-const updateLocale = (args: {lang: ChartKitLang; locale?: moment.LocaleSpecification}) => {
-    const {lang, locale} = args;
-
-    if (locale) {
-        moment.updateLocale(lang, locale);
-    }
-
-    moment.locale(lang);
+const updateLang = (lang: ChartKitLang) => {
     configure({lang});
     i18nFactory.setLang(lang);
 };
@@ -46,6 +35,10 @@ class ChartKitSettings {
         lang: 'en',
     };
 
+    constructor() {
+        updateLang(this.get('lang'));
+    }
+
     get<T extends SettingKey>(key: T) {
         return get(this.settings, key);
     }
@@ -53,10 +46,9 @@ class ChartKitSettings {
     set(updates: Partial<Settings>) {
         const filteredUpdates = removeUndefinedValues(updates);
 
-        if (filteredUpdates.lang || filteredUpdates.locale) {
+        if (filteredUpdates.lang) {
             const lang = filteredUpdates.lang || this.get('lang');
-            const locale = filteredUpdates.locale || this.get('locale');
-            updateLocale({lang, locale});
+            updateLang(lang);
         }
 
         this.settings = merge(this.settings, filteredUpdates);
@@ -64,5 +56,3 @@ class ChartKitSettings {
 }
 
 export const settings = new ChartKitSettings();
-
-settings.set({locale: DEFAULT_LOCALE_SPECIFICATION});
