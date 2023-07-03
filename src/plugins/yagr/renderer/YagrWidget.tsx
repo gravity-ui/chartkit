@@ -1,6 +1,6 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
-import YagrComponent, {YagrChartProps} from '@gravity-ui/yagr/dist/react';
+import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist/react';
 import {i18n} from '../../../i18n';
 import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
@@ -22,7 +22,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
         onRender,
         onChartLoad,
     } = props;
-    const yagrRef = React.useRef<YagrComponent>(null);
+    const yagrRef = React.useRef<YagrReactRef>(null);
 
     if (!data || isEmpty(data)) {
         throw new ChartKitError({
@@ -42,8 +42,13 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
     );
 
     const onWindowResize = React.useCallback(() => {
-        if (yagrRef.current?.chart) {
-            const chart = yagrRef.current.chart;
+        if (yagrRef.current) {
+            const chart = yagrRef.current.yagr();
+
+            if (!chart) {
+                return;
+            }
+
             const root = chart.root;
             const height = root.offsetHeight;
             const width = root.offsetWidth;
@@ -62,8 +67,8 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
         [onWindowResize],
     );
 
-    React.useLayoutEffect(() => {
-        const yagr = yagrRef.current?.chart;
+    React.useEffect(() => {
+        const yagr = yagrRef.current?.yagr();
 
         if (!yagr) {
             return;
@@ -96,11 +101,11 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
                 handlers.mouseDown = null;
             }
         });
-    });
+    }, []);
 
     React.useLayoutEffect(() => {
-        onChartLoad?.({widget: yagrRef.current?.chart});
-    }, []);
+        onChartLoad?.({widget: yagrRef.current?.yagr()});
+    }, [yagrRef, onChartLoad]);
 
     return (
         <YagrComponent

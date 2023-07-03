@@ -139,7 +139,7 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
     };
 
     const chart: YagrChartOptions = {
-        appereance: {
+        appearance: {
             locale: settings.get('lang'),
             theme,
         },

@@ -1,5 +1,7 @@
 import type {Config} from '@jest/types';
 
+const esModules = ['@gravity-ui/yagr', 'uplot'].join('|');
+
 const cfg: Config.InitialOptions = {
     verbose: true,
     preset: 'ts-jest',
@@ -8,6 +10,7 @@ const cfg: Config.InitialOptions = {
         '^.+\\.(js|ts)?$': 'ts-jest',
     },
     modulePathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/node_modules/'],
+    transformIgnorePatterns: [`<rootDir>/node_modules/(?!${esModules})`],
     moduleNameMapper: {
         '^.+\\.(css|scss)$': '<rootDir>/test-utils/style.mock.ts',
     },
