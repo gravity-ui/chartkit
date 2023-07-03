@@ -58,10 +58,6 @@ function forceHoverState(
 ) {
     const chartType = get(chart, 'userOptions.chart.type');
 
-    if (!chartType) {
-        return;
-    }
-
     if (chartType === 'pie') {
         chart.tooltip.refresh(activePoints);
         chart.pointsForInitialRefresh = activePoints;
@@ -336,7 +332,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
 
     return React.forwardRef<ComposedComponentProps, WrapperComponentPropsWithForwardedRef>(
         (props, ref) => {
-            return <WithSplitPane {...props} forwardedRef={ref} />;
+            return <WithSplitPane forwardedRef={ref} {...props} />;
         },
     );
 };
