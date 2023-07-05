@@ -2,7 +2,9 @@
 
 import block from 'bem-cn-lite';
 import merge from 'lodash/merge';
+
 import {i18n} from '../../../../../i18n';
+
 import {getChartKitFormattedValue} from './utils';
 import LocalStorage from './utils/localStorage';
 

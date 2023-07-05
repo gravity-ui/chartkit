@@ -1,5 +1,5 @@
-import {prepareData} from '../renderer/helpers/prepare-data';
 import {data} from '../mocks/line';
+import {prepareData} from '../renderer/helpers/prepare-data';
 import {ConfigOptions} from '../renderer/helpers/types';
 
 describe('plugins/highcharts/helpers', () => {

@@ -1,13 +1,14 @@
-import React from 'react';
-import {Meta, Story} from '@storybook/react';
 import {Button} from '@gravity-ui/uikit';
+import '@gravity-ui/yagr/dist/index.css';
+import {Meta, Story} from '@storybook/react';
+import React from 'react';
+
+import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
 import {YagrPlugin} from '../../../plugins';
-import {ChartKit} from '../../../components/ChartKit';
 import type {ChartKitRef} from '../../../types';
-import {getNewConfig, line10} from './mocks/line10';
 
-import '@gravity-ui/yagr/dist/index.css';
+import {getNewConfig, line10} from './mocks/line10';
 
 export default {
     title: 'Plugins/Yagr',

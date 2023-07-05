@@ -1,5 +1,6 @@
 import type {FormatNumberOptions} from '../../../../../shared';
 import type {TooltipLine} from '../../tooltip/types';
+
 import {getFormatOptionsFromLine} from './getFormatOptionsFromLine';
 
 describe('plugins/highcharts/config', () => {

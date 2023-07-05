@@ -1,6 +1,6 @@
+import block from 'bem-cn-lite';
 import React from 'react';
 import SplitPane, {Pane, Split, SplitPaneProps} from 'react-split-pane';
-import block from 'bem-cn-lite';
 
 import './StyledSplitPane.scss';
 

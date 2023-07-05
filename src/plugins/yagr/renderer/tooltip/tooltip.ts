@@ -1,10 +1,10 @@
 /* eslint complexity: 0 */
 
 import {i18n} from '../../../../i18n';
-import {escapeHTML} from './helpers/escapeHTML';
-import type {TooltipData, TooltipExtraData, TooltipLine, RowRenderingConfig} from './types';
 
+import {escapeHTML} from './helpers/escapeHTML';
 import './tooltip.scss';
+import type {RowRenderingConfig, TooltipData, TooltipExtraData, TooltipLine} from './types';
 
 const SERIES_NAME_DATA_ATTRIBUTE = 'data-series-name';
 const SERIES_IDX_DATA_ATTRIBUTE = 'data-series-idx';

@@ -1,7 +1,8 @@
 import React from 'react';
 
-import type {ChartKitWidget} from './widget';
 import {ChartKitError} from '../libs';
+
+import type {ChartKitWidget} from './widget';
 
 export type {ChartKitHolidays} from './misc';
 

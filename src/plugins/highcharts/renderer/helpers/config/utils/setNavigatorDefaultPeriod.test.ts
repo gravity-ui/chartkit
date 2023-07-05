@@ -1,5 +1,6 @@
 import type {Highcharts} from '../../../../types';
 import type {NavigatorPeriod} from '../types';
+
 import {getDefaultPeriodInMS} from './setNavigatorDefaultPeriod';
 
 const date1 = new Date('2021-01-01');

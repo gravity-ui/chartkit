@@ -1,13 +1,14 @@
-import React from 'react';
-import {Meta, Story} from '@storybook/react';
-import {ChartKit} from '../../../../components/ChartKit';
-import {ChartStory} from '../components/ChartStory';
 import {Button} from '@gravity-ui/uikit';
+import {Meta, Story} from '@storybook/react';
+import React from 'react';
+
+import {ChartKit} from '../../../../components/ChartKit';
 import {CHARTKIT_ERROR_CODE, settings} from '../../../../libs';
-import {HighchartsPlugin} from '../../index';
-import holidays from '../../mocks/holidays';
-import {noData, filledData} from '../../mocks/custom-error-render';
 import {RenderError} from '../../../../types';
+import {HighchartsPlugin} from '../../index';
+import {filledData, noData} from '../../mocks/custom-error-render';
+import holidays from '../../mocks/holidays';
+import {ChartStory} from '../components/ChartStory';
 
 export default {
     title: 'Plugins/Highcharts/CustomErrorRender',

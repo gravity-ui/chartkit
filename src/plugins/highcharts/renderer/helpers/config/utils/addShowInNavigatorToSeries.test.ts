@@ -1,4 +1,5 @@
 import {NavigatorLinesMode} from '../../constants';
+
 import {addShowInNavigatorToSeries} from './addShowInNavigatorToSeries';
 
 describe('plugins/highcharts/config/addShowInNavigatorToSeries', () => {

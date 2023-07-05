@@ -1,5 +1,6 @@
-import React from 'react';
 import block from 'bem-cn-lite';
+import React from 'react';
+
 import type {ChartKitProps} from '../../../types';
 import type {IndicatorWidgetDataItem} from '../types';
 

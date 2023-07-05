@@ -1,5 +1,6 @@
 import type {FormatNumberOptions} from '../../../../../shared';
 import {i18nInstance} from '../../../../../shared/format-number/i18n/i18n';
+
 import {numberFormat} from './numberFormat';
 
 i18nInstance.setLang('en');

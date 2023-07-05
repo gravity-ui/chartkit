@@ -1,10 +1,11 @@
-import React from 'react';
 import {Button} from '@gravity-ui/uikit';
-import {ChartKitRef, RenderError} from '../../../../types';
+import React from 'react';
+
+import {ChartKit} from '../../../../components/ChartKit';
 import {settings} from '../../../../libs';
+import {ChartKitRef, RenderError} from '../../../../types';
 import {HighchartsPlugin} from '../../index';
 import holidays from '../../mocks/holidays';
-import {ChartKit} from '../../../../components/ChartKit';
 import {HighchartsWidgetData} from '../../types';
 
 const DEFAULT_STORY_HEIGHT = '300px';

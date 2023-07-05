@@ -1,16 +1,17 @@
-import React from 'react';
-import Highcharts, {ChartCallbackFunction, Options, Chart} from 'highcharts';
+import Highcharts, {Chart, ChartCallbackFunction, Options} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import get from 'lodash/get';
-import type {ChartKitProps} from '../../../../types';
+import React from 'react';
+
 import {settings} from '../../../../libs';
-import {markChartPerformance, getChartPerformanceDuration, getRandomCKId} from '../../../../utils';
+import type {ChartKitProps} from '../../../../types';
+import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../../utils';
 import type {HighchartsWidgetData, StringParams} from '../../types';
 import {getGraph} from '../helpers/graph';
 import {initHighchartsModules} from '../helpers/init-highcharts-modules';
-import {withSplitPane} from './withSplitPane/withSplitPane';
 
 import './HighchartsComponent.scss';
+import {withSplitPane} from './withSplitPane/withSplitPane';
 
 const HighcharsReactWithSplitPane = withSplitPane(HighchartsReact);
 

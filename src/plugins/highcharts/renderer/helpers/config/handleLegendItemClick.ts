@@ -1,6 +1,8 @@
-import {drawComments, hideComments} from '../comments/drawing';
-import {isNavigatorSeries} from './utils';
 import Highcharts from 'highcharts';
+
+import {drawComments, hideComments} from '../comments/drawing';
+
+import {isNavigatorSeries} from './utils';
 
 type LegendItemClickType = 'extended' | 'default';
 

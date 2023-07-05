@@ -1,5 +1,5 @@
-import {i18nInstance} from './i18n/i18n';
 import {formatNumber} from './format-number';
+import {i18nInstance} from './i18n/i18n';
 import type {FormatNumberOptions} from './types';
 
 i18nInstance.setLang('en');

@@ -1,6 +1,6 @@
-import React from 'react';
-import block from 'bem-cn-lite';
 import {Loader as BaseLoader, LoaderProps as BaseLoaderProps} from '@gravity-ui/uikit';
+import block from 'bem-cn-lite';
+import React from 'react';
 
 import './Loader.scss';
 

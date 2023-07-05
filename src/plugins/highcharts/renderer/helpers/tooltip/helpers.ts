@@ -1,4 +1,5 @@
 import orderBy from 'lodash/orderBy';
+
 import type {TooltipData, TooltipLine} from './types';
 
 export const escapeHTML = (html = '') => {

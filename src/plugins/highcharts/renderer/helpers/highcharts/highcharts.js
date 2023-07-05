@@ -2,20 +2,22 @@
 
 import Highcharts from 'highcharts';
 import get from 'lodash/get';
+
 import {i18n} from '../../../../../i18n';
 import {
-    hideFixedTooltip,
     getTooltipPositioner,
     handleScroll,
+    hideFixedTooltip,
     synchronizeTooltipTablesCellsWidth,
 } from '../config/config';
 import {
-    TOOLTIP_ROW_CLASS_NAME,
-    TOOLTIP_LIST_CLASS_NAME,
-    TOOLTIP_FOOTER_CLASS_NAME,
     TOOLTIP_CONTAINER_CLASS_NAME,
+    TOOLTIP_FOOTER_CLASS_NAME,
+    TOOLTIP_LIST_CLASS_NAME,
+    TOOLTIP_ROW_CLASS_NAME,
     TOOLTIP_ROW_NAME_CLASS_NANE,
 } from '../tooltip';
+
 import colors from './colors';
 import {calculateClosestPointManually} from './utils';
 

@@ -1,7 +1,9 @@
-import moment from 'moment';
 import lodashMin from 'lodash/min';
+import moment from 'moment';
+
 import {i18n} from '../../../../i18n';
-import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
+import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../../libs';
+
 import {DEFAULT_LINES_LIMIT} from './constants';
 
 function prepareValue(value, firstValue, options) {

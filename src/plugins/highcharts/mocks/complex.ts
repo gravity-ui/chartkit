@@ -1,4 +1,5 @@
-import type {Chart, SeriesZonesOptionsObject, BBoxObject, OffsetObject} from 'highcharts';
+import type {BBoxObject, Chart, OffsetObject, SeriesZonesOptionsObject} from 'highcharts';
+
 import type {HighchartsWidgetData} from '../types';
 
 /**
@@ -45,7 +46,7 @@ function getZones(
 
     let positive: boolean | undefined;
     let color: string | undefined;
-    let prev: typeof counts[number] | undefined;
+    let prev: (typeof counts)[number] | undefined;
 
     for (const count of counts) {
         const isPositive = count.created - count.resolved >= 0;

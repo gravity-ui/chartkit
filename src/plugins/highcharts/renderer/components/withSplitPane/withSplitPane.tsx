@@ -1,7 +1,5 @@
 /* eslint callback-return: 0 */
 
-import React from 'react';
-
 import block from 'bem-cn-lite';
 import {debounce, get} from 'lodash';
 

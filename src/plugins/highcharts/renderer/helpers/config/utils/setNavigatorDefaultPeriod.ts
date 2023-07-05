@@ -1,6 +1,8 @@
 import moment from 'moment';
+
 import type {Highcharts} from '../../../../types';
 import type {NavigatorPeriod} from '../types';
+
 import {getXAxisThresholdValue} from './getXAxisThresholdValue';
 
 type SetNavigatorDefaultPeriod = {

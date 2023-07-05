@@ -1,5 +1,5 @@
 import {shapeYagrConfig} from '../renderer/utils';
-import type {YagrWidgetData, MinimalValidConfig} from '../types';
+import type {MinimalValidConfig, YagrWidgetData} from '../types';
 
 const DATA: YagrWidgetData['data'] = {
     timeline: [1],

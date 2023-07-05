@@ -1,7 +1,9 @@
 import moment from 'moment';
-import type {TooltipRow, TooltipRenderOptions, ValueFormatter} from '../../types';
-import type {TooltipData, TooltipLine} from './types';
+
+import type {TooltipRenderOptions, TooltipRow, ValueFormatter} from '../../types';
+
 import {formatTooltip} from './tooltip';
+import type {TooltipData, TooltipLine} from './types';
 
 const calcOption = <T>(d: T | {[key in string]: T} | undefined) => {
     return typeof d === 'object' && d !== null

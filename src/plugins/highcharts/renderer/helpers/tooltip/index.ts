@@ -1,13 +1,14 @@
 /* eslint-disable complexity */
 
 import _escape from 'lodash/escape';
+
 import {i18n} from '../../../../../i18n';
 import type {Highcharts} from '../../../types';
-import type {TooltipData, TooltipLine, RowRenderingConfig} from './types';
-import {renderShapeIcon} from './render-shape-icon';
-import {escapeHTML, getSortedLines} from './helpers';
 
+import {escapeHTML, getSortedLines} from './helpers';
+import {renderShapeIcon} from './render-shape-icon';
 import './tooltip.scss';
+import type {RowRenderingConfig, TooltipData, TooltipLine} from './types';
 
 export const SERIES_NAME_DATA_ATTRIBUTE = 'data-series-name';
 export const SERIES_IDX_DATA_ATTRIBUTE = 'data-series-idx';

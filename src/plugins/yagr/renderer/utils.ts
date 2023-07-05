@@ -1,8 +1,10 @@
-import moment from 'moment';
-import merge from 'lodash/merge';
 import {defaults} from '@gravity-ui/yagr';
+import merge from 'lodash/merge';
+import moment from 'moment';
+
 import {settings} from '../../../libs';
-import type {Yagr, YagrWidgetData, YagrTheme, YagrChartOptions, MinimalValidConfig} from '../types';
+import type {MinimalValidConfig, Yagr, YagrChartOptions, YagrTheme, YagrWidgetData} from '../types';
+
 import {renderTooltip} from './tooltip';
 
 const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';

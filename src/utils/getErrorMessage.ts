@@ -1,5 +1,5 @@
-import type {ChartKitError} from '../libs';
 import {i18n} from '../i18n';
+import type {ChartKitError} from '../libs';
 
 export function getErrorMessage(error: ChartKitError | Error) {
     const code = 'code' in error && error.code;

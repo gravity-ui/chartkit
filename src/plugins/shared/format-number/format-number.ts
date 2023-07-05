@@ -1,7 +1,7 @@
-import ru from './i18n/ru.json';
 import en from './i18n/en.json';
 import {i18nInstance, makeInstance} from './i18n/i18n';
-import type {FormatOptions, FormatNumberOptions} from './types';
+import ru from './i18n/ru.json';
+import type {FormatNumberOptions, FormatOptions} from './types';
 
 const i18n = makeInstance('chartkit-units', {ru, en});
 

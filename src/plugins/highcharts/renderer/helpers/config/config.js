@@ -1,49 +1,51 @@
 /* eslint new-cap: 0, complexity: 0 */
 
-import Highcharts from 'highcharts';
 import block from 'bem-cn-lite';
-import merge from 'lodash/merge';
-import mergeWith from 'lodash/mergeWith';
-import get from 'lodash/get';
+import Highcharts from 'highcharts';
 import clamp from 'lodash/clamp';
+import debounce from 'lodash/debounce';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
-import throttle from 'lodash/throttle';
+import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
 import pick from 'lodash/pick';
-import debounce from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 import moment from 'moment';
+
 import {i18n} from '../../../../../i18n';
 import {formatNumber} from '../../../../shared';
 import {
-    getCommentsOnLine,
     drawComments,
-    hideComments,
     drawOnlyRendererComments,
+    getCommentsOnLine,
+    hideComments,
 } from '../comments/drawing';
 import formatTooltip, {
-    TOOLTIP_ROW_CLASS_NAME,
     SERIES_NAME_DATA_ATTRIBUTE,
+    TOOLTIP_CONTAINER_CLASS_NAME,
+    TOOLTIP_FOOTER_CLASS_NAME,
     TOOLTIP_HEADER_CLASS_NAME,
     TOOLTIP_LIST_CLASS_NAME,
-    TOOLTIP_FOOTER_CLASS_NAME,
-    TOOLTIP_CONTAINER_CLASS_NAME,
+    TOOLTIP_ROW_CLASS_NAME,
     TOOLTIP_ROW_NAME_CLASS_NANE,
 } from '../tooltip';
+
+import {handleLegendItemClick} from './handleLegendItemClick';
 import defaultOptions from './options';
 import {
-    calculatePrecision,
-    isTooltipShared,
-    isSafari,
-    mergeArrayWithObject,
-    concatStrings,
-    buildNavigatorFallback,
     addShowInNavigatorToSeries,
-    setNavigatorDefaultPeriod,
-    numberFormat,
-    getFormatOptionsFromLine,
+    buildNavigatorFallback,
+    calculatePrecision,
     checkTooltipPinningAvailability,
+    concatStrings,
+    getFormatOptionsFromLine,
+    isSafari,
+    isTooltipShared,
+    mergeArrayWithObject,
+    numberFormat,
+    setNavigatorDefaultPeriod,
 } from './utils';
-import {handleLegendItemClick} from './handleLegendItemClick';
 import {getChartKitFormattedValue} from './utils/getChartKitFormattedValue';
 
 const b = block('chartkit-tooltip');

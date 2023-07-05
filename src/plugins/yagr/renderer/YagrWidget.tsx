@@ -1,16 +1,16 @@
-import React from 'react';
-import isEmpty from 'lodash/isEmpty';
+import '@gravity-ui/yagr/dist/index.css';
 import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist/react';
+import isEmpty from 'lodash/isEmpty';
+import React from 'react';
+
 import {i18n} from '../../../i18n';
-import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
+import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
+
+import './YagrWidget.scss';
+import './polyfills';
 import {useWidgetData} from './useWidgetData';
 import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from './utils';
-
-import './polyfills';
-
-import '@gravity-ui/yagr/dist/index.css';
-import './YagrWidget.scss';
 
 type Props = ChartKitProps<'yagr'> & {id: string};
 
