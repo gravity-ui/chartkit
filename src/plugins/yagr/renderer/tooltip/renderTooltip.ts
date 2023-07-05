@@ -4,7 +4,7 @@ import type {TooltipData, TooltipLine} from './types';
 import {formatTooltip} from './tooltip';
 
 const calcOption = <T>(d: T | {[key in string]: T} | undefined) => {
-    return typeof d === 'object'
+    return typeof d === 'object' && d !== null
         ? Object.values(d).reduce((_, t) => {
               return t;
           })
