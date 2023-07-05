@@ -2,7 +2,7 @@ import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist/react';
 import {i18n} from '../../../i18n';
-import type {ChartKitWidgetRef, ChartKitProps, ChartRenderedRef} from '../../../types';
+import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import {useWidgetData} from './useWidgetData';
 import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from './utils';
@@ -12,10 +12,7 @@ import './polyfills';
 import '@gravity-ui/yagr/dist/index.css';
 import './YagrWidget.scss';
 
-type Props = ChartKitProps<'yagr'> & {
-    id: string;
-    rendererRef: ChartRenderedRef<'yagr'>;
-};
+type Props = ChartKitProps<'yagr'> & {id: string};
 
 const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props, forwardedRef) => {
     const {
