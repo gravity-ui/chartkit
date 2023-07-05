@@ -2,7 +2,7 @@ import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist/react';
 import {i18n} from '../../../i18n';
-import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
+import type {ChartKitWidgetRef, ChartKitProps, ChartRenderedRef} from '../../../types';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import {useWidgetData} from './useWidgetData';
 import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from './utils';
@@ -12,7 +12,10 @@ import './polyfills';
 import '@gravity-ui/yagr/dist/index.css';
 import './YagrWidget.scss';
 
-type Props = ChartKitProps<'yagr'> & {id: string};
+type Props = ChartKitProps<'yagr'> & {
+    id: string;
+    rendererRef: ChartRenderedRef<'yagr'>;
+};
 
 const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props, forwardedRef) => {
     const {
@@ -49,11 +52,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
                 return;
             }
 
-            const root = chart.root;
-            const height = root.offsetHeight;
-            const width = root.offsetWidth;
-            chart.uplot.setSize({width, height});
-            chart.uplot.redraw();
+            chart.reflow();
         }
     }, []);
 
@@ -67,10 +66,16 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
         [onWindowResize],
     );
 
+    React.useImperativeHandle(props.rendererRef, () => yagrRef.current!);
+
     React.useEffect(() => {
         const yagr = yagrRef.current?.yagr();
 
         if (!yagr) {
+            return;
+        }
+
+        if (yagr.config?.tooltip?.virtual) {
             return;
         }
 

@@ -2,6 +2,7 @@ import React from 'react';
 
 import type {ChartKitWidget} from './widget';
 import {ChartKitError} from '../libs';
+import {YagrReactRef} from '@gravity-ui/yagr/dist/react';
 
 export type {ChartKitHolidays} from './misc';
 
@@ -16,6 +17,12 @@ export type ChartKitRef = {
 export type ChartKitWidgetRef = {
     reflow?: ChartKitRef['reflow'];
 };
+
+export type ChartRenderedRef<T extends ChartKitType | undefined = undefined> = T extends undefined
+    ? undefined
+    : T extends 'yagr'
+    ? React.MutableRefObject<YagrReactRef | null>
+    : undefined;
 
 export type ChartKitOnLoadData<T extends ChartKitType> = {
     widget?: ChartKitWidget[T]['widget'];
@@ -34,6 +41,7 @@ export type ChartKitOnError = (data: {error: any}) => void;
 
 export type ChartKitProps<T extends ChartKitType> = {
     type: T;
+    rendererRef?: ChartRenderedRef<T>;
     data: ChartKitWidget[T]['data'];
     id?: string;
     isMobile?: boolean;

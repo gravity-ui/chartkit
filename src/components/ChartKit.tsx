@@ -3,7 +3,13 @@ import block from 'bem-cn-lite';
 import {i18n} from '../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError, settings} from '../libs';
 import {getRandomCKId, typedMemo} from '../utils';
-import type {ChartKitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '../types';
+import type {
+    ChartKitType,
+    ChartKitRef,
+    ChartKitWidgetRef,
+    ChartKitProps,
+    ChartRenderedRef,
+} from '../types';
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 
@@ -13,6 +19,7 @@ const b = block('chartkit');
 
 type ChartKitComponentProps<T extends ChartKitType> = Omit<ChartKitProps<T>, 'onError'> & {
     instanceRef?: React.ForwardedRef<ChartKitRef | undefined>;
+    rendererRef?: ChartRenderedRef<T>;
 };
 
 const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps<T>) => {
