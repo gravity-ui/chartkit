@@ -18,7 +18,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
+<<<<<<< HEAD
           node-version: 18
+=======
+          node-version: '18.x'
+>>>>>>> fix: build fixes (#190)
           cache: 'npm'
       - name: Install Packages
         run: npm ci
@@ -38,7 +42,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
+<<<<<<< HEAD
           node-version: 18
+=======
+          node-version: '18.x'
+>>>>>>> fix: build fixes (#190)
           cache: 'npm'
       - name: Install Packages
         run: npm ci
