@@ -1,8 +1,10 @@
 /* eslint callback-return: 0 */
 
 import React from 'react';
+
 import block from 'bem-cn-lite';
-import {get, debounce} from 'lodash';
+import {debounce, get} from 'lodash';
+
 import {getRandomCKId} from '../../../../../utils';
 import type {Highcharts} from '../../../types';
 import {chartTypesWithoutCrosshair} from '../../helpers/config/config';
@@ -56,7 +58,7 @@ function forceHoverState(
     chart: Highcharts.Chart,
     activePoints: Highcharts.Point | Highcharts.Point[],
 ) {
-    const chartType = get(chart, 'userOptions.chart.type');
+    const chartType = get(chart, 'userOptions.chart.type') || '';
 
     if (chartType === 'pie') {
         chart.tooltip.refresh(activePoints);
@@ -332,7 +334,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
 
     return React.forwardRef<ComposedComponentProps, WrapperComponentPropsWithForwardedRef>(
         (props, ref) => {
-            return <WithSplitPane forwardedRef={ref} {...props} />;
+            return <WithSplitPane {...props} forwardedRef={ref} />;
         },
     );
 };
