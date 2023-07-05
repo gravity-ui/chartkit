@@ -45,7 +45,7 @@ function getZones(
 
     let positive: boolean | undefined;
     let color: string | undefined;
-    let prev: typeof counts[number] | undefined;
+    let prev: (typeof counts)[number] | undefined;
 
     for (const count of counts) {
         const isPositive = count.created - count.resolved >= 0;
