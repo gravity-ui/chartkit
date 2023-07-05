@@ -1,8 +1,10 @@
 /* eslint callback-return: 0 */
 
 import React from 'react';
+
 import block from 'bem-cn-lite';
-import {get, debounce} from 'lodash';
+import {debounce, get} from 'lodash';
+
 import {getRandomCKId} from '../../../../../utils';
 import type {Highcharts} from '../../../types';
 import {chartTypesWithoutCrosshair} from '../../helpers/config/config';
