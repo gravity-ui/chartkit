@@ -2,7 +2,6 @@ import React from 'react';
 
 import type {ChartKitWidget} from './widget';
 import {ChartKitError} from '../libs';
-import {YagrReactRef} from '@gravity-ui/yagr/dist/react';
 
 export type {ChartKitHolidays} from './misc';
 
@@ -17,12 +16,6 @@ export type ChartKitRef = {
 export type ChartKitWidgetRef = {
     reflow?: ChartKitRef['reflow'];
 };
-
-export type ChartRenderedRef<T extends ChartKitType | undefined = undefined> = T extends undefined
-    ? undefined
-    : T extends 'yagr'
-    ? React.MutableRefObject<YagrReactRef | null>
-    : undefined;
 
 export type ChartKitOnLoadData<T extends ChartKitType> = {
     widget?: ChartKitWidget[T]['widget'];
@@ -41,8 +34,9 @@ export type ChartKitOnError = (data: {error: any}) => void;
 
 export type ChartKitProps<T extends ChartKitType> = {
     type: T;
-    rendererRef?: ChartRenderedRef<T>;
     data: ChartKitWidget[T]['data'];
+    /** Plugin component's react ref */
+    pluginRef?: ChartKitWidget[T]['pluginRef'];
     id?: string;
     isMobile?: boolean;
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
@@ -56,7 +50,9 @@ export type ChartKitProps<T extends ChartKitType> = {
     renderError?: RenderError;
     /** Used to render user's plugin loader component */
     renderPluginLoader?: () => React.ReactNode;
-} & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
+} & {
+    [key in keyof Omit<ChartKitWidget[T], 'data' | 'widget' | 'pluginRef'>]: ChartKitWidget[T][key];
+};
 
 export type ChartKitPlugin = {
     type: ChartKitType;
