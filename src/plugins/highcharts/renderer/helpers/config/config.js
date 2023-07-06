@@ -11,7 +11,7 @@ import isNumber from 'lodash/isNumber';
 import throttle from 'lodash/throttle';
 import pick from 'lodash/pick';
 import debounce from 'lodash/debounce';
-import moment from 'moment';
+import {dateTime} from '@gravity-ui/date-utils';
 import {i18n} from '../../../../../i18n';
 import {formatNumber} from '../../../../shared';
 import {
@@ -1412,7 +1412,9 @@ function drillOnClick(event, {options, chartType}) {
                     chartType === 'scatter' ? drillDownFilter - 180 * 60 * 1000 : drillDownFilter;
             }
 
-            return isDateTime ? moment(drillDownFilter).format('YYYY-MM-DD') : drillDownFilter;
+            return isDateTime
+                ? dateTime({input: drillDownFilter}).format('YYYY-MM-DD')
+                : drillDownFilter;
         }
 
         return filter;
