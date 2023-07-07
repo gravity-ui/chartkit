@@ -1,4 +1,4 @@
-import moment from 'moment';
+import {dateTime} from '@gravity-ui/date-utils';
 import type {Highcharts} from '../../../../types';
 import type {NavigatorPeriod} from '../types';
 import {getXAxisThresholdValue} from './getXAxisThresholdValue';
@@ -39,7 +39,7 @@ export const getDefaultPeriodInMS = (
         return null;
     }
 
-    const minXValue = moment(maxXValue).subtract(value, period);
+    const minXValue = dateTime({input: maxXValue}).subtract(value, period);
     const range = maxXValue - minXValue.valueOf();
 
     return {

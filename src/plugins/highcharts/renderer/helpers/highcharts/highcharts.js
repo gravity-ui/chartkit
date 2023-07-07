@@ -131,7 +131,7 @@ Highcharts.setOptions({
     },
 });
 
-function initHighcharts({isMobile}) {
+function initHighchartsLangOptions() {
     Highcharts.setOptions({
         lang: {
             resetZoom: '⟲',
@@ -178,6 +178,10 @@ function initHighcharts({isMobile}) {
             thousandsSep: i18n('highcharts', 'thousands-sep'),
         },
     });
+}
+
+function initHighcharts({isMobile}) {
+    initHighchartsLangOptions();
 
     // https://github.com/highcharts/highcharts/issues/11494
     (function (H) {
@@ -428,4 +432,4 @@ function initHighchartsMap() {
     });
 }
 
-export {initHighcharts, initHighchartsMap};
+export {initHighcharts, initHighchartsMap, initHighchartsLangOptions};

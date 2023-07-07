@@ -4,10 +4,12 @@ import HighchartsReact from 'highcharts-react-official';
 import get from 'lodash/get';
 import type {ChartKitProps} from '../../../../types';
 import {settings} from '../../../../libs';
+import {settingsEventEmitter} from '../../../../libs/settings/settings';
 import {markChartPerformance, getChartPerformanceDuration, getRandomCKId} from '../../../../utils';
 import type {HighchartsWidgetData, StringParams} from '../../types';
 import {getGraph} from '../helpers/graph';
 import {initHighchartsModules} from '../helpers/init-highcharts-modules';
+import {initHighchartsLangOptions} from '../helpers/highcharts/highcharts';
 import {withSplitPane} from './withSplitPane/withSplitPane';
 
 import './HighchartsComponent.scss';
@@ -22,6 +24,11 @@ type State = {
     callback: ChartCallbackFunction | null;
     isError: boolean;
 };
+
+settingsEventEmitter.on('change-lang', {
+    id: 'hc-lang-handler',
+    action: initHighchartsLangOptions,
+});
 
 initHighchartsModules();
 
