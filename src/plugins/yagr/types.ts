@@ -1,6 +1,7 @@
 import type {RawSerieData, YagrConfig} from '@gravity-ui/yagr';
 
 export type {default as Yagr} from '@gravity-ui/yagr';
+export type {YagrReactRef} from '@gravity-ui/yagr/dist/react';
 export * from '@gravity-ui/yagr/dist/types';
 
 export type YagrWidgetData = {
