@@ -1,5 +1,5 @@
-import moment from 'moment';
 import lodashMin from 'lodash/min';
+import {dateTime} from '@gravity-ui/date-utils';
 import {i18n} from '../../../../i18n';
 import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
 import {DEFAULT_LINES_LIMIT} from './constants';
@@ -80,9 +80,9 @@ function removeHolidays(data, options, holidays) {
     });
 
     data.categories_ms.forEach((ts, i) => {
-        const datetime = moment(ts).format('YYYYMMDD');
+        const key = dateTime({input: ts}).format('YYYYMMDD');
         const region = (options.region && options.region.toLowerCase()) || 'tot';
-        const holiday = holidays.holiday[region][datetime] || holidays.weekend[region][datetime];
+        const holiday = holidays.holiday[region][key] || holidays.weekend[region][key];
 
         if (!holiday) {
             timeline.push(ts);
