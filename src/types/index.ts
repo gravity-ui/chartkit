@@ -35,6 +35,8 @@ export type ChartKitOnError = (data: {error: any}) => void;
 export type ChartKitProps<T extends ChartKitType> = {
     type: T;
     data: ChartKitWidget[T]['data'];
+    /** Plugin component's react ref */
+    pluginRef?: ChartKitWidget[T]['pluginRef'];
     id?: string;
     isMobile?: boolean;
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
@@ -48,7 +50,9 @@ export type ChartKitProps<T extends ChartKitType> = {
     renderError?: RenderError;
     /** Used to render user's plugin loader component */
     renderPluginLoader?: () => React.ReactNode;
-} & {[key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key]};
+} & {
+    [key in keyof Omit<ChartKitWidget[T], 'data' | 'widget' | 'pluginRef'>]: ChartKitWidget[T][key];
+};
 
 export type ChartKitPlugin = {
     type: ChartKitType;

@@ -1,5 +1,6 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
+import {useForkRef} from '@gravity-ui/uikit';
 import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist/react';
 import {i18n} from '../../../i18n';
 import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
@@ -18,11 +19,13 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
     const {
         id,
         data: {data},
+        pluginRef,
         onLoad,
         onRender,
         onChartLoad,
     } = props;
     const yagrRef = React.useRef<YagrReactRef>(null);
+    const handleRef = useForkRef(pluginRef, yagrRef);
 
     if (!data || isEmpty(data)) {
         throw new ChartKitError({
@@ -38,7 +41,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
             onLoad?.({...data, widget: chart, widgetRendering: renderTime});
             onRender?.({renderTime});
         },
-        [onLoad, data],
+        [onLoad, onRender, data],
     );
 
     const onWindowResize = React.useCallback(() => {
@@ -49,11 +52,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
                 return;
             }
 
-            const root = chart.root;
-            const height = root.offsetHeight;
-            const width = root.offsetWidth;
-            chart.uplot.setSize({width, height});
-            chart.uplot.redraw();
+            chart.reflow();
         }
     }, []);
 
@@ -71,6 +70,10 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
         const yagr = yagrRef.current?.yagr();
 
         if (!yagr) {
+            return;
+        }
+
+        if (yagr.config?.tooltip?.virtual) {
             return;
         }
 
@@ -109,7 +112,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
 
     return (
         <YagrComponent
-            ref={yagrRef}
+            ref={handleRef}
             id={id}
             config={config}
             debug={debug}

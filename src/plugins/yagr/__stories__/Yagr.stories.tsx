@@ -2,7 +2,7 @@ import React from 'react';
 import {Meta, Story} from '@storybook/react';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
-import {YagrPlugin} from '../../../plugins';
+import {YagrPlugin, YagrReactRef} from '../../../plugins';
 import {ChartKit} from '../../../components/ChartKit';
 import type {ChartKitRef} from '../../../types';
 import {getNewConfig, line10} from './mocks/line10';
@@ -17,6 +17,8 @@ export default {
 const LineTemplate: Story<any> = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
+    // Example of usage pluginRef property
+    const yagrPluginRef = React.useRef<YagrReactRef>(null);
 
     if (!shown) {
         settings.set({plugins: [YagrPlugin]});
@@ -25,7 +27,13 @@ const LineTemplate: Story<any> = () => {
 
     return (
         <div style={{height: 300, width: '100%'}}>
-            <ChartKit ref={chartkitRef} id="1" type="yagr" data={line10} />
+            <ChartKit
+                ref={chartkitRef}
+                id="1"
+                type="yagr"
+                data={line10}
+                pluginRef={yagrPluginRef}
+            />
         </div>
     );
 };
