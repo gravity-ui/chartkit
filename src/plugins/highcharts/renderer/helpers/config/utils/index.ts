@@ -1,3 +1,6 @@
+import orderBy from 'lodash/orderBy';
+import type {HighchartsSortData} from '../../../../types/widget';
+
 export {addShowInNavigatorToSeries} from './addShowInNavigatorToSeries';
 export {buildNavigatorFallback} from './buildNavigatorFallback';
 export {calculatePrecision} from './calculatePrecision';
@@ -11,3 +14,16 @@ export {isSafari} from './isSafari';
 export {mergeArrayWithObject} from './mergeArrayWithObject';
 export {numberFormat} from './numberFormat';
 export {setNavigatorDefaultPeriod} from './setNavigatorDefaultPeriod';
+
+export const getSortedData = <T extends Record<string, any>>(
+    data: T[],
+    sort: HighchartsSortData = {},
+) => {
+    const {enabled = true, order = 'desc', iteratee = 'y'} = sort;
+
+    if (!enabled) {
+        return [...data];
+    }
+
+    return orderBy(data, iteratee, order);
+};
