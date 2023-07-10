@@ -34,6 +34,20 @@ export type HighchartsManageTooltipConfig = (
     chart: Highcharts.Chart,
 ) => HighchartsManageTooltipConfigOptions;
 
+export type HighchartsSortData = {
+    /** Enable tooltip lines sorting. `false` by default */
+    enabled?: boolean;
+    /** The sort orders. `'desc'` by default */
+    order?: 'asc' | 'desc';
+    /** The iteratees to sort by key(s) from `TooltipLine`. `'originalValue'` by default */
+    iteratee?:
+        | keyof TooltipLine
+        | keyof TooltipLine[]
+        | ((
+              line: TooltipLine,
+          ) => TooltipLine[keyof TooltipLine] | TooltipLine[keyof TooltipLine][]);
+};
+
 export type HighchartsWidgetData = {
     data: (
         | CkHighchartsSeriesOptionsType[]
@@ -105,7 +119,7 @@ export type HighchartsWidgetData = {
                 metaKey?: boolean;
             };
             /** Used to manage tooltip lines sorting */
-            sort?: TooltipData['sort'];
+            sort?: HighchartsSortData;
         };
         /**
          * Used to modify tooltip data
