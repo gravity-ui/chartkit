@@ -8,24 +8,24 @@
 }
 
 .chartkit-theme_common {
-    --highcarts-navigator-border: var(--yc-color-line-generic);
-    --highcarts-navigator-track: var(--yc-color-base-generic);
-    --highcarts-navigator-body: var(--yc-color-scroll-handle);
-    --highcharts-series-border: var(--yc-color-base-background);
-    --highcharts-grid-line: var(--yc-color-line-generic);
-    --highcharts-axis-line: var(--yc-color-line-generic);
-    --highcharts-tick: var(--yc-color-line-generic);
-    --highcharts-title: var(--yc-color-text-primary);
-    --highcharts-axis-labels: var(--yc-color-text-secondary);
-    --highcharts-data-labels: var(--yc-color-text-complementary);
-    --highcharts-plot-line-label: var(--yc-color-text-complementary);
-    --highcharts-legend-item: var(--yc-color-text-secondary);
-    --highcharts-legend-item-hover: var(--yc-color-text-primary);
-    --highcharts-legend-item-hidden: var(--yc-color-text-hint);
-    --highcharts-floating-bg: var(--yc-color-infographics-tooltip-bg);
-    --highcharts-tooltip-text: var(--yc-color-text-primary);
+    --highcarts-navigator-border: var(--g-color-line-generic);
+    --highcarts-navigator-track: var(--g-color-base-generic);
+    --highcarts-navigator-body: var(--g-color-scroll-handle);
+    --highcharts-series-border: var(--g-color-base-background);
+    --highcharts-grid-line: var(--g-color-line-generic);
+    --highcharts-axis-line: var(--g-color-line-generic);
+    --highcharts-tick: var(--g-color-line-generic);
+    --highcharts-title: var(--g-color-text-primary);
+    --highcharts-axis-labels: var(--g-color-text-secondary);
+    --highcharts-data-labels: var(--g-color-text-complementary);
+    --highcharts-plot-line-label: var(--g-color-text-complementary);
+    --highcharts-legend-item: var(--g-color-text-secondary);
+    --highcharts-legend-item-hover: var(--g-color-text-primary);
+    --highcharts-legend-item-hidden: var(--g-color-text-hint);
+    --highcharts-floating-bg: var(--g-color-infographics-tooltip-bg);
+    --highcharts-tooltip-text: var(--g-color-text-primary);
     --highcharts-tooltip-bg: var(--highcharts-floating-bg);
-    --highcharts-tooltip-alternate-bg: var(--yc-color-base-generic);
-    --highcharts-tooltip-text-complementary: var(--yc-color-text-complementary);
-    --highcharts-holiday-band: var(--yc-color-base-generic);
+    --highcharts-tooltip-alternate-bg: var(--g-color-base-generic);
+    --highcharts-tooltip-text-complementary: var(--g-color-text-complementary);
+    --highcharts-holiday-band: var(--g-color-base-generic);
 }
