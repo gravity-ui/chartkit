@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@gravity-ui/date-utils": "^1.4.1",
-    "@gravity-ui/yagr": "^3.4.0",
+    "@gravity-ui/yagr": "^3.4.1",
     "bem-cn-lite": "^4.1.0",
     "highcharts": "^8.2.2",
     "highcharts-react-official": "^3.0.0",
