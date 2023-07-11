@@ -18,13 +18,13 @@ $monospaceFontFamily: 'Consolas', 'Menlo', 'Ubuntu Mono', monospace;
     &._tooltip-with-scroll {
         ._tooltip-header td:last-child {
             padding-right: calc(
-                #{$lastTDRightPadding} + var(--yc-scrollbar-width, #{$defaultScrollbarWidth})
+                #{$lastTDRightPadding} + var(--g-scrollbar-width, #{$defaultScrollbarWidth})
             );
         }
 
         ._tooltip-footer td:last-child {
             padding-right: calc(
-                #{$lastTDRightPadding} + var(--yc-scrollbar-width, #{$defaultScrollbarWidth})
+                #{$lastTDRightPadding} + var(--g-scrollbar-width, #{$defaultScrollbarWidth})
             );
         }
     }
@@ -32,13 +32,13 @@ $monospaceFontFamily: 'Consolas', 'Menlo', 'Ubuntu Mono', monospace;
     &._tooltip-with-scroll-in-safari {
         ._tooltip-row td:last-child {
             padding-right: calc(
-                #{$lastTDRightPadding} + var(--yc-scrollbar-width, #{$defaultScrollbarWidth})
+                #{$lastTDRightPadding} + var(--g-scrollbar-width, #{$defaultScrollbarWidth})
             );
         }
 
         ._tooltip-rows__summ-tr td:last-child {
             padding-right: calc(
-                #{$lastTDRightPadding} + var(--yc-scrollbar-width, #{$defaultScrollbarWidth})
+                #{$lastTDRightPadding} + var(--g-scrollbar-width, #{$defaultScrollbarWidth})
             );
         }
     }
@@ -386,7 +386,7 @@ $monospaceFontFamily: 'Consolas', 'Menlo', 'Ubuntu Mono', monospace;
             word-break: break-word;
 
             &_for-split-tooltip {
-                color: var(--yc-color-text-secondary);
+                color: var(--g-color-text-secondary);
                 padding-left: 8px;
                 border-top: none;
                 border-left: 2px solid;

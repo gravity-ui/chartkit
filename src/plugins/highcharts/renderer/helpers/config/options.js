@@ -185,7 +185,7 @@ const options = {
         },
         title: {
             style: {
-                color: 'var(--yc-color-text-secondary)',
+                color: 'var(--g-color-text-secondary)',
             },
         },
     },
