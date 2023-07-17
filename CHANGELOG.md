@@ -5,11 +5,14 @@
 
 ### ⚠ BREAKING CHANGES
 
-* chartkit v3 ([#208](https://github.com/gravity-ui/chartkit/issues/208))
+* update @gravity-ui/uikit to v5 ([#206](https://github.com/gravity-ui/chartkit/pull/206))
+* update @gravity-ui/yagr to v3 ([#202](https://github.com/gravity-ui/chartkit/pull/202))
+* change moment to @gravity-ui/date-utils ([#198](https://github.com/gravity-ui/chartkit/pull/198))
+* move `sort` property to higher level ([#208](https://github.com/gravity-ui/chartkit/pull/208)). Now this property does not enabled in `TooltipData`, but still enabled in `HighchartsWidgetData.tooltip`
 
 ### Features
 
-* chartkit v3 ([#208](https://github.com/gravity-ui/chartkit/issues/208)) ([8e1c53b](https://github.com/gravity-ui/chartkit/commit/8e1c53b192cd0cc1f9d97600e3d6670f18d6992e))
+* add `pluginRef` property ([#195](https://github.com/gravity-ui/chartkit/pull/195))
 
 ## [2.13.0](https://github.com/gravity-ui/chartkit/compare/v2.12.0...v2.13.0) (2023-06-30)
 
