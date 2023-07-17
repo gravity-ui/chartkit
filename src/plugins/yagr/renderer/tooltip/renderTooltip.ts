@@ -1,4 +1,4 @@
-import moment from 'moment';
+import {dateTime} from '@gravity-ui/date-utils';
 import type {TooltipRow, TooltipRenderOptions, ValueFormatter} from '../../types';
 import type {TooltipData, TooltipLine} from './types';
 import {formatTooltip} from './tooltip';
@@ -20,7 +20,7 @@ export const renderTooltip = (data: TooltipRenderOptions) => {
     const cfg = data.yagr.config;
     const timeMultiplier = cfg.chart.timeMultiplier || 1;
     const opts = data.options;
-    const {x, pinned} = data;
+    const {x, state} = data;
 
     let sumTotal = 0;
     const rows = Object.values(data.scales).reduce((acc, scale) => {
@@ -34,7 +34,7 @@ export const renderTooltip = (data: TooltipRenderOptions) => {
     const maxLines = calcOption<number>(opts.maxLines);
     const valueFormatter = calcOption<ValueFormatter>(opts.value);
     // eslint-disable-next-line no-nested-ternary
-    const hiddenRowsNumber = pinned
+    const hiddenRowsNumber = state.pinned
         ? undefined
         : lines > maxLines
         ? Math.abs(maxLines - lines)
@@ -50,7 +50,7 @@ export const renderTooltip = (data: TooltipRenderOptions) => {
 
     const tooltipFormatOptions: TooltipData = {
         activeRowAlwaysFirstInTooltip: rows.length > 1,
-        tooltipHeader: moment(x / timeMultiplier).format('DD MMMM YYYY HH:mm:ss'),
+        tooltipHeader: dateTime({input: x / timeMultiplier}).format('DD MMMM YYYY HH:mm:ss'),
         shared: true,
         lines: rows.map(
             (row, i) =>
@@ -74,6 +74,6 @@ export const renderTooltip = (data: TooltipRenderOptions) => {
     }
 
     return formatTooltip(tooltipFormatOptions, {
-        lastVisibleRowIndex: pinned ? rows.length - 1 : maxLines - 1,
+        lastVisibleRowIndex: state.pinned ? rows.length - 1 : maxLines - 1,
     });
 };

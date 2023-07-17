@@ -1,6 +1,7 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
-import YagrComponent, {YagrChartProps} from '@gravity-ui/yagr/dist/react';
+import {useForkRef} from '@gravity-ui/uikit';
+import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist/react';
 import {i18n} from '../../../i18n';
 import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
@@ -18,11 +19,13 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
     const {
         id,
         data: {data},
+        pluginRef,
         onLoad,
         onRender,
         onChartLoad,
     } = props;
-    const yagrRef = React.useRef<YagrComponent>(null);
+    const yagrRef = React.useRef<YagrReactRef>(null);
+    const handleRef = useForkRef(pluginRef, yagrRef);
 
     if (!data || isEmpty(data)) {
         throw new ChartKitError({
@@ -38,17 +41,18 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
             onLoad?.({...data, widget: chart, widgetRendering: renderTime});
             onRender?.({renderTime});
         },
-        [onLoad, data],
+        [onLoad, onRender, data],
     );
 
     const onWindowResize = React.useCallback(() => {
-        if (yagrRef.current?.chart) {
-            const chart = yagrRef.current.chart;
-            const root = chart.root;
-            const height = root.offsetHeight;
-            const width = root.offsetWidth;
-            chart.uplot.setSize({width, height});
-            chart.uplot.redraw();
+        if (yagrRef.current) {
+            const chart = yagrRef.current.yagr();
+
+            if (!chart) {
+                return;
+            }
+
+            chart.reflow();
         }
     }, []);
 
@@ -62,10 +66,14 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
         [onWindowResize],
     );
 
-    React.useLayoutEffect(() => {
-        const yagr = yagrRef.current?.chart;
+    React.useEffect(() => {
+        const yagr = yagrRef.current?.yagr();
 
         if (!yagr) {
+            return;
+        }
+
+        if (yagr.config?.tooltip?.virtual) {
             return;
         }
 
@@ -96,15 +104,15 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, Props>((props
                 handlers.mouseDown = null;
             }
         });
-    });
+    }, []);
 
     React.useLayoutEffect(() => {
-        onChartLoad?.({widget: yagrRef.current?.chart});
-    }, []);
+        onChartLoad?.({widget: yagrRef.current?.yagr()});
+    }, [yagrRef, onChartLoad]);
 
     return (
         <YagrComponent
-            ref={yagrRef}
+            ref={handleRef}
             id={id}
             config={config}
             debug={debug}

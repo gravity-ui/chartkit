@@ -1,22 +1,24 @@
-import moment from 'moment';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import {configure} from '@gravity-ui/uikit';
 import {i18nFactory} from '../../i18n';
 import type {ChartKitPlugin, ChartKitLang, ChartKitHolidays} from '../../types';
+import {EventEmitter} from './eventEmitter';
 
 interface Settings {
     plugins: ChartKitPlugin[];
     lang: ChartKitLang;
-    locale?: moment.LocaleSpecification;
     extra?: {
         holidays?: ChartKitHolidays;
     };
 }
 
 type SettingKey = keyof Settings;
+type SettingsEventsMap = {
+    'change-lang': ChartKitLang;
+};
 
-export const DEFAULT_LOCALE_SPECIFICATION: moment.LocaleSpecification = {week: {dow: 1, doy: 7}};
+export const settingsEventEmitter = new EventEmitter<SettingsEventsMap>();
 
 const removeUndefinedValues = <T extends Record<string, any>>(data: T) => {
     return Object.entries(data).reduce((acc, [key, value]) => {
@@ -28,14 +30,7 @@ const removeUndefinedValues = <T extends Record<string, any>>(data: T) => {
     }, {} as T);
 };
 
-const updateLocale = (args: {lang: ChartKitLang; locale?: moment.LocaleSpecification}) => {
-    const {lang, locale} = args;
-
-    if (locale) {
-        moment.updateLocale(lang, locale);
-    }
-
-    moment.locale(lang);
+const updateLang = (lang: ChartKitLang) => {
     configure({lang});
     i18nFactory.setLang(lang);
 };
@@ -46,6 +41,10 @@ class ChartKitSettings {
         lang: 'en',
     };
 
+    constructor() {
+        updateLang(this.get('lang'));
+    }
+
     get<T extends SettingKey>(key: T) {
         return get(this.settings, key);
     }
@@ -53,16 +52,14 @@ class ChartKitSettings {
     set(updates: Partial<Settings>) {
         const filteredUpdates = removeUndefinedValues(updates);
 
-        if (filteredUpdates.lang || filteredUpdates.locale) {
-            const lang = filteredUpdates.lang || this.get('lang');
-            const locale = filteredUpdates.locale || this.get('locale');
-            updateLocale({lang, locale});
-        }
-
         this.settings = merge(this.settings, filteredUpdates);
+
+        if (filteredUpdates.lang) {
+            const lang = filteredUpdates.lang || this.get('lang');
+            updateLang(lang);
+            settingsEventEmitter.dispatch('change-lang', lang);
+        }
     }
 }
 
 export const settings = new ChartKitSettings();
-
-settings.set({locale: DEFAULT_LOCALE_SPECIFICATION});

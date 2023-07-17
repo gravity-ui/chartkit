@@ -11,7 +11,7 @@ import isNumber from 'lodash/isNumber';
 import throttle from 'lodash/throttle';
 import pick from 'lodash/pick';
 import debounce from 'lodash/debounce';
-import moment from 'moment';
+import {dateTime} from '@gravity-ui/date-utils';
 import {i18n} from '../../../../../i18n';
 import {formatNumber} from '../../../../shared';
 import {
@@ -42,6 +42,7 @@ import {
     numberFormat,
     getFormatOptionsFromLine,
     checkTooltipPinningAvailability,
+    getSortedData,
 } from './utils';
 import {handleLegendItemClick} from './handleLegendItemClick';
 import {getChartKitFormattedValue} from './utils/getChartKitFormattedValue';
@@ -528,7 +529,6 @@ function getTooltip(tooltip, options, comments, holidays) {
             count: 1,
             shared: true,
             unsafe: Boolean(options.unsafe),
-            sort: options?.tooltip?.sort,
         };
 
         if (typeof options.manageTooltipConfig === 'function') {
@@ -573,7 +573,7 @@ function getTooltip(tooltip, options, comments, holidays) {
     let shared;
 
     if (this.points) {
-        points = this.points;
+        points = getSortedData(this.points, options?.tooltip?.sort);
         shared = true;
     } else {
         points.push(Object.assign({}, this.point));
@@ -594,7 +594,6 @@ function getTooltip(tooltip, options, comments, holidays) {
         withPercent: false,
         tooltipHeader: null,
         unsafe: Boolean(options.unsafe),
-        sort: options?.tooltip?.sort,
     };
 
     if (isDatetimeXAxis) {
@@ -1412,7 +1411,9 @@ function drillOnClick(event, {options, chartType}) {
                     chartType === 'scatter' ? drillDownFilter - 180 * 60 * 1000 : drillDownFilter;
             }
 
-            return isDateTime ? moment(drillDownFilter).format('YYYY-MM-DD') : drillDownFilter;
+            return isDateTime
+                ? dateTime({input: drillDownFilter}).format('YYYY-MM-DD')
+                : drillDownFilter;
         }
 
         return filter;
