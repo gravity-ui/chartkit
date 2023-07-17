@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/gravity-ui/chartkit/compare/v2.13.0...v3.0.0) (2023-07-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* chartkit v3 ([#208](https://github.com/gravity-ui/chartkit/issues/208))
+
+### Features
+
+* chartkit v3 ([#208](https://github.com/gravity-ui/chartkit/issues/208)) ([8e1c53b](https://github.com/gravity-ui/chartkit/commit/8e1c53b192cd0cc1f9d97600e3d6670f18d6992e))
+
 ## [2.13.0](https://github.com/gravity-ui/chartkit/compare/v2.12.0...v2.13.0) (2023-06-30)
 
 
