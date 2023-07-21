@@ -1,4 +1,4 @@
-import type {Yagr, YagrReactRef, YagrWidgetData} from '../plugins/yagr/types';
+import type {CustomTooltipProps, Yagr, YagrReactRef, YagrWidgetData} from '../plugins/yagr/types';
 import type {IndicatorWidgetData} from '../plugins/indicator/types';
 import type {Highcharts, HighchartsWidgetData, StringParams} from '../plugins/highcharts/types';
 
@@ -7,6 +7,7 @@ export interface ChartKitWidget {
         data: YagrWidgetData;
         widget: Yagr;
         pluginRef: React.MutableRefObject<YagrReactRef | null>;
+        CustomTooltip?: React.ComponentType<CustomTooltipProps>;
     };
     indicator: {
         data: IndicatorWidgetData;
