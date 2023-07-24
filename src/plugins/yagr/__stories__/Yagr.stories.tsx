@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Meta, Story} from '@storybook/react';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
-import {CustomTooltipProps, TooltipHandlerData, YagrPlugin, YagrReactRef} from '../../../plugins';
+import {CustomTooltipProps, TooltipHandlerData, YagrPlugin} from '../../../plugins';
 import {ChartKit} from '../../../components/ChartKit';
 import type {ChartKitRef} from '../../../types';
 import {getNewConfig, line10} from './mocks/line10';
@@ -19,8 +19,6 @@ export default {
 const LineTemplate: Story<any> = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
-    // Example of usage pluginRef property
-    const yagrPluginRef = React.useRef<YagrReactRef>(null);
 
     if (!shown) {
         settings.set({plugins: [YagrPlugin]});
@@ -29,13 +27,7 @@ const LineTemplate: Story<any> = () => {
 
     return (
         <div style={{height: 300, width: '100%'}}>
-            <ChartKit
-                ref={chartkitRef}
-                id="1"
-                type="yagr"
-                data={line10}
-                pluginRef={yagrPluginRef}
-            />
+            <ChartKit ref={chartkitRef} id="1" type="yagr" data={line10} />
         </div>
     );
 };
@@ -125,7 +117,13 @@ const CustomTooltipImpl: Story<any> = () => {
 
     return (
         <div style={{height: 300, width: '100%'}}>
-            <ChartKit ref={chartkitRef} id="1" type="yagr" data={state} CustomTooltip={Tooltip} />
+            <ChartKit
+                ref={chartkitRef}
+                id="1"
+                type="yagr"
+                data={state}
+                tooltip={(props: CustomTooltipProps) => <Tooltip {...props} />}
+            />
             <Button onClick={() => setState(getNewConfig())}>Change data</Button>
         </div>
     );

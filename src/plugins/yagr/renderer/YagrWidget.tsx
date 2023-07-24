@@ -23,7 +23,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
             onLoad,
             onRender,
             onChartLoad,
-            CustomTooltip,
+            tooltip,
         } = props;
 
         const yagrRef = React.useRef<YagrReactRef>(null);
@@ -103,7 +103,11 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
 
         return (
             <React.Fragment>
-                {CustomTooltip && yagr && <CustomTooltip yagr={yagr} />}
+                {tooltip &&
+                    yagr &&
+                    tooltip({
+                        yagr,
+                    })}
                 <YagrComponent
                     ref={yagrRef}
                     id={id}

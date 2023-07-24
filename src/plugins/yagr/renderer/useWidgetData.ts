@@ -16,9 +16,9 @@ export const useWidgetData = (
                 data,
                 libraryConfig,
                 theme,
-                customTooltip: Boolean(props.CustomTooltip),
+                customTooltip: Boolean(props.tooltip),
             }),
-        [data, libraryConfig, theme, props.CustomTooltip],
+        [data, libraryConfig, theme, props.tooltip],
     );
     const debug: YagrChartProps['debug'] = React.useMemo(() => {
         const filename = sources
