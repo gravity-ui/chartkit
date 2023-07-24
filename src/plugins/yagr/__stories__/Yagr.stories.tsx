@@ -107,7 +107,7 @@ function Tooltip({yagr}: CustomTooltipProps) {
             }}
             ref={tooltipRef}
         >
-            {dateTime({input: x}).format('DD MMMM YYYY HH:mm:ss')}
+            {dateTime({input: x ?? 0}).format('DD MMMM YYYY HH:mm:ss')}
         </div>
     );
 }
