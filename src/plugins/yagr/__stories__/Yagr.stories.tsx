@@ -9,6 +9,7 @@ import {getNewConfig, line10} from './mocks/line10';
 
 import '@gravity-ui/yagr/dist/index.css';
 import placement from '@gravity-ui/yagr/dist/YagrCore/plugins/tooltip/placement';
+import {dateTime} from '@gravity-ui/date-utils';
 
 export default {
     title: 'Plugins/Yagr',
@@ -102,10 +103,11 @@ function Tooltip({yagr}: CustomTooltipProps) {
                 zIndex: 1000,
                 backgroundColor: 'white',
                 padding: 8,
+                pointerEvents: 'none',
             }}
             ref={tooltipRef}
         >
-            {x}
+            {dateTime({input: x}).format('DD MMMM YYYY HH:mm:ss')}
         </div>
     );
 }

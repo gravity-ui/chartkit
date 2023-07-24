@@ -1,5 +1,6 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
+
 import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist/react';
 
 import {i18n} from '../../../i18n';
@@ -41,22 +42,14 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
             (chart, {renderTime}) => {
                 onLoad?.({...data, widget: chart, widgetRendering: renderTime});
                 onRender?.({renderTime});
-                if (!yagr) {
-                    setYagr(chart);
-                }
+                setYagr(chart);
             },
-            [onLoad, onRender, data, setYagr, yagr],
+            [onLoad, onRender, data, setYagr],
         );
 
         const onWindowResize = React.useCallback(() => {
-            if (yagrRef.current) {
-                const chart = yagrRef.current.yagr();
-
-                if (!chart) {
-                    return;
-                }
-
-                chart.reflow();
+            if (yagr) {
+                yagr.reflow();
             }
         }, []);
 
@@ -105,8 +98,8 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
         }, [yagr]);
 
         React.useLayoutEffect(() => {
-            onChartLoad?.({widget: yagrRef.current?.yagr()});
-        }, [yagrRef, onChartLoad]);
+            onChartLoad?.({widget: yagr});
+        }, [yagr, onChartLoad]);
 
         return (
             <React.Fragment>
