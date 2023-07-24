@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@gravity-ui/date-utils": "^1.4.1",
-    "@gravity-ui/yagr": "^3.4.0",
+    "@gravity-ui/yagr": "^3.6.1",
     "bem-cn-lite": "^4.1.0",
     "lodash": "^4.17.21",
     "react-split-pane": "^0.1.92"
@@ -72,9 +72,9 @@
   },
   "peerDependencies": {
     "@gravity-ui/uikit": "^5.0.0",
-    "react": "^16.0.0 || ^17.0.0 || ^18.0.0",
     "highcharts": "^8.2.2",
-    "highcharts-react-official": "^3.2.0"
+    "highcharts-react-official": "^3.2.0",
+    "react": "^16.0.0 || ^17.0.0 || ^18.0.0"
   },
   "scripts": {
     "test": "jest",

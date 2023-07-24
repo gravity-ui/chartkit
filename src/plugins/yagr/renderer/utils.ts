@@ -12,6 +12,7 @@ type ShapeYagrConfigArgs = {
     data: YagrWidgetData['data'];
     libraryConfig: YagrWidgetData['libraryConfig'];
     theme: YagrTheme;
+    customTooltip?: boolean;
 };
 
 export const synchronizeTooltipTablesCellsWidth = (tooltipContainer: HTMLElement) => {
@@ -156,6 +157,10 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
         if (!config.tooltip.className) {
             // "className" property prevent default yagr styles adding
             config.tooltip.className = 'chartkit-yagr-tooltip';
+        }
+
+        if (args.customTooltip) {
+            config.tooltip.virtual = true;
         }
     }
 
