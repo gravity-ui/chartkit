@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.0](https://github.com/gravity-ui/chartkit/compare/v3.0.0...v3.1.0) (2023-07-26)
+
+
+### Features
+
+* bump yagr to 3.7.0 ([#213](https://github.com/gravity-ui/chartkit/issues/213)) ([3cf2bf3](https://github.com/gravity-ui/chartkit/commit/3cf2bf31374e8951515d09bfc5be78356bff8897))
+* custom react tooltip support in Yagr type widgets ([#211](https://github.com/gravity-ui/chartkit/issues/211)) ([800749d](https://github.com/gravity-ui/chartkit/commit/800749da7ba643f9963139b271ac33c1d70de04b))
+
 ## [3.0.0](https://github.com/gravity-ui/chartkit/compare/v2.13.0...v3.0.0) (2023-07-17)
 
 
