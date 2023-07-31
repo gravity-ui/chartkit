@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@gravity-ui/date-utils": "^1.4.1",
-    "@gravity-ui/yagr": "^3.7.1",
+    "@gravity-ui/yagr": "^3.7.2",
     "bem-cn-lite": "^4.1.0",
     "lodash": "^4.17.21",
     "react-split-pane": "^0.1.92"
