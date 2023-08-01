@@ -29,3 +29,9 @@
     --highcharts-tooltip-text-complementary: var(--yc-color-text-complementary);
     --highcharts-holiday-band: var(--yc-color-base-generic);
 }
+
+.g-root {
+    --ck-color-grid: var(--g-color-line-generic);
+    --ck-color-axis: var(--g-color-line-generic-active);
+    --ck-color-axis-label: var(--g-color-text-secondary);
+}

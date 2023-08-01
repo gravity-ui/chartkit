@@ -1,0 +1,47 @@
+.chartkit-d3-axis {
+    & .domain {
+        stroke: var(--g-color-line-generic-active);
+    }
+
+    & .tick text {
+        color: var(--g-color-text-secondary);
+    }
+
+    & .tick line {
+        stroke: var(--g-color-line-generic);
+    }
+}
+
+.chartkit-d3-legend {
+    &__item {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    &__item-text {
+        fill: var(--g-color-text-secondary);
+
+        &_unselected {
+            fill: var(--g-color-text-hint);
+        }
+
+        &:hover {
+            fill: var(--g-color-text-complementary);
+        }
+    }
+}
+
+.chartkit-d3-scatter {
+    &__point {
+        stroke-width: 1px;
+
+        .chartkit-d3_hovered & {
+            opacity: 0.5;
+        }
+
+        &:hover {
+            stroke: #fff;
+            opacity: 1;
+        }
+    }
+}
