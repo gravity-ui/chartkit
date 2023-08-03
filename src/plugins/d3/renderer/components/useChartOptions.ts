@@ -61,7 +61,7 @@ const getAxisLabelMaxWidth = (args: {axis: Axis; series: ChartKitWidgetSeries[]}
     switch (axis.type) {
         case 'category': {
             const yCatigories = get(axis, 'categories', [] as string[]);
-            maxDomainValue = yCatigories.sort()[yCatigories.length - 1];
+            maxDomainValue = [...yCatigories].sort((c1, c2) => c2.length - c1.length)[0];
             break;
         }
         case 'datetime': {
