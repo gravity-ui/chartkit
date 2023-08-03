@@ -25,8 +25,16 @@ type ReturnValue = {
     yScale: ChartScale;
 };
 
-export const isNumericalArrayData = (data: unknown[]): data is number[] => {
+const isNumericalArrayData = (data: unknown[]): data is number[] => {
     return data.every((d) => typeof d === 'number' || d === null);
+};
+
+const filterCategoriesByVisibleSeries = (categories: string[], series: ChartKitWidgetSeries[]) => {
+    return categories.filter((category) => {
+        return series.some((s) => {
+            return s.data.some((d) => 'category' in d && d.category === category);
+        });
+    });
 };
 
 export const useScales = (args: Args): ReturnValue => {
@@ -57,7 +65,11 @@ export const useScales = (args: Args): ReturnValue => {
         }
         case 'category': {
             if (xCatigories) {
-                xScale = scaleBand().domain(xCatigories).range([0, boundsWidth]);
+                const filteredCategories = filterCategoriesByVisibleSeries(
+                    xCatigories,
+                    visibleSeries,
+                );
+                xScale = scaleBand().domain(filteredCategories).range([0, boundsWidth]);
             }
 
             break;
@@ -96,9 +108,11 @@ export const useScales = (args: Args): ReturnValue => {
         }
         case 'category': {
             if (yCatigories) {
-                yScale = scaleBand()
-                    .domain(yCatigories as string[])
-                    .range([boundsHeight, 0]);
+                const filteredCategories = filterCategoriesByVisibleSeries(
+                    yCatigories,
+                    visibleSeries,
+                );
+                yScale = scaleBand().domain(filteredCategories).range([boundsHeight, 0]);
             }
 
             break;
