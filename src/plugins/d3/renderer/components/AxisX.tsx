@@ -1,13 +1,14 @@
 import React from 'react';
 import block from 'bem-cn-lite';
 import {axisBottom, select} from 'd3';
-import type {AxisScale, AxisDomain} from 'd3';
+import type {AxisScale, AxisDomain, Selection} from 'd3';
 
 import type {ChartOptions} from './useChartOptions';
 import type {ChartScale} from './useScales';
 import {formatAxisTickLabel, parseTransformStyle} from './utils';
 
 const b = block('chartkit-d3-axis');
+const EMPTY_SPACE_BETWEEN_LABELS = 10;
 
 type Props = {
     axis: ChartOptions['xAxis'];
@@ -16,6 +17,27 @@ type Props = {
     scale: ChartScale;
 };
 
+// Note: this method do not prepared for rotated labels
+const removeOverlappingXTicks = (axis: Selection<SVGGElement, unknown, null, undefined>) => {
+    const a = axis.selectAll('g.tick').nodes();
+
+    if (a.length <= 1) {
+        return;
+    }
+
+    for (let i = 0, x = 0; i < a.length; i++) {
+        const node = a[i] as Element;
+        const r = node.getBoundingClientRect();
+
+        if (r.left < x) {
+            node?.parentNode?.removeChild(node);
+        } else {
+            x = r.right + EMPTY_SPACE_BETWEEN_LABELS;
+        }
+    }
+};
+
+// FIXME: add overflow ellipsis for the labels that out of boundaries
 export const AxisX = ({axis, width, height, scale}: Props) => {
     return (
         <g
@@ -36,8 +58,7 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
                             dateFormat: axis.labels.dateFormat,
                             numberFormat: axis.labels.numberFormat,
                         });
-                    })
-                    .ticks(6);
+                    });
 
                 svgElement.call(xAxisGenerator).attr('class', b());
                 svgElement.select('.domain').attr('d', `M0,0V0H${width}`);
@@ -46,8 +67,11 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
                 const {x} = parseTransformStyle(transformStyle);
 
                 if (x === 0) {
+                    // Remove tick that has the same x coordinate like domain
                     svgElement.select('.tick').remove();
                 }
+
+                removeOverlappingXTicks(svgElement);
             }}
         />
     );
