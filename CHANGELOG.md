@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.1](https://github.com/gravity-ui/chartkit/compare/v3.1.0...v3.1.1) (2023-08-04)
+
+
+### Bug Fixes
+
+* bumped yagr to 3.7.5 ([#214](https://github.com/gravity-ui/chartkit/issues/214)) ([5d24852](https://github.com/gravity-ui/chartkit/commit/5d248529fec2a85306f8409d647c9f6a8eb79c6a))
+* **Highcharts plugin:** revert 'show totals of selected series on leg… ([#215](https://github.com/gravity-ui/chartkit/issues/215)) ([d7dd0c4](https://github.com/gravity-ui/chartkit/commit/d7dd0c472cde1d3ab8a82ab48671cb71cd47d9c6))
+* **Highcharts plugin:** revert 'show totals of selected series on legend click' ([d7dd0c4](https://github.com/gravity-ui/chartkit/commit/d7dd0c472cde1d3ab8a82ab48671cb71cd47d9c6))
+
 ## [3.1.0](https://github.com/gravity-ui/chartkit/compare/v3.0.0...v3.1.0) (2023-07-26)
 
 
