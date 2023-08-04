@@ -61,40 +61,43 @@ const getPointProperties = (args: {
 
 export const useShapes = (args: Args) => {
     const {series, xAxis, xScale, yAxis, yScale} = args;
-    const visibleSeries = getOnlyVisibleSeries(series);
-    const shapes = visibleSeries.reduce<React.ReactElement[]>((acc, s) => {
-        const randomKey = Math.random().toString();
-        switch (s.type) {
-            case 'scatter': {
-                const preparedData =
-                    xAxis.type === 'category' || yAxis[0]?.type === 'category'
-                        ? prepareCategoricalScatterData(s.data)
-                        : prepareLinearScatterData(s.data);
-                acc.push(
-                    ...preparedData.map((point, i) => {
-                        const pointProps = getPointProperties({
-                            point,
-                            xAxis,
-                            xScale,
-                            yAxis,
-                            yScale,
-                        });
+    const shapes = React.useMemo(() => {
+        const visibleSeries = getOnlyVisibleSeries(series);
 
-                        return (
-                            <circle
-                                key={`${i}-${randomKey}`}
-                                className={b('point')}
-                                fill={s.color}
-                                {...pointProps}
-                            />
-                        );
-                    }),
-                );
-                break;
+        return visibleSeries.reduce<React.ReactElement[]>((acc, s) => {
+            const randomKey = Math.random().toString();
+            switch (s.type) {
+                case 'scatter': {
+                    const preparedData =
+                        xAxis.type === 'category' || yAxis[0]?.type === 'category'
+                            ? prepareCategoricalScatterData(s.data)
+                            : prepareLinearScatterData(s.data);
+                    acc.push(
+                        ...preparedData.map((point, i) => {
+                            const pointProps = getPointProperties({
+                                point,
+                                xAxis,
+                                xScale,
+                                yAxis,
+                                yScale,
+                            });
+
+                            return (
+                                <circle
+                                    key={`${i}-${randomKey}`}
+                                    className={b('point')}
+                                    fill={s.color}
+                                    {...pointProps}
+                                />
+                            );
+                        }),
+                    );
+                    break;
+                }
             }
-        }
-        return acc;
-    }, []);
+            return acc;
+        }, []);
+    }, [series, xAxis, xScale, yAxis, yScale]);
 
     return {shapes};
 };

@@ -130,7 +130,7 @@ const Template: Story = () => {
     }
 
     return (
-        <div style={{height: 300, width: '100%'}}>
+        <div style={{height: '50vh', width: '100%'}}>
             <ChartKit ref={chartkitRef} type="d3" data={data} />
         </div>
     );

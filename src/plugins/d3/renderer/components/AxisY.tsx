@@ -39,43 +39,44 @@ const removeOverlappingYTicks = (axis: Selection<SVGGElement, unknown, null, und
 };
 
 // FIXME: add overflow ellipsis for the labels that out of boundaries
-export const AxisY = ({axises, width, height, offsetTop, scale}: Props) => {
-    return (
-        <g
-            ref={(node) => {
-                if (!node) {
-                    return;
-                }
+const Axis = ({axises, width, height, offsetTop, scale}: Props) => {
+    const ref = React.useRef<SVGGElement>(null);
 
-                const axis = axises[0];
-                const svgElement = select(node);
-                svgElement.selectAll('*').remove();
-                const yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
-                    .tickSize(-width * 1.3)
-                    .tickPadding(axis.labels.padding)
-                    .tickFormat((value) => {
-                        return formatAxisTickLabel({
-                            axisType: axis.type,
-                            value,
-                            dateFormat: axis.labels.dateFormat,
-                            numberFormat: axis.labels.numberFormat,
-                        });
-                    })
-                    .ticks(6);
+    React.useEffect(() => {
+        if (!ref.current) {
+            return;
+        }
 
-                svgElement.call(yAxisGenerator).attr('class', b());
-                svgElement.select('.domain').attr('d', `M0,${height}H0V-${offsetTop}`);
-                svgElement.selectAll('.tick text').style('font-size', axis.labels.style.fontSize);
-                const transformStyle = svgElement.select('.tick').attr('transform');
-                const {y} = parseTransformStyle(transformStyle);
+        const axis = axises[0];
+        const svgElement = select(ref.current);
+        svgElement.selectAll('*').remove();
+        const yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
+            .tickSize(-width * 1.3)
+            .tickPadding(axis.labels.padding)
+            .tickFormat((value) => {
+                return formatAxisTickLabel({
+                    axisType: axis.type,
+                    value,
+                    dateFormat: axis.labels.dateFormat,
+                    numberFormat: axis.labels.numberFormat,
+                });
+            });
 
-                if (y === height) {
-                    // Remove stroke from tick that has the same y coordinate like domain
-                    svgElement.select('.tick line').style('stroke', 'none');
-                }
+        svgElement.call(yAxisGenerator).attr('class', b());
+        svgElement.select('.domain').attr('d', `M0,${height}H0V-${offsetTop}`);
+        svgElement.selectAll('.tick text').style('font-size', axis.labels.style.fontSize);
+        const transformStyle = svgElement.select('.tick').attr('transform');
+        const {y} = parseTransformStyle(transformStyle);
 
-                removeOverlappingYTicks(svgElement);
-            }}
-        />
-    );
+        if (y === height) {
+            // Remove stroke from tick that has the same y coordinate like domain
+            svgElement.select('.tick line').style('stroke', 'none');
+        }
+
+        removeOverlappingYTicks(svgElement);
+    }, [axises, width, height, offsetTop, scale]);
+
+    return <g ref={ref} />;
 };
+
+export const AxisY = React.memo(Axis);
