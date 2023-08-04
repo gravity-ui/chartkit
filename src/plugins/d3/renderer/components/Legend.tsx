@@ -2,8 +2,7 @@ import React from 'react';
 import block from 'bem-cn-lite';
 import {select} from 'd3';
 
-import type {OnLegendItemClick} from './useLegend';
-import type {ChartSeries} from './useSeries';
+import type {ChartSeries, OnLegendItemClick} from '../hooks';
 
 const b = block('chartkit-d3-legend');
 

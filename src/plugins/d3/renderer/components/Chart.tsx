@@ -16,7 +16,7 @@ import {
     useSeries,
     useShapes,
 } from '../hooks';
-import {isAxisRelatedSeries} from './utils';
+import {isAxisRelatedSeries} from '../utils';
 
 import './styles.scss';
 

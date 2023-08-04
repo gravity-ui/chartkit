@@ -14,7 +14,7 @@ import type {
     ChartMargin,
 } from '../../../../../types/widget-data';
 
-import {formatAxisTickLabel, getDomainDataYBySeries} from '../../components/utils';
+import {formatAxisTickLabel, getDomainDataYBySeries} from '../../utils';
 
 type AxisLabels = Omit<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'style'> &
     Required<Pick<ChartKitWidgetAxisLabels, 'enabled' | 'padding'>> & {
@@ -165,7 +165,7 @@ export const useChartOptions = (args: ChartKitWidgetData): ChartOptions => {
             chart: {
                 margin: {
                     // add margin by label height
-                    top: get(chart, 'margin.top', 10),
+                    top: get(chart, 'margin.top', 0),
                     right: get(chart, 'margin.right', 0),
                     bottom: marginBottom,
                     left: marginLeft,

@@ -3,9 +3,8 @@ import block from 'bem-cn-lite';
 import {axisBottom, select} from 'd3';
 import type {AxisScale, AxisDomain, Selection} from 'd3';
 
-import type {ChartOptions} from '../hooks';
-import type {ChartScale} from './useScales';
-import {formatAxisTickLabel, parseTransformStyle} from './utils';
+import type {ChartOptions, ChartScale} from '../hooks';
+import {formatAxisTickLabel, parseTransformStyle} from '../utils';
 
 const b = block('chartkit-d3-axis');
 const EMPTY_SPACE_BETWEEN_LABELS = 10;

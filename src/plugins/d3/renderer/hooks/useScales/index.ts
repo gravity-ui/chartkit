@@ -6,11 +6,7 @@ import get from 'lodash/get';
 import type {ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
 import type {ChartOptions} from '../useChartOptions';
-import {
-    getOnlyVisibleSeries,
-    getDomainDataXBySeries,
-    getDomainDataYBySeries,
-} from '../../components/utils';
+import {getOnlyVisibleSeries, getDomainDataXBySeries, getDomainDataYBySeries} from '../../utils';
 
 export type ChartScale =
     | ScaleLinear<number, number>

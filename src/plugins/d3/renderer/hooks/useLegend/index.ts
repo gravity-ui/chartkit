@@ -2,7 +2,7 @@ import React from 'react';
 
 import type {ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
-import {getVisibleSeriesNames} from '../../components/utils';
+import {getVisibleSeriesNames} from '../../utils';
 
 export type OnLegendItemClick = (data: {name: string; metaKey: boolean}) => void;
 
