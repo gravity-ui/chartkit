@@ -30,19 +30,6 @@ export const getDomainDataYBySeries = (series: ChartKitWidgetSeries[]) => {
     }, []);
 };
 
-const extractColor = (styles: CSSStyleDeclaration, token: string) => {
-    return styles.getPropertyValue(token).trim();
-};
-
-export const extractColorsFromCss = () => {
-    const computedStyle = getComputedStyle(document.body);
-    const axis = extractColor(computedStyle, '--ck-color-axis');
-    const grid = extractColor(computedStyle, '--ck-color-grid');
-    const labelAxis = extractColor(computedStyle, '--ck-color-axis-label');
-
-    return {axis, grid, labelAxis};
-};
-
 // Uses to get all series names array (except `pie` charts)
 export const getSeriesNames = (series: ChartKitWidgetSeries[]) => {
     return series.reduce<string[]>((acc, s) => {
@@ -85,7 +72,7 @@ export const parseTransformStyle = (style: string | null): {x?: number; y?: numb
 };
 
 const defaultFormatNumberOptions: FormatNumberOptions = {
-    precision: 2,
+    precision: 0,
 };
 
 export const formatAxisTickLabel = (args: {

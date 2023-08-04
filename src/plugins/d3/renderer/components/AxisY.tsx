@@ -3,7 +3,7 @@ import block from 'bem-cn-lite';
 import {axisLeft, select} from 'd3';
 import type {AxisScale, AxisDomain, Selection} from 'd3';
 
-import type {ChartOptions} from './useChartOptions';
+import type {ChartOptions} from '../hooks';
 import type {ChartScale} from './useScales';
 import {formatAxisTickLabel, parseTransformStyle} from './utils';
 
@@ -14,7 +14,6 @@ type Props = {
     axises: ChartOptions['yAxis'];
     width: number;
     height: number;
-    offsetTop: number;
     scale: ChartScale;
 };
 
@@ -39,7 +38,7 @@ const removeOverlappingYTicks = (axis: Selection<SVGGElement, unknown, null, und
 };
 
 // FIXME: add overflow ellipsis for the labels that out of boundaries
-export const AxisY = ({axises, width, height, offsetTop, scale}: Props) => {
+export const AxisY = ({axises, width, height, scale}: Props) => {
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -51,7 +50,7 @@ export const AxisY = ({axises, width, height, offsetTop, scale}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
         const yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
-            .tickSize(-width * 1.3)
+            .tickSize(width * -1)
             .tickPadding(axis.labels.padding)
             .tickFormat((value) => {
                 return formatAxisTickLabel({
@@ -63,7 +62,7 @@ export const AxisY = ({axises, width, height, offsetTop, scale}: Props) => {
             });
 
         svgElement.call(yAxisGenerator).attr('class', b());
-        svgElement.select('.domain').attr('d', `M0,${height}H0V-${offsetTop}`);
+        svgElement.select('.domain').attr('d', `M0,${height}H0V0`);
         svgElement
             .selectAll('.tick text')
             .style('font-size', axis.labels.style.fontSize)
@@ -77,7 +76,7 @@ export const AxisY = ({axises, width, height, offsetTop, scale}: Props) => {
         }
 
         removeOverlappingYTicks(svgElement);
-    }, [axises, width, height, offsetTop, scale]);
+    }, [axises, width, height, scale]);
 
     return <g ref={ref} />;
 };

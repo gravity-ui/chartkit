@@ -6,9 +6,10 @@ import type {ChartKitWidgetData} from '../../../../types/widget-data';
 import {AxisY} from './AxisY';
 import {AxisX} from './AxisX';
 import {Legend} from './Legend';
+import {Title} from './Title';
+import {useChartOptions} from '../hooks';
 import {useChartDimensions} from './useChartDimensions';
 import {useChartEvents} from './useChartEvents';
-import {useChartOptions} from './useChartOptions';
 import {useLegend} from './useLegend';
 import {useScales} from './useScales';
 import {useSeries} from './useSeries';
@@ -30,12 +31,13 @@ export const Chart = ({width, height, data}: Props) => {
     const {series} = data;
     const hasAxisRelatedSeries = series.some(isAxisRelatedSeries);
     const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
-    const {chart, legend, xAxis, yAxis} = useChartOptions(data);
+    const {chart, legend, title, xAxis, yAxis} = useChartOptions(data);
     const {boundsWidth, boundsHeight, legendHeight} = useChartDimensions({
         width,
         height,
         margin: chart.margin,
         legend,
+        title,
     });
     const {activeLegendItems, handleLegendItemClick} = useLegend({series});
     const {chartSeries} = useSeries({activeLegendItems, series});
@@ -56,10 +58,14 @@ export const Chart = ({width, height, data}: Props) => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
+            {title && <Title {...title} />}
             <g
                 width={boundsWidth}
                 height={boundsHeight}
-                transform={`translate(${[chart.margin.left, chart.margin.top].join(',')})`}
+                transform={`translate(${[
+                    chart.margin.left,
+                    chart.margin.top + (title?.height || 0),
+                ].join(',')})`}
             >
                 {hasAxisRelatedSeries && (
                     <React.Fragment>
@@ -67,13 +73,12 @@ export const Chart = ({width, height, data}: Props) => {
                             axises={yAxis}
                             width={boundsWidth}
                             height={boundsHeight}
-                            offsetTop={chart.margin.top}
                             scale={yScale}
                         />
                         <g transform={`translate(0, ${boundsHeight})`}>
                             <AxisX
                                 axis={xAxis}
-                                width={width}
+                                width={boundsWidth}
                                 height={boundsHeight}
                                 scale={xScale}
                             />

@@ -3,7 +3,7 @@ import block from 'bem-cn-lite';
 import {axisBottom, select} from 'd3';
 import type {AxisScale, AxisDomain, Selection} from 'd3';
 
-import type {ChartOptions} from './useChartOptions';
+import type {ChartOptions} from '../hooks';
 import type {ChartScale} from './useScales';
 import {formatAxisTickLabel, parseTransformStyle} from './utils';
 
@@ -49,7 +49,7 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
         const xAxisGenerator = axisBottom(scale as AxisScale<AxisDomain>)
-            .tickSize(-height * 1.3)
+            .tickSize(height * -1)
             .tickPadding(axis.labels.padding)
             .tickFormat((value) => {
                 return formatAxisTickLabel({
