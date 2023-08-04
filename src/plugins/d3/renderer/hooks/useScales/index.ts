@@ -3,10 +3,14 @@ import {scaleBand, scaleLinear, scaleUtc, extent} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import type {ChartKitWidgetSeries} from '../../../../types/widget-data';
+import type {ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
-import type {ChartOptions} from './useChartOptions';
-import {getOnlyVisibleSeries, getDomainDataXBySeries, getDomainDataYBySeries} from './utils';
+import type {ChartOptions} from '../useChartOptions';
+import {
+    getOnlyVisibleSeries,
+    getDomainDataXBySeries,
+    getDomainDataYBySeries,
+} from '../../components/utils';
 
 export type ChartScale =
     | ScaleLinear<number, number>

@@ -2,12 +2,12 @@ import React from 'react';
 import block from 'bem-cn-lite';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 
-import type {ScatterSeriesData} from '../../../../types/widget-data';
+import type {ScatterSeriesData} from '../../../../../types/widget-data';
 
-import type {ChartOptions} from './useChartOptions';
-import type {ChartScale} from './useScales';
-import type {ChartSeries} from './useSeries';
-import {getOnlyVisibleSeries} from './utils';
+import type {ChartOptions} from '../useChartOptions';
+import type {ChartScale} from '../useScales';
+import type {ChartSeries} from '../useSeries';
+import {getOnlyVisibleSeries} from '../../components/utils';
 
 type Args = {
     series: ChartSeries[];

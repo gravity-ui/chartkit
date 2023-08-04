@@ -7,13 +7,15 @@ import {AxisY} from './AxisY';
 import {AxisX} from './AxisX';
 import {Legend} from './Legend';
 import {Title} from './Title';
-import {useChartOptions} from '../hooks';
-import {useChartDimensions} from './useChartDimensions';
-import {useChartEvents} from './useChartEvents';
-import {useLegend} from './useLegend';
-import {useScales} from './useScales';
-import {useSeries} from './useSeries';
-import {useShapes} from './useShapes';
+import {
+    useChartDimensions,
+    useChartEvents,
+    useChartOptions,
+    useLegend,
+    useScales,
+    useSeries,
+    useShapes,
+} from '../hooks';
 import {isAxisRelatedSeries} from './utils';
 
 import './styles.scss';

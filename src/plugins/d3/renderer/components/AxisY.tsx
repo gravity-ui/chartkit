@@ -66,7 +66,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
         svgElement
             .selectAll('.tick text')
             .style('font-size', axis.labels.style.fontSize)
-            .style('transform', 'translateY(-2px)');
+            .style('transform', 'translateY(-1px)');
         const transformStyle = svgElement.select('.tick').attr('transform');
         const {y} = parseTransformStyle(transformStyle);
 

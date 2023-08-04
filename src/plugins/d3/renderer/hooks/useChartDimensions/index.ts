@@ -1,6 +1,6 @@
-import type {ChartMargin} from '../../../../types/widget-data';
+import type {ChartMargin} from '../../../../../types/widget-data';
 
-import type {ChartOptions, PreparedTitle} from '../hooks';
+import type {ChartOptions, PreparedTitle} from '../useChartOptions';
 
 const LEGEND_LINE_HEIGHT = 15;
 
