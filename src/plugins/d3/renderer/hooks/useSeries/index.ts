@@ -4,7 +4,7 @@ import {scaleOrdinal} from 'd3';
 
 import type {ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
-import {DEFAULT_PALETTE} from '../../components/constants';
+import {DEFAULT_PALETTE} from '../../constants';
 import {getSeriesNames} from '../../utils';
 
 export type ChartSeries = ChartKitWidgetSeries & {
