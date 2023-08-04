@@ -39,7 +39,7 @@ const removeOverlappingYTicks = (axis: Selection<SVGGElement, unknown, null, und
 };
 
 // FIXME: add overflow ellipsis for the labels that out of boundaries
-const Axis = ({axises, width, height, offsetTop, scale}: Props) => {
+export const AxisY = ({axises, width, height, offsetTop, scale}: Props) => {
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -64,7 +64,10 @@ const Axis = ({axises, width, height, offsetTop, scale}: Props) => {
 
         svgElement.call(yAxisGenerator).attr('class', b());
         svgElement.select('.domain').attr('d', `M0,${height}H0V-${offsetTop}`);
-        svgElement.selectAll('.tick text').style('font-size', axis.labels.style.fontSize);
+        svgElement
+            .selectAll('.tick text')
+            .style('font-size', axis.labels.style.fontSize)
+            .style('transform', 'translateY(-2px)');
         const transformStyle = svgElement.select('.tick').attr('transform');
         const {y} = parseTransformStyle(transformStyle);
 
@@ -78,5 +81,3 @@ const Axis = ({axises, width, height, offsetTop, scale}: Props) => {
 
     return <g ref={ref} />;
 };
-
-export const AxisY = React.memo(Axis);
