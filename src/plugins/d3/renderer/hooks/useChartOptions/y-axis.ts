@@ -3,9 +3,7 @@ import get from 'lodash/get';
 import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types/widget-data';
 
 import type {PreparedAxis} from './types';
-
-const DEFAULT_AXIS_LABEL_PADDING = 10;
-const DEFAULT_AXIS_LABEL_FONT_SIZE = '11px';
+import {DEFAULT_AXIS_LABEL_FONT_SIZE, DEFAULT_AXIS_LABEL_PADDING} from './constants';
 
 export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}): PreparedAxis[] => {
     // FIXME: add support for n axises

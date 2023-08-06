@@ -1,46 +1,11 @@
-import {select} from 'd3';
 import get from 'lodash/get';
 
-import type {
-    BaseTextStyle,
-    ChartKitWidgetData,
-    ChartKitWidgetLegend,
-    ChartMargin,
-} from '../../../../../types/widget-data';
+import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types/widget-data';
 
-import type {PreparedAxis, PreparedTitle} from './types';
+import type {PreparedTitle} from './types';
+import {getHorisontalSvgTextDimensions} from './utils';
 
-export type ChartOptions = {
-    chart: {
-        margin: ChartMargin;
-    };
-    legend: Required<ChartKitWidgetLegend>;
-    xAxis: PreparedAxis;
-    yAxis: PreparedAxis[];
-    title?: PreparedTitle;
-};
-
-const DEFAULT_AXIS_LABEL_FONT_SIZE = '11px';
 const DEFAULT_TITLE_FONT_SIZE = '15px';
-
-const getHorisontalSvgTextDimensions = (args: {text: string; style?: Partial<BaseTextStyle>}) => {
-    const {text, style} = args;
-    const textSelection = select(document.body).append('text').text(text);
-    const fontSize = get(style, 'fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE);
-    let height = 0;
-
-    if (fontSize) {
-        textSelection.style('font-size', fontSize);
-    }
-
-    textSelection
-        .each(function () {
-            height = this.getBoundingClientRect().height;
-        })
-        .remove();
-
-    return height;
-};
 
 export const getPreparedTitle = ({
     title,

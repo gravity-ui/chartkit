@@ -2,37 +2,14 @@ import {select, max} from 'd3';
 import type {AxisDomain} from 'd3';
 import get from 'lodash/get';
 
-import type {
-    BaseTextStyle,
-    ChartKitWidgetData,
-    ChartKitWidgetSeries,
-} from '../../../../../types/widget-data';
+import type {ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
 import {formatAxisTickLabel, getDomainDataYBySeries} from '../../utils';
 
 import type {PreparedAxis, PreparedChart} from './types';
+import {getHorisontalSvgTextDimensions} from './utils';
 
-const DEFAULT_AXIS_LABEL_FONT_SIZE = '11px';
 const AXIS_WIDTH = 1;
-
-const getHorisontalSvgTextDimensions = (args: {text: string; style?: Partial<BaseTextStyle>}) => {
-    const {text, style} = args;
-    const textSelection = select(document.body).append('text').text(text);
-    const fontSize = get(style, 'fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE);
-    let height = 0;
-
-    if (fontSize) {
-        textSelection.style('font-size', fontSize);
-    }
-
-    textSelection
-        .each(function () {
-            height = this.getBoundingClientRect().height;
-        })
-        .remove();
-
-    return height;
-};
 
 const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetSeries[]}) => {
     const {axis, series} = args;
