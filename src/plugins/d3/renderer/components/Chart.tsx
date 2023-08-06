@@ -60,7 +60,7 @@ export const Chart = ({width, height, data}: Props) => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            {title && <Title {...title} />}
+            {title && <Title {...title} chartWidth={width} />}
             <g
                 width={boundsWidth}
                 height={boundsHeight}
