@@ -7,7 +7,12 @@ type BaseSeries = {
     visible?: boolean;
 };
 
-type BaseSeriesData<T = unknown> = {
+type BaseSeriesData<T = any> = {
+    /**
+     * A reserved subspace to store options and values for customized functionality
+     *
+     * Here you can add additional data for your own event callbacks and formatter callbacks
+     */
     custom?: T;
 };
 
@@ -15,7 +20,7 @@ export type BaseTextStyle = {
     fontSize: string;
 };
 
-export type ScatterSeriesData<T = unknown> = BaseSeriesData<T> & {
+export type ScatterSeriesData<T = any> = BaseSeriesData<T> & {
     /** The x value of the point */
     x?: number;
     /** The y value of the point */
@@ -39,7 +44,7 @@ export type ScatterSeries = BaseSeries & {
     visible?: boolean;
 };
 
-export type PieSeriesData<T = unknown> = BaseSeriesData<T> & {
+export type PieSeriesData<T = any> = BaseSeriesData<T> & {
     value: number;
     color: string;
     name: string;
@@ -51,6 +56,8 @@ export type PieSeries = BaseSeries & {
 };
 
 export type ChartKitWidgetSeries = ScatterSeries | PieSeries;
+
+export type ChartKitWidgetSeriesData<T = any> = ScatterSeriesData<T> | PieSeriesData<T>;
 
 export type ChartKitWidgetAxisType = 'category' | 'datetime' | 'linear';
 
@@ -88,7 +95,12 @@ type ChartKitWidgetTitle = {
     style?: Partial<BaseTextStyle>;
 };
 
-export type ChartKitWidgetData = {
+export type TooltipHoveredData<T = any> = {
+    data: ChartKitWidgetSeriesData<T>;
+    series: ChartKitWidgetSeries;
+};
+
+export type ChartKitWidgetData<T = any> = {
     chart?: {
         margin?: Partial<ChartMargin>;
     };
@@ -97,10 +109,7 @@ export type ChartKitWidgetData = {
     title?: ChartKitWidgetTitle;
     tooltip?: {
         enabled?: boolean;
-        renderer?: (data: {
-            data: ChartKitWidgetSeries['data'];
-            series: ChartKitWidgetSeries;
-        }) => React.ReactElement;
+        renderer?: (data: {hovered: TooltipHoveredData<T>}) => React.ReactElement;
     };
     xAxis?: ChartKitWidgetAxis;
     yAxis?: ChartKitWidgetAxis[];

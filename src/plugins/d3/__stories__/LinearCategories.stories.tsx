@@ -8,6 +8,7 @@ import {ChartKit} from '../../../components/ChartKit';
 import type {ChartKitRef} from '../../../types';
 import type {
     ChartKitWidgetAxis,
+    ChartKitWidgetData,
     ScatterSeries,
     ScatterSeriesData,
 } from '../../../types/widget-data';
@@ -55,7 +56,7 @@ const shapeScatterChartData = (
     series: ScatterSeries[],
     categoriesType: 'none' | 'x' | 'y',
     categories?: string[],
-): any => {
+): ChartKitWidgetData => {
     let xAxis: ChartKitWidgetAxis = {
         labels: {
             enabled: false,
@@ -80,7 +81,14 @@ const shapeScatterChartData = (
         ];
     }
 
-    return {series, xAxis, yAxis};
+    return {
+        series,
+        xAxis,
+        yAxis,
+        title: {
+            text: 'Chart title',
+        },
+    };
 };
 
 const Template: Story = () => {
@@ -130,7 +138,7 @@ const Template: Story = () => {
     }
 
     return (
-        <div style={{height: '50vh', width: '100%'}}>
+        <div style={{height: '80vh', width: '100%'}}>
             <ChartKit ref={chartkitRef} type="d3" data={data} />
         </div>
     );

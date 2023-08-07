@@ -6,3 +6,5 @@ export * from './useLegend';
 export * from './useScales';
 export * from './useSeries';
 export * from './useShapes';
+export * from './useTooltip';
+export * from './useTooltip/types';

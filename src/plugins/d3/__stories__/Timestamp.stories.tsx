@@ -1,6 +1,7 @@
 import React from 'react';
 import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
+import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
 import {ChartKit} from '../../../components/ChartKit';
@@ -12,42 +13,50 @@ import type {
 } from '../../../types/widget-data';
 import {D3Plugin} from '..';
 
-const rowData = [
+const rowData: ScatterSeriesData<string>[] = [
     {
         x: 1690686000000,
         y: 86.71905594602345,
+        custom: 'green',
     },
     {
         x: 1690426800000,
         y: 86.73089353359981,
+        custom: 'yellow',
     },
     {
         x: 1690254000000,
         y: 86.53675705168267,
+        custom: 'red',
     },
     {
         x: 1690772400000,
         y: 86.47880981408552,
+        custom: 'blue',
     },
     {
         x: 1690340400000,
         y: 86.4108836764148,
+        custom: 'gray',
     },
     {
         x: 1690599600000,
         y: 86.73440096266042,
+        custom: 'pink',
     },
     {
         x: 1690513200000,
         y: 86.64935929597681,
+        custom: 'purple',
     },
 ];
 
-const shapeData = (data: Record<string, any>[]): ChartKitWidgetData => {
+const shapeData = (data: Record<string, any>[]): ChartKitWidgetData<string> => {
     const scatterData: ScatterSeriesData[] = data.map((d) => ({
         x: d.x,
         y: d.y,
         radius: random(3, 6),
+        custom: d.custom,
     }));
 
     const scatterSeries: ScatterSeries = {
@@ -61,6 +70,15 @@ const shapeData = (data: Record<string, any>[]): ChartKitWidgetData => {
         xAxis: {
             type: 'datetime',
             timestamps: data.map((d) => d.x),
+        },
+        tooltip: {
+            renderer: ({hovered}) => {
+                const d = hovered.data as ScatterSeriesData<string>;
+                return <div style={{color: d.custom}}>{dateTime({input: d.x}).format('LL')}</div>;
+            },
+        },
+        title: {
+            text: 'Chart title',
         },
     };
 };

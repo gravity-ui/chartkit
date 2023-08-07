@@ -1,13 +1,15 @@
 import React from 'react';
 import block from 'bem-cn-lite';
+import {pointer} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 
 import type {ScatterSeriesData} from '../../../../../types/widget-data';
 
 import {getOnlyVisibleSeries} from '../../utils';
-import type {ChartOptions} from '../useChartOptions';
+import type {ChartOptions} from '../useChartOptions/types';
 import type {ChartScale} from '../useScales';
 import type {ChartSeries} from '../useSeries';
+import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
 
 type Args = {
     series: ChartSeries[];
@@ -15,6 +17,9 @@ type Args = {
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
     yScale: ChartScale;
+    svgContainer: SVGSVGElement | null;
+    onSeriesMouseMove?: OnSeriesMouseMove;
+    onSeriesMouseLeave?: OnSeriesMouseLeave;
 };
 
 const b = block('chartkit-d3-scatter');
@@ -60,7 +65,16 @@ const getPointProperties = (args: {
 };
 
 export const useShapes = (args: Args) => {
-    const {series, xAxis, xScale, yAxis, yScale} = args;
+    const {
+        series,
+        xAxis,
+        xScale,
+        yAxis,
+        yScale,
+        svgContainer,
+        onSeriesMouseMove,
+        onSeriesMouseLeave,
+    } = args;
     const shapes = React.useMemo(() => {
         const visibleSeries = getOnlyVisibleSeries(series);
 
@@ -88,6 +102,16 @@ export const useShapes = (args: Args) => {
                                     className={b('point')}
                                     fill={s.color}
                                     {...pointProps}
+                                    onMouseMove={function (e) {
+                                        onSeriesMouseMove?.({
+                                            hovered: {
+                                                data: point,
+                                                series: s,
+                                            },
+                                            pointerPosition: pointer(e, svgContainer),
+                                        });
+                                    }}
+                                    onMouseLeave={onSeriesMouseLeave}
                                 />
                             );
                         }),
@@ -97,7 +121,7 @@ export const useShapes = (args: Args) => {
             }
             return acc;
         }, []);
-    }, [series, xAxis, xScale, yAxis, yScale]);
+    }, [series, xAxis, xScale, yAxis, yScale, svgContainer, onSeriesMouseMove, onSeriesMouseLeave]);
 
     return {shapes};
 };

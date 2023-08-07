@@ -29,6 +29,5 @@ export interface ChartKitWidget {
     d3: {
         data: ChartKitWidgetData;
         widget: never;
-        pluginRef: never;
     };
 }

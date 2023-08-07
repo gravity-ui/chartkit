@@ -51,3 +51,13 @@
     font-weight: var(--g-text-subheader-font-weight);
     fill: var(--g-color-text-primary);
 }
+
+.chartkit-d3-tooltip {
+    position: absolute;
+    padding: 10px 14px;
+    background-color: var(--g-color-infographics-tooltip-bg);
+    border: 1px solid var(--g-color-line-generic);
+    border-radius: 3px;
+    box-shadow: 0 2px 12px var(--g-color-sfx-shadow);
+    z-index: 100001;
+}

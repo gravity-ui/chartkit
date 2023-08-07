@@ -28,9 +28,14 @@ export type PreparedTitle = ChartKitWidgetData['title'] & {
     height: number;
 };
 
+export type PreparedTooltip = ChartKitWidgetData['tooltip'] & {
+    enabled: boolean;
+};
+
 export type ChartOptions = {
     chart: PreparedChart;
     legend: PreparedLegend;
+    tooltip: PreparedTooltip;
     xAxis: PreparedAxis;
     yAxis: PreparedAxis[];
     title?: PreparedTitle;

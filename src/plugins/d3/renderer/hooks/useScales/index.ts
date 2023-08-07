@@ -5,7 +5,7 @@ import get from 'lodash/get';
 
 import type {ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
-import type {ChartOptions} from '../useChartOptions';
+import type {ChartOptions} from '../useChartOptions/types';
 import {getOnlyVisibleSeries, getDomainDataXBySeries, getDomainDataYBySeries} from '../../utils';
 
 export type ChartScale =
