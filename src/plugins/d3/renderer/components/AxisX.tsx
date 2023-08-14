@@ -70,6 +70,20 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
             svgElement.select('.tick').remove();
         }
 
+        if (axis.title.text) {
+            const textY =
+                axis.title.height + parseInt(axis.labels.style.fontSize) + axis.labels.padding;
+
+            svgElement
+                .append('text')
+                .attr('class', b('title'))
+                .attr('text-anchor', 'middle')
+                .attr('x', width / 2)
+                .attr('y', textY)
+                .attr('font-size', axis.title.style.fontSize)
+                .text(axis.title.text);
+        }
+
         removeOverlappingXTicks(svgElement);
     }, [axis, width, height, scale]);
 

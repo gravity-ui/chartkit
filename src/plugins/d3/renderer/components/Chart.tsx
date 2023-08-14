@@ -43,6 +43,8 @@ export const Chart = ({width, height, data}: Props) => {
         margin: chart.margin,
         legend,
         title,
+        xAxis,
+        yAxis,
     });
     const {activeLegendItems, handleLegendItemClick} = useLegend({series});
     const {chartSeries} = useSeries({activeLegendItems, series});
@@ -82,7 +84,7 @@ export const Chart = ({width, height, data}: Props) => {
                     width={boundsWidth}
                     height={boundsHeight}
                     transform={`translate(${[
-                        chart.margin.left,
+                        chart.margin.left + (yAxis[0]?.title.height || 0),
                         chart.margin.top + (title?.height || 0),
                     ].join(',')})`}
                 >

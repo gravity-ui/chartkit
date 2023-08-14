@@ -19,4 +19,7 @@ export type ChartKitWidgetAxis = {
     type?: ChartKitWidgetAxisType;
     /** The axis labels show the number or category for each tick */
     labels?: ChartKitWidgetAxisLabels;
+    title?: {
+        text?: string;
+    };
 };
