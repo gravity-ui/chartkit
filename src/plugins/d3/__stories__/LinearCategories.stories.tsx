@@ -1,7 +1,7 @@
 import React from 'react';
 import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
-import {withKnobs, select, radios} from '@storybook/addon-knobs';
+import {withKnobs, select, radios, text} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
 import {ChartKit} from '../../../components/ChartKit';
@@ -61,8 +61,16 @@ const shapeScatterChartData = (
         labels: {
             enabled: false,
         },
+        title: {
+            text: text('X axis title', ''),
+        },
     };
-    let yAxis: ChartKitWidgetAxis[] | undefined;
+
+    let yAxis: ChartKitWidgetAxis = {
+        title: {
+            text: text('Y axis title', ''),
+        },
+    };
 
     if (categories && categoriesType === 'x') {
         xAxis = {
@@ -73,20 +81,19 @@ const shapeScatterChartData = (
     }
 
     if (categories && categoriesType === 'y') {
-        yAxis = [
-            {
-                type: 'category',
-                categories,
-            },
-        ];
+        yAxis = {
+            ...yAxis,
+            type: 'category',
+            categories,
+        };
     }
 
     return {
         series,
         xAxis,
-        yAxis,
+        yAxis: [yAxis],
         title: {
-            text: 'Chart title',
+            text: text('title', 'Chart title'),
         },
     };
 };

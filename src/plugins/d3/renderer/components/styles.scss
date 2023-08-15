@@ -10,6 +10,10 @@
     & .tick line {
         stroke: var(--g-color-line-generic);
     }
+
+    &__title {
+        fill: var(--g-color-text-secondary);
+    }
 }
 
 .chartkit-d3-legend {

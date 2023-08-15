@@ -43,6 +43,8 @@ export const Chart = ({width, height, data}: Props) => {
         margin: chart.margin,
         legend,
         title,
+        xAxis,
+        yAxis,
     });
     const {activeLegendItems, handleLegendItemClick} = useLegend({series});
     const {chartSeries} = useSeries({activeLegendItems, series});

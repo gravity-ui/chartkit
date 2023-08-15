@@ -22,6 +22,11 @@ export type PreparedLegend = Required<ChartKitWidgetLegend>;
 export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
     type: ChartKitWidgetAxisType;
     labels: PreparedAxisLabels;
+    title: {
+        height: number;
+        text: string;
+        style: BaseTextStyle;
+    };
 };
 
 export type PreparedTitle = ChartKitWidgetData['title'] & {

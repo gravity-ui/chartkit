@@ -74,6 +74,20 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             svgElement.select('.tick line').style('stroke', 'none');
         }
 
+        if (axis.title.text) {
+            const textY = axis.title.height + axis.labels.padding;
+
+            svgElement
+                .append('text')
+                .attr('class', b('title'))
+                .attr('text-anchor', 'middle')
+                .attr('dy', -textY)
+                .attr('dx', -height / 2)
+                .attr('font-size', axis.title.style.fontSize)
+                .attr('transform', 'rotate(-90)')
+                .text(axis.title.text);
+        }
+
         removeOverlappingYTicks(svgElement);
     }, [axises, width, height, scale]);
 
