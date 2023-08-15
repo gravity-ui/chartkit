@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/gravity-ui/chartkit/compare/v3.1.3...v3.2.0) (2023-08-15)
+
+
+### Features
+
+* add d3 plugin ([#217](https://github.com/gravity-ui/chartkit/issues/217)) ([9815fb0](https://github.com/gravity-ui/chartkit/commit/9815fb087f08413dcd489b7ee11585199d4bd310))
+
+
+### Bug Fixes
+
+* bump yagr to 3.7.8 ([#224](https://github.com/gravity-ui/chartkit/issues/224)) ([dabdfc4](https://github.com/gravity-ui/chartkit/commit/dabdfc4e0bb9719a0b941945af037e9593178ae3))
+
 ## [3.1.3](https://github.com/gravity-ui/chartkit/compare/v3.1.2...v3.1.3) (2023-08-10)
 
 
