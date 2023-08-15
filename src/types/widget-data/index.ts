@@ -11,6 +11,7 @@ export * from './chart';
 export * from './legend';
 export * from './pie';
 export * from './scatter';
+export * from './bar';
 export * from './series';
 export * from './title';
 export * from './tooltip';

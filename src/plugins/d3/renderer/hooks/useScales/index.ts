@@ -42,7 +42,7 @@ export const useScales = (args: Args): ReturnValue => {
     const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
     const scales = React.useMemo(() => {
         const xType = get(xAxis, 'type', 'linear');
-        const xCatigories = get(xAxis, 'categories');
+        const xCategories = get(xAxis, 'categories');
         const xTimestamps = get(xAxis, 'timestamps');
         const yType = get(yAxis[0], 'type', 'linear');
         const yCatigories = get(yAxis[0], 'categories');
@@ -66,9 +66,9 @@ export const useScales = (args: Args): ReturnValue => {
                 break;
             }
             case 'category': {
-                if (xCatigories) {
+                if (xCategories) {
                     const filteredCategories = filterCategoriesByVisibleSeries(
-                        xCatigories,
+                        xCategories,
                         visibleSeries,
                     );
                     xScale = scaleBand().domain(filteredCategories).range([0, boundsWidth]);

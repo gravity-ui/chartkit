@@ -10,6 +10,7 @@ import type {ChartOptions} from '../useChartOptions/types';
 import type {ChartScale} from '../useScales';
 import type {ChartSeries} from '../useSeries';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
+import {prepareBarSeries} from './bar';
 
 type Args = {
     series: ChartSeries[];
@@ -47,7 +48,7 @@ const getPointProperties = (args: {
 
     if (xAxis.type === 'category') {
         const xBandScale = xScale as ScaleBand<string>;
-        cx = xBandScale(point.category as string)! + xBandScale.step() / 2;
+        cx = (xBandScale(point.category as string) || 0) + xBandScale.step() / 2;
     } else {
         const xLinearScale = xScale as ScaleLinear<number, number> | ScaleTime<number, number>;
         cx = xLinearScale(point.x as number);
@@ -55,10 +56,10 @@ const getPointProperties = (args: {
 
     if (yAxis[0].type === 'category') {
         const yBandScale = yScale as ScaleBand<string>;
-        cy = yBandScale(point.category as string)! + yBandScale.step() / 2;
+        cy = (yBandScale(point.category as string) || 0) + yBandScale.step() / 2;
     } else {
-        const xLinearScale = yScale as ScaleLinear<number, number> | ScaleTime<number, number>;
-        cy = xLinearScale(point.y as number);
+        const yLinearScale = yScale as ScaleLinear<number, number> | ScaleTime<number, number>;
+        cy = yLinearScale(point.y as number);
     }
 
     return {r, cx, cy};
@@ -81,6 +82,20 @@ export const useShapes = (args: Args) => {
         return visibleSeries.reduce<React.ReactElement[]>((acc, s) => {
             const randomKey = Math.random().toString();
             switch (s.type) {
+                case 'bar': {
+                    acc.push(
+                        ...prepareBarSeries({
+                            series: s,
+                            xAxis,
+                            xScale,
+                            yAxis,
+                            yScale,
+                            onSeriesMouseMove,
+                            onSeriesMouseLeave,
+                        }),
+                    );
+                    break;
+                }
                 case 'scatter': {
                     const preparedData =
                         xAxis.type === 'category' || yAxis[0]?.type === 'category'
