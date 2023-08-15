@@ -84,7 +84,7 @@ export const Chart = ({width, height, data}: Props) => {
                     width={boundsWidth}
                     height={boundsHeight}
                     transform={`translate(${[
-                        chart.margin.left + (yAxis[0]?.title.height || 0),
+                        chart.margin.left,
                         chart.margin.top + (title?.height || 0),
                     ].join(',')})`}
                 >
