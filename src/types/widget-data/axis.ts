@@ -22,4 +22,7 @@ export type ChartKitWidgetAxis = {
     title?: {
         text?: string;
     };
+
+    /** The minimum value of the axis. If undefined the min value is automatically calculate */
+    min?: number;
 };
