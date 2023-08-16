@@ -3,17 +3,17 @@ import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
 import {withKnobs, select, radios, text} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../libs';
-import {ChartKit} from '../../../components/ChartKit';
-import type {ChartKitRef} from '../../../types';
+import {settings} from '../../../../libs';
+import {ChartKit} from '../../../../components/ChartKit';
+import type {ChartKitRef} from '../../../../types';
 import type {
     ChartKitWidgetAxis,
     ChartKitWidgetData,
     ScatterSeries,
     ScatterSeriesData,
-} from '../../../types/widget-data';
-import {D3Plugin} from '..';
-import penguins from './penguins.json';
+} from '../../../../types/widget-data';
+import {D3Plugin} from '../..';
+import penguins from '../penguins.json';
 
 const shapeScatterSeriesData = (args: {data: Record<string, any>[]; groupBy: string; map: any}) => {
     const {data, groupBy, map} = args;
@@ -156,7 +156,7 @@ const Template: Story = () => {
 export const LinearAndCategories = Template.bind({});
 
 const meta: Meta = {
-    title: 'Plugins/D3',
+    title: 'Plugins/D3/Scatter',
     decorators: [withKnobs],
 };
 
