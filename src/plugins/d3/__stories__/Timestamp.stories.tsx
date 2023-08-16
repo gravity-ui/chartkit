@@ -66,7 +66,9 @@ const shapeData = (data: Record<string, any>[]): ChartKitWidgetData<string> => {
     };
 
     return {
-        series: [scatterSeries],
+        series: {
+            data: [scatterSeries],
+        },
         xAxis: {
             type: 'datetime',
             timestamps: data.map((d) => d.x),

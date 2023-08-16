@@ -67,7 +67,7 @@ export const getPreparedChart = (args: {
     const marginLeft =
         get(chart, 'margin.left', AXIS_WIDTH) +
         preparedY1Axis.labels.padding +
-        getAxisLabelMaxWidth({axis: preparedY1Axis, series}) +
+        getAxisLabelMaxWidth({axis: preparedY1Axis, series: series.data}) +
         (preparedY1Axis.title.height || 0);
 
     return {

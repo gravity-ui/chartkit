@@ -7,18 +7,19 @@ import {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import block from 'bem-cn-lite';
 
 const DEFAULT_BAR_RECT_WIDTH = 50;
+const DEFAULT_LINEAR_BAR_RECT_WIDTH = 20;
+const MIN_RECT_GAP = 1;
 
 const b = block('chartkit-d3-bar');
 
 type Args = {
-    series: BarSeries;
+    series: BarSeries[];
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
     yScale: ChartScale;
     onSeriesMouseMove?: OnSeriesMouseMove;
     onSeriesMouseLeave?: OnSeriesMouseLeave;
-    key?: string;
 };
 
 const getRectProperties = (args: {
@@ -37,27 +38,26 @@ const getRectProperties = (args: {
 
     if (xAxis.type === 'category') {
         const xBandScale = xScale as ScaleBand<string>;
-        width = Math.min(xBandScale.bandwidth(), DEFAULT_BAR_RECT_WIDTH);
+        const maxWidth = xBandScale.bandwidth() - MIN_RECT_GAP;
+        width = Math.min(maxWidth, DEFAULT_BAR_RECT_WIDTH);
         cx = (xBandScale(point.category as string) || 0) + xBandScale.step() / 2 - width / 2;
     } else {
         const xLinearScale = xScale as ScaleLinear<number, number> | ScaleTime<number, number>;
         const [min, max] = xLinearScale.domain();
         const range = xLinearScale.range();
         const maxWidth =
-            ((range[1] - range[0]) * minPointDistance) / (Number(max) - Number(min)) - 1;
+            ((range[1] - range[0]) * minPointDistance) / (Number(max) - Number(min)) - MIN_RECT_GAP;
 
-        width = Math.min(Math.max(maxWidth, 1), DEFAULT_BAR_RECT_WIDTH);
+        width = Math.min(Math.max(maxWidth, 1), DEFAULT_LINEAR_BAR_RECT_WIDTH);
         cx = xLinearScale(point.x as number) - width / 2;
     }
 
-    if (yAxis[0].type === 'category') {
-        const yBandScale = yScale as ScaleBand<string>;
-        cy = (yBandScale(point.category as string) || 0) + yBandScale.step() / 2;
-        height = (yBandScale(yBandScale.domain()[0]) || 0) + yBandScale.step() - cy;
-    } else {
-        const yLinearScale = yScale as ScaleLinear<number, number> | ScaleTime<number, number>;
+    if (yAxis[0].type === 'linear') {
+        const yLinearScale = yScale as ScaleLinear<number, number>;
         cy = yLinearScale(point.y as number);
         height = yLinearScale(yLinearScale.domain()[0]) - cy;
+    } else {
+        throw Error(`The "${yAxis[0].type}" type for the Y axis is not supported`);
     }
 
     return {x: cx, y: cy, width, height};
@@ -79,36 +79,42 @@ function minDiff(arr: number[]) {
 }
 
 export function prepareBarSeries(args: Args) {
-    const {series, xAxis, xScale, yAxis, yScale, onSeriesMouseMove, onSeriesMouseLeave, key} = args;
-    const preparedData = series.data;
-    const minPointDistance = minDiff(preparedData.map((item) => Number(item.x)));
+    const {series, xAxis, xScale, yAxis, yScale, onSeriesMouseMove, onSeriesMouseLeave} = args;
+    const seriesData = series.map(({data}) => data).flat(2);
+    const minPointDistance = minDiff(seriesData.map((item) => Number(item.x)));
 
-    return preparedData.map((point, i) => {
-        const rectProps = getRectProperties({
-            point,
-            xAxis,
-            xScale,
-            yAxis,
-            yScale,
-            minPointDistance,
+    return series.reduce<React.ReactElement[]>((result, item) => {
+        const randomKey = Math.random().toString();
+
+        item.data.forEach((point, i) => {
+            const rectProps = getRectProperties({
+                point,
+                xAxis,
+                xScale,
+                yAxis,
+                yScale,
+                minPointDistance,
+            });
+
+            result.push(
+                <rect
+                    key={`${i}-${randomKey}`}
+                    className={b('rect')}
+                    fill={item.color}
+                    {...rectProps}
+                    onMouseMove={function () {
+                        onSeriesMouseMove?.({
+                            hovered: {
+                                data: point,
+                                series: item,
+                            },
+                        });
+                    }}
+                    onMouseLeave={onSeriesMouseLeave}
+                />,
+            );
         });
 
-        return (
-            <rect
-                key={`${i}-${key}`}
-                className={b('rect')}
-                fill={series.color}
-                {...rectProps}
-                onMouseMove={function () {
-                    onSeriesMouseMove?.({
-                        hovered: {
-                            data: point,
-                            series,
-                        },
-                    });
-                }}
-                onMouseLeave={onSeriesMouseLeave}
-            />
-        );
-    });
+        return result;
+    }, []);
 }

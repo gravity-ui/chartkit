@@ -1,7 +1,7 @@
 import type {ChartKitWidgetAxis} from './axis';
 import type {ChartKitWidgetChart} from './chart';
 import type {ChartKitWidgetLegend} from './legend';
-import type {ChartKitWidgetSeries} from './series';
+import type {ChartKitWidgetSeries, ChartKitWidgetSeriesOptions} from './series';
 import type {ChartKitWidgetTitle} from './title';
 import type {ChartKitWidgetTooltip} from './tooltip';
 
@@ -19,7 +19,10 @@ export * from './tooltip';
 export type ChartKitWidgetData<T = any> = {
     chart?: ChartKitWidgetChart;
     legend?: ChartKitWidgetLegend;
-    series: ChartKitWidgetSeries<T>[];
+    series: {
+        data: ChartKitWidgetSeries<T>[];
+        options?: ChartKitWidgetSeriesOptions;
+    };
     title?: ChartKitWidgetTitle;
     tooltip?: ChartKitWidgetTooltip<T>;
     xAxis?: ChartKitWidgetAxis;

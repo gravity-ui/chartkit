@@ -45,7 +45,8 @@ export const useScales = (args: Args): ReturnValue => {
         const xCategories = get(xAxis, 'categories');
         const xTimestamps = get(xAxis, 'timestamps');
         const yType = get(yAxis[0], 'type', 'linear');
-        const yCatigories = get(yAxis[0], 'categories');
+        const yMin = get(yAxis[0], 'min');
+        const yCategories = get(yAxis[0], 'categories');
         const yTimestamps = get(xAxis, 'timestamps');
         let visibleSeries = getOnlyVisibleSeries(series);
         // Reassign to all series in case of all series unselected,
@@ -102,16 +103,20 @@ export const useScales = (args: Args): ReturnValue => {
                 const domain = getDomainDataYBySeries(visibleSeries);
 
                 if (isNumericalArrayData(domain)) {
-                    const [yMin, yMax] = extent(domain) as [number, number];
-                    yScale = scaleLinear().domain([yMin, yMax]).range([boundsHeight, 0]).nice();
+                    const [domainYMin, yMax] = extent(domain) as [number, number];
+                    const yMinValue = typeof yMin === 'number' ? yMin : domainYMin;
+                    yScale = scaleLinear()
+                        .domain([yMinValue, yMax])
+                        .range([boundsHeight, 0])
+                        .nice();
                 }
 
                 break;
             }
             case 'category': {
-                if (yCatigories) {
+                if (yCategories) {
                     const filteredCategories = filterCategoriesByVisibleSeries(
-                        yCatigories,
+                        yCategories,
                         visibleSeries,
                     );
                     yScale = scaleBand().domain(filteredCategories).range([boundsHeight, 0]);

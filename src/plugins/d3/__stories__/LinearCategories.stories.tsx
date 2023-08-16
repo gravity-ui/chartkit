@@ -89,7 +89,9 @@ const shapeScatterChartData = (
     }
 
     return {
-        series,
+        series: {
+            data: series,
+        },
         xAxis,
         yAxis: [yAxis],
         title: {
