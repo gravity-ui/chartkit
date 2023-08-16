@@ -3,15 +3,15 @@ import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
 import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../libs';
-import {ChartKit} from '../../../components/ChartKit';
-import type {ChartKitRef} from '../../../types';
+import {settings} from '../../../../libs';
+import {ChartKit} from '../../../../components/ChartKit';
+import type {ChartKitRef} from '../../../../types';
 import type {
     ChartKitWidgetData,
     ScatterSeries,
     ScatterSeriesData,
-} from '../../../types/widget-data';
-import {D3Plugin} from '..';
+} from '../../../../types/widget-data';
+import {D3Plugin} from '../..';
 
 const rowData: ScatterSeriesData<string>[] = [
     {
@@ -66,7 +66,9 @@ const shapeData = (data: Record<string, any>[]): ChartKitWidgetData<string> => {
     };
 
     return {
-        series: [scatterSeries],
+        series: {
+            data: [scatterSeries],
+        },
         xAxis: {
             type: 'datetime',
             timestamps: data.map((d) => d.x),
@@ -103,7 +105,7 @@ const Template: Story = () => {
 export const Timestamp = Template.bind({});
 
 const meta: Meta = {
-    title: 'Plugins/D3',
+    title: 'Plugins/D3/Scatter',
 };
 
 export default meta;

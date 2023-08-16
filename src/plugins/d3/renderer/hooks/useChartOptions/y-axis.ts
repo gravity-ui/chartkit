@@ -39,6 +39,7 @@ export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}):
                 ? getHorisontalSvgTextDimensions({text: y1TitleText, style: y1TitleStyle})
                 : 0,
         },
+        min: get(yAxis1, 'min'),
     };
 
     return [preparedY1Axis];

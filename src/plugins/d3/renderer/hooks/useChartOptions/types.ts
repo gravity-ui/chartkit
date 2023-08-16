@@ -27,6 +27,7 @@ export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
         text: string;
         style: BaseTextStyle;
     };
+    min?: number;
 };
 
 export type PreparedTitle = ChartKitWidgetData['title'] & {
