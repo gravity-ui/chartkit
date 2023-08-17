@@ -34,11 +34,16 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
         }
     }
 
-    const formattedValue = formatAxisTickLabel({
-        axisType: axis.type,
-        value: maxDomainValue,
-        labels: axis.labels,
-    });
+    let formattedValue = '';
+
+    if (axis.labels.enabled) {
+        formattedValue = formatAxisTickLabel({
+            axisType: axis.type,
+            value: maxDomainValue,
+            dateFormat: axis.labels['dateFormat'],
+            numberFormat: axis.labels['numberFormat'],
+        });
+    }
 
     select(document.body)
         .append('text')

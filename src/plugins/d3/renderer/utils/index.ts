@@ -78,15 +78,15 @@ const defaultFormatNumberOptions: FormatNumberOptions = {
 export const formatAxisTickLabel = (args: {
     axisType: ChartKitWidgetAxisType;
     value: AxisDomain;
-    labels?: ChartKitWidgetAxisLabels;
+    dateFormat?: ChartKitWidgetAxisLabels['dateFormat'];
+    numberFormat?: ChartKitWidgetAxisLabels['numberFormat'];
 }) => {
-    const {axisType, value, labels = {}} = args;
-    const dateFormat = labels?.dateFormat || 'DD.MM.YY';
-    const numberFormat = labels?.numberFormat || defaultFormatNumberOptions;
-
-    if (!labels?.enabled) {
-        return '';
-    }
+    const {
+        axisType,
+        value,
+        dateFormat = 'DD.MM.YY',
+        numberFormat = defaultFormatNumberOptions,
+    } = args;
 
     switch (axisType) {
         case 'category': {

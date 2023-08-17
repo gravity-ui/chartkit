@@ -53,10 +53,15 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             .tickSize(tickSize)
             .tickPadding(axis.labels.padding)
             .tickFormat((value) => {
+                if (!axis.labels.enabled) {
+                    return '';
+                }
+
                 return formatAxisTickLabel({
                     axisType: axis.type,
                     value,
-                    labels: axis.labels,
+                    dateFormat: axis.labels['dateFormat'],
+                    numberFormat: axis.labels['numberFormat'],
                 });
             });
 
