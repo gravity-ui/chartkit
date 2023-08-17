@@ -35,6 +35,10 @@ export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}):
                 ? getHorisontalSvgTextDimensions({text: titleText, style: titleStyle})
                 : 0,
         },
+        min: get(xAxis, 'min'),
+        grid: {
+            enabled: get(xAxis, 'grid.enabled', true),
+        },
     };
 
     return preparedXAxis;

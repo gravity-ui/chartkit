@@ -25,4 +25,12 @@ export type ChartKitWidgetAxis = {
 
     /** The minimum value of the axis. If undefined the min value is automatically calculate */
     min?: number;
+
+    grid?: {
+        /** Enable or disable the grid lines.
+         *
+         * Defaults to true.
+         * */
+        enabled?: boolean;
+    };
 };

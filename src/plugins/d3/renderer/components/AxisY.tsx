@@ -48,8 +48,9 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
         const axis = axises[0];
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
+        const tickSize = axis.grid.enabled ? width * -1 : 0;
         const yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
-            .tickSize(width * -1)
+            .tickSize(tickSize)
             .tickPadding(axis.labels.padding)
             .tickFormat((value) => {
                 return formatAxisTickLabel({
