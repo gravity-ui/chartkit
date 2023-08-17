@@ -35,7 +35,8 @@ export type ChartKitWidgetAxis = {
     };
 
     ticks?: {
-        /** Pixel interval of the tick marks. Not applicable to categorized axis. */
+        /** Pixel interval of the tick marks. Not applicable to categorized axis.
+         * The specified value is only a hint; the interval between ticks can be greater or less depending on the data. */
         pixelInterval?: number;
     };
 
