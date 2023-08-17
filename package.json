@@ -12,6 +12,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "sideEffects": ["*.css"],
   "dependencies": {
     "@gravity-ui/date-utils": "^1.4.1",
     "@gravity-ui/yagr": "^3.7.8",
