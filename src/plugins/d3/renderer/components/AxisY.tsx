@@ -56,17 +56,20 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
                 return formatAxisTickLabel({
                     axisType: axis.type,
                     value,
-                    dateFormat: axis.labels.dateFormat,
-                    numberFormat: axis.labels.numberFormat,
+                    labels: axis.labels,
                 });
             });
 
         svgElement.call(yAxisGenerator).attr('class', b());
         svgElement.select('.domain').attr('d', `M0,${height}H0V0`);
-        svgElement
-            .selectAll('.tick text')
-            .style('font-size', axis.labels.style.fontSize)
-            .style('transform', 'translateY(-1px)');
+
+        if (axis.labels.enabled) {
+            svgElement
+                .selectAll('.tick text')
+                .style('font-size', axis.labels.style.fontSize)
+                .style('transform', 'translateY(-1px)');
+        }
+
         const transformStyle = svgElement.select('.tick').attr('transform');
         const {y} = parseTransformStyle(transformStyle);
 

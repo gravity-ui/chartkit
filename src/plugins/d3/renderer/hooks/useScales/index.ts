@@ -58,10 +58,11 @@ export const useScales = (args: Args): ReturnValue => {
         switch (xType) {
             case 'linear': {
                 const domain = getDomainDataXBySeries(visibleSeries);
+                const range = [0, boundsWidth - boundsWidth * xAxis.maxPadding];
 
                 if (isNumericalArrayData(domain)) {
                     const [xMin, xMax] = extent(domain) as [number, number];
-                    xScale = scaleLinear().domain([xMin, xMax]).range([0, boundsWidth]).nice();
+                    xScale = scaleLinear().domain([xMin, xMax]).range(range).nice();
                 }
 
                 break;
@@ -78,15 +79,17 @@ export const useScales = (args: Args): ReturnValue => {
                 break;
             }
             case 'datetime': {
+                const range = [0, boundsWidth - boundsWidth * xAxis.maxPadding];
+
                 if (xTimestamps) {
                     const [xMin, xMax] = extent(xTimestamps) as [number, number];
-                    xScale = scaleUtc().domain([xMin, xMax]).range([0, boundsWidth]).nice();
+                    xScale = scaleUtc().domain([xMin, xMax]).range(range).nice();
                 } else {
                     const domain = getDomainDataXBySeries(visibleSeries);
 
                     if (isNumericalArrayData(domain)) {
                         const [xMin, xMax] = extent(domain) as [number, number];
-                        xScale = scaleUtc().domain([xMin, xMax]).range([0, boundsWidth]).nice();
+                        xScale = scaleUtc().domain([xMin, xMax]).range(range).nice();
                     }
                 }
 
@@ -101,14 +104,12 @@ export const useScales = (args: Args): ReturnValue => {
         switch (yType) {
             case 'linear': {
                 const domain = getDomainDataYBySeries(visibleSeries);
+                const range = [boundsHeight, boundsHeight * yAxis[0].maxPadding];
 
                 if (isNumericalArrayData(domain)) {
                     const [domainYMin, yMax] = extent(domain) as [number, number];
                     const yMinValue = typeof yMin === 'number' ? yMin : domainYMin;
-                    yScale = scaleLinear()
-                        .domain([yMinValue, yMax])
-                        .range([boundsHeight, 0])
-                        .nice();
+                    yScale = scaleLinear().domain([yMinValue, yMax]).range(range).nice();
                 }
 
                 break;
@@ -125,15 +126,17 @@ export const useScales = (args: Args): ReturnValue => {
                 break;
             }
             case 'datetime': {
+                const range = [boundsHeight, boundsHeight * yAxis[0].maxPadding];
+
                 if (yTimestamps) {
                     const [yMin, yMax] = extent(yTimestamps) as [number, number];
-                    yScale = scaleUtc().domain([yMin, yMax]).range([boundsHeight, 0]).nice();
+                    yScale = scaleUtc().domain([yMin, yMax]).range(range).nice();
                 } else {
                     const domain = getDomainDataYBySeries(visibleSeries);
 
                     if (isNumericalArrayData(domain)) {
                         const [yMin, yMax] = extent(domain) as [number, number];
-                        yScale = scaleUtc().domain([yMin, yMax]).range([boundsHeight, 0]).nice();
+                        yScale = scaleUtc().domain([yMin, yMax]).range(range).nice();
                     }
                 }
 

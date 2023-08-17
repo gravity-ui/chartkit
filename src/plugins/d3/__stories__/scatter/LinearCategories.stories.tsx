@@ -58,9 +58,6 @@ const shapeScatterChartData = (
     categories?: string[],
 ): ChartKitWidgetData => {
     let xAxis: ChartKitWidgetAxis = {
-        labels: {
-            enabled: false,
-        },
         title: {
             text: text('X axis title', ''),
         },

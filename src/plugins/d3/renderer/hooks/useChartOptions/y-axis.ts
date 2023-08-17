@@ -40,6 +40,7 @@ export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}):
                 : 0,
         },
         min: get(yAxis1, 'min'),
+        maxPadding: get(yAxis1, 'maxPadding', 0.05),
         grid: {
             enabled: get(yAxis1, 'grid.enabled', true),
         },
