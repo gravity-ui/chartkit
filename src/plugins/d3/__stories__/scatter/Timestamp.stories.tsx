@@ -1,6 +1,7 @@
 import React from 'react';
 import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
+import {boolean} from '@storybook/addon-knobs';
 import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
@@ -72,7 +73,17 @@ const shapeData = (data: Record<string, any>[]): ChartKitWidgetData<string> => {
         xAxis: {
             type: 'datetime',
             timestamps: data.map((d) => d.x),
+            grid: {
+                enabled: boolean('xAxis.grid.enabled', true),
+            },
         },
+        yAxis: [
+            {
+                grid: {
+                    enabled: boolean('yAxis.grid.enabled', true),
+                },
+            },
+        ],
         tooltip: {
             renderer: ({hovered}) => {
                 const d = hovered.data as ScatterSeriesData<string>;

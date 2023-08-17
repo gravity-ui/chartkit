@@ -40,6 +40,9 @@ export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}):
                 : 0,
         },
         min: get(yAxis1, 'min'),
+        grid: {
+            enabled: get(yAxis1, 'grid.enabled', true),
+        },
     };
 
     return [preparedY1Axis];

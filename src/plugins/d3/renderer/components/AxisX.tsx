@@ -47,8 +47,9 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
 
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
+        const tickSize = axis.grid.enabled ? height * -1 : 0;
         const xAxisGenerator = axisBottom(scale as AxisScale<AxisDomain>)
-            .tickSize(height * -1)
+            .tickSize(tickSize)
             .tickPadding(axis.labels.padding)
             .tickFormat((value) => {
                 return formatAxisTickLabel({
