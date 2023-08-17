@@ -32,6 +32,9 @@ export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
         enabled: boolean;
     };
     maxPadding: number;
+    ticks: {
+        pixelInterval?: number;
+    };
 };
 
 export type PreparedTitle = ChartKitWidgetData['title'] & {

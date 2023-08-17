@@ -47,6 +47,7 @@ const Template: Story = () => {
         },
         title: {text: 'Linear axis'},
         xAxis: {
+            min: 0,
             type: 'linear',
             labels: {enabled: true},
         },
@@ -55,6 +56,9 @@ const Template: Story = () => {
                 type: 'linear',
                 labels: {enabled: true},
                 min: 0,
+                ticks: {
+                    pixelInterval: 100,
+                },
             },
         ],
         legend: {enabled: true},

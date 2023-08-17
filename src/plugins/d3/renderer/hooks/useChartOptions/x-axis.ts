@@ -40,6 +40,9 @@ export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}):
         grid: {
             enabled: get(xAxis, 'grid.enabled', true),
         },
+        ticks: {
+            pixelInterval: get(xAxis, 'ticks.pixelInterval'),
+        },
     };
 
     return preparedXAxis;

@@ -48,7 +48,7 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
         const tickSize = axis.grid.enabled ? height * -1 : 0;
-        const xAxisGenerator = axisBottom(scale as AxisScale<AxisDomain>)
+        let xAxisGenerator = axisBottom(scale as AxisScale<AxisDomain>)
             .tickSize(tickSize)
             .tickPadding(axis.labels.padding)
             .tickFormat((value) => {
@@ -63,6 +63,11 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
                     numberFormat: axis.labels['numberFormat'],
                 });
             });
+
+        if (axis.ticks.pixelInterval) {
+            const ticksCount = width / axis.ticks.pixelInterval;
+            xAxisGenerator = xAxisGenerator.ticks(ticksCount);
+        }
 
         svgElement.call(xAxisGenerator).attr('class', b());
         svgElement.select('.domain').attr('d', `M0,0V0H${width}`);

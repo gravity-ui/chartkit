@@ -34,6 +34,12 @@ export type ChartKitWidgetAxis = {
         enabled?: boolean;
     };
 
+    ticks?: {
+        /** Pixel interval of the tick marks. Not applicable to categorized axis.
+         * The specified value is only a hint; the interval between ticks can be greater or less depending on the data. */
+        pixelInterval?: number;
+    };
+
     /** Padding of the max value relative to the length of the axis.
      * A padding of 0.05 will make a 100px axis 5px longer.
      *

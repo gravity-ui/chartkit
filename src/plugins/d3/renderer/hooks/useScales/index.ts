@@ -41,6 +41,7 @@ const filterCategoriesByVisibleSeries = (categories: string[], series: ChartKitW
 export const useScales = (args: Args): ReturnValue => {
     const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
     const scales = React.useMemo(() => {
+        const xMin = get(xAxis, 'min');
         const xType = get(xAxis, 'type', 'linear');
         const xCategories = get(xAxis, 'categories');
         const xTimestamps = get(xAxis, 'timestamps');
@@ -61,8 +62,9 @@ export const useScales = (args: Args): ReturnValue => {
                 const range = [0, boundsWidth - boundsWidth * xAxis.maxPadding];
 
                 if (isNumericalArrayData(domain)) {
-                    const [xMin, xMax] = extent(domain) as [number, number];
-                    xScale = scaleLinear().domain([xMin, xMax]).range(range).nice();
+                    const [domainXMin, xMax] = extent(domain) as [number, number];
+                    const xMinValue = typeof xMin === 'number' ? xMin : domainXMin;
+                    xScale = scaleLinear().domain([xMinValue, xMax]).range(range).nice();
                 }
 
                 break;

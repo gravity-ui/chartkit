@@ -1,7 +1,7 @@
 import React from 'react';
 import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
-import {boolean} from '@storybook/addon-knobs';
+import {boolean, number} from '@storybook/addon-knobs';
 import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
@@ -78,6 +78,9 @@ const shapeData = (data: Record<string, any>[]): ChartKitWidgetData<string> => {
             },
             labels: {
                 enabled: boolean('xAxis.labels.enabled', true),
+            },
+            ticks: {
+                pixelInterval: number('xAxis.ticks.pixelInterval', 100),
             },
         },
         yAxis: [
