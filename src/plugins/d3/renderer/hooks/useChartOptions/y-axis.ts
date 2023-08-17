@@ -44,6 +44,9 @@ export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}):
         grid: {
             enabled: get(yAxis1, 'grid.enabled', true),
         },
+        ticks: {
+            pixelInterval: get(yAxis1, 'ticks.pixelInterval'),
+        },
     };
 
     return [preparedY1Axis];
