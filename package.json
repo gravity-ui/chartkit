@@ -7,7 +7,9 @@
   "main": "build/index.js",
   "typings": "build/index.d.ts",
   "files": [
-    "build"
+    "build",
+    "!**/__tests__/**",
+    "!**/__stories__/**"
   ],
   "publishConfig": {
     "access": "public"
