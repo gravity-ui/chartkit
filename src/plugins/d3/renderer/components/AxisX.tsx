@@ -52,17 +52,25 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
             .tickSize(tickSize)
             .tickPadding(axis.labels.padding)
             .tickFormat((value) => {
+                if (!axis.labels.enabled) {
+                    return '';
+                }
+
                 return formatAxisTickLabel({
                     axisType: axis.type,
                     value,
-                    dateFormat: axis.labels.dateFormat,
-                    numberFormat: axis.labels.numberFormat,
+                    dateFormat: axis.labels['dateFormat'],
+                    numberFormat: axis.labels['numberFormat'],
                 });
             });
 
         svgElement.call(xAxisGenerator).attr('class', b());
         svgElement.select('.domain').attr('d', `M0,0V0H${width}`);
-        svgElement.selectAll('.tick text').style('font-size', axis.labels.style.fontSize);
+
+        if (axis.labels.enabled) {
+            svgElement.selectAll('.tick text').style('font-size', axis.labels.style.fontSize);
+        }
+
         const transformStyle = svgElement.select('.tick').attr('transform');
         const {x} = parseTransformStyle(transformStyle);
 

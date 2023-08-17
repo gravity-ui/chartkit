@@ -33,4 +33,11 @@ export type ChartKitWidgetAxis = {
          * */
         enabled?: boolean;
     };
+
+    /** Padding of the max value relative to the length of the axis.
+     * A padding of 0.05 will make a 100px axis 5px longer.
+     *
+     * Defaults to 0.05 for Y axis and to 0.01 for X axis
+     * */
+    maxPadding?: number;
 };

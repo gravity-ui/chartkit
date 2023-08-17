@@ -36,6 +36,7 @@ export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}):
                 : 0,
         },
         min: get(xAxis, 'min'),
+        maxPadding: get(xAxis, 'maxPadding', 0.01),
         grid: {
             enabled: get(xAxis, 'grid.enabled', true),
         },

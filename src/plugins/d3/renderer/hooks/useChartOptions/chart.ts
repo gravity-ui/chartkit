@@ -34,12 +34,16 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
         }
     }
 
-    const formattedValue = formatAxisTickLabel({
-        axisType: axis.type,
-        value: maxDomainValue,
-        dateFormat: axis.labels.dateFormat,
-        numberFormat: axis.labels.numberFormat,
-    });
+    let formattedValue = '';
+
+    if (axis.labels.enabled) {
+        formattedValue = formatAxisTickLabel({
+            axisType: axis.type,
+            value: maxDomainValue,
+            dateFormat: axis.labels['dateFormat'],
+            numberFormat: axis.labels['numberFormat'],
+        });
+    }
 
     select(document.body)
         .append('text')
@@ -69,11 +73,17 @@ export const getPreparedChart = (args: {
         preparedY1Axis.labels.padding +
         getAxisLabelMaxWidth({axis: preparedY1Axis, series: series.data}) +
         (preparedY1Axis.title.height || 0);
+    const marginTop =
+        get(chart, 'margin.top', 0) +
+        getHorisontalSvgTextDimensions({text: 'Tmp', style: preparedY1Axis.labels.style}) / 2;
+    const marginRight =
+        get(chart, 'margin.right', 0) +
+        getAxisLabelMaxWidth({axis: preparedXAxis, series: series.data}) / 2;
 
     return {
         margin: {
-            top: get(chart, 'margin.top', 0),
-            right: get(chart, 'margin.right', 0),
+            top: marginTop,
+            right: marginRight,
             bottom: marginBottom,
             left: marginLeft,
         },
