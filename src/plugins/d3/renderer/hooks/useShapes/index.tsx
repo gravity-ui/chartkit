@@ -1,14 +1,14 @@
 import React from 'react';
 import {group} from 'd3';
 
-import type {BarSeries, ScatterSeries} from '../../../../../types/widget-data';
+import type {BarXSeries, ScatterSeries} from '../../../../../types/widget-data';
 
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
 import type {ChartScale} from '../useScales';
 import type {ChartSeries} from '../useSeries';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
-import {prepareBarSeries} from './bar';
+import {prepareBarXSeries} from './bar-x';
 import {prepareScatterSeries} from './scatter';
 
 type Args = {
@@ -40,10 +40,10 @@ export const useShapes = (args: Args) => {
         return Array.from(groupedSeries).reduce<React.ReactElement[]>((acc, item) => {
             const [seriesType, chartSeries] = item;
             switch (seriesType) {
-                case 'bar': {
+                case 'bar-x': {
                     acc.push(
-                        ...prepareBarSeries({
-                            series: chartSeries as BarSeries[],
+                        ...prepareBarXSeries({
+                            series: chartSeries as BarXSeries[],
                             xAxis,
                             xScale,
                             yAxis,

@@ -1,7 +1,7 @@
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetSeriesOptions} from './series';
 
-export type BarSeriesData<T = any> = BaseSeriesData<T> & {
+export type BarXSeriesData<T = any> = BaseSeriesData<T> & {
     /** The x value of the point */
     x?: number;
     /** The y value of the point */
@@ -10,9 +10,9 @@ export type BarSeriesData<T = any> = BaseSeriesData<T> & {
     category?: string;
 };
 
-export type BarSeries<T = any> = BaseSeries & {
-    type: 'bar';
-    data: BarSeriesData<T>[];
+export type BarXSeries<T = any> = BaseSeries & {
+    type: 'bar-x';
+    data: BarXSeriesData<T>[];
 
     /** The name of the series (used in legend) */
     name: string;

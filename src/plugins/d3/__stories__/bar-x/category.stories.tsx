@@ -1,6 +1,6 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react';
-import {withKnobs, object} from '@storybook/addon-knobs';
+import {object, withKnobs} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
@@ -12,10 +12,19 @@ const Template: Story = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
     const data: ChartKitWidgetData = {
+        legend: {enabled: true},
+        tooltip: {enabled: false},
+        yAxis: [
+            {
+                type: 'linear',
+                labels: {enabled: true},
+                min: 0,
+            },
+        ],
         series: {
             data: [
                 {
-                    type: 'bar',
+                    type: 'bar-x',
                     visible: true,
                     data: [
                         {
@@ -32,7 +41,7 @@ const Template: Story = () => {
                     name: 'AB',
                 },
                 {
-                    type: 'bar',
+                    type: 'bar-x',
                     visible: true,
                     data: [
                         {
@@ -45,20 +54,12 @@ const Template: Story = () => {
                 },
             ],
         },
-        title: {text: 'Linear axis'},
+        title: {text: 'Category axis'},
         xAxis: {
-            type: 'linear',
+            type: 'category',
+            categories: ['A', 'B', 'C'],
             labels: {enabled: true},
         },
-        yAxis: [
-            {
-                type: 'linear',
-                labels: {enabled: true},
-                min: 0,
-            },
-        ],
-        legend: {enabled: true},
-        tooltip: {enabled: false},
     };
 
     if (!shown) {
@@ -78,10 +79,10 @@ const Template: Story = () => {
     );
 };
 
-export const LinearXAxis = Template.bind({});
+export const CategoryXAxis = Template.bind({});
 
 const meta: Meta = {
-    title: 'Plugins/D3/Bar',
+    title: 'Plugins/D3/Bar-X',
     decorators: [withKnobs],
 };
 

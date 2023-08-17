@@ -2,7 +2,7 @@ import React from 'react';
 import {ChartOptions} from '../useChartOptions/types';
 import {ChartScale} from '../useScales';
 import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
-import {BarSeries, BarSeriesData} from '../../../../../types/widget-data';
+import {BarXSeries, BarXSeriesData} from '../../../../../types/widget-data';
 import {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import block from 'bem-cn-lite';
 
@@ -13,7 +13,7 @@ const MIN_RECT_GAP = 1;
 const b = block('chartkit-d3-bar');
 
 type Args = {
-    series: BarSeries[];
+    series: BarXSeries[];
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
@@ -23,7 +23,7 @@ type Args = {
 };
 
 const getRectProperties = (args: {
-    point: BarSeriesData;
+    point: BarXSeriesData;
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
@@ -78,7 +78,7 @@ function minDiff(arr: number[]) {
     return result;
 }
 
-export function prepareBarSeries(args: Args) {
+export function prepareBarXSeries(args: Args) {
     const {series, xAxis, xScale, yAxis, yScale, onSeriesMouseMove, onSeriesMouseLeave} = args;
     const seriesData = series.map(({data}) => data).flat(2);
     const minPointDistance = minDiff(seriesData.map((item) => Number(item.x)));

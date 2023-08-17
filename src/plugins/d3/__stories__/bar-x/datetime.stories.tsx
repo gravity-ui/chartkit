@@ -29,7 +29,7 @@ const Template: Story = () => {
         series: {
             data: [
                 {
-                    type: 'bar',
+                    type: 'bar-x',
                     visible: true,
                     data: [
                         {
@@ -44,7 +44,7 @@ const Template: Story = () => {
                     name: 'AB',
                 },
                 {
-                    type: 'bar',
+                    type: 'bar-x',
                     visible: true,
                     data: [
                         {
@@ -78,7 +78,7 @@ const Template: Story = () => {
 export const DatetimeXAxis = Template.bind({});
 
 const meta: Meta = {
-    title: 'Plugins/D3/Bar',
+    title: 'Plugins/D3/Bar-X',
     decorators: [withKnobs],
 };
 

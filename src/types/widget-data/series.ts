@@ -1,14 +1,14 @@
 import type {PieSeries, PieSeriesData} from './pie';
 import type {ScatterSeries, ScatterSeriesData} from './scatter';
-import type {BarSeries, BarSeriesData} from './bar';
+import type {BarXSeries, BarXSeriesData} from './bar-x';
 import React from 'react';
 
-export type ChartKitWidgetSeries<T = any> = ScatterSeries<T> | PieSeries<T> | BarSeries<T>;
+export type ChartKitWidgetSeries<T = any> = ScatterSeries<T> | PieSeries<T> | BarXSeries<T>;
 
 export type ChartKitWidgetSeriesData<T = any> =
     | ScatterSeriesData<T>
     | PieSeriesData<T>
-    | BarSeriesData<T>;
+    | BarXSeriesData<T>;
 
 export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;
