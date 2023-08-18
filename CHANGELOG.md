@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.4.0](https://github.com/gravity-ui/chartkit/compare/v3.3.0...v3.4.0) (2023-08-18)
+
+
+### Features
+
+* add `sideEffects` ([#227](https://github.com/gravity-ui/chartkit/issues/227)) ([1624ebc](https://github.com/gravity-ui/chartkit/commit/1624ebc8d835f2e77089a7212dc805b24aa43af7))
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** disable tooltip lines sorting by default ([#233](https://github.com/gravity-ui/chartkit/issues/233)) ([423498e](https://github.com/gravity-ui/chartkit/commit/423498e931811d014c40206b199cb9cdac825bd9))
+
 ## [3.3.0](https://github.com/gravity-ui/chartkit/compare/v3.2.0...v3.3.0) (2023-08-17)
 
 
