@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.3.0](https://github.com/gravity-ui/chartkit/compare/v3.2.0...v3.3.0) (2023-08-17)
+
+
+### Features
+
+* **D3 plugin:** add axis grid settings ([#228](https://github.com/gravity-ui/chartkit/issues/228)) ([0a4c3c0](https://github.com/gravity-ui/chartkit/commit/0a4c3c04a6e861932054f3bcef59b9a6858f8d8d))
+* **D3 plugin:** add basic bar chart ([#225](https://github.com/gravity-ui/chartkit/issues/225)) ([5806761](https://github.com/gravity-ui/chartkit/commit/58067616c8a4a69cc7f96116d3f5c0478250b31b))
+* **D3 plugin:** add ticks pixel interval settings ([#232](https://github.com/gravity-ui/chartkit/issues/232)) ([cae265e](https://github.com/gravity-ui/chartkit/commit/cae265e8caeb30fee648138ba69505efba2fe413))
+* **D3 plugin:** axis maxPadding options ([#231](https://github.com/gravity-ui/chartkit/issues/231)) ([89602a3](https://github.com/gravity-ui/chartkit/commit/89602a35f7b330b9474f6e0a02becca962cc0705))
+
 ## [3.2.0](https://github.com/gravity-ui/chartkit/compare/v3.1.3...v3.2.0) (2023-08-15)
 
 
