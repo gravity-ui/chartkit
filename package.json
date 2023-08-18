@@ -7,11 +7,14 @@
   "main": "build/index.js",
   "typings": "build/index.d.ts",
   "files": [
-    "build"
+    "build",
+    "!**/__tests__/**",
+    "!**/__stories__/**"
   ],
   "publishConfig": {
     "access": "public"
   },
+  "sideEffects": ["*.css"],
   "dependencies": {
     "@gravity-ui/date-utils": "^1.4.1",
     "@gravity-ui/yagr": "^3.7.8",
