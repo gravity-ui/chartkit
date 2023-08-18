@@ -19,7 +19,7 @@ export const getSortedData = <T extends Record<string, any>>(
     data: T[],
     sort: HighchartsSortData = {},
 ) => {
-    const {enabled = true, order = 'desc', iteratee = 'y'} = sort;
+    const {enabled = false, order = 'desc', iteratee = 'y'} = sort;
 
     if (!enabled) {
         return [...data];
