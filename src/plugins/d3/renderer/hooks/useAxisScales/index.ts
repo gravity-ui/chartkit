@@ -38,7 +38,7 @@ const filterCategoriesByVisibleSeries = (categories: string[], series: ChartKitW
     });
 };
 
-export const useScales = (args: Args): ReturnValue => {
+export const useAxisScales = (args: Args): ReturnValue => {
     const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
     const scales = React.useMemo(() => {
         const xMin = get(xAxis, 'min');

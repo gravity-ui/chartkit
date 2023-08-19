@@ -5,7 +5,7 @@ import type {BarXSeries, ScatterSeries} from '../../../../../types/widget-data';
 
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
-import type {ChartScale} from '../useScales';
+import type {ChartScale} from '../useAxisScales';
 import type {ChartSeries} from '../useSeries';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
 import {prepareBarXSeries} from './bar-x';

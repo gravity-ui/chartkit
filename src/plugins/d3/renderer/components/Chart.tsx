@@ -13,7 +13,7 @@ import {
     useChartEvents,
     useChartOptions,
     useLegend,
-    useScales,
+    useAxisScales,
     useSeries,
     useShapes,
     useTooltip,
@@ -48,7 +48,7 @@ export const Chart = ({width, height, data}: Props) => {
     });
     const {activeLegendItems, handleLegendItemClick} = useLegend({series: series.data});
     const {chartSeries} = useSeries({activeLegendItems, series: series.data});
-    const {xScale, yScale} = useScales({
+    const {xScale, yScale} = useAxisScales({
         boundsWidth,
         boundsHeight,
         series: chartSeries,

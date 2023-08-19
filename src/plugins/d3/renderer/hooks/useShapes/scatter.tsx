@@ -1,7 +1,7 @@
 import {pointer, ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import React from 'react';
 import {ChartOptions} from '../useChartOptions/types';
-import {ChartScale} from '../useScales';
+import {ChartScale} from '../useAxisScales';
 import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import block from 'bem-cn-lite';
 import {ScatterSeries, ScatterSeriesData} from '../../../../../types/widget-data';
