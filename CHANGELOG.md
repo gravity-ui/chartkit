@@ -5,7 +5,6 @@
 
 ### Bug Fixes
 
-* remove sideEffects cause of it broke styles ([d76d2a9](https://github.com/gravity-ui/chartkit/commit/d76d2a9b4ca6302a6a406b5e16ecede0a3852ac3))
 * remove sideEffects cause of it brokes styles ([#237](https://github.com/gravity-ui/chartkit/issues/237)) ([d76d2a9](https://github.com/gravity-ui/chartkit/commit/d76d2a9b4ca6302a6a406b5e16ecede0a3852ac3))
 
 ## [3.4.1](https://github.com/gravity-ui/chartkit/compare/v3.4.0...v3.4.1) (2023-08-18)
