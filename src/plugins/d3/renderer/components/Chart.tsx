@@ -88,7 +88,7 @@ export const Chart = ({width, height, data}: Props) => {
                         chart.margin.top + (title?.height || 0),
                     ].join(',')})`}
                 >
-                    {hasAxisRelatedSeries && (
+                    {hasAxisRelatedSeries && xScale && yScale && (
                         <React.Fragment>
                             <AxisY
                                 axises={yAxis}

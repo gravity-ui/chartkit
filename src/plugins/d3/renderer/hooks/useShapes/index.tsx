@@ -14,12 +14,12 @@ import {prepareScatterSeries} from './scatter';
 type Args = {
     series: ChartSeries[];
     xAxis: ChartOptions['xAxis'];
-    xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
-    yScale: ChartScale;
     svgContainer: SVGSVGElement | null;
     onSeriesMouseMove?: OnSeriesMouseMove;
     onSeriesMouseLeave?: OnSeriesMouseLeave;
+    xScale?: ChartScale;
+    yScale?: ChartScale;
 };
 
 export const useShapes = (args: Args) => {
@@ -41,32 +41,36 @@ export const useShapes = (args: Args) => {
             const [seriesType, chartSeries] = item;
             switch (seriesType) {
                 case 'bar-x': {
-                    acc.push(
-                        ...prepareBarXSeries({
-                            series: chartSeries as BarXSeries[],
-                            xAxis,
-                            xScale,
-                            yAxis,
-                            yScale,
-                            onSeriesMouseMove,
-                            onSeriesMouseLeave,
-                        }),
-                    );
+                    if (xScale && yScale) {
+                        acc.push(
+                            ...prepareBarXSeries({
+                                series: chartSeries as BarXSeries[],
+                                xAxis,
+                                xScale,
+                                yAxis,
+                                yScale,
+                                onSeriesMouseMove,
+                                onSeriesMouseLeave,
+                            }),
+                        );
+                    }
                     break;
                 }
                 case 'scatter': {
-                    acc.push(
-                        ...prepareScatterSeries({
-                            series: chartSeries as ScatterSeries[],
-                            xAxis,
-                            xScale,
-                            yAxis,
-                            yScale,
-                            onSeriesMouseMove,
-                            onSeriesMouseLeave,
-                            svgContainer,
-                        }),
-                    );
+                    if (xScale && yScale) {
+                        acc.push(
+                            ...prepareScatterSeries({
+                                series: chartSeries as ScatterSeries[],
+                                xAxis,
+                                xScale,
+                                yAxis,
+                                yScale,
+                                onSeriesMouseMove,
+                                onSeriesMouseLeave,
+                                svgContainer,
+                            }),
+                        );
+                    }
                     break;
                 }
             }
