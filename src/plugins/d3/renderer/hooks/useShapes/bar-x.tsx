@@ -1,6 +1,6 @@
 import React from 'react';
 import {ChartOptions} from '../useChartOptions/types';
-import {ChartScale} from '../useScales';
+import {ChartScale} from '../useAxisScales';
 import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import {BarXSeries, BarXSeriesData} from '../../../../../types/widget-data';
 import {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
