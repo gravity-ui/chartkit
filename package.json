@@ -31,7 +31,7 @@
     "@gravity-ui/prettier-config": "^1.0.1",
     "@gravity-ui/stylelint-config": "^1.0.1",
     "@gravity-ui/tsconfig": "^1.0.0",
-    "@gravity-ui/uikit": "^5.0.0",
+    "@gravity-ui/uikit": "^5.6.0",
     "@storybook/addon-essentials": "^7.0.26",
     "@storybook/addon-knobs": "^7.0.2",
     "@storybook/cli": "^7.0.26",
