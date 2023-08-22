@@ -46,7 +46,7 @@ const Template: Story = () => {
     return (
         <div
             style={{
-                height: '80vh',
+                height: '300px',
                 width: '100%',
             }}
         >
