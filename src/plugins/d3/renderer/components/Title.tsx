@@ -1,9 +1,9 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 
+import {block} from '../../../../utils/cn';
 import type {PreparedTitle} from '../hooks';
 
-const b = block('chartkit-d3-title');
+const b = block('d3-title');
 
 type Props = PreparedTitle & {
     chartWidth: number;

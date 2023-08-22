@@ -3,8 +3,8 @@ import React from 'react';
 import {ChartOptions} from '../useChartOptions/types';
 import {ChartScale} from '../useAxisScales';
 import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
-import block from 'bem-cn-lite';
 import {ScatterSeries, ScatterSeriesData} from '../../../../../types/widget-data';
+import {block} from '../../../../../utils/cn';
 
 type PrepareScatterSeriesArgs = {
     series: ScatterSeries[];
@@ -18,7 +18,7 @@ type PrepareScatterSeriesArgs = {
     key?: string;
 };
 
-const b = block('chartkit-d3-scatter');
+const b = block('d3-scatter');
 const DEFAULT_SCATTER_POINT_RADIUS = 4;
 
 const prepareCategoricalScatterData = (data: ScatterSeriesData[]) => {

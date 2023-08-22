@@ -1,10 +1,10 @@
 import React from 'react';
 import SplitPane, {Pane, Split, SplitPaneProps} from 'react-split-pane';
-import block from 'bem-cn-lite';
+import {cn} from '../../../../../utils/cn';
 
 import './StyledSplitPane.scss';
 
-const b = block('styled-split-pane');
+const b = cn('styled-split-pane');
 const resizerClassName = b('pane-resizer');
 
 export type PaneSplit = Split;

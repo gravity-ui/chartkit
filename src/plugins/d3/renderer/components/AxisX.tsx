@@ -1,12 +1,12 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {axisBottom, select} from 'd3';
 import type {AxisScale, AxisDomain, Selection} from 'd3';
 
+import {block} from '../../../../utils/cn';
 import type {ChartOptions, ChartScale} from '../hooks';
 import {formatAxisTickLabel, parseTransformStyle} from '../utils';
 
-const b = block('chartkit-d3-axis');
+const b = block('d3-axis');
 const EMPTY_SPACE_BETWEEN_LABELS = 10;
 
 type Props = {

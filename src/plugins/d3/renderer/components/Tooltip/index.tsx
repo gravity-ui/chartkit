@@ -1,12 +1,12 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 
 import type {TooltipHoveredData} from '../../../../../types/widget-data';
+import {block} from '../../../../../utils/cn';
 
 import type {PointerPosition, PreparedAxis, PreparedTooltip} from '../../hooks';
 import {DefaultContent} from './DefaultContent';
 
-const b = block('chartkit-d3-tooltip');
+const b = block('d3-tooltip');
 const POINTER_OFFSET_X = 20;
 
 type TooltipProps = {
