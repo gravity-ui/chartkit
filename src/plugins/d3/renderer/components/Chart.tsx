@@ -37,7 +37,7 @@ export const Chart = ({width, height, data}: Props) => {
     const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
     const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
     const {chart, legend, title, tooltip, xAxis, yAxis} = useChartOptions(data);
-    const {boundsWidth, boundsHeight, legendHeight} = useChartDimensions({
+    const {boundsWidth, boundsHeight} = useChartDimensions({
         width,
         height,
         margin: chart.margin,
@@ -112,8 +112,9 @@ export const Chart = ({width, height, data}: Props) => {
                     <Legend
                         width={boundsWidth}
                         offsetWidth={chart.margin.left}
-                        height={legendHeight}
-                        offsetHeight={height - legendHeight / 2}
+                        height={legend.height}
+                        legend={legend}
+                        offsetHeight={height - legend.height / 2}
                         chartSeries={chartSeries}
                         onItemClick={handleLegendItemClick}
                     />

@@ -17,7 +17,10 @@ export type PreparedChart = {
     margin: ChartMargin;
 };
 
-export type PreparedLegend = Required<ChartKitWidgetLegend>;
+export type PreparedLegend = Required<ChartKitWidgetLegend> & {
+    symbol: Required<ChartKitWidgetLegend['symbol']>;
+    height: number;
+};
 
 export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
     type: ChartKitWidgetAxisType;
