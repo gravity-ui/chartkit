@@ -14,7 +14,7 @@ export type BarXSeries<T = any> = BaseSeries & {
     type: 'bar-x';
     data: BarXSeriesData<T>[];
 
-    /** The name of the series (used in legend) */
+    /** The name of the series (used in legend, tooltip etc) */
     name: string;
 
     /** The main color of the series (hex, rgba) */

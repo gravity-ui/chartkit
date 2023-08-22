@@ -36,7 +36,10 @@ export const Chart = ({width, height, data}: Props) => {
     const svgRef = React.createRef<SVGSVGElement>();
     const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
     const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
-    const {chart, legend, title, tooltip, xAxis, yAxis} = useChartOptions(data);
+    const {chart, legend, title, tooltip, xAxis, yAxis} = useChartOptions({
+        ...data,
+        hasAxisRelatedSeries,
+    });
     const {boundsWidth, boundsHeight, legendHeight} = useChartDimensions({
         width,
         height,
@@ -59,6 +62,8 @@ export const Chart = ({width, height, data}: Props) => {
         tooltip,
     });
     const {shapes} = useShapes({
+        boundsWidth,
+        boundsHeight,
         series: chartSeries,
         xAxis,
         xScale,

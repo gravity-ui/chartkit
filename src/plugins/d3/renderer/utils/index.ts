@@ -41,13 +41,17 @@ export const getSeriesNames = (series: ChartKitWidgetSeries[]) => {
     }, []);
 };
 
-// Uses to get all visible series names array (except `pie` charts)
-export const getVisibleSeriesNames = (series: ChartKitWidgetSeries[]) => {
-    return series.reduce<string[]>((acc, s) => {
-        const visible = s.visible ?? true;
+/**
+ * Uses to get all visible entries names in array.
+ *
+ * Note: each data structure chunk should have required field `name` and optional field `visible`
+ */
+export const getVisibleEntriesNames = (entries: {name?: string; visible?: boolean}[]) => {
+    return entries.reduce<string[]>((acc, e) => {
+        const visible = e.visible ?? true;
 
-        if ('name' in s && typeof s.name === 'string' && visible) {
-            acc.push(s.name);
+        if ('name' in e && typeof e.name === 'string' && visible) {
+            acc.push(e.name);
         }
 
         return acc;
@@ -100,4 +104,12 @@ export const formatAxisTickLabel = (args: {
             return formatNumber(value as number | string, numberFormat);
         }
     }
+};
+
+export const isStringValueInPercent = (value = '') => {
+    return value.endsWith('%') && !Number.isNaN(Number.parseFloat(value));
+};
+
+export const isStringValueInPixel = (value = '') => {
+    return value.endsWith('px') && !Number.isNaN(Number.parseFloat(value));
 };

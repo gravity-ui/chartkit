@@ -1,8 +1,8 @@
 import React from 'react';
 
-import type {ChartKitWidgetSeries} from '../../../../../types/widget-data';
+import type {ChartKitWidgetSeries, PieSeriesData} from '../../../../../types/widget-data';
 
-import {getVisibleSeriesNames} from '../../utils';
+import {getVisibleEntriesNames, isAxisRelatedSeries} from '../../utils';
 
 export type OnLegendItemClick = (data: {name: string; metaKey: boolean}) => void;
 
@@ -10,9 +10,25 @@ type Args = {
     series: ChartKitWidgetSeries[];
 };
 
+const getActiveLegendItems = (series: ChartKitWidgetSeries[]) => {
+    if (series.length === 1 && !isAxisRelatedSeries(series[0])) {
+        return getVisibleEntriesNames(series[0].data as PieSeriesData[]);
+    }
+
+    return getVisibleEntriesNames(series);
+};
+
+const getAllLegendItems = (series: ChartKitWidgetSeries[]) => {
+    if (series.length === 1 && !isAxisRelatedSeries(series[0])) {
+        return (series[0].data as PieSeriesData[]).map((d) => d.name);
+    }
+
+    return series.map((s) => ('name' in s && s.name) || '');
+};
+
 export const useLegend = (args: Args) => {
     const {series} = args;
-    const [activeLegendItems, setActiveLegendItems] = React.useState(getVisibleSeriesNames(series));
+    const [activeLegendItems, setActiveLegendItems] = React.useState(getActiveLegendItems(series));
 
     const handleLegendItemClick: OnLegendItemClick = React.useCallback(
         ({name, metaKey}) => {
@@ -25,7 +41,7 @@ export const useLegend = (args: Args) => {
             } else if (metaKey && !activeLegendItems.includes(name)) {
                 nextActiveLegendItems = activeLegendItems.concat(name);
             } else if (onlyItemSelected) {
-                nextActiveLegendItems = getVisibleSeriesNames(series);
+                nextActiveLegendItems = getAllLegendItems(series);
             } else {
                 nextActiveLegendItems = [name];
             }
@@ -37,7 +53,7 @@ export const useLegend = (args: Args) => {
 
     // FIXME: remove effect. It initiates extra rerender
     React.useEffect(() => {
-        setActiveLegendItems(getVisibleSeriesNames(series));
+        setActiveLegendItems(getActiveLegendItems(series));
     }, [series]);
 
     return {activeLegendItems, handleLegendItemClick};

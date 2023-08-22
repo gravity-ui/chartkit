@@ -13,7 +13,7 @@ export type ScatterSeriesData<T = any> = BaseSeriesData<T> & {
 export type ScatterSeries<T = any> = BaseSeries & {
     type: 'scatter';
     data: ScatterSeriesData<T>[];
-    /** The name of the series (used in legend) */
+    /** The name of the series (used in legend, tooltip etc) */
     name: string;
     /** The main color of the series (hex, rgba) */
     color?: string;
