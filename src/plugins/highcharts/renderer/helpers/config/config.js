@@ -1,7 +1,6 @@
 /* eslint new-cap: 0, complexity: 0 */
 
 import Highcharts from 'highcharts';
-import block from 'bem-cn-lite';
 import merge from 'lodash/merge';
 import mergeWith from 'lodash/mergeWith';
 import get from 'lodash/get';
@@ -14,6 +13,7 @@ import debounce from 'lodash/debounce';
 import {dateTime} from '@gravity-ui/date-utils';
 import {i18n} from '../../../../../i18n';
 import {formatNumber} from '../../../../shared';
+import {block} from '../../../../../utils/cn';
 import {
     getCommentsOnLine,
     drawComments,
@@ -47,7 +47,7 @@ import {
 import {handleLegendItemClick} from './handleLegendItemClick';
 import {getChartKitFormattedValue} from './utils/getChartKitFormattedValue';
 
-const b = block('chartkit-tooltip');
+const b = block('tooltip');
 const TOOLTIP_OFFSET_FROM_CURSOR = 15;
 const TOOLTIP_ROOT_CLASS_NAME = 'chartkit-highcharts-tooltip-container';
 const MOBILE_TOOLTIP_OFFSET_FROM_POINTER = 30;

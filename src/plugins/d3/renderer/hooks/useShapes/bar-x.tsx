@@ -3,14 +3,14 @@ import {ChartOptions} from '../useChartOptions/types';
 import {ChartScale} from '../useAxisScales';
 import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import {BarXSeries, BarXSeriesData} from '../../../../../types/widget-data';
+import {block} from '../../../../../utils/cn';
 import {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
-import block from 'bem-cn-lite';
 
 const DEFAULT_BAR_RECT_WIDTH = 50;
 const DEFAULT_LINEAR_BAR_RECT_WIDTH = 20;
 const MIN_RECT_GAP = 1;
 
-const b = block('chartkit-d3-bar');
+const b = block('d3-bar');
 
 type Args = {
     series: BarXSeries[];

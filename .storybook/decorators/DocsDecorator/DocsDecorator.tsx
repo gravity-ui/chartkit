@@ -1,14 +1,14 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {DocsContainer, DocsContainerProps} from '@storybook/addon-docs';
 import {ThemeProvider, MobileProvider, getThemeType} from '@gravity-ui/uikit';
 import {themes} from '../../../.storybook/theme';
+import {cn} from '../../../src/utils/cn';
 
 import './DocsDecorator.scss';
 
 export interface DocsDecoratorProps extends React.PropsWithChildren<DocsContainerProps> {}
 
-const b = block('docs-decorator');
+const b = cn('docs-decorator');
 
 export function DocsDecorator({children, context}: DocsDecoratorProps) {
     const storyContext = context.getStoryContext(context.storyById(context.id));

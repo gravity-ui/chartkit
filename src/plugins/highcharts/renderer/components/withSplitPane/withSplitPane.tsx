@@ -2,17 +2,17 @@
 
 import React from 'react';
 
-import block from 'bem-cn-lite';
 import {debounce, get} from 'lodash';
 
 import {getRandomCKId} from '../../../../../utils';
+import {cn} from '../../../../../utils/cn';
 import type {Highcharts} from '../../../types';
 import {chartTypesWithoutCrosshair} from '../../helpers/config/config';
 import {StyledSplitPane} from '../StyledSplitPane/StyledSplitPane';
 
 import './WithSplitPane.scss';
 
-const b = block('with-split-pane');
+const b = cn('with-split-pane');
 
 const PANE_RESIZER_HEIGHT = 24;
 const CHART_SECTION_PERCENTAGE = 0.6;

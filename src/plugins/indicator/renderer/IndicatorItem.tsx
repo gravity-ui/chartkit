@@ -1,9 +1,9 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import type {ChartKitProps} from '../../../types';
+import {block} from '../../../utils/cn';
 import type {IndicatorWidgetDataItem} from '../types';
 
-const b = block('chartkit-indicator');
+const b = block('indicator');
 
 export const IndicatorItem = (
     props: IndicatorWidgetDataItem & {

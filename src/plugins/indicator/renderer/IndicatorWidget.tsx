@@ -1,16 +1,16 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {isEmpty} from 'lodash';
 import {i18n} from '../../../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from '../../../constants';
 import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../utils';
+import {block} from '../../../utils/cn';
 import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
 import {IndicatorItem} from './IndicatorItem';
 
 import './IndicatorWidget.scss';
 
-const b = block('chartkit-indicator');
+const b = block('indicator');
 
 const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'indicator'>>(
     // _ref needs to avoid this React warning:

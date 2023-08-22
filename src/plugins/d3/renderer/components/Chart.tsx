@@ -1,7 +1,7 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 
 import type {ChartKitWidgetData} from '../../../../types/widget-data';
+import {block} from '../../../../utils/cn';
 
 import {AxisY} from './AxisY';
 import {AxisX} from './AxisX';
@@ -22,7 +22,7 @@ import {isAxisRelatedSeries} from '../utils';
 
 import './styles.scss';
 
-const b = block('chartkit-d3');
+const b = block('d3');
 
 type Props = {
     width: number;

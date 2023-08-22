@@ -1,10 +1,10 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {select} from 'd3';
 
+import {block} from '../../../../utils/cn';
 import type {ChartSeries, OnLegendItemClick} from '../hooks';
 
-const b = block('chartkit-d3-legend');
+const b = block('d3-legend');
 
 type Props = {
     width: number;
