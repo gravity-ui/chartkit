@@ -9,9 +9,16 @@ import type {
 import {formatNumber} from '../../../shared';
 import type {FormatNumberOptions} from '../../../shared';
 
+export * from './math';
+
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie'];
 
-// Сhecks whether the series should be drawn with axes
+/**
+ * Checks whether the series should be drawn with axes.
+ *
+ * @param series - The series object to check.
+ * @returns `true` if the series should be drawn with axes, `false` otherwise.
+ */
 export const isAxisRelatedSeries = (series: ChartKitWidgetSeries) => {
     return !CHARTS_WITHOUT_AXIS.includes(series.type);
 };
@@ -35,23 +42,6 @@ export const getSeriesNames = (series: ChartKitWidgetSeries[]) => {
     return series.reduce<string[]>((acc, s) => {
         if ('name' in s && typeof s.name === 'string') {
             acc.push(s.name);
-        }
-
-        return acc;
-    }, []);
-};
-
-/**
- * Uses to get all visible entries names in array.
- *
- * Note: each data structure chunk should have required field `name` and optional field `visible`
- */
-export const getVisibleEntriesNames = (entries: {name?: string; visible?: boolean}[]) => {
-    return entries.reduce<string[]>((acc, e) => {
-        const visible = e.visible ?? true;
-
-        if ('name' in e && typeof e.name === 'string' && visible) {
-            acc.push(e.name);
         }
 
         return acc;
@@ -104,12 +94,4 @@ export const formatAxisTickLabel = (args: {
             return formatNumber(value as number | string, numberFormat);
         }
     }
-};
-
-export const isStringValueInPercent = (value = '') => {
-    return value.endsWith('%') && !Number.isNaN(Number.parseFloat(value));
-};
-
-export const isStringValueInPixel = (value = '') => {
-    return value.endsWith('px') && !Number.isNaN(Number.parseFloat(value));
 };

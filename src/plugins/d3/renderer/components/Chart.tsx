@@ -31,15 +31,11 @@ type Props = {
 };
 
 export const Chart = ({width, height, data}: Props) => {
-    // FIXME: add data validation
     const {series} = data;
     const svgRef = React.createRef<SVGSVGElement>();
     const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
     const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
-    const {chart, legend, title, tooltip, xAxis, yAxis} = useChartOptions({
-        ...data,
-        hasAxisRelatedSeries,
-    });
+    const {chart, legend, title, tooltip, xAxis, yAxis} = useChartOptions(data);
     const {boundsWidth, boundsHeight, legendHeight} = useChartDimensions({
         width,
         height,

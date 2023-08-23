@@ -24,8 +24,6 @@ export type PieSeries<T = any> = BaseSeries & {
     center?: [string | number | null, string | number | null];
     /** The inner radius of the pie. Default 0. */
     innerRadius?: string | number;
-    /** The name of the series. Applicable in case of using pie chart with multiple series (used in legend) */
-    name?: string;
     /** The radius of the pie relative to the chart area. The default behaviour is to scale to the chart area. */
     radius?: string | number;
 };

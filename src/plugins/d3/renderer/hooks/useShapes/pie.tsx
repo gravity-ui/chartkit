@@ -5,7 +5,7 @@ import type {PieArcDatum} from 'd3';
 import type {PieSeries, PieSeriesData} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
 
-import {isStringValueInPercent, isStringValueInPixel} from '../../utils';
+import {calculateNumericProperty} from '../../utils';
 import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 
 type PreparePieSeriesArgs = {
@@ -18,51 +18,6 @@ type PreparePieSeriesArgs = {
 };
 
 const b = block('d3-pie');
-const DEFAULT_INNER_RADIUS = 0;
-
-const getRadius = (radiusRelatedToChart: number, style?: string | number) => {
-    if (typeof style === 'undefined') {
-        return radiusRelatedToChart;
-    }
-
-    if (typeof style === 'string') {
-        if (isStringValueInPercent(style)) {
-            const percentage = Number.parseFloat(style) / 100;
-            return radiusRelatedToChart * percentage;
-        }
-
-        if (isStringValueInPixel(style)) {
-            return Number.parseFloat(style);
-        }
-
-        // In case of incorrect style value
-        return radiusRelatedToChart;
-    }
-
-    return style;
-};
-
-const getInnerRadius = (radius: number, style?: string | number) => {
-    if (typeof style === 'undefined') {
-        return DEFAULT_INNER_RADIUS;
-    }
-
-    if (typeof style === 'string') {
-        if (isStringValueInPercent(style)) {
-            const percentage = Number.parseFloat(style) / 100;
-            return radius * percentage;
-        }
-
-        if (isStringValueInPixel(style)) {
-            return Number.parseFloat(style);
-        }
-
-        // In case of incorrect style value
-        return DEFAULT_INNER_RADIUS;
-    }
-
-    return style;
-};
 
 const getCenter = (
     boundsWidth: number,
@@ -77,38 +32,8 @@ const getCenter = (
     }
 
     const [x, y] = center;
-    let resultX: number;
-    let resultY: number;
-
-    if (typeof x === 'string') {
-        if (isStringValueInPercent(x)) {
-            const percentage = Number.parseFloat(x) / 100;
-            resultX = boundsWidth * percentage;
-        } else if (isStringValueInPixel(x)) {
-            resultX = Number.parseFloat(x);
-        } else {
-            resultX = defaultX;
-        }
-    } else if (typeof x === 'number') {
-        resultX = x;
-    } else {
-        resultX = defaultX;
-    }
-
-    if (typeof y === 'string') {
-        if (isStringValueInPercent(y)) {
-            const percentage = Number.parseFloat(y) / 100;
-            resultY = boundsHeight * percentage;
-        } else if (isStringValueInPixel(y)) {
-            resultY = Number.parseFloat(y);
-        } else {
-            resultY = defaultY;
-        }
-    } else if (typeof y === 'number') {
-        resultY = y;
-    } else {
-        resultY = defaultY;
-    }
+    const resultX = calculateNumericProperty({value: x, base: boundsWidth}) ?? defaultX;
+    const resultY = calculateNumericProperty({value: y, base: boundsHeight}) ?? defaultY;
 
     return [resultX, resultY];
 };
@@ -126,8 +51,11 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
 
         const svgElement = select(ref.current);
         const radiusRelatedToChart = Math.min(boundsWidth, boundsHeight) / 2;
-        const radius = getRadius(radiusRelatedToChart, series.radius);
-        const innerRadius = getInnerRadius(radius, series.innerRadius);
+        const radius =
+            calculateNumericProperty({value: series.radius, base: radiusRelatedToChart}) ??
+            radiusRelatedToChart;
+        const innerRadius =
+            calculateNumericProperty({value: series.innerRadius, base: radius}) ?? 0;
         const pieGenerator = pie<PieSeriesData>().value((d) => d.value);
         const visibleData = series.data.filter((d) => d.visible);
         const dataReady = pieGenerator(visibleData);

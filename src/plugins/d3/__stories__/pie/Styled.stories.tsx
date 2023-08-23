@@ -19,19 +19,18 @@ const Template: Story = () => {
                     borderRadius: 5,
                     borderWidth: 3,
                     center: ['25%', null],
-                    name: 'Pie',
                     radius: '75%',
                     data: [
                         {
-                            name: 'One',
+                            name: 'One 1',
                             value: 50,
                         },
                         {
-                            name: 'Two',
+                            name: 'Two 1',
                             value: 20,
                         },
                         {
-                            name: 'Three',
+                            name: 'Three 1',
                             value: 90,
                         },
                     ],
@@ -42,19 +41,18 @@ const Template: Story = () => {
                     borderWidth: 3,
                     center: ['75%', null],
                     innerRadius: '50%',
-                    name: 'Donut',
                     radius: '75%',
                     data: [
                         {
-                            name: 'One',
+                            name: 'One 2',
                             value: 50,
                         },
                         {
-                            name: 'Two',
+                            name: 'Two 2',
                             value: 20,
                         },
                         {
-                            name: 'Three',
+                            name: 'Three 2',
                             value: 90,
                         },
                     ],

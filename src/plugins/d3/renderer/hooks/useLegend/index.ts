@@ -1,8 +1,9 @@
 import React from 'react';
+import get from 'lodash/get';
 
-import type {ChartKitWidgetSeries, PieSeriesData} from '../../../../../types/widget-data';
+import type {ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
-import {getVisibleEntriesNames, isAxisRelatedSeries} from '../../utils';
+import {isAxisRelatedSeries} from '../../utils';
 
 export type OnLegendItemClick = (data: {name: string; metaKey: boolean}) => void;
 
@@ -10,20 +11,41 @@ type Args = {
     series: ChartKitWidgetSeries[];
 };
 
-const getActiveLegendItems = (series: ChartKitWidgetSeries[]) => {
-    if (series.length === 1 && !isAxisRelatedSeries(series[0])) {
-        return getVisibleEntriesNames(series[0].data as PieSeriesData[]);
-    }
+const isEntryVisible = (entry: {name?: string; visible?: boolean} | {}) => {
+    const name = 'name' in entry && entry.name;
+    const visible = ('visible' in entry && entry.visible) ?? true;
+    return Boolean(name && visible);
+};
 
-    return getVisibleEntriesNames(series);
+const getActiveLegendItems = (series: ChartKitWidgetSeries[]) => {
+    return series.reduce<string[]>((acc, s) => {
+        const isAxisRelated = isAxisRelatedSeries(s);
+        const legendEnabled = get(s, 'legend.enabled', true);
+
+        if (legendEnabled && isAxisRelated && isEntryVisible(s) && 'name' in s) {
+            acc.push(s.name);
+        } else if (legendEnabled && !isAxisRelated) {
+            s.data.forEach((d) => {
+                if (isEntryVisible(d) && 'name' in d) {
+                    acc.push(d.name);
+                }
+            });
+        }
+
+        return acc;
+    }, []);
 };
 
 const getAllLegendItems = (series: ChartKitWidgetSeries[]) => {
-    if (series.length === 1 && !isAxisRelatedSeries(series[0])) {
-        return (series[0].data as PieSeriesData[]).map((d) => d.name);
-    }
+    return series.reduce<string[]>((acc, s) => {
+        if (isAxisRelatedSeries(s) && 'name' in s) {
+            acc.push(s.name);
+        } else {
+            acc.push(...s.data.map((d) => ('name' in d && d.name) || ''));
+        }
 
-    return series.map((s) => ('name' in s && s.name) || '');
+        return acc;
+    }, []);
 };
 
 export const useLegend = (args: Args) => {

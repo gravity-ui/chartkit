@@ -1,5 +1,6 @@
 import React from 'react';
 import {select} from 'd3';
+import get from 'lodash/get';
 
 import {block} from '../../../../utils/cn';
 import type {ChartSeries, OnLegendItemClick} from '../hooks';
@@ -16,6 +17,23 @@ type Props = {
     onItemClick: OnLegendItemClick;
 };
 
+type LegendItem = {color: string; name: string; visible?: boolean};
+
+const getLegendItems = (series: ChartSeries[]) => {
+    return series.reduce<LegendItem[]>((acc, s) => {
+        const isAxisRelated = isAxisRelatedSeries(s);
+        const legendEnabled = get(s, 'legend.enabled', true);
+
+        if (isAxisRelated) {
+            acc.push(s);
+        } else if (!isAxisRelated && legendEnabled) {
+            acc.push(...(s.data as LegendItem[]));
+        }
+
+        return acc;
+    }, []);
+};
+
 export const Legend = (props: Props) => {
     const {width, offsetWidth, height, offsetHeight, chartSeries, onItemClick} = props;
     const ref = React.useRef<SVGGElement>(null);
@@ -25,12 +43,7 @@ export const Legend = (props: Props) => {
             return;
         }
 
-        const legendItems = (
-            chartSeries.length === 1 && !isAxisRelatedSeries(chartSeries[0])
-                ? chartSeries[0].data
-                : chartSeries
-        ) as {color: string; name: string; visible?: boolean}[];
-
+        const legendItems = getLegendItems(chartSeries);
         const size = 10;
         const textWidths: number[] = [0];
         const svgElement = select(ref.current);

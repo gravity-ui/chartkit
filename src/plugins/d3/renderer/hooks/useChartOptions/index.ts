@@ -10,10 +10,10 @@ import {getPreparedXAxis} from './x-axis';
 import {getPreparedYAxis} from './y-axis';
 import type {ChartOptions} from './types';
 
-type Args = ChartKitWidgetData & {hasAxisRelatedSeries: boolean};
+type Args = ChartKitWidgetData;
 
 export const useChartOptions = (args: Args): ChartOptions => {
-    const {chart, hasAxisRelatedSeries, series, legend, title, tooltip, xAxis, yAxis} = args;
+    const {chart, series, legend, title, tooltip, xAxis, yAxis} = args;
     const options: ChartOptions = React.useMemo(() => {
         const preparedTitle = getPreparedTitle({title});
         const preparedTooltip = getPreparedTooltip({tooltip});
@@ -22,7 +22,6 @@ export const useChartOptions = (args: Args): ChartOptions => {
         const preparedXAxis = getPreparedXAxis({xAxis});
         const preparedChart = getPreparedChart({
             chart,
-            hasAxisRelatedSeries,
             series,
             preparedXAxis,
             preparedY1Axis: preparedYAxis[0],
@@ -35,7 +34,7 @@ export const useChartOptions = (args: Args): ChartOptions => {
             xAxis: preparedXAxis,
             yAxis: preparedYAxis,
         };
-    }, [chart, hasAxisRelatedSeries, legend, title, tooltip, series, xAxis, yAxis]);
+    }, [chart, legend, title, tooltip, series, xAxis, yAxis]);
 
     return options;
 };

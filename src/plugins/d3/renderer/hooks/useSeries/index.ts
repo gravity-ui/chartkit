@@ -1,8 +1,13 @@
 import React from 'react';
 import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
 import {ScaleOrdinal, scaleOrdinal} from 'd3';
 
-import type {ChartKitWidgetSeries, PieSeries} from '../../../../../types/widget-data';
+import type {
+    ChartKitWidgetSeries,
+    PieSeries,
+    PieSeriesData,
+} from '../../../../../types/widget-data';
 
 import {DEFAULT_PALETTE} from '../../constants';
 import {getSeriesNames, isAxisRelatedSeries} from '../../utils';
@@ -25,47 +30,45 @@ const prepareAxisRelatedSeries = (args: {
 }) => {
     const {activeLegendItems, colorScale, series} = args;
     const preparedSeries = cloneDeep(series) as ChartSeries;
+    const legendEnabled = get(preparedSeries, 'legend.enabled', true);
+    const defaultVisible = get(preparedSeries, 'visible', true);
     const name = 'name' in series && series.name ? series.name : '';
     const color = 'color' in series && series.color ? series.color : colorScale(name);
     preparedSeries.color = color;
     preparedSeries.name = name;
-    preparedSeries.visible = activeLegendItems.includes(name);
+    preparedSeries.visible = legendEnabled ? activeLegendItems.includes(name) : defaultVisible;
 
     return preparedSeries;
 };
 
-const preparePieSeries = (args: {
-    activeLegendItems: string[];
-    onlySeries: boolean;
-    series: PieSeries;
-}) => {
-    const {activeLegendItems, onlySeries, series} = args;
+const preparePieSeries = (args: {activeLegendItems: string[]; series: PieSeries}) => {
+    const {activeLegendItems, series} = args;
     const preparedSeries = cloneDeep(series) as ChartSeries;
+    const legendEnabled = get(preparedSeries, 'legend.enabled', true);
     const dataNames = series.data.map((d) => d.name);
     const colorScale = scaleOrdinal(dataNames, DEFAULT_PALETTE);
-    preparedSeries.data = series.data.map((d) => {
-        const nextData = cloneDeep(d);
-        nextData.color = nextData.color || colorScale(nextData.name);
-        nextData.visible = onlySeries ? activeLegendItems.includes(nextData.name) : true;
-
-        return nextData;
+    preparedSeries.data = (preparedSeries.data as PieSeriesData[]).map((d) => {
+        const defaultVisible = get(d, 'visible', true);
+        d.color = d.color || colorScale(d.name);
+        d.visible = legendEnabled ? activeLegendItems.includes(d.name) : defaultVisible;
+        return d;
     });
 
-    preparedSeries.visible = onlySeries ? true : activeLegendItems.includes(preparedSeries.name);
+    // Not axis related series manages their own data visibility inside their data
+    preparedSeries.visible = true;
 
     return preparedSeries;
 };
 
 const prepareNotAxisRelatedSeries = (args: {
     activeLegendItems: string[];
-    onlySeries: boolean;
     series: ChartKitWidgetSeries;
 }) => {
-    const {activeLegendItems, onlySeries, series} = args;
+    const {activeLegendItems, series} = args;
 
     switch (series.type) {
         case 'pie': {
-            return preparePieSeries({activeLegendItems, onlySeries, series});
+            return preparePieSeries({activeLegendItems, series});
         }
         default: {
             throw new Error(
@@ -86,7 +89,6 @@ export const useSeries = (args: Args) => {
                 ? prepareAxisRelatedSeries({activeLegendItems, colorScale, series: s})
                 : prepareNotAxisRelatedSeries({
                       activeLegendItems,
-                      onlySeries: series.length === 1,
                       series: s,
                   });
         });
