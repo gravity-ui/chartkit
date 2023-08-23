@@ -35,4 +35,18 @@ declare module 'highcharts' {
     }
 
     interface SeriesOptionsRegistry extends Record<string, Record<string, unknown>> {}
+
+    // for Stock chart from https://github.com/highcharts/highcharts/blob/master/ts/Stock/Navigator/NavigatorComposition.ts#L65
+    interface Series {
+        // https://github.com/highcharts/highcharts/blob/master/ts/Core/Series/Series.ts#L1023
+        getPointsCollection: () => Point[];
+        xData: number[];
+        baseSeries?: Series;
+        navigatorSeries?: Series;
+    }
+
+    interface SeriesClickEventObject {
+        // https://github.com/highcharts/highcharts/blob/818eb62b9d1a0efc3c9ec705e95b13849e2040fa/ts/Core/Series/Series.ts#L5039
+        metaKey?: boolean;
+    }
 }

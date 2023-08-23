@@ -1,10 +1,10 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {Loader as BaseLoader, LoaderProps as BaseLoaderProps} from '@gravity-ui/uikit';
+import {block} from '../../utils/cn';
 
 import './Loader.scss';
 
-const b = block('chartkit-loader');
+const b = block('loader');
 
 type LoaderProps = BaseLoaderProps;
 

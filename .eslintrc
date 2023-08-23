@@ -1,4 +1,11 @@
 {
-    "extends": ["@gravity-ui/eslint-config", "@gravity-ui/eslint-config/client"],
+    "extends": [
+        "@gravity-ui/eslint-config",
+        "@gravity-ui/eslint-config/client",
+        "@gravity-ui/eslint-config/prettier"
+    ],
+    "rules": {
+        "valid-jsdoc": 0
+    },
     "root": true
 }

@@ -1,18 +1,19 @@
 /* eslint new-cap: 0, complexity: 0 */
 
 import Highcharts from 'highcharts';
-import block from 'bem-cn-lite';
 import merge from 'lodash/merge';
 import mergeWith from 'lodash/mergeWith';
 import get from 'lodash/get';
 import clamp from 'lodash/clamp';
+import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
 import throttle from 'lodash/throttle';
 import pick from 'lodash/pick';
 import debounce from 'lodash/debounce';
-import moment from 'moment';
+import {dateTime} from '@gravity-ui/date-utils';
 import {i18n} from '../../../../../i18n';
 import {formatNumber} from '../../../../shared';
+import {block} from '../../../../../utils/cn';
 import {
     getCommentsOnLine,
     drawComments,
@@ -40,11 +41,13 @@ import {
     setNavigatorDefaultPeriod,
     numberFormat,
     getFormatOptionsFromLine,
+    checkTooltipPinningAvailability,
+    getSortedData,
 } from './utils';
 import {handleLegendItemClick} from './handleLegendItemClick';
 import {getChartKitFormattedValue} from './utils/getChartKitFormattedValue';
 
-const b = block('chartkit-tooltip');
+const b = block('tooltip');
 const TOOLTIP_OFFSET_FROM_CURSOR = 15;
 const TOOLTIP_ROOT_CLASS_NAME = 'chartkit-highcharts-tooltip-container';
 const MOBILE_TOOLTIP_OFFSET_FROM_POINTER = 30;
@@ -94,7 +97,7 @@ function getFormattedValueWithSuffixAndPrefix(item) {
 
 function isZoomResetButtonClick(event, chartContainer) {
     let iterationIndex = 0;
-    let element = event.path[iterationIndex];
+    let element = event.composedPath()[iterationIndex];
 
     while (element) {
         if (element === chartContainer) {
@@ -103,7 +106,7 @@ function isZoomResetButtonClick(event, chartContainer) {
             return true;
         }
 
-        element = event.path[++iterationIndex];
+        element = event.composedPath()[++iterationIndex];
     }
 
     return false;
@@ -215,6 +218,9 @@ export function buildLegend(options) {
             activeColor: 'var(--yc-color-base-special)',
             inactiveColor: 'var(--yc-color-base-generic-accent-disabled)',
             style: {color: 'var(--yc-color-text-primary)'},
+        },
+        title: {
+            style: {color: 'var(--yc-color-text-secondary)'},
         },
     };
 
@@ -522,6 +528,7 @@ function getTooltip(tooltip, options, comments, holidays) {
             ],
             count: 1,
             shared: true,
+            unsafe: Boolean(options.unsafe),
         };
 
         if (typeof options.manageTooltipConfig === 'function') {
@@ -566,7 +573,7 @@ function getTooltip(tooltip, options, comments, holidays) {
     let shared;
 
     if (this.points) {
-        points = this.points;
+        points = getSortedData(this.points, options?.tooltip?.sort);
         shared = true;
     } else {
         points.push(Object.assign({}, this.point));
@@ -1152,7 +1159,9 @@ export function hideFixedTooltip(tooltip, isMobile) {
 
     if (Array.isArray(tooltip.pointsOnFixedTooltip)) {
         tooltip.pointsOnFixedTooltip.forEach((point) => {
-            point.setState('');
+            if (typeof point.setState === 'function') {
+                point.setState('');
+            }
         });
     } else {
         tooltip.pointsOnFixedTooltip.setState('');
@@ -1183,7 +1192,13 @@ export function hideFixedTooltip(tooltip, isMobile) {
 }
 
 function fixTooltip(tooltip, options, event) {
-    if (options.splitTooltip) {
+    const availableToPin = checkTooltipPinningAvailability({
+        tooltip: options.tooltip,
+        altKey: event.altKey,
+        metaKey: event.metaKey,
+    });
+
+    if (options.splitTooltip || (!availableToPin && !tooltip.fixed)) {
         return false;
     }
 
@@ -1222,7 +1237,7 @@ function fixTooltip(tooltip, options, event) {
             tooltip.preFixationHeight = height;
         }
 
-        tooltip.lastVisibleRowIndex = null;
+        tooltip.lastVisibleRowIndex = undefined;
         tooltip.update({
             style: {
                 ...tooltip.style,
@@ -1396,7 +1411,9 @@ function drillOnClick(event, {options, chartType}) {
                     chartType === 'scatter' ? drillDownFilter - 180 * 60 * 1000 : drillDownFilter;
             }
 
-            return isDateTime ? moment(drillDownFilter).format('YYYY-MM-DD') : drillDownFilter;
+            return isDateTime
+                ? dateTime({input: drillDownFilter}).format('YYYY-MM-DD')
+                : drillDownFilter;
         }
 
         return filter;
@@ -1421,7 +1438,7 @@ function fixTooltipOnClick(event, {options}) {
 }
 
 function adjustDonutFontSize(chart, chartSeries, innerWidth, totals) {
-    if (!totals) {
+    if (!totals || isEmpty(chart) || isEmpty(chartSeries)) {
         return;
     }
     const MIN_ACCEPTABLE_INNER_SIZE = 400;
@@ -1749,6 +1766,20 @@ export function prepareConfig(data, options, isMobile, holidays) {
                     return Highcharts.Axis.prototype.defaultLabelFormatter.call(this);
                 },
             },
+            events: {
+                setExtremes: function () {
+                    // There is no better way to align zoom button text
+                    // Callback setExtremes used because of it obligatory invocation on every zoom event
+                    // setTimeout used because of absence resetZoomButton node in dom on first zoom event
+                    setTimeout(() => {
+                        const text = this.chart.resetZoomButton?.text;
+
+                        if (text) {
+                            text.translate(0, -6);
+                        }
+                    }, 0);
+                },
+            },
         },
         yAxis: {
             crosshair: options.splitTooltip
@@ -1945,12 +1976,8 @@ export function prepareConfig(data, options, isMobile, holidays) {
                     false,
                 );
 
-                if (serieHasIntersectionWithOthers) {
-                    if (hasPositiveValues && !hasNegativeValues) {
-                        serie.stack = 'positive';
-                    } else if (!hasPositiveValues && hasNegativeValues) {
-                        serie.stack = 'negative';
-                    }
+                if (serieHasIntersectionWithOthers && !hasPositiveValues && hasNegativeValues) {
+                    serie.stack = serie.stack ? `${serie.stack}__negative` : 'negative';
                 }
             }
         });

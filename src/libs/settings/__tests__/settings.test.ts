@@ -1,17 +1,8 @@
-import {DEFAULT_LOCALE_SPECIFICATION, settings} from '../settings';
+import {settings} from '../settings';
 
-const resetSettings = () =>
-    settings.set({
-        lang: 'en',
-        locale: DEFAULT_LOCALE_SPECIFICATION,
-    });
+const resetSettings = () => settings.set({lang: 'en'});
 
 describe('libs/settings', () => {
-    it('Default locale should be equal DEFAULT_LOCALE_SPECIFICATION', () => {
-        const result = settings.get('locale');
-        expect(result).toStrictEqual(DEFAULT_LOCALE_SPECIFICATION);
-    });
-
     it('Default lang should be equal to en', () => {
         const result = settings.get('lang');
 

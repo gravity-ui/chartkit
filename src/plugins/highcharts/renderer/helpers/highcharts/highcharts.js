@@ -48,11 +48,15 @@ Highcharts.setOptions({
         resetZoomButton: {
             relativeTo: 'chart',
             theme: {
-                width: 16,
-                height: 16,
+                r: 6,
+                width: 12,
+                height: 12,
                 'text-align': 'center',
                 opacity: '0.8',
                 cursor: 'pointer',
+                style: {
+                    fontSize: '20px',
+                },
             },
             position: {
                 y: 30,
@@ -127,7 +131,7 @@ Highcharts.setOptions({
     },
 });
 
-function initHighcharts({isMobile}) {
+function initHighchartsLangOptions() {
     Highcharts.setOptions({
         lang: {
             resetZoom: '⟲',
@@ -174,6 +178,10 @@ function initHighcharts({isMobile}) {
             thousandsSep: i18n('highcharts', 'thousands-sep'),
         },
     });
+}
+
+function initHighcharts({isMobile}) {
+    initHighchartsLangOptions();
 
     // https://github.com/highcharts/highcharts/issues/11494
     (function (H) {
@@ -263,7 +271,7 @@ function initHighcharts({isMobile}) {
 
     Highcharts.wrap(Highcharts.Tooltip.prototype, 'hide', function (proceed, ...rest) {
         if (this.lastVisibleRowIndex) {
-            this.lastVisibleRowIndex = null;
+            this.lastVisibleRowIndex = undefined;
         }
 
         if (this.scrollHandler && !this.fixed) {
@@ -307,7 +315,7 @@ function initHighcharts({isMobile}) {
 
         if ((!this.fixed || isFixation) && points) {
             if (isFixation) {
-                this.lastVisibleRowIndex = null;
+                this.lastVisibleRowIndex = undefined;
             }
 
             proceed.apply(this, [points, ...rest]);
@@ -362,7 +370,7 @@ function initHighcharts({isMobile}) {
                     `.${TOOLTIP_LIST_CLASS_NAME} .${TOOLTIP_ROW_CLASS_NAME}`,
                 );
 
-                let lastVisibleRowIndex = null;
+                let lastVisibleRowIndex;
 
                 const selectedSeriesIndex = this.chart.hoverPoints.indexOf(this.chart.hoverPoint);
 
@@ -424,4 +432,4 @@ function initHighchartsMap() {
     });
 }
 
-export {initHighcharts, initHighchartsMap};
+export {initHighcharts, initHighchartsMap, initHighchartsLangOptions};

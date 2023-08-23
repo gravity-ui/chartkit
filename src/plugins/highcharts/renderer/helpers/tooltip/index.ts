@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 
-import {escape as _escape, orderBy as _orderBy} from 'lodash';
+import _escape from 'lodash/escape';
 import {i18n} from '../../../../../i18n';
 import type {Highcharts} from '../../../types';
 import type {TooltipData, TooltipLine, RowRenderingConfig} from './types';
@@ -211,10 +211,9 @@ export const formatTooltip = (
     isMobile?: boolean,
 ) => {
     const {splitTooltip, activeRowAlwaysFirstInTooltip} = data;
-    const selectedLineIndex = data.lines.findIndex(({selectedSeries}) => selectedSeries);
-    const selectedLine = data.lines[selectedLineIndex];
     const lines = data.lines.slice(0, (tooltip.lastVisibleRowIndex || data.lines.length) + 1);
-    const sortedLines = _orderBy(lines, ['originalValue'], ['desc']);
+    const selectedLineIndex = lines.findIndex(({selectedSeries}) => selectedSeries);
+    const selectedLine = lines[selectedLineIndex];
     const withShapes = lines.every((line) => line.seriesShape);
     const unsafe = data.unsafe;
     const tooltipHeaderRaw = data.tooltipHeader?.trim();
@@ -250,7 +249,9 @@ export const formatTooltip = (
         cellsRenderers,
         useCompareFrom: data.useCompareFrom,
         isSelectedLine: true,
-        allowComment: selectedLineIndex > tooltip.lastVisibleRowIndex,
+        allowComment:
+            typeof tooltip.lastVisibleRowIndex === 'number' &&
+            selectedLineIndex > tooltip.lastVisibleRowIndex,
     };
 
     // @ts-ignore
@@ -326,7 +327,7 @@ export const formatTooltip = (
                             </thead>`
                     }
                     <tbody class="${TOOLTIP_LIST_CLASS_NAME}">
-                        ${sortedLines
+                        ${lines
                             .map((line, index) => renderRow(line, getRowRenderConfig(index)))
                             .join('')}
                     </tbody>

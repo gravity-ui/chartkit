@@ -4,9 +4,12 @@ import HighchartsReact from './HighchartsReact';
 import get from 'lodash/get';
 import type {ChartKitProps} from '../../../../types';
 import {settings} from '../../../../libs';
+import {settingsEventEmitter} from '../../../../libs/settings/settings';
+import {markChartPerformance, getChartPerformanceDuration, getRandomCKId} from '../../../../utils';
 import type {HighchartsWidgetData, StringParams} from '../../types';
 import {getGraph} from '../helpers/graph';
 import {initHighchartsModules} from '../helpers/init-highcharts-modules';
+import {initHighchartsLangOptions} from '../helpers/highcharts/highcharts';
 import {withSplitPane} from './withSplitPane/withSplitPane';
 
 import './HighchartsComponent.scss';
@@ -21,6 +24,11 @@ type State = {
     callback: ChartCallbackFunction | null;
     isError: boolean;
 };
+
+settingsEventEmitter.on('change-lang', {
+    id: 'hc-lang-handler',
+    action: initHighchartsLangOptions,
+});
 
 initHighchartsModules();
 
@@ -92,16 +100,50 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         isError: false,
     };
 
+    private id?: string;
+
     private chartComponent = React.createRef<{
         chart: Highcharts.Chart;
         container: React.RefObject<HTMLDivElement>;
     }>();
 
     componentDidMount() {
-        this.onLoad();
+        if (!this.props.onChartLoad) {
+            this.onLoad();
+            return;
+        }
+
+        const needCallbacks = !this.state.isError && !this.props.splitTooltip;
+        if (!needCallbacks) {
+            return;
+        }
+        const widget = this.chartComponent.current ? this.chartComponent.current.chart : null;
+
+        if (this.state.callback && widget) {
+            this.state.callback(widget);
+        }
+
+        this.props.onChartLoad?.({
+            widget,
+        });
     }
 
     componentDidUpdate() {
+        const needRenderCallback =
+            this.props.onRender && !this.state.isError && !this.props.splitTooltip;
+        if (needRenderCallback) {
+            this.props.onRender?.({
+                renderTime: getChartPerformanceDuration(this.getId()),
+            });
+
+            const widget = this.chartComponent.current ? this.chartComponent.current.chart : null;
+
+            if (this.state.callback && widget) {
+                this.state.callback(widget);
+            }
+
+            return;
+        }
         this.onLoad();
     }
 
@@ -112,6 +154,8 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         if (isError) {
             return null;
         }
+
+        markChartPerformance(this.getId(true));
 
         return (
             <Component
@@ -152,6 +196,13 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
         }
     };
 
+    private getId(refresh = false) {
+        if (refresh) {
+            this.id = getRandomCKId();
+        }
+        return `${this.props.id}_${this.id}`;
+    }
+
     private onLoad() {
         if (!this.state.isError && !this.props.splitTooltip) {
             const data = {
@@ -164,8 +215,10 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
                 this.state.callback(data.widget);
             }
 
+            const widgetRendering = getChartPerformanceDuration(this.getId());
+
             if (this.props.onLoad) {
-                this.props.onLoad({widget: data.widget});
+                this.props.onLoad({widget: data.widget, widgetRendering});
             }
 
             window.requestAnimationFrame(this.reflow);

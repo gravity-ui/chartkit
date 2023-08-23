@@ -1,16 +1,15 @@
 import React from 'react';
-import block from 'bem-cn-lite';
 import {i18n} from '../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError, settings} from '../libs';
 import {getRandomCKId, typedMemo} from '../utils';
+import {cn} from '../utils/cn';
 import type {ChartKitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '../types';
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 
-import '@gravity-ui/uikit/styles/styles.scss';
 import './ChartKit.scss';
 
-const b = block('chartkit');
+const b = cn('chartkit');
 
 type ChartKitComponentProps<T extends ChartKitType> = Omit<ChartKitProps<T>, 'onError'> & {
     instanceRef?: React.ForwardedRef<ChartKitRef | undefined>;
@@ -18,7 +17,7 @@ type ChartKitComponentProps<T extends ChartKitType> = Omit<ChartKitProps<T>, 'on
 
 const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps<T>) => {
     const widgetRef = React.useRef<ChartKitWidgetRef>();
-    const {instanceRef, id: propsId, type, data, onLoad, isMobile, ...restProps} = props;
+    const {instanceRef, id: propsId, type, isMobile, renderPluginLoader, ...restProps} = props;
 
     const ckId = React.useMemo(() => getRandomCKId(), []);
     const id = propsId || ckId;
@@ -49,16 +48,9 @@ const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps
     );
 
     return (
-        <React.Suspense fallback={<Loader />}>
+        <React.Suspense fallback={renderPluginLoader?.() || <Loader />}>
             <div className={b({mobile: isMobile}, 'chartkit-theme_common')}>
-                <ChartComponent
-                    ref={widgetRef}
-                    id={id}
-                    lang={lang}
-                    data={data}
-                    onLoad={onLoad}
-                    {...restProps}
-                />
+                <ChartComponent ref={widgetRef} id={id} lang={lang} {...restProps} />
             </div>
         </React.Suspense>
     );
@@ -69,7 +61,7 @@ const ChartKitComponentWithErrorBoundary = React.forwardRef<
     ChartKitProps<ChartKitType>
 >(function ChartKitComponentWithErrorBoundary(props, ref) {
     return (
-        <ErrorBoundary onError={props.onError}>
+        <ErrorBoundary onError={props.onError} data={props.data} renderError={props.renderError}>
             <ChartKitComponent instanceRef={ref} {...props} />
         </ErrorBoundary>
     );

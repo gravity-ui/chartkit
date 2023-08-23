@@ -11,28 +11,30 @@ export const line10: YagrWidgetData = {
                 id: '0',
                 name: 'Serie 1',
                 color: '#6c59c2',
-                visible: true,
-                data: [25, 52, 89, 72, 39, 49, 82, 59, 36, 5],
+                data: [45, 52, 89, 72, 39, 49, 82, 59, 36, 5],
             },
             {
                 id: '1',
                 name: 'Serie 2',
                 color: '#6e8188',
-                visible: true,
                 data: [37, 6, 51, 10, 65, 35, 72, 0, 94, 54],
             },
             {
                 id: '2',
                 name: 'Serie 3',
                 color: '#e21576',
-                visible: true,
                 data: [26, 54, 15, 40, 43, 18, 65, 46, 51, 33],
             },
         ],
     },
     libraryConfig: {
         chart: {
-            type: 'line',
+            series: {
+                type: 'line',
+            },
+            select: {
+                zoom: false,
+            },
         },
         title: {
             text: 'line: random 10 pts',
@@ -53,16 +55,37 @@ export const line10: YagrWidgetData = {
                 style: 'solid 2px rgba(230, 2, 7, 0.3)',
             },
         },
-        settings: {
-            adaptive: true,
-        },
         tooltip: {
-            enabled: true,
-            boundClassName: '.wrapper',
+            show: true,
             tracking: 'sticky',
-            className: 'chartkit-theme_common',
         },
         legend: {},
         processing: {},
     },
+};
+
+export const getNewConfig = () => {
+    const startPoint = (Math.random() * 10 ** 5) >> 0; // eslint-disable-line no-bitwise
+    return {
+        ...line10,
+        libraryConfig: {
+            ...line10.libraryConfig,
+            title: {
+                text: 'line: random 100 pts',
+            },
+        },
+        data: {
+            timeline: new Array(100).fill(0).map((_, i) => {
+                return startPoint + i * 1000;
+            }),
+            graphs: line10.data.graphs.map((graph) => {
+                return {
+                    ...graph,
+                    data: new Array(100).fill(0).map(() => {
+                        return (Math.random() * 100) >> 0; // eslint-disable-line no-bitwise
+                    }),
+                };
+            }),
+        },
+    };
 };

@@ -1,6 +1,8 @@
-import moment from 'moment';
 import lodashMin from 'lodash/min';
+import {dateTime} from '@gravity-ui/date-utils';
+import {i18n} from '../../../../i18n';
 import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
+import {DEFAULT_LINES_LIMIT} from './constants';
 
 function prepareValue(value, firstValue, options) {
     if (value === null) {
@@ -78,9 +80,9 @@ function removeHolidays(data, options, holidays) {
     });
 
     data.categories_ms.forEach((ts, i) => {
-        const datetime = moment(ts).format('YYYYMMDD');
+        const key = dateTime({input: ts}).format('YYYYMMDD');
         const region = (options.region && options.region.toLowerCase()) || 'tot';
-        const holiday = holidays.holiday[region][datetime] || holidays.weekend[region][datetime];
+        const holiday = holidays.holiday[region][key] || holidays.weekend[region][key];
 
         if (!holiday) {
             timeline.push(ts);
@@ -96,6 +98,8 @@ function removeHolidays(data, options, holidays) {
 
 // eslint-disable-next-line complexity
 export function prepareData(data, options, holidays) {
+    const limit = options.linesLimit || DEFAULT_LINES_LIMIT;
+
     if (
         !data ||
         (typeof data === 'object' && !Object.keys(data).length) ||
@@ -105,11 +109,14 @@ export function prepareData(data, options, holidays) {
             )) ||
         (Array.isArray(data) && !data.length)
     ) {
-        throw new ChartKitError({code: CHARTKIT_ERROR_CODE.NO_DATA});
+        throw new ChartKitError({
+            code: CHARTKIT_ERROR_CODE.NO_DATA,
+            message: i18n('error', 'label_no-data'),
+        });
     }
 
     if (data.graphs) {
-        if (data.graphs.length > 50 && !options.withoutLineLimit) {
+        if (data.graphs.length > limit && !options.withoutLineLimit) {
             throw new ChartKitError({code: CHARTKIT_ERROR_CODE.TOO_MANY_LINES});
         }
 

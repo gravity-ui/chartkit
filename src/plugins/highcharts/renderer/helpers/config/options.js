@@ -1,12 +1,12 @@
 /** Default options for Highcharts & Highstock */
 
-import block from 'bem-cn-lite';
 import merge from 'lodash/merge';
 import {i18n} from '../../../../../i18n';
+import {block} from '../../../../../utils/cn';
 import {getChartKitFormattedValue} from './utils';
 import LocalStorage from './utils/localStorage';
 
-const b = block('chartkit-tooltip');
+const b = block('tooltip');
 
 function getTooltipHeaderFormat(format, showColor) {
     return `<div class="${b('header')}">
@@ -181,6 +181,11 @@ const options = {
             style: {
                 textOutline: 'none',
                 color: 'var(--highcharts-data-labels)',
+            },
+        },
+        title: {
+            style: {
+                color: 'var(--yc-color-text-secondary)',
             },
         },
     },
