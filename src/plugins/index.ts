@@ -4,3 +4,4 @@ export {IndicatorPlugin} from './indicator';
 export type {IndicatorWidgetData} from './indicator/types';
 export {HighchartsPlugin} from './highcharts';
 export type {Highcharts, HighchartsWidgetData, HighchartsComment} from './highcharts/types';
+export {HighchartsReact} from './highcharts/renderer/components/HighchartsReact';

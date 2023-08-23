@@ -1,6 +1,6 @@
 import React from 'react';
 import Highcharts, {ChartCallbackFunction, Options, Chart} from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import HighchartsReact from './HighchartsReact';
 import get from 'lodash/get';
 import type {ChartKitProps} from '../../../../types';
 import {settings} from '../../../../libs';
