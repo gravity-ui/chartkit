@@ -4,7 +4,7 @@ import {ChartScale} from '../useAxisScales';
 import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import {BarXSeries, BarXSeriesData} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
-import {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
+import {pointer, ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 
 const DEFAULT_BAR_RECT_WIDTH = 50;
 const DEFAULT_LINEAR_BAR_RECT_WIDTH = 20;
@@ -13,6 +13,8 @@ const MIN_RECT_GAP = 1;
 const b = block('d3-bar');
 
 type Args = {
+    top: number;
+    left: number;
     series: BarXSeries[];
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
@@ -20,6 +22,7 @@ type Args = {
     yScale: ChartScale;
     onSeriesMouseMove?: OnSeriesMouseMove;
     onSeriesMouseLeave?: OnSeriesMouseLeave;
+    svgContainer: SVGSVGElement | null;
 };
 
 const getRectProperties = (args: {
@@ -79,7 +82,18 @@ function minDiff(arr: number[]) {
 }
 
 export function prepareBarXSeries(args: Args) {
-    const {series, xAxis, xScale, yAxis, yScale, onSeriesMouseMove, onSeriesMouseLeave} = args;
+    const {
+        top,
+        left,
+        series,
+        xAxis,
+        xScale,
+        yAxis,
+        yScale,
+        onSeriesMouseMove,
+        onSeriesMouseLeave,
+        svgContainer,
+    } = args;
     const seriesData = series.map(({data}) => data).flat(2);
     const minPointDistance = minDiff(seriesData.map((item) => Number(item.x)));
 
@@ -102,12 +116,14 @@ export function prepareBarXSeries(args: Args) {
                     className={b('rect')}
                     fill={item.color}
                     {...rectProps}
-                    onMouseMove={function () {
+                    onMouseMove={function (e) {
+                        const [x, y] = pointer(e, svgContainer);
                         onSeriesMouseMove?.({
                             hovered: {
                                 data: point,
                                 series: item,
                             },
+                            pointerPosition: [x - top, y - left],
                         });
                     }}
                     onMouseLeave={onSeriesMouseLeave}

@@ -12,6 +12,8 @@ import {prepareBarXSeries} from './bar-x';
 import {prepareScatterSeries} from './scatter';
 
 type Args = {
+    top: number;
+    left: number;
     series: ChartSeries[];
     xAxis: ChartOptions['xAxis'];
     yAxis: ChartOptions['yAxis'];
@@ -24,6 +26,8 @@ type Args = {
 
 export const useShapes = (args: Args) => {
     const {
+        top,
+        left,
         series,
         xAxis,
         xScale,
@@ -33,6 +37,7 @@ export const useShapes = (args: Args) => {
         onSeriesMouseMove,
         onSeriesMouseLeave,
     } = args;
+
     const shapes = React.useMemo(() => {
         const visibleSeries = getOnlyVisibleSeries(series);
         const groupedSeries = group(visibleSeries, (item) => item.type);
@@ -44,6 +49,8 @@ export const useShapes = (args: Args) => {
                     if (xScale && yScale) {
                         acc.push(
                             ...prepareBarXSeries({
+                                top,
+                                left,
                                 series: chartSeries as BarXSeries[],
                                 xAxis,
                                 xScale,
@@ -51,6 +58,7 @@ export const useShapes = (args: Args) => {
                                 yScale,
                                 onSeriesMouseMove,
                                 onSeriesMouseLeave,
+                                svgContainer,
                             }),
                         );
                     }
@@ -60,6 +68,8 @@ export const useShapes = (args: Args) => {
                     if (xScale && yScale) {
                         acc.push(
                             ...prepareScatterSeries({
+                                top,
+                                left,
                                 series: chartSeries as ScatterSeries[],
                                 xAxis,
                                 xScale,

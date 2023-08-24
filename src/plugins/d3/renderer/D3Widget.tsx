@@ -8,6 +8,8 @@ import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {Chart} from './components';
 
 type ChartDimensions = {
+    top: number;
+    left: number;
     width: number;
     height: number;
 };
@@ -20,8 +22,8 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
 
         const handleResize = React.useCallback(() => {
             if (ref.current) {
-                const {width, height} = ref.current.getBoundingClientRect();
-                setDimensions({width, height});
+                const {top, left, width, height} = ref.current.getBoundingClientRect();
+                setDimensions({top, left, width, height});
             }
         }, []);
 
@@ -59,7 +61,13 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
         return (
             <div ref={ref} style={{width: '100%', height: '100%'}}>
                 {dimensions?.width && dimensions?.height && (
-                    <Chart width={dimensions.width} height={dimensions.height} data={props.data} />
+                    <Chart
+                        top={dimensions?.top || 0}
+                        left={dimensions.left || 0}
+                        width={dimensions.width}
+                        height={dimensions.height}
+                        data={props.data}
+                    />
                 )}
             </div>
         );

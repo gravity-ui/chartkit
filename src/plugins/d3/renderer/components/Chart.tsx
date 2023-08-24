@@ -25,12 +25,15 @@ import './styles.scss';
 const b = block('d3');
 
 type Props = {
+    top: number;
+    left: number;
     width: number;
     height: number;
     data: ChartKitWidgetData;
 };
 
-export const Chart = ({width, height, data}: Props) => {
+export const Chart = (props: Props) => {
+    const {top, left, width, height, data} = props;
     // FIXME: add data validation
     const {series} = data;
     const svgRef = React.createRef<SVGSVGElement>();
@@ -59,6 +62,8 @@ export const Chart = ({width, height, data}: Props) => {
         tooltip,
     });
     const {shapes} = useShapes({
+        top,
+        left,
         series: chartSeries,
         xAxis,
         xScale,

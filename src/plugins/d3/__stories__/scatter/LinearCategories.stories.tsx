@@ -144,14 +144,7 @@ const Template: Story = () => {
     }
 
     return (
-        <div
-            style={{
-                position: 'absolute',
-                marginLeft: '100px',
-                height: '80vh',
-                width: '80%',
-            }}
-        >
+        <div style={{height: '400px', width: '100%'}}>
             <ChartKit ref={chartkitRef} type="d3" data={data} />
         </div>
     );

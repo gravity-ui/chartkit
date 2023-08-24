@@ -7,6 +7,8 @@ import {ScatterSeries, ScatterSeriesData} from '../../../../../types/widget-data
 import {block} from '../../../../../utils/cn';
 
 type PrepareScatterSeriesArgs = {
+    top: number;
+    left: number;
     series: ScatterSeries[];
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
@@ -62,6 +64,8 @@ const getPointProperties = (args: {
 
 export function prepareScatterSeries(args: PrepareScatterSeriesArgs) {
     const {
+        top,
+        left,
         series,
         xAxis,
         xScale,
@@ -96,12 +100,13 @@ export function prepareScatterSeries(args: PrepareScatterSeriesArgs) {
                         fill={s.color}
                         {...pointProps}
                         onMouseMove={function (e) {
+                            const [x, y] = pointer(e, svgContainer);
                             onSeriesMouseMove?.({
                                 hovered: {
                                     data: point,
                                     series: s,
                                 },
-                                pointerPosition: pointer(e, svgContainer),
+                                pointerPosition: [x - top, y - left],
                             });
                         }}
                         onMouseLeave={onSeriesMouseLeave}

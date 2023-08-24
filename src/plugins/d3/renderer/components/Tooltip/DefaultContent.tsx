@@ -1,6 +1,10 @@
 import React from 'react';
 
-import type {ScatterSeriesData, TooltipHoveredData} from '../../../../../types/widget-data';
+import type {
+    ScatterSeriesData,
+    BarXSeriesData,
+    TooltipHoveredData,
+} from '../../../../../types/widget-data';
 
 import type {PreparedAxis} from '../../hooks';
 
@@ -27,6 +31,21 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                     <div>
                         <span>Y:&nbsp;</span>
                         <b>{yRow}</b>
+                    </div>
+                </div>
+            );
+        }
+        case 'bar-x': {
+            const barXData = data as BarXSeriesData;
+            const xRow = xAxis.type === 'category' ? barXData.category : barXData.x;
+            const yRow = yAxis.type === 'category' ? barXData.category : barXData.y;
+            return (
+                <div>
+                    <div>{xRow}</div>
+                    <div>
+                        <span>
+                            <b>{series.name}</b>: {yRow}
+                        </span>
                     </div>
                 </div>
             );
