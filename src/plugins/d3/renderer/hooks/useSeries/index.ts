@@ -4,6 +4,7 @@ import get from 'lodash/get';
 import {ScaleOrdinal, scaleOrdinal} from 'd3';
 
 import type {
+    ChartKitWidgetData,
     ChartKitWidgetSeries,
     PieSeries,
     PieSeriesData,
@@ -11,41 +12,48 @@ import type {
 
 import {DEFAULT_PALETTE} from '../../constants';
 import {getSeriesNames, isAxisRelatedSeries} from '../../utils';
-import {PreparedSeries} from '../useChartOptions/types';
+import {PreparedLegend} from '../useChartOptions/types';
+import {getActiveLegendItems, getAllLegendItems, prepareLegendSymbol} from './utils';
+import {PreparedSeries} from './types';
 
-export type ChartSeries = PreparedSeries & {
-    color: string;
-    name: string;
-    visible: boolean;
-};
+export type OnLegendItemClick = (data: {name: string; metaKey: boolean}) => void;
 
 type Args = {
-    activeLegendItems: string[];
-    series: ChartKitWidgetSeries[];
+    legend: PreparedLegend;
+    series: ChartKitWidgetData['series'];
 };
 
 const prepareAxisRelatedSeries = (args: {
     activeLegendItems: string[];
     colorScale: ScaleOrdinal<string, string>;
     series: ChartKitWidgetSeries;
+    legend: PreparedLegend;
 }) => {
-    const {activeLegendItems, colorScale, series} = args;
-    const preparedSeries = cloneDeep(series) as ChartSeries;
-    const legendEnabled = get(preparedSeries, 'legend.enabled', true);
+    const {activeLegendItems, colorScale, series, legend} = args;
+    const preparedSeries = cloneDeep(series) as PreparedSeries;
+    const legendEnabled = get(preparedSeries, 'legend.enabled', legend.enabled);
     const defaultVisible = get(preparedSeries, 'visible', true);
     const name = 'name' in series && series.name ? series.name : '';
     const color = 'color' in series && series.color ? series.color : colorScale(name);
     preparedSeries.color = color;
     preparedSeries.name = name;
     preparedSeries.visible = legendEnabled ? activeLegendItems.includes(name) : defaultVisible;
+    preparedSeries.legend = {
+        enabled: legendEnabled,
+        symbol: prepareLegendSymbol(preparedSeries),
+    };
 
     return preparedSeries;
 };
 
-const preparePieSeries = (args: {activeLegendItems: string[]; series: PieSeries}) => {
-    const {activeLegendItems, series} = args;
-    const preparedSeries = cloneDeep(series) as ChartSeries;
-    const legendEnabled = get(preparedSeries, 'legend.enabled', true);
+const preparePieSeries = (args: {
+    activeLegendItems: string[];
+    series: PieSeries;
+    legend: PreparedLegend;
+}) => {
+    const {activeLegendItems, series, legend} = args;
+    const preparedSeries = cloneDeep(series) as PreparedSeries;
+    const legendEnabled = get(preparedSeries, 'legend.enabled', legend.enabled);
     const dataNames = series.data.map((d) => d.name);
     const colorScale = scaleOrdinal(dataNames, DEFAULT_PALETTE);
     preparedSeries.data = (preparedSeries.data as PieSeriesData[]).map((d) => {
@@ -57,6 +65,10 @@ const preparePieSeries = (args: {activeLegendItems: string[]; series: PieSeries}
 
     // Not axis related series manages their own data visibility inside their data
     preparedSeries.visible = true;
+    preparedSeries.legend = {
+        enabled: legendEnabled,
+        symbol: prepareLegendSymbol(preparedSeries),
+    };
 
     return preparedSeries;
 };
@@ -64,12 +76,13 @@ const preparePieSeries = (args: {activeLegendItems: string[]; series: PieSeries}
 const prepareNotAxisRelatedSeries = (args: {
     activeLegendItems: string[];
     series: ChartKitWidgetSeries;
+    legend: PreparedLegend;
 }) => {
-    const {activeLegendItems, series} = args;
+    const {activeLegendItems, series, legend} = args;
 
     switch (series.type) {
         case 'pie': {
-            return preparePieSeries({activeLegendItems, series});
+            return preparePieSeries({activeLegendItems, series, legend});
         }
         default: {
             throw new Error(
@@ -80,20 +93,52 @@ const prepareNotAxisRelatedSeries = (args: {
 };
 
 export const useSeries = (args: Args) => {
-    const {activeLegendItems, series} = args;
-    const chartSeries = React.useMemo<ChartSeries[]>(() => {
+    const {
+        series: {data: series},
+        legend,
+    } = args;
+    const [activeLegendItems, setActiveLegendItems] = React.useState(getActiveLegendItems(series));
+
+    // FIXME: remove effect. It initiates extra rerender
+    React.useEffect(() => {
+        setActiveLegendItems(getActiveLegendItems(series));
+    }, [series]);
+
+    const chartSeries = React.useMemo<PreparedSeries[]>(() => {
         const seriesNames = getSeriesNames(series);
         const colorScale = scaleOrdinal(seriesNames, DEFAULT_PALETTE);
 
         return series.map((s) => {
             return isAxisRelatedSeries(s)
-                ? prepareAxisRelatedSeries({activeLegendItems, colorScale, series: s})
+                ? prepareAxisRelatedSeries({activeLegendItems, colorScale, series: s, legend})
                 : prepareNotAxisRelatedSeries({
                       activeLegendItems,
                       series: s,
+                      legend,
                   });
         });
     }, [activeLegendItems, series]);
 
-    return {chartSeries};
+    const handleLegendItemClick: OnLegendItemClick = React.useCallback(
+        ({name, metaKey}) => {
+            const onlyItemSelected =
+                activeLegendItems.length === 1 && activeLegendItems.includes(name);
+            let nextActiveLegendItems: string[];
+
+            if (metaKey && activeLegendItems.includes(name)) {
+                nextActiveLegendItems = activeLegendItems.filter((item) => item !== name);
+            } else if (metaKey && !activeLegendItems.includes(name)) {
+                nextActiveLegendItems = activeLegendItems.concat(name);
+            } else if (onlyItemSelected) {
+                nextActiveLegendItems = getAllLegendItems(series);
+            } else {
+                nextActiveLegendItems = [name];
+            }
+
+            setActiveLegendItems(nextActiveLegendItems);
+        },
+        [series, activeLegendItems],
+    );
+
+    return {chartSeries, handleLegendItemClick};
 };

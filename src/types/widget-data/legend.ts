@@ -39,9 +39,3 @@ export type RectLegendSymbolOptions = BaseLegendSymbol & {
      * Defaults to half the symbolHeight, effectively creating a circle. */
     radius?: number;
 };
-
-export type RectLegendSymbol = {
-    shape: 'rect';
-} & Required<RectLegendSymbolOptions>;
-
-export type LegendSymbol = RectLegendSymbol;

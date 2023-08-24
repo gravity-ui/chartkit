@@ -1,5 +1,5 @@
 import type {BaseSeries, BaseSeriesData} from './base';
-import {ChartKitWidgetLegend, RectLegendSymbol} from './legend';
+import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
 export type PieSeriesData<T = any> = BaseSeriesData<T> & {
     /** The value of the pie segment. */
@@ -30,6 +30,6 @@ export type PieSeries<T = any> = BaseSeries & {
 
     /** Individual series legend options. Has higher priority than legend options in widget data */
     legend?: ChartKitWidgetLegend & {
-        symbol?: RectLegendSymbol;
+        symbol?: RectLegendSymbolOptions;
     };
 };

@@ -1,5 +1,5 @@
 import type {BaseSeries, BaseSeriesData} from './base';
-import type {ChartKitWidgetLegend, RectLegendSymbol} from './legend';
+import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
 export type ScatterSeriesData<T = any> = BaseSeriesData<T> & {
     /** The x value of the point */
@@ -24,6 +24,6 @@ export type ScatterSeries<T = any> = BaseSeries & {
 
     /** Individual series legend options. Has higher priority than legend options in widget data */
     legend?: ChartKitWidgetLegend & {
-        symbol?: RectLegendSymbol;
+        symbol?: RectLegendSymbolOptions;
     };
 };

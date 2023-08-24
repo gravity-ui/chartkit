@@ -1,6 +1,6 @@
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetSeriesOptions} from './series';
-import {ChartKitWidgetLegend, RectLegendSymbol} from './legend';
+import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
 export type BarXSeriesData<T = any> = BaseSeriesData<T> & {
     /** The x value of the point */
@@ -43,6 +43,6 @@ export type BarXSeries<T = any> = BaseSeries & {
 
     /** Individual series legend options. Has higher priority than legend options in widget data */
     legend?: ChartKitWidgetLegend & {
-        symbol?: RectLegendSymbol;
+        symbol?: RectLegendSymbolOptions;
     };
 };

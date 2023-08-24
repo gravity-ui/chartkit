@@ -3,9 +3,13 @@ import {select, sum} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../utils/cn';
-import type {ChartSeries, OnLegendItemClick, PreparedLegend} from '../hooks';
+import type {
+    OnLegendItemClick,
+    PreparedLegend,
+    PreparedLegendSymbol,
+    PreparedSeries,
+} from '../hooks';
 import {isAxisRelatedSeries} from '../utils';
-import {LegendSymbol} from '../../../../types/widget-data';
 
 const b = block('d3-legend');
 
@@ -15,7 +19,7 @@ type Props = {
     legend: PreparedLegend;
     offsetWidth: number;
     offsetHeight: number;
-    chartSeries: ChartSeries[];
+    chartSeries: PreparedSeries[];
     onItemClick: OnLegendItemClick;
 };
 
@@ -23,10 +27,10 @@ type LegendItem = {
     color: string;
     name: string;
     visible?: boolean;
-    symbol: LegendSymbol;
+    symbol: PreparedLegendSymbol;
 };
 
-const getLegendItems = (series: ChartSeries[]) => {
+const getLegendItems = (series: PreparedSeries[]) => {
     return series.reduce<LegendItem[]>((acc, s) => {
         const isAxisRelated = isAxisRelatedSeries(s);
         const legendEnabled = get(s, 'legend.enabled', true);
