@@ -11,22 +11,19 @@ type Args = {
     series: ChartKitWidgetSeries[];
 };
 
-const isEntryVisible = (entry: {name?: string; visible?: boolean} | {}) => {
-    const name = 'name' in entry && entry.name;
-    const visible = ('visible' in entry && entry.visible) ?? true;
-    return Boolean(name && visible);
-};
-
 const getActiveLegendItems = (series: ChartKitWidgetSeries[]) => {
     return series.reduce<string[]>((acc, s) => {
         const isAxisRelated = isAxisRelatedSeries(s);
-        const legendEnabled = get(s, 'legend.enabled', true);
+        const isLegendEnabled = get(s, 'legend.enabled', true);
+        const isSeriesVisible = get(s, 'visible', true);
 
-        if (legendEnabled && isAxisRelated && isEntryVisible(s) && 'name' in s) {
+        if (isLegendEnabled && isAxisRelated && isSeriesVisible && 'name' in s) {
             acc.push(s.name);
-        } else if (legendEnabled && !isAxisRelated) {
+        } else if (isLegendEnabled && !isAxisRelated) {
             s.data.forEach((d) => {
-                if (isEntryVisible(d) && 'name' in d) {
+                const isDataVisible = get(d, 'visible', true);
+
+                if (isDataVisible && 'name' in d) {
                     acc.push(d.name);
                 }
             });
