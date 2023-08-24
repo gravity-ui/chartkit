@@ -1,9 +1,14 @@
 import React from 'react';
-import {select} from 'd3';
+import {select, sum} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../utils/cn';
-import type {ChartSeries, OnLegendItemClick} from '../hooks';
+import type {
+    OnLegendItemClick,
+    PreparedLegend,
+    PreparedLegendSymbol,
+    PreparedSeries,
+} from '../hooks';
 import {isAxisRelatedSeries} from '../utils';
 
 const b = block('d3-legend');
@@ -11,31 +16,68 @@ const b = block('d3-legend');
 type Props = {
     width: number;
     height: number;
+    legend: PreparedLegend;
     offsetWidth: number;
     offsetHeight: number;
-    chartSeries: ChartSeries[];
+    chartSeries: PreparedSeries[];
     onItemClick: OnLegendItemClick;
 };
 
-type LegendItem = {color: string; name: string; visible?: boolean};
+type LegendItem = {
+    color: string;
+    name: string;
+    visible?: boolean;
+    symbol: PreparedLegendSymbol;
+};
 
-const getLegendItems = (series: ChartSeries[]) => {
+const getLegendItems = (series: PreparedSeries[]) => {
     return series.reduce<LegendItem[]>((acc, s) => {
         const isAxisRelated = isAxisRelatedSeries(s);
         const legendEnabled = get(s, 'legend.enabled', true);
 
-        if (isAxisRelated) {
-            acc.push(s);
-        } else if (!isAxisRelated && legendEnabled) {
-            acc.push(...(s.data as LegendItem[]));
+        if (legendEnabled) {
+            if (isAxisRelated) {
+                acc.push({
+                    ...s,
+                    symbol: s.legend.symbol,
+                });
+            } else {
+                const legendItems = s.data.map((item) => {
+                    return {
+                        ...item,
+                        symbol: s.legend.symbol,
+                    } as LegendItem;
+                });
+                acc.push(...legendItems);
+            }
         }
 
         return acc;
     }, []);
 };
 
+function getLegendPosition(args: {
+    align: PreparedLegend['align'];
+    contentWidth: number;
+    width: number;
+    offsetWidth: number;
+}) {
+    const {align, offsetWidth, width, contentWidth} = args;
+    const top = 0;
+
+    if (align === 'left') {
+        return {top, left: offsetWidth};
+    }
+
+    if (align === 'right') {
+        return {top, left: offsetWidth + width - contentWidth};
+    }
+
+    return {top, left: offsetWidth + width / 2 - contentWidth / 2};
+}
+
 export const Legend = (props: Props) => {
-    const {width, offsetWidth, height, offsetHeight, chartSeries, onItemClick} = props;
+    const {width, offsetWidth, height, offsetHeight, chartSeries, legend, onItemClick} = props;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -44,7 +86,6 @@ export const Legend = (props: Props) => {
         }
 
         const legendItems = getLegendItems(chartSeries);
-        const size = 10;
         const textWidths: number[] = [0];
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
@@ -71,27 +112,33 @@ export const Legend = (props: Props) => {
 
         legendItemTemplate
             .append('rect')
-            .attr('x', function (_d, i) {
+            .attr('x', function (legendItem, i) {
                 return (
-                    offsetWidth +
-                    i * size +
+                    i * legendItem.symbol.width +
+                    i * legend.itemDistance +
+                    i * legendItem.symbol.padding +
                     textWidths.slice(0, i + 1).reduce((acc, tw) => acc + tw, 0)
                 );
             })
-            .attr('y', offsetHeight - size / 2)
-            .attr('width', size)
-            .attr('height', size)
+            .attr('y', (legendItem) => offsetHeight - legendItem.symbol.height / 2)
+            .attr('width', (legendItem) => {
+                return legendItem.symbol.width;
+            })
+            .attr('height', (legendItem) => legendItem.symbol.height)
+            .attr('rx', (legendItem) => legendItem.symbol.radius)
             .attr('class', b('item-shape'))
             .style('fill', function (d) {
                 return d.color;
             });
         legendItemTemplate
             .append('text')
-            .attr('x', function (_d, i) {
+            .attr('x', function (legendItem, i) {
                 return (
-                    offsetWidth +
-                    i * size +
-                    size +
+                    i * legendItem.symbol.width +
+                    i * legend.itemDistance +
+                    i * legendItem.symbol.padding +
+                    legendItem.symbol.width +
+                    legendItem.symbol.padding +
                     textWidths.slice(0, i + 1).reduce((acc, tw) => acc + tw, 0)
                 );
             })
@@ -104,7 +151,21 @@ export const Legend = (props: Props) => {
                 return ('name' in d && d.name) as string;
             })
             .style('alignment-baseline', 'middle');
-    }, [width, offsetWidth, height, offsetHeight, chartSeries, onItemClick]);
+
+        const contentWidth =
+            sum(textWidths) +
+            sum(legendItems, (item) => item.symbol.width + item.symbol.padding) +
+            legend.itemDistance * (legendItems.length - 1);
+
+        const {left} = getLegendPosition({
+            align: legend.align,
+            width,
+            offsetWidth,
+            contentWidth,
+        });
+
+        svgElement.attr('transform', `translate(${[left, 0].join(',')})`);
+    }, [width, offsetWidth, height, offsetHeight, chartSeries, onItemClick, legend]);
 
     return <g ref={ref} width={width} height={height} />;
 };

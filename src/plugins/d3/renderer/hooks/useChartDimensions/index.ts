@@ -1,14 +1,12 @@
 import type {ChartMargin} from '../../../../../types/widget-data';
 
-import type {ChartOptions, PreparedAxis, PreparedTitle} from '../useChartOptions/types';
-
-const LEGEND_LINE_HEIGHT = 15;
+import type {PreparedAxis, PreparedLegend, PreparedTitle} from '../useChartOptions/types';
 
 type Args = {
     width: number;
     height: number;
     margin: ChartMargin;
-    legend: ChartOptions['legend'];
+    legend: PreparedLegend;
     title?: PreparedTitle;
     xAxis?: PreparedAxis;
     yAxis?: PreparedAxis[];
@@ -16,7 +14,6 @@ type Args = {
 
 export const useChartDimensions = (args: Args) => {
     const {margin, legend, title, width, height, xAxis, yAxis} = args;
-    const legendHeight = legend.enabled ? LEGEND_LINE_HEIGHT : 0;
     const titleHeight = title?.height || 0;
     const xAxisTitleHeight = xAxis?.title.height || 0;
     const yAxisTitleHeight =
@@ -26,7 +23,7 @@ export const useChartDimensions = (args: Args) => {
 
     const boundsWidth = width - margin.right - margin.left - yAxisTitleHeight;
     const boundsHeight =
-        height - margin.top - margin.bottom - legendHeight - titleHeight - xAxisTitleHeight;
+        height - margin.top - margin.bottom - legend.height - titleHeight - xAxisTitleHeight;
 
-    return {boundsWidth, boundsHeight, legendHeight};
+    return {boundsWidth, boundsHeight, legendHeight: legend.height};
 };

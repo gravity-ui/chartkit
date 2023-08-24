@@ -6,7 +6,7 @@ import type {BarXSeries, PieSeries, ScatterSeries} from '../../../../../types/wi
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
 import type {ChartScale} from '../useAxisScales';
-import type {ChartSeries} from '../useSeries';
+import type {PreparedSeries} from '../';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
 import {prepareBarXSeries} from './bar-x';
 import {prepareScatterSeries} from './scatter';
@@ -19,7 +19,7 @@ type Args = {
     left: number;
     boundsWidth: number;
     boundsHeight: number;
-    series: ChartSeries[];
+    series: PreparedSeries[];
     xAxis: ChartOptions['xAxis'];
     yAxis: ChartOptions['yAxis'];
     svgContainer: SVGSVGElement | null;

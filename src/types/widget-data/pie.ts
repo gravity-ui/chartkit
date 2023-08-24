@@ -1,4 +1,5 @@
 import type {BaseSeries, BaseSeriesData} from './base';
+import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
 export type PieSeriesData<T = any> = BaseSeriesData<T> & {
     /** The value of the pie segment. */
@@ -26,4 +27,9 @@ export type PieSeries<T = any> = BaseSeries & {
     innerRadius?: string | number;
     /** The radius of the pie relative to the chart area. The default behaviour is to scale to the chart area. */
     radius?: string | number;
+
+    /** Individual series legend options. Has higher priority than legend options in widget data */
+    legend?: ChartKitWidgetLegend & {
+        symbol?: RectLegendSymbolOptions;
+    };
 };

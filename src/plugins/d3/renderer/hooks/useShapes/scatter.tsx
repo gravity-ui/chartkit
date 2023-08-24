@@ -17,7 +17,6 @@ type PrepareScatterSeriesArgs = {
     svgContainer: SVGSVGElement | null;
     onSeriesMouseMove?: OnSeriesMouseMove;
     onSeriesMouseLeave?: OnSeriesMouseLeave;
-    key?: string;
 };
 
 const b = block('d3-scatter');
@@ -73,11 +72,11 @@ export function prepareScatterSeries(args: PrepareScatterSeriesArgs) {
         yScale,
         onSeriesMouseMove,
         onSeriesMouseLeave,
-        key,
         svgContainer,
     } = args;
 
     return series.reduce<React.ReactElement[]>((result, s) => {
+        const randomKey = Math.random().toString();
         const preparedData =
             xAxis.type === 'category' || yAxis[0]?.type === 'category'
                 ? prepareCategoricalScatterData(s.data)
@@ -95,7 +94,7 @@ export function prepareScatterSeries(args: PrepareScatterSeriesArgs) {
 
                 return (
                     <circle
-                        key={`${i}-${key}`}
+                        key={`${i}-${randomKey}`}
                         className={b('point')}
                         fill={s.color}
                         {...pointProps}

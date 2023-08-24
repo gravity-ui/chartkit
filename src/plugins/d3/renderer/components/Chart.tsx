@@ -12,7 +12,6 @@ import {
     useChartDimensions,
     useChartEvents,
     useChartOptions,
-    useLegend,
     useAxisScales,
     useSeries,
     useShapes,
@@ -35,12 +34,10 @@ type Props = {
 export const Chart = (props: Props) => {
     const {top, left, width, height, data} = props;
     // FIXME: add data validation
-    const {series} = data;
     const svgRef = React.createRef<SVGSVGElement>();
-    const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
     const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
     const {chart, legend, title, tooltip, xAxis, yAxis} = useChartOptions(data);
-    const {boundsWidth, boundsHeight, legendHeight} = useChartDimensions({
+    const {boundsWidth, boundsHeight} = useChartDimensions({
         width,
         height,
         margin: chart.margin,
@@ -49,8 +46,7 @@ export const Chart = (props: Props) => {
         xAxis,
         yAxis,
     });
-    const {activeLegendItems, handleLegendItemClick} = useLegend({series: series.data});
-    const {chartSeries} = useSeries({activeLegendItems, series: series.data});
+    const {chartSeries, handleLegendItemClick} = useSeries({series: data.series, legend});
     const {xScale, yScale} = useAxisScales({
         boundsWidth,
         boundsHeight,
@@ -75,6 +71,7 @@ export const Chart = (props: Props) => {
         onSeriesMouseMove: handleSeriesMouseMove,
         onSeriesMouseLeave: handleSeriesMouseLeave,
     });
+    const hasAxisRelatedSeries = chartSeries.some(isAxisRelatedSeries);
 
     return (
         <React.Fragment>
@@ -119,8 +116,9 @@ export const Chart = (props: Props) => {
                     <Legend
                         width={boundsWidth}
                         offsetWidth={chart.margin.left}
-                        height={legendHeight}
-                        offsetHeight={height - legendHeight / 2}
+                        height={legend.height}
+                        legend={legend}
+                        offsetHeight={height - legend.height / 2}
                         chartSeries={chartSeries}
                         onItemClick={handleLegendItemClick}
                     />
