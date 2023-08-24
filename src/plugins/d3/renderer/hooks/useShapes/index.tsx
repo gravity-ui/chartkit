@@ -15,6 +15,8 @@ import {PieSeriesComponent} from './pie';
 import './styles.scss';
 
 type Args = {
+    top: number;
+    left: number;
     boundsWidth: number;
     boundsHeight: number;
     series: ChartSeries[];
@@ -29,6 +31,8 @@ type Args = {
 
 export const useShapes = (args: Args) => {
     const {
+        top,
+        left,
         boundsWidth,
         boundsHeight,
         series,
@@ -40,6 +44,7 @@ export const useShapes = (args: Args) => {
         onSeriesMouseMove,
         onSeriesMouseLeave,
     } = args;
+
     const shapes = React.useMemo(() => {
         const visibleSeries = getOnlyVisibleSeries(series);
         const groupedSeries = group(visibleSeries, (item) => item.type);
@@ -51,6 +56,8 @@ export const useShapes = (args: Args) => {
                     if (xScale && yScale) {
                         acc.push(
                             ...prepareBarXSeries({
+                                top,
+                                left,
                                 series: chartSeries as BarXSeries[],
                                 xAxis,
                                 xScale,
@@ -58,6 +65,7 @@ export const useShapes = (args: Args) => {
                                 yScale,
                                 onSeriesMouseMove,
                                 onSeriesMouseLeave,
+                                svgContainer,
                             }),
                         );
                     }
@@ -67,6 +75,8 @@ export const useShapes = (args: Args) => {
                     if (xScale && yScale) {
                         acc.push(
                             ...prepareScatterSeries({
+                                top,
+                                left,
                                 series: chartSeries as ScatterSeries[],
                                 xAxis,
                                 xScale,
