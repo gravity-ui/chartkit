@@ -13,7 +13,7 @@ const Template: Story = () => {
     const chartkitRef = React.useRef<ChartKitRef>();
     const data: ChartKitWidgetData = {
         legend: {enabled: true},
-        tooltip: {enabled: false},
+        tooltip: {enabled: true},
         yAxis: [
             {
                 type: 'linear',
