@@ -1,3 +1,5 @@
+/* eslint no-console: ["error", { allow: ["warn", "error"]}] */
+
 import React from 'react';
 import Highcharts from 'highcharts';
 
@@ -20,10 +22,9 @@ const useIsomorphicLayoutEffect =
 
 export const HighchartsReact: React.ForwardRefExoticComponent<
     React.PropsWithoutRef<HighchartsReactProps> & React.RefAttributes<HighchartsReactRefObject>
-    // eslint-disable-next-line react/display-name
 > = React.memo(
     React.forwardRef(function HighchartsReact(props: HighchartsReactProps, ref) {
-        const containerRef = React.useRef<HTMLDivElement | null>();
+        const containerRef = React.useRef<HTMLDivElement | null>(null);
         const chartRef = React.useRef<Highcharts.Chart | null>();
 
         useIsomorphicLayoutEffect(() => {
@@ -74,9 +75,10 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
             [],
         );
 
-        // @ts-ignore
         return <div {...props.containerProps} ref={containerRef} />;
     }),
 );
+
+HighchartsReact.displayName = 'HighchartsReact';
 
 export default HighchartsReact;
