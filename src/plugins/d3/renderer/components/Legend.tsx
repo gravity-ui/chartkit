@@ -1,8 +1,10 @@
 import React from 'react';
 import {select} from 'd3';
+import get from 'lodash/get';
 
 import {block} from '../../../../utils/cn';
-import type {ChartSeries, OnLegendItemClick, PreparedLegend} from '../hooks';
+import type {ChartSeries, OnLegendItemClick} from '../hooks';
+import {isAxisRelatedSeries} from '../utils';
 
 const b = block('d3-legend');
 
@@ -11,117 +13,98 @@ type Props = {
     height: number;
     offsetWidth: number;
     offsetHeight: number;
-    legend: PreparedLegend;
     chartSeries: ChartSeries[];
     onItemClick: OnLegendItemClick;
 };
 
-function getSeriesLegendWidth(legend: PreparedLegend, series: ChartSeries) {
-    let width = 0;
+type LegendItem = {color: string; name: string; visible?: boolean};
 
-    select<HTMLElement, ChartSeries>(document.body)
-        .append('text')
-        .text(series.name)
-        .each(function () {
-            width = this.getBoundingClientRect().width;
-        })
-        .remove();
+const getLegendItems = (series: ChartSeries[]) => {
+    return series.reduce<LegendItem[]>((acc, s) => {
+        const isAxisRelated = isAxisRelatedSeries(s);
+        const legendEnabled = get(s, 'legend.enabled', true);
 
-    return legend.symbol.width + legend.symbol.padding + width;
-}
+        if (isAxisRelated) {
+            acc.push(s);
+        } else if (!isAxisRelated && legendEnabled) {
+            acc.push(...(s.data as LegendItem[]));
+        }
+
+        return acc;
+    }, []);
+};
 
 export const Legend = (props: Props) => {
-    const {width, height, offsetWidth, offsetHeight, chartSeries, onItemClick, legend} = props;
+    const {width, offsetWidth, height, offsetHeight, chartSeries, onItemClick} = props;
+    const ref = React.useRef<SVGGElement>(null);
 
-    const left = React.useMemo(() => {
-        if (legend.align === 'left') {
-            return offsetWidth;
+    React.useEffect(() => {
+        if (!ref.current) {
+            return;
         }
 
-        const contentWidth =
-            chartSeries.reduce((acc, s) => acc + getSeriesLegendWidth(legend, s), 0) +
-            (chartSeries.length - 1) * legend.itemDistance;
+        const legendItems = getLegendItems(chartSeries);
+        const size = 10;
+        const textWidths: number[] = [0];
+        const svgElement = select(ref.current);
+        svgElement.selectAll('*').remove();
+        const legendItemTemplate = svgElement
+            .selectAll('legend-history')
+            .data(legendItems)
+            .enter()
+            .append('g')
+            .attr('class', b('item'))
+            .on('click', function (e, d) {
+                onItemClick({name: d.name, metaKey: e.metaKey});
+            });
+        svgElement
+            .selectAll('*')
+            .data(legendItems)
+            .append('text')
+            .text(function (d) {
+                return d.name;
+            })
+            .each(function () {
+                textWidths.push(this.getComputedTextLength());
+            })
+            .remove();
 
-        if (legend.align === 'right') {
-            return offsetWidth + width - contentWidth;
-        }
+        legendItemTemplate
+            .append('rect')
+            .attr('x', function (_d, i) {
+                return (
+                    offsetWidth +
+                    i * size +
+                    textWidths.slice(0, i + 1).reduce((acc, tw) => acc + tw, 0)
+                );
+            })
+            .attr('y', offsetHeight - size / 2)
+            .attr('width', size)
+            .attr('height', size)
+            .attr('class', b('item-shape'))
+            .style('fill', function (d) {
+                return d.color;
+            });
+        legendItemTemplate
+            .append('text')
+            .attr('x', function (_d, i) {
+                return (
+                    offsetWidth +
+                    i * size +
+                    size +
+                    textWidths.slice(0, i + 1).reduce((acc, tw) => acc + tw, 0)
+                );
+            })
+            .attr('y', offsetHeight)
+            .attr('class', function (d) {
+                const mods = {selected: d.visible, unselected: !d.visible};
+                return b('item-text', mods);
+            })
+            .text(function (d) {
+                return ('name' in d && d.name) as string;
+            })
+            .style('alignment-baseline', 'middle');
+    }, [width, offsetWidth, height, offsetHeight, chartSeries, onItemClick]);
 
-        return offsetWidth + width / 2 - contentWidth / 2;
-    }, [chartSeries, legend, offsetWidth, width]);
-
-    return (
-        <g
-            width={width}
-            height={height}
-            transform={`translate(${[left, 0].join(',')})`}
-            ref={(node) => {
-                if (!node) {
-                    return;
-                }
-
-                const textWidths: number[] = [0];
-                const svgElement = select(node);
-                svgElement.selectAll('*').remove();
-                const legendItemTemplate = svgElement
-                    .selectAll('legend-history')
-                    .data(chartSeries)
-                    .enter()
-                    .append('g')
-                    .attr('class', b('item'))
-                    .on('click', function (e, d) {
-                        onItemClick({name: d.name, metaKey: e.metaKey});
-                    });
-                svgElement
-                    .selectAll('*')
-                    .data(chartSeries)
-                    .append('text')
-                    .text(function (d) {
-                        return d.name;
-                    })
-                    .each(function () {
-                        textWidths.push(this.getComputedTextLength());
-                    })
-                    .remove();
-
-                legendItemTemplate
-                    .append('rect')
-                    .attr('x', function (_d, i) {
-                        return (
-                            i * legend.symbol.width +
-                            i * legend.itemDistance +
-                            i * legend.symbol.padding +
-                            textWidths.slice(0, i + 1).reduce((acc, tw) => acc + tw, 0)
-                        );
-                    })
-                    .attr('y', offsetHeight - legend.symbol.height / 2)
-                    .attr('width', legend.symbol.width)
-                    .attr('height', legend.symbol.height)
-                    .attr('rx', legend.symbol.radius)
-                    .style('fill', function (d) {
-                        return d.color;
-                    });
-                legendItemTemplate
-                    .append('text')
-                    .attr('x', function (_d, i) {
-                        return (
-                            i * legend.symbol.width +
-                            i * legend.itemDistance +
-                            i * legend.symbol.padding +
-                            legend.symbol.width +
-                            legend.symbol.padding +
-                            textWidths.slice(0, i + 1).reduce((acc, tw) => acc + tw, 0)
-                        );
-                    })
-                    .attr('y', offsetHeight)
-                    .attr('class', function (d) {
-                        const mods = {selected: d.visible, unselected: !d.visible};
-                        return b('item-text', mods);
-                    })
-                    .text(function (d) {
-                        return ('name' in d && d.name) as string;
-                    })
-                    .style('alignment-baseline', 'middle');
-            }}
-        />
-    );
+    return <g ref={ref} width={width} height={height} />;
 };

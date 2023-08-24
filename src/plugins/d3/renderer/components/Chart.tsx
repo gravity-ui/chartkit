@@ -31,7 +31,6 @@ type Props = {
 };
 
 export const Chart = ({width, height, data}: Props) => {
-    // FIXME: add data validation
     const {series} = data;
     const svgRef = React.createRef<SVGSVGElement>();
     const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
@@ -59,6 +58,8 @@ export const Chart = ({width, height, data}: Props) => {
         tooltip,
     });
     const {shapes} = useShapes({
+        boundsWidth,
+        boundsHeight,
         series: chartSeries,
         xAxis,
         xScale,
