@@ -8,13 +8,10 @@ interface HighchartsReactRefObject {
 
 interface HighchartsReactProps {
     [key: string]: any;
-    allowChartUpdate?: boolean;
     constructorType?: keyof typeof Highcharts;
     containerProps?: {[key: string]: any};
     highcharts?: typeof Highcharts;
-    immutable?: boolean;
     options: Highcharts.Options;
-    updateArgs?: [boolean] | [boolean, boolean] | [boolean, boolean, boolean];
     callback?: Highcharts.ChartCallbackFunction;
 }
 
@@ -28,8 +25,6 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
     React.forwardRef(function HighchartsReact(props: HighchartsReactProps, ref) {
         const containerRef = React.useRef<HTMLDivElement | null>();
         const chartRef = React.useRef<Highcharts.Chart | null>();
-        const constructorType = React.useRef(props.constructorType);
-        const highcharts = React.useRef(props.highcharts);
 
         useIsomorphicLayoutEffect(() => {
             function createChart() {
@@ -54,28 +49,10 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
                 }
             }
 
-            if (chartRef.current) {
-                if (props.allowChartUpdate !== false) {
-                    if (
-                        props.constructorType !== constructorType.current ||
-                        props.highcharts !== highcharts.current
-                    ) {
-                        constructorType.current = props.constructorType;
-                        highcharts.current = props.highcharts;
-                        createChart();
-                    } else if (!props.immutable && chartRef.current) {
-                        chartRef.current.update(
-                            props.options,
-                            ...(props.updateArgs || [true, true]),
-                        );
-                    } else {
-                        createChart();
-                    }
-                }
-            } else {
+            if (!chartRef.current) {
                 createChart();
             }
-        }, [props.options, props.allowChartUpdate, props.updateArgs, props.containerProps, props.highcharts, props.constructorType]);
+        }, [props.options, props.allowChartUpdate, props.containerProps, props.highcharts, props.constructorType]);
 
         useIsomorphicLayoutEffect(() => {
             return () => {
