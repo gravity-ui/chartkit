@@ -1,5 +1,5 @@
-import react, * as React from 'react';
-import * as Highcharts from 'highcharts';
+import React from 'react';
+import Highcharts from 'highcharts';
 
 interface HighchartsReactRefObject {
     chart: Highcharts.Chart | null | undefined;
@@ -13,26 +13,27 @@ interface HighchartsReactProps {
     containerProps?: {[key: string]: any};
     highcharts?: typeof Highcharts;
     immutable?: boolean;
-    options?: Highcharts.Options;
+    options: Highcharts.Options;
     updateArgs?: [boolean] | [boolean, boolean] | [boolean, boolean, boolean];
     callback?: Highcharts.ChartCallbackFunction;
 }
 
 const useIsomorphicLayoutEffect =
-    typeof window === 'undefined' ? react.useEffect : react.useLayoutEffect;
+    typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
 
 export const HighchartsReact: React.ForwardRefExoticComponent<
     React.PropsWithoutRef<HighchartsReactProps> & React.RefAttributes<HighchartsReactRefObject>
-> = react.memo(
-    react.forwardRef(function HighchartsReact(props, ref) {
-        const containerRef = react.useRef<HTMLDivElement>();
-        const chartRef = react.useRef<Highcharts.Chart | null>();
-        const constructorType = react.useRef(props.constructorType);
-        const highcharts = react.useRef(props.highcharts);
+    // eslint-disable-next-line react/display-name
+> = React.memo(
+    React.forwardRef(function HighchartsReact(props: HighchartsReactProps, ref) {
+        const containerRef = React.useRef<HTMLDivElement | null>();
+        const chartRef = React.useRef<Highcharts.Chart | null>();
+        const constructorType = React.useRef(props.constructorType);
+        const highcharts = React.useRef(props.highcharts);
 
         useIsomorphicLayoutEffect(() => {
             function createChart() {
-                const {HighchartsComponent} = props;
+                const {highcharts: HighchartsComponent} = props;
                 const constructorType = props.constructorType || 'chart';
 
                 if (!HighchartsComponent) {
@@ -85,7 +86,7 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
             };
         }, []);
 
-        react.useImperativeHandle(
+        React.useImperativeHandle(
             ref,
             () => ({
                 get chart() {
@@ -96,6 +97,7 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
             [],
         );
 
+        // @ts-ignore
         return <div {...props.containerProps} ref={containerRef} />;
     }),
 );
