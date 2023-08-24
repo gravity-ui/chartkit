@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.5.0](https://github.com/gravity-ui/chartkit/compare/v3.4.3...v3.5.0) (2023-08-24)
+
+
+### Features
+
+* **d3 plugin:** add basic pie chart ([#244](https://github.com/gravity-ui/chartkit/issues/244)) ([c0559cd](https://github.com/gravity-ui/chartkit/commit/c0559cdf323b41747b9e7dcf1c5d05a9e8c677b1))
+
+
+### Bug Fixes
+
+* **D3 plugin:** fix tooltip position ([#240](https://github.com/gravity-ui/chartkit/issues/240)) ([d07764b](https://github.com/gravity-ui/chartkit/commit/d07764b0c9659d09f6a235be0c57df6bf4318dd6))
+
 ## [3.4.3](https://github.com/gravity-ui/chartkit/compare/v3.4.2...v3.4.3) (2023-08-24)
 
 
