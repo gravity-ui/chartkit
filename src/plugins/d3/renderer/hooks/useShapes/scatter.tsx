@@ -106,7 +106,7 @@ export function prepareScatterSeries(args: PrepareScatterSeriesArgs) {
                                     data: point,
                                     series: s,
                                 },
-                                pointerPosition: [x - top, y - left],
+                                pointerPosition: [x - left, y - top],
                             });
                         }}
                         onMouseLeave={onSeriesMouseLeave}

@@ -123,7 +123,7 @@ export function prepareBarXSeries(args: Args) {
                                 data: point,
                                 series: item,
                             },
-                            pointerPosition: [x - top, y - left],
+                            pointerPosition: [x - left, y - top],
                         });
                     }}
                     onMouseLeave={onSeriesMouseLeave}

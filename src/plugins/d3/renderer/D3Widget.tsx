@@ -59,7 +59,7 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
         }, [handleResize]);
 
         return (
-            <div ref={ref} style={{width: '100%', height: '100%'}}>
+            <div ref={ref} style={{width: '100%', height: '100%', position: 'relative'}}>
                 {dimensions?.width && dimensions?.height && (
                     <Chart
                         top={dimensions?.top || 0}
