@@ -35,11 +35,9 @@ type Props = {
 export const Chart = (props: Props) => {
     const {top, left, width, height, data} = props;
     // FIXME: add data validation
-    const {series} = data;
     const svgRef = React.createRef<SVGSVGElement>();
-    const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
     const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
-    const {chart, legend, title, tooltip, xAxis, yAxis} = useChartOptions(data);
+    const {chart, legend, title, tooltip, xAxis, yAxis, series} = useChartOptions(data);
     const {boundsWidth, boundsHeight} = useChartDimensions({
         width,
         height,
@@ -49,8 +47,8 @@ export const Chart = (props: Props) => {
         xAxis,
         yAxis,
     });
-    const {activeLegendItems, handleLegendItemClick} = useLegend({series: series.data});
-    const {chartSeries} = useSeries({activeLegendItems, series: series.data});
+    const {activeLegendItems, handleLegendItemClick} = useLegend({series: series});
+    const {chartSeries} = useSeries({activeLegendItems, series: series});
     const {xScale, yScale} = useAxisScales({
         boundsWidth,
         boundsHeight,
@@ -75,6 +73,7 @@ export const Chart = (props: Props) => {
         onSeriesMouseMove: handleSeriesMouseMove,
         onSeriesMouseLeave: handleSeriesMouseLeave,
     });
+    const hasAxisRelatedSeries = series.some(isAxisRelatedSeries);
 
     return (
         <React.Fragment>

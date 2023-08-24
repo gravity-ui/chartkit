@@ -5,6 +5,7 @@ import get from 'lodash/get';
 import {block} from '../../../../utils/cn';
 import type {ChartSeries, OnLegendItemClick, PreparedLegend} from '../hooks';
 import {isAxisRelatedSeries} from '../utils';
+import {LegendSymbol} from '../../../../types/widget-data';
 
 const b = block('d3-legend');
 
@@ -18,17 +19,30 @@ type Props = {
     onItemClick: OnLegendItemClick;
 };
 
-type LegendItem = {color: string; name: string; visible?: boolean};
+type LegendItem = {
+    color: string;
+    name: string;
+    visible?: boolean;
+    legend: {enabled: boolean; symbol: LegendSymbol};
+};
 
 const getLegendItems = (series: ChartSeries[]) => {
     return series.reduce<LegendItem[]>((acc, s) => {
         const isAxisRelated = isAxisRelatedSeries(s);
         const legendEnabled = get(s, 'legend.enabled', true);
 
-        if (isAxisRelated) {
-            acc.push(s);
-        } else if (!isAxisRelated && legendEnabled) {
-            acc.push(...(s.data as LegendItem[]));
+        if (legendEnabled) {
+            if (isAxisRelated) {
+                acc.push(s as LegendItem);
+            } else {
+                const legendItems = s.data.map((item) => {
+                    return {
+                        ...item,
+                        legend: s.legend,
+                    } as LegendItem;
+                });
+                acc.push(...legendItems);
+            }
         }
 
         return acc;
@@ -91,31 +105,33 @@ export const Legend = (props: Props) => {
 
         legendItemTemplate
             .append('rect')
-            .attr('x', function (_d, i) {
+            .attr('x', function (legendItem, i) {
                 return (
-                    i * legend.symbol.width +
+                    i * legendItem.legend.symbol.width +
                     i * legend.itemDistance +
-                    i * legend.symbol.padding +
+                    i * legendItem.legend.symbol.padding +
                     textWidths.slice(0, i + 1).reduce((acc, tw) => acc + tw, 0)
                 );
             })
-            .attr('y', offsetHeight - legend.symbol.height / 2)
-            .attr('width', legend.symbol.width)
-            .attr('height', legend.symbol.height)
-            .attr('rx', legend.symbol.radius)
+            .attr('y', (legendItem) => offsetHeight - legendItem.legend.symbol.height / 2)
+            .attr('width', (legendItem) => {
+                return legendItem.legend.symbol.width;
+            })
+            .attr('height', (legendItem) => legendItem.legend.symbol.height)
+            .attr('rx', (legendItem) => legendItem.legend.symbol.radius)
             .attr('class', b('item-shape'))
             .style('fill', function (d) {
                 return d.color;
             });
         legendItemTemplate
             .append('text')
-            .attr('x', function (_d, i) {
+            .attr('x', function (legendItem, i) {
                 return (
-                    i * legend.symbol.width +
+                    i * legendItem.legend.symbol.width +
                     i * legend.itemDistance +
-                    i * legend.symbol.padding +
-                    legend.symbol.width +
-                    legend.symbol.padding +
+                    i * legendItem.legend.symbol.padding +
+                    legendItem.legend.symbol.width +
+                    legendItem.legend.symbol.padding +
                     textWidths.slice(0, i + 1).reduce((acc, tw) => acc + tw, 0)
                 );
             })
@@ -131,7 +147,7 @@ export const Legend = (props: Props) => {
 
         const contentWidth =
             sum(textWidths) +
-            (legend.symbol.width + legend.symbol.padding) * legendItems.length +
+            sum(legendItems, (item) => item.legend.symbol.width + item.legend.symbol.padding) +
             legend.itemDistance * (legendItems.length - 1);
 
         const {left} = getLegendPosition({

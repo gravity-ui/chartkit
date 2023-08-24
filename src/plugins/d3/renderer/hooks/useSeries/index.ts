@@ -11,8 +11,9 @@ import type {
 
 import {DEFAULT_PALETTE} from '../../constants';
 import {getSeriesNames, isAxisRelatedSeries} from '../../utils';
+import {PreparedSeries} from '../useChartOptions/types';
 
-export type ChartSeries = ChartKitWidgetSeries & {
+export type ChartSeries = PreparedSeries & {
     color: string;
     name: string;
     visible: boolean;

@@ -9,6 +9,7 @@ import {getPreparedTooltip} from './tooltip';
 import {getPreparedXAxis} from './x-axis';
 import {getPreparedYAxis} from './y-axis';
 import type {ChartOptions} from './types';
+import {getPreparedSeries} from './series';
 
 type Args = ChartKitWidgetData;
 
@@ -18,6 +19,7 @@ export const useChartOptions = (args: Args): ChartOptions => {
         const preparedTitle = getPreparedTitle({title});
         const preparedTooltip = getPreparedTooltip({tooltip});
         const preparedLegend = getPreparedLegend({legend, series});
+        const preparedSeries = getPreparedSeries({series, legend: preparedLegend});
         const preparedYAxis = getPreparedYAxis({yAxis});
         const preparedXAxis = getPreparedXAxis({xAxis});
         const preparedChart = getPreparedChart({
@@ -33,6 +35,7 @@ export const useChartOptions = (args: Args): ChartOptions => {
             tooltip: preparedTooltip,
             xAxis: preparedXAxis,
             yAxis: preparedYAxis,
+            series: preparedSeries,
         };
     }, [chart, legend, title, tooltip, series, xAxis, yAxis]);
 

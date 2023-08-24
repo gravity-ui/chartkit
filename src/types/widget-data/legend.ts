@@ -12,28 +12,36 @@ export type ChartKitWidgetLegend = {
      * @default 20
      * */
     itemDistance?: number;
-
-    symbol?: {
-        /** The pixel width of the symbol for series types that use a rectangle in the legend
-         *
-         * @default 10
-         * */
-        width?: number;
-
-        /** The pixel width of the symbol for series types that use a rectangle in the legend
-         *
-         * @default 10
-         * */
-        height?: number;
-
-        /** The border radius of the symbol for series types that use a rectangle in the legend.
-         * Defaults to half the symbolHeight, effectively creating a circle. */
-        radius?: number;
-
-        /** The pixel padding between the legend item symbol and the legend item text.
-         *
-         * @default 5
-         * */
-        padding?: number;
-    };
 };
+
+export type BaseLegendSymbol = {
+    /** The pixel padding between the legend item symbol and the legend item text.
+     *
+     * @default 5
+     * */
+    padding?: number;
+};
+
+export type RectLegendSymbolOptions = BaseLegendSymbol & {
+    /** The pixel width of the symbol for series types that use a rectangle in the legend
+     *
+     * @default 10
+     * */
+    width?: number;
+
+    /** The pixel width of the symbol for series types that use a rectangle in the legend
+     *
+     * @default 10
+     * */
+    height?: number;
+
+    /** The border radius of the symbol for series types that use a rectangle in the legend.
+     * Defaults to half the symbolHeight, effectively creating a circle. */
+    radius?: number;
+};
+
+export type RectLegendSymbol = {
+    shape: 'rect';
+} & Required<RectLegendSymbolOptions>;
+
+export type LegendSymbol = RectLegendSymbol;

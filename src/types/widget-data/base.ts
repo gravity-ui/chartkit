@@ -1,8 +1,4 @@
-import type {ChartKitWidgetLegend} from './legend';
-
 export type BaseSeries = {
-    /** Individual series legend options. Has higher priority than legend options in widget data */
-    legend?: ChartKitWidgetLegend;
     /** Initial visibility of the series */
     visible?: boolean;
 };
