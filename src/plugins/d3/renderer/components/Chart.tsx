@@ -64,6 +64,8 @@ export const Chart = (props: Props) => {
     const {shapes} = useShapes({
         top,
         left,
+        boundsWidth,
+        boundsHeight,
         series: chartSeries,
         xAxis,
         xScale,

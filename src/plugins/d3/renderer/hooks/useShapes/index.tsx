@@ -1,7 +1,7 @@
 import React from 'react';
 import {group} from 'd3';
 
-import type {BarXSeries, ScatterSeries} from '../../../../../types/widget-data';
+import type {BarXSeries, PieSeries, ScatterSeries} from '../../../../../types/widget-data';
 
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
@@ -10,10 +10,15 @@ import type {ChartSeries} from '../useSeries';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
 import {prepareBarXSeries} from './bar-x';
 import {prepareScatterSeries} from './scatter';
+import {PieSeriesComponent} from './pie';
+
+import './styles.scss';
 
 type Args = {
     top: number;
     left: number;
+    boundsWidth: number;
+    boundsHeight: number;
     series: ChartSeries[];
     xAxis: ChartOptions['xAxis'];
     yAxis: ChartOptions['yAxis'];
@@ -28,6 +33,8 @@ export const useShapes = (args: Args) => {
     const {
         top,
         left,
+        boundsWidth,
+        boundsHeight,
         series,
         xAxis,
         xScale,
@@ -83,10 +90,36 @@ export const useShapes = (args: Args) => {
                     }
                     break;
                 }
+                case 'pie': {
+                    acc.push(
+                        ...(chartSeries as PieSeries[]).map((cs, i) => (
+                            <PieSeriesComponent
+                                key={`pie-${i}`}
+                                boundsWidth={boundsWidth}
+                                boundsHeight={boundsHeight}
+                                series={cs}
+                                onSeriesMouseMove={onSeriesMouseMove}
+                                onSeriesMouseLeave={onSeriesMouseLeave}
+                                svgContainer={svgContainer}
+                            />
+                        )),
+                    );
+                }
             }
             return acc;
         }, []);
-    }, [series, xAxis, xScale, yAxis, yScale, svgContainer, onSeriesMouseMove, onSeriesMouseLeave]);
+    }, [
+        boundsWidth,
+        boundsHeight,
+        series,
+        xAxis,
+        xScale,
+        yAxis,
+        yScale,
+        svgContainer,
+        onSeriesMouseMove,
+        onSeriesMouseLeave,
+    ]);
 
     return {shapes};
 };
