@@ -4,7 +4,7 @@ import get from 'lodash/get';
 
 import type {ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
-import {formatAxisTickLabel, getDomainDataYBySeries} from '../../utils';
+import {formatAxisTickLabel, getDomainDataYBySeries, isAxisRelatedSeries} from '../../utils';
 
 import type {PreparedAxis, PreparedChart} from './types';
 import {getHorisontalSvgTextDimensions} from './utils';
@@ -64,21 +64,25 @@ export const getPreparedChart = (args: {
     preparedY1Axis: PreparedAxis;
 }): PreparedChart => {
     const {chart, series, preparedXAxis, preparedY1Axis} = args;
-    const marginBottom =
-        get(chart, 'margin.bottom', 0) +
-        preparedXAxis.labels.padding +
-        getHorisontalSvgTextDimensions({text: 'Tmp', style: preparedXAxis.labels.style});
-    const marginLeft =
-        get(chart, 'margin.left', AXIS_WIDTH) +
-        preparedY1Axis.labels.padding +
-        getAxisLabelMaxWidth({axis: preparedY1Axis, series: series.data}) +
-        (preparedY1Axis.title.height || 0);
-    const marginTop =
-        get(chart, 'margin.top', 0) +
-        getHorisontalSvgTextDimensions({text: 'Tmp', style: preparedY1Axis.labels.style}) / 2;
-    const marginRight =
-        get(chart, 'margin.right', 0) +
-        getAxisLabelMaxWidth({axis: preparedXAxis, series: series.data}) / 2;
+    const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
+    let marginBottom = get(chart, 'margin.bottom', 0);
+    let marginLeft = get(chart, 'margin.left', 0);
+    let marginTop = get(chart, 'margin.top', 0);
+    let marginRight = get(chart, 'margin.right', 0);
+
+    if (hasAxisRelatedSeries) {
+        marginBottom +=
+            preparedXAxis.labels.padding +
+            getHorisontalSvgTextDimensions({text: 'Tmp', style: preparedXAxis.labels.style});
+        marginLeft +=
+            AXIS_WIDTH +
+            preparedY1Axis.labels.padding +
+            getAxisLabelMaxWidth({axis: preparedY1Axis, series: series.data}) +
+            (preparedY1Axis.title.height || 0);
+        marginTop +=
+            getHorisontalSvgTextDimensions({text: 'Tmp', style: preparedY1Axis.labels.style}) / 2;
+        marginRight += getAxisLabelMaxWidth({axis: preparedXAxis, series: series.data}) / 2;
+    }
 
     return {
         margin: {
