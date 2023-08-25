@@ -25,21 +25,21 @@ export function isAxisRelatedSeries(series: UnknownSeries) {
     return !CHARTS_WITHOUT_AXIS.includes(series.type);
 }
 
-export function isSeriesWithXAxis(series: UnknownSeries): series is {
+export function isSeriesWithNumericalXValues(series: UnknownSeries): series is {
     type: ChartKitWidgetSeries['type'];
     data: {x: number}[];
 } {
     return isAxisRelatedSeries(series);
 }
 
-export function isSeriesWithYAxis(series: UnknownSeries): series is {
+export function isSeriesWithNumericalYValues(series: UnknownSeries): series is {
     type: ChartKitWidgetSeries['type'];
     data: {y: number}[];
 } {
     return isAxisRelatedSeries(series);
 }
 
-export function isSeriesWithCategoryAxis(series: UnknownSeries): series is {
+export function isSeriesWithCategoryValues(series: UnknownSeries): series is {
     type: ChartKitWidgetSeries['type'];
     data: {category: string}[];
 } {
@@ -48,7 +48,7 @@ export function isSeriesWithCategoryAxis(series: UnknownSeries): series is {
 
 export const getDomainDataXBySeries = (series: UnknownSeries[]) => {
     return series.reduce<number[]>((acc, s) => {
-        if (isSeriesWithXAxis(s)) {
+        if (isSeriesWithNumericalXValues(s)) {
             acc.push(...s.data.map((d) => Number(d.x)));
         }
 
@@ -57,7 +57,7 @@ export const getDomainDataXBySeries = (series: UnknownSeries[]) => {
 };
 
 export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
-    return series.filter(isSeriesWithYAxis).reduce<unknown[]>((acc, s) => {
+    return series.filter(isSeriesWithNumericalYValues).reduce<unknown[]>((acc, s) => {
         acc.push(...s.data.map((d) => d.y));
         return acc;
     }, []);

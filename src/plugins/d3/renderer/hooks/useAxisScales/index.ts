@@ -9,7 +9,7 @@ import {
     getDomainDataYBySeries,
     isAxisRelatedSeries,
     getDomainDataXBySeries,
-    isSeriesWithCategoryAxis,
+    isSeriesWithCategoryValues,
 } from '../../utils';
 import {PreparedSeries} from '../useSeries/types';
 
@@ -38,7 +38,7 @@ const isNumericalArrayData = (data: unknown[]): data is number[] => {
 const filterCategoriesByVisibleSeries = (categories: string[], series: PreparedSeries[]) => {
     return categories.filter((category) => {
         return series.some((s) => {
-            return isSeriesWithCategoryAxis(s) && s.data.some((d) => d.category === category);
+            return isSeriesWithCategoryValues(s) && s.data.some((d) => d.category === category);
         });
     });
 };
