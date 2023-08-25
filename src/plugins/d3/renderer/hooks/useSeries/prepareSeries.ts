@@ -11,6 +11,7 @@ import type {PreparedLegendSymbol, PreparedPieSeries, PreparedSeries} from './ty
 import get from 'lodash/get';
 import {DEFAULT_PALETTE} from '../../constants';
 import {DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
+import {getRandomCKId} from '../../../../../utils';
 
 function prepareLegendSymbol(series: ChartKitWidgetSeries): PreparedLegendSymbol {
     switch (series.type) {
@@ -60,7 +61,6 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
     const {series, legend} = args;
     const dataNames = series.data.map((d) => d.name);
     const colorScale = scaleOrdinal(dataNames, DEFAULT_PALETTE);
-    const randomKey = Math.random().toString();
 
     const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem) => {
         const preparedSeries: PreparedPieSeries = {
@@ -79,7 +79,7 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
             borderWidth: series.borderWidth ?? 1,
             radius: series.radius || '100%',
             innerRadius: series.innerRadius || 0,
-            stackId: randomKey,
+            stackId: getRandomCKId(),
         };
 
         return preparedSeries;

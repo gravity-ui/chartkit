@@ -5,6 +5,7 @@ import {ChartScale} from '../useAxisScales';
 import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import {ScatterSeries, ScatterSeriesData} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
+import {getRandomCKId} from '../../../../../utils';
 
 type PrepareScatterSeriesArgs = {
     top: number;
@@ -76,7 +77,7 @@ export function prepareScatterSeries(args: PrepareScatterSeriesArgs) {
     } = args;
 
     return series.reduce<React.ReactElement[]>((result, s) => {
-        const randomKey = Math.random().toString();
+        const randomKey = getRandomCKId();
         const preparedData =
             xAxis.type === 'category' || yAxis[0]?.type === 'category'
                 ? prepareCategoricalScatterData(s.data)
