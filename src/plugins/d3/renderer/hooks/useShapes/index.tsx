@@ -1,12 +1,12 @@
 import React from 'react';
 import {group} from 'd3';
 
-import type {BarXSeries, PieSeries, ScatterSeries} from '../../../../../types/widget-data';
+import type {BarXSeries, ScatterSeries} from '../../../../../types/widget-data';
 
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
 import type {ChartScale} from '../useAxisScales';
-import type {PreparedSeries} from '../';
+import type {PreparedPieSeries, PreparedSeries} from '../';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
 import {prepareBarXSeries} from './bar-x';
 import {prepareScatterSeries} from './scatter';
@@ -91,18 +91,24 @@ export const useShapes = (args: Args) => {
                     break;
                 }
                 case 'pie': {
+                    const groupedPieSeries = group(
+                        chartSeries as PreparedPieSeries[],
+                        (item) => item.stackId,
+                    );
                     acc.push(
-                        ...(chartSeries as PieSeries[]).map((cs, i) => (
-                            <PieSeriesComponent
-                                key={`pie-${i}`}
-                                boundsWidth={boundsWidth}
-                                boundsHeight={boundsHeight}
-                                series={cs}
-                                onSeriesMouseMove={onSeriesMouseMove}
-                                onSeriesMouseLeave={onSeriesMouseLeave}
-                                svgContainer={svgContainer}
-                            />
-                        )),
+                        ...Array.from(groupedPieSeries).map(([key, pieSeries]) => {
+                            return (
+                                <PieSeriesComponent
+                                    key={`pie-${key}`}
+                                    boundsWidth={boundsWidth}
+                                    boundsHeight={boundsHeight}
+                                    series={pieSeries}
+                                    onSeriesMouseMove={onSeriesMouseMove}
+                                    onSeriesMouseLeave={onSeriesMouseLeave}
+                                    svgContainer={svgContainer}
+                                />
+                            );
+                        }),
                     );
                 }
             }

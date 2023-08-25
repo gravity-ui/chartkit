@@ -3,15 +3,15 @@ import {scaleBand, scaleLinear, scaleUtc, extent} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import type {ChartKitWidgetSeries} from '../../../../../types/widget-data';
-
 import type {ChartOptions} from '../useChartOptions/types';
 import {
     getOnlyVisibleSeries,
-    getDomainDataXBySeries,
     getDomainDataYBySeries,
     isAxisRelatedSeries,
+    getDomainDataXBySeries,
+    isSeriesWithCategoryAxis,
 } from '../../utils';
+import {PreparedSeries} from '../useSeries/types';
 
 export type ChartScale =
     | ScaleLinear<number, number>
@@ -21,7 +21,7 @@ export type ChartScale =
 type Args = {
     boundsWidth: number;
     boundsHeight: number;
-    series: ChartKitWidgetSeries[];
+    series: PreparedSeries[];
     xAxis: ChartOptions['xAxis'];
     yAxis: ChartOptions['yAxis'];
 };
@@ -35,10 +35,10 @@ const isNumericalArrayData = (data: unknown[]): data is number[] => {
     return data.every((d) => typeof d === 'number' || d === null);
 };
 
-const filterCategoriesByVisibleSeries = (categories: string[], series: ChartKitWidgetSeries[]) => {
+const filterCategoriesByVisibleSeries = (categories: string[], series: PreparedSeries[]) => {
     return categories.filter((category) => {
         return series.some((s) => {
-            return s.data.some((d) => 'category' in d && d.category === category);
+            return isSeriesWithCategoryAxis(s) && s.data.some((d) => d.category === category);
         });
     });
 };

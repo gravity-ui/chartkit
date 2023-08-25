@@ -1,0 +1,1 @@
+export const DEFAULT_LEGEND_SYMBOL_SIZE = 10;
