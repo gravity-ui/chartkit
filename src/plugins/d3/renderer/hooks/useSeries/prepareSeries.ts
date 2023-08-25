@@ -1,12 +1,13 @@
-import {scaleOrdinal, ScaleOrdinal} from 'd3';
-import {
+import type {ScaleOrdinal} from 'd3';
+import {scaleOrdinal} from 'd3';
+import type {
     ChartKitWidgetSeries,
     PieSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types/widget-data';
-import {PreparedLegend} from '../useChartOptions/types';
+import type {PreparedLegend} from '../useChartOptions/types';
 import cloneDeep from 'lodash/cloneDeep';
-import {PreparedLegendSymbol, PreparedPieSeries, PreparedSeries} from './types';
+import type {PreparedLegendSymbol, PreparedPieSeries, PreparedSeries} from './types';
 import get from 'lodash/get';
 import {DEFAULT_PALETTE} from '../../constants';
 import {DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';

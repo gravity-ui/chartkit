@@ -49,7 +49,7 @@ export function isSeriesWithCategoryValues(series: UnknownSeries): series is {
 export const getDomainDataXBySeries = (series: UnknownSeries[]) => {
     return series.reduce<number[]>((acc, s) => {
         if (isSeriesWithNumericalXValues(s)) {
-            acc.push(...s.data.map((d) => Number(d.x)));
+            acc.push(...s.data.map((d) => d.x));
         }
 
         return acc;
