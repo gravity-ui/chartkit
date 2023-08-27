@@ -2,13 +2,13 @@ import get from 'lodash/get';
 
 import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types/widget-data';
 
-import type {PreparedAxis} from './types';
 import {
     DEFAULT_AXIS_LABEL_FONT_SIZE,
     DEFAULT_AXIS_LABEL_PADDING,
     DEFAULT_AXIS_TITLE_FONT_SIZE,
-} from './constants';
-import {getHorisontalSvgTextDimensions} from './utils';
+} from '../../constants';
+import {getHorisontalSvgTextHeight} from '../../utils';
+import type {PreparedAxis} from './types';
 
 export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}): PreparedAxis[] => {
     // FIXME: add support for n axises
@@ -36,7 +36,7 @@ export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}):
             text: y1TitleText,
             style: y1TitleStyle,
             height: y1TitleText
-                ? getHorisontalSvgTextDimensions({text: y1TitleText, style: y1TitleStyle})
+                ? getHorisontalSvgTextHeight({text: y1TitleText, style: y1TitleStyle})
                 : 0,
         },
         min: get(yAxis1, 'min'),

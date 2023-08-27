@@ -5,7 +5,7 @@ import type {PieArcDatum} from 'd3';
 import type {PieSeries} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
 
-import {calculateNumericProperty} from '../../utils';
+import {calculateNumericProperty, getHorisontalSvgTextHeight} from '../../utils';
 import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import {PreparedPieSeries} from '../useSeries/types';
 
@@ -51,10 +51,23 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
         }
 
         const svgElement = select(ref.current);
-        const radiusRelatedToChart = Math.min(boundsWidth, boundsHeight) / 2;
-        const radius =
-            calculateNumericProperty({value: series[0].radius, base: radiusRelatedToChart}) ??
+        let radiusRelatedToChart = Math.min(boundsWidth, boundsHeight) / 2;
+
+        if (isLabelsEnabled) {
+            // To have enough space for labels
+            radiusRelatedToChart *= 0.9;
+        }
+
+        let radius =
+            calculateNumericProperty({value: series.radius, base: radiusRelatedToChart}) ??
             radiusRelatedToChart;
+        const labelsArcRadius = series.radius ? radius : radiusRelatedToChart;
+
+        if (isLabelsEnabled) {
+            // To have enough space for labels lines
+            radius *= 0.9;
+        }
+
         const innerRadius =
             calculateNumericProperty({value: series[0].innerRadius, base: radius}) ?? 0;
         const pieGenerator = pie<PreparedPieSeries>().value((d) => d.data);
@@ -67,15 +80,82 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
         svgElement.selectAll('*').remove();
 
         svgElement
-            .selectAll('*')
+            .selectAll('allSlices')
             .data(dataReady)
             .enter()
             .append('path')
             .attr('d', arcGenerator)
             .attr('class', b('segment'))
             .attr('fill', (d) => d.data.color || '')
-            .style('stroke', (d) => d.data.borderColor)
-            .style('stroke-width', (d) => d.data.borderWidth);
+            .style('stroke', series.borderColor || '')
+            .style('stroke-width', series.borderWidth ?? 1);
+
+        if (series.dataLabels?.enabled) {
+            const labelHeight = getHorisontalSvgTextHeight({text: 'tmp'});
+            const outerArc = arc<PieArcDatum<PieSeriesData>>()
+                .innerRadius(labelsArcRadius)
+                .outerRadius(labelsArcRadius);
+            // Add the polylines between chart and labels
+            svgElement
+                .selectAll('allPolylines')
+                .data(dataReady)
+                .enter()
+                .append('polyline')
+                .attr('stroke', (d) => d.data.color || '')
+                .style('fill', 'none')
+                .attr('stroke-width', 1)
+                .attr('points', (d) => {
+                    // Line insertion in the slice
+                    const posA = arcGenerator.centroid(d);
+                    // Line break: we use the other arc generator that has been built only for that
+                    const posB = outerArc.centroid(d);
+                    const posC = outerArc.centroid(d);
+                    // We need the angle to see if the X position will be at the extreme right or extreme left
+                    const midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                    const result = [posA, posB, posC];
+
+                    if (midangle < Math.PI) {
+                        // polylines located to the right
+                        const nextCx = radiusRelatedToChart * 0.95;
+
+                        if (nextCx > result[1][0]) {
+                            result[2][0] = nextCx;
+                        } else {
+                            result.splice(2, 1);
+                        }
+                    } else {
+                        // polylines located to the left
+                        const nextCx = radiusRelatedToChart * 0.95 * -1;
+
+                        if (nextCx < result[1][0]) {
+                            result[2][0] = nextCx;
+                        } else {
+                            result.splice(2, 1);
+                        }
+                    }
+
+                    return result.join(' ');
+                });
+
+            // Add the polylines between chart and labels
+            svgElement
+                .selectAll('allLabels')
+                .data(dataReady)
+                .join('text')
+                .text((d) => d.data.label || d.value)
+                .attr('class', b('label'))
+                .attr('transform', (d) => {
+                    const pos = outerArc.centroid(d);
+                    const midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                    pos[0] = radiusRelatedToChart * 0.99 * (midangle < Math.PI ? 1 : -1);
+                    pos[1] += labelHeight / 4;
+                    return `translate(${pos})`;
+                })
+                .style('text-anchor', (d) => {
+                    const midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                    return midangle < Math.PI ? 'start' : 'end';
+                });
+        }
     }, [boundsWidth, boundsHeight, series, onSeriesMouseMove, onSeriesMouseLeave, svgContainer]);
 
     return <g ref={ref} className={b()} transform={`translate(${x}, ${y})`} />;

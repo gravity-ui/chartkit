@@ -1,13 +1,16 @@
-import type {AxisDomain} from 'd3';
+import {AxisDomain, select} from 'd3';
+import get from 'lodash/get';
 import {dateTime} from '@gravity-ui/date-utils';
 
 import type {
+    BaseTextStyle,
     ChartKitWidgetSeries,
     ChartKitWidgetAxisType,
     ChartKitWidgetAxisLabels,
 } from '../../../../types/widget-data';
 import {formatNumber} from '../../../shared';
 import type {FormatNumberOptions} from '../../../shared';
+import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
 
 export * from './math';
 
@@ -120,4 +123,34 @@ export const formatAxisTickLabel = (args: {
             return formatNumber(value as number | string, numberFormat);
         }
     }
+};
+
+/**
+ * Calculates the height of a text element in a horizontal SVG layout.
+ *
+ * @param {Object} args - The arguments for the function.
+ * @param {string} args.text - The text to be measured.
+ * @param {Partial<BaseTextStyle>} args.style - Optional style properties for the text element.
+ * @return {number} The height of the text element.
+ */
+export const getHorisontalSvgTextHeight = (args: {
+    text: string;
+    style?: Partial<BaseTextStyle>;
+}) => {
+    const {text, style} = args;
+    const textSelection = select(document.body).append('text').text(text);
+    const fontSize = get(style, 'fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE);
+    let height = 0;
+
+    if (fontSize) {
+        textSelection.style('font-size', fontSize);
+    }
+
+    textSelection
+        .each(function () {
+            height = this.getBoundingClientRect().height;
+        })
+        .remove();
+
+    return height;
 };
