@@ -7,6 +7,10 @@ export type BaseSeries = {
      * Note: now this option is supported only for `pie` charts.
      * */
     dataLabels?: {
+        /**
+         * Enable or disable the data labels
+         * @default true
+         */
         enabled?: boolean;
     };
 };

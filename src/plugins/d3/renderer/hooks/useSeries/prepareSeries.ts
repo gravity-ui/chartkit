@@ -61,6 +61,7 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
     const {series, legend} = args;
     const dataNames = series.data.map((d) => d.name);
     const colorScale = scaleOrdinal(dataNames, DEFAULT_PALETTE);
+    const stackId = getRandomCKId();
 
     const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem) => {
         const result: PreparedPieSeries = {
@@ -83,7 +84,7 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
             borderWidth: series.borderWidth ?? 1,
             radius: series.radius || '100%',
             innerRadius: series.innerRadius || 0,
-            stackId: getRandomCKId(),
+            stackId,
         };
 
         return result;

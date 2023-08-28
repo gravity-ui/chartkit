@@ -20,6 +20,7 @@ const Template: Story = () => {
                     borderWidth: 3,
                     center: ['25%', null],
                     radius: '75%',
+                    dataLabels: {enabled: false},
                     data: [
                         {
                             name: 'One 1',
@@ -42,6 +43,7 @@ const Template: Story = () => {
                     center: ['75%', null],
                     innerRadius: '50%',
                     radius: '75%',
+                    dataLabels: {enabled: false},
                     data: [
                         {
                             name: 'One 2',
