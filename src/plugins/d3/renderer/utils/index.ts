@@ -13,26 +13,52 @@ export * from './math';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie'];
 
+type UnknownSeries = {type: ChartKitWidgetSeries['type']; data: unknown};
+
 /**
  * Checks whether the series should be drawn with axes.
  *
  * @param series - The series object to check.
  * @returns `true` if the series should be drawn with axes, `false` otherwise.
  */
-export const isAxisRelatedSeries = (series: ChartKitWidgetSeries) => {
+export function isAxisRelatedSeries(series: UnknownSeries) {
     return !CHARTS_WITHOUT_AXIS.includes(series.type);
-};
+}
 
-export const getDomainDataXBySeries = (series: ChartKitWidgetSeries[]) => {
-    return series.filter(isAxisRelatedSeries).reduce<unknown[]>((acc, s) => {
-        acc.push(...s.data.map((d) => 'x' in d && d.x));
+export function isSeriesWithNumericalXValues(series: UnknownSeries): series is {
+    type: ChartKitWidgetSeries['type'];
+    data: {x: number}[];
+} {
+    return isAxisRelatedSeries(series);
+}
+
+export function isSeriesWithNumericalYValues(series: UnknownSeries): series is {
+    type: ChartKitWidgetSeries['type'];
+    data: {y: number}[];
+} {
+    return isAxisRelatedSeries(series);
+}
+
+export function isSeriesWithCategoryValues(series: UnknownSeries): series is {
+    type: ChartKitWidgetSeries['type'];
+    data: {category: string}[];
+} {
+    return isAxisRelatedSeries(series);
+}
+
+export const getDomainDataXBySeries = (series: UnknownSeries[]) => {
+    return series.reduce<number[]>((acc, s) => {
+        if (isSeriesWithNumericalXValues(s)) {
+            acc.push(...s.data.map((d) => d.x));
+        }
+
         return acc;
     }, []);
 };
 
-export const getDomainDataYBySeries = (series: ChartKitWidgetSeries[]) => {
-    return series.filter(isAxisRelatedSeries).reduce<unknown[]>((acc, s) => {
-        acc.push(...s.data.map((d) => 'y' in d && d.y));
+export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
+    return series.filter(isSeriesWithNumericalYValues).reduce<unknown[]>((acc, s) => {
+        acc.push(...s.data.map((d) => d.y));
         return acc;
     }, []);
 };
@@ -48,7 +74,7 @@ export const getSeriesNames = (series: ChartKitWidgetSeries[]) => {
     }, []);
 };
 
-export const getOnlyVisibleSeries = <T extends ChartKitWidgetSeries>(series: T[]) => {
+export const getOnlyVisibleSeries = <T extends {visible: boolean}>(series: T[]) => {
     return series.filter((s) => s.visible);
 };
 

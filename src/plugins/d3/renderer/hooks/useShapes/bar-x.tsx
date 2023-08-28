@@ -5,6 +5,7 @@ import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import {BarXSeries, BarXSeriesData} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
 import {pointer, ScaleBand, ScaleLinear, ScaleTime} from 'd3';
+import {getRandomCKId} from '../../../../../utils';
 
 const DEFAULT_BAR_RECT_WIDTH = 50;
 const DEFAULT_LINEAR_BAR_RECT_WIDTH = 20;
@@ -98,7 +99,7 @@ export function prepareBarXSeries(args: Args) {
     const minPointDistance = minDiff(seriesData.map((item) => Number(item.x)));
 
     return series.reduce<React.ReactElement[]>((result, item) => {
-        const randomKey = Math.random().toString();
+        const randomKey = getRandomCKId();
 
         item.data.forEach((point, i) => {
             const rectProps = getRectProperties({

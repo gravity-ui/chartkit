@@ -2,16 +2,17 @@ import React from 'react';
 import {arc, pie, select} from 'd3';
 import type {PieArcDatum} from 'd3';
 
-import type {PieSeries, PieSeriesData} from '../../../../../types/widget-data';
+import type {PieSeries} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
 
 import {calculateNumericProperty} from '../../utils';
 import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
+import {PreparedPieSeries} from '../useSeries/types';
 
 type PreparePieSeriesArgs = {
     boundsWidth: number;
     boundsHeight: number;
-    series: PieSeries;
+    series: PreparedPieSeries[];
     svgContainer: SVGSVGElement | null;
     onSeriesMouseMove?: OnSeriesMouseMove;
     onSeriesMouseLeave?: OnSeriesMouseLeave;
@@ -42,7 +43,7 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
     const {boundsWidth, boundsHeight, series, onSeriesMouseMove, onSeriesMouseLeave, svgContainer} =
         args;
     const ref = React.useRef<SVGGElement>(null);
-    const [x, y] = getCenter(boundsWidth, boundsHeight, series.center);
+    const [x, y] = getCenter(boundsWidth, boundsHeight, series[0]?.center);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -52,17 +53,17 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
         const svgElement = select(ref.current);
         const radiusRelatedToChart = Math.min(boundsWidth, boundsHeight) / 2;
         const radius =
-            calculateNumericProperty({value: series.radius, base: radiusRelatedToChart}) ??
+            calculateNumericProperty({value: series[0].radius, base: radiusRelatedToChart}) ??
             radiusRelatedToChart;
         const innerRadius =
-            calculateNumericProperty({value: series.innerRadius, base: radius}) ?? 0;
-        const pieGenerator = pie<PieSeriesData>().value((d) => d.value);
-        const visibleData = series.data.filter((d) => d.visible);
+            calculateNumericProperty({value: series[0].innerRadius, base: radius}) ?? 0;
+        const pieGenerator = pie<PreparedPieSeries>().value((d) => d.data);
+        const visibleData = series.filter((d) => d.visible);
         const dataReady = pieGenerator(visibleData);
-        const arcGenerator = arc<PieArcDatum<PieSeriesData>>()
+        const arcGenerator = arc<PieArcDatum<PreparedPieSeries>>()
             .innerRadius(innerRadius)
             .outerRadius(radius)
-            .cornerRadius(series.borderRadius ?? 0);
+            .cornerRadius((d) => d.data.borderRadius);
         svgElement.selectAll('*').remove();
 
         svgElement
@@ -73,8 +74,8 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
             .attr('d', arcGenerator)
             .attr('class', b('segment'))
             .attr('fill', (d) => d.data.color || '')
-            .style('stroke', series.borderColor || '')
-            .style('stroke-width', series.borderWidth ?? 1);
+            .style('stroke', (d) => d.data.borderColor)
+            .style('stroke-width', (d) => d.data.borderWidth);
     }, [boundsWidth, boundsHeight, series, onSeriesMouseMove, onSeriesMouseLeave, svgContainer]);
 
     return <g ref={ref} className={b()} transform={`translate(${x}, ${y})`} />;

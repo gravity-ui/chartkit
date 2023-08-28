@@ -9,7 +9,6 @@ import type {
     PreparedLegendSymbol,
     PreparedSeries,
 } from '../hooks';
-import {isAxisRelatedSeries} from '../utils';
 
 const b = block('d3-legend');
 
@@ -32,24 +31,13 @@ type LegendItem = {
 
 const getLegendItems = (series: PreparedSeries[]) => {
     return series.reduce<LegendItem[]>((acc, s) => {
-        const isAxisRelated = isAxisRelatedSeries(s);
         const legendEnabled = get(s, 'legend.enabled', true);
 
         if (legendEnabled) {
-            if (isAxisRelated) {
-                acc.push({
-                    ...s,
-                    symbol: s.legend.symbol,
-                });
-            } else {
-                const legendItems = s.data.map((item) => {
-                    return {
-                        ...item,
-                        symbol: s.legend.symbol,
-                    } as LegendItem;
-                });
-                acc.push(...legendItems);
-            }
+            acc.push({
+                ...s,
+                symbol: s.legend.symbol,
+            });
         }
 
         return acc;

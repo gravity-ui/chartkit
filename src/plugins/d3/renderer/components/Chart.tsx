@@ -17,7 +17,6 @@ import {
     useShapes,
     useTooltip,
 } from '../hooks';
-import {isAxisRelatedSeries} from '../utils';
 
 import './styles.scss';
 
@@ -46,11 +45,11 @@ export const Chart = (props: Props) => {
         xAxis,
         yAxis,
     });
-    const {chartSeries, handleLegendItemClick} = useSeries({series: data.series, legend});
+    const {preparedSeries, handleLegendItemClick} = useSeries({series: data.series, legend});
     const {xScale, yScale} = useAxisScales({
         boundsWidth,
         boundsHeight,
-        series: chartSeries,
+        series: preparedSeries,
         xAxis,
         yAxis,
     });
@@ -62,7 +61,7 @@ export const Chart = (props: Props) => {
         left,
         boundsWidth,
         boundsHeight,
-        series: chartSeries,
+        series: preparedSeries,
         xAxis,
         xScale,
         yAxis,
@@ -71,7 +70,6 @@ export const Chart = (props: Props) => {
         onSeriesMouseMove: handleSeriesMouseMove,
         onSeriesMouseLeave: handleSeriesMouseLeave,
     });
-    const hasAxisRelatedSeries = chartSeries.some(isAxisRelatedSeries);
 
     return (
         <React.Fragment>
@@ -92,7 +90,7 @@ export const Chart = (props: Props) => {
                         chart.margin.top + (title?.height || 0),
                     ].join(',')})`}
                 >
-                    {hasAxisRelatedSeries && xScale && yScale && (
+                    {xScale && yScale && (
                         <React.Fragment>
                             <AxisY
                                 axises={yAxis}
@@ -119,7 +117,7 @@ export const Chart = (props: Props) => {
                         height={legend.height}
                         legend={legend}
                         offsetHeight={height - legend.height / 2}
-                        chartSeries={chartSeries}
+                        chartSeries={preparedSeries}
                         onItemClick={handleLegendItemClick}
                     />
                 )}
