@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.0](https://github.com/gravity-ui/chartkit/compare/v3.5.0...v3.6.0) (2023-08-28)
+
+
+### Features
+
+* **D3 plugin:** add basic pie chart ([#252](https://github.com/gravity-ui/chartkit/issues/252)) ([71d3139](https://github.com/gravity-ui/chartkit/commit/71d31399a5c0a1a23ddfe2c98c0381ddc44f04e4))
+* **D3 plugin:** add legend options ([#243](https://github.com/gravity-ui/chartkit/issues/243)) ([8844b57](https://github.com/gravity-ui/chartkit/commit/8844b57d953c95203a69877e67fedcd74ba9b272))
+
 ## [3.5.0](https://github.com/gravity-ui/chartkit/compare/v3.4.3...v3.5.0) (2023-08-24)
 
 
