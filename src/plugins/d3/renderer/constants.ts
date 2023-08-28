@@ -20,3 +20,7 @@ export const DEFAULT_PALETTE = [
     '#FFB46C',
     '#DCA3D7',
 ];
+
+export const DEFAULT_AXIS_LABEL_FONT_SIZE = '11px';
+export const DEFAULT_AXIS_LABEL_PADDING = 10;
+export const DEFAULT_AXIS_TITLE_FONT_SIZE = '14px';

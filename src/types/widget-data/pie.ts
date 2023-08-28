@@ -10,24 +10,37 @@ export type PieSeriesData<T = any> = BaseSeriesData<T> & {
     color?: string;
     /** Initial visibility of the pie segment. */
     visible?: boolean;
+    /** Initial data label of the pie segment. If not specified, the value is used. */
+    label?: string;
 };
 
 export type PieSeries<T = any> = BaseSeries & {
     type: 'pie';
     data: PieSeriesData<T>[];
-    /** The color of the border surrounding each segment. Default `--g-color-base-background` from @gravity-ui/uikit. */
+    /**
+     * The color of the border surrounding each segment.
+     * @default `--g-color-base-background` from @gravity-ui/uikit.
+     */
     borderColor?: string;
-    /** The width of the border surrounding each segment. Default 1px. */
+    /**
+     * The width of the border surrounding each segment.
+     * @default '1px'
+     */
     borderWidth?: number;
-    /** The corner radius of the border surrounding each segment. Default 0. */
+    /**
+     * The corner radius of the border surrounding each segment.
+     * @default 0
+     */
     borderRadius?: number;
     /** The center of the pie chart relative to the chart area. */
     center?: [string | number | null, string | number | null];
-    /** The inner radius of the pie. Default 0. */
+    /**
+     * The inner radius of the pie.
+     * @default 0
+     */
     innerRadius?: string | number;
     /** The radius of the pie relative to the chart area. The default behaviour is to scale to the chart area. */
     radius?: string | number;
-
     /** Individual series legend options. Has higher priority than legend options in widget data */
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;

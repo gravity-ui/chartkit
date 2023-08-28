@@ -1,6 +1,18 @@
 export type BaseSeries = {
     /** Initial visibility of the series */
     visible?: boolean;
+    /**
+     * Options for the series data labels, appearing next to each data point.
+     *
+     * Note: now this option is supported only for `pie` charts.
+     * */
+    dataLabels?: {
+        /**
+         * Enable or disable the data labels
+         * @default true
+         */
+        enabled?: boolean;
+    };
 };
 
 export type BaseSeriesData<T = any> = {

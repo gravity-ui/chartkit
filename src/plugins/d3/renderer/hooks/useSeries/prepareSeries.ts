@@ -61,11 +61,16 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
     const {series, legend} = args;
     const dataNames = series.data.map((d) => d.name);
     const colorScale = scaleOrdinal(dataNames, DEFAULT_PALETTE);
+    const stackId = getRandomCKId();
 
     const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem) => {
-        const preparedSeries: PreparedPieSeries = {
+        const result: PreparedPieSeries = {
             type: 'pie',
             data: dataItem.value,
+            dataLabels: {
+                enabled: get(series, 'dataLabels.enabled', true),
+            },
+            label: dataItem.label,
             visible: typeof dataItem.visible === 'boolean' ? dataItem.visible : true,
             name: dataItem.name,
             color: dataItem.color || colorScale(dataItem.name),
@@ -79,10 +84,10 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
             borderWidth: series.borderWidth ?? 1,
             radius: series.radius || '100%',
             innerRadius: series.innerRadius || 0,
-            stackId: getRandomCKId(),
+            stackId,
         };
 
-        return preparedSeries;
+        return result;
     });
 
     return preparedSeries;

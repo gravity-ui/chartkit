@@ -4,10 +4,14 @@ import get from 'lodash/get';
 
 import type {ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
-import {formatAxisTickLabel, getDomainDataYBySeries, isAxisRelatedSeries} from '../../utils';
+import {
+    formatAxisTickLabel,
+    getDomainDataYBySeries,
+    getHorisontalSvgTextHeight,
+    isAxisRelatedSeries,
+} from '../../utils';
 
 import type {PreparedAxis, PreparedChart} from './types';
-import {getHorisontalSvgTextDimensions} from './utils';
 
 const AXIS_WIDTH = 1;
 
@@ -73,14 +77,14 @@ export const getPreparedChart = (args: {
     if (hasAxisRelatedSeries) {
         marginBottom +=
             preparedXAxis.labels.padding +
-            getHorisontalSvgTextDimensions({text: 'Tmp', style: preparedXAxis.labels.style});
+            getHorisontalSvgTextHeight({text: 'Tmp', style: preparedXAxis.labels.style});
         marginLeft +=
             AXIS_WIDTH +
             preparedY1Axis.labels.padding +
             getAxisLabelMaxWidth({axis: preparedY1Axis, series: series.data}) +
             (preparedY1Axis.title.height || 0);
         marginTop +=
-            getHorisontalSvgTextDimensions({text: 'Tmp', style: preparedY1Axis.labels.style}) / 2;
+            getHorisontalSvgTextHeight({text: 'Tmp', style: preparedY1Axis.labels.style}) / 2;
         marginRight += getAxisLabelMaxWidth({axis: preparedXAxis, series: series.data}) / 2;
     }
 

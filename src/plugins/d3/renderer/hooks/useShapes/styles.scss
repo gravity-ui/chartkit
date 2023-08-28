@@ -17,4 +17,10 @@
     &__segment {
         stroke: var(--g-color-base-background);
     }
+
+    &__label {
+        fill: var(--g-color-text-complementary);
+        font-size: 11px;
+        font-weight: bold;
+    }
 }

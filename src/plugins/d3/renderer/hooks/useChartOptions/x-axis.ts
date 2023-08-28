@@ -2,14 +2,14 @@ import get from 'lodash/get';
 
 import type {ChartKitWidgetData} from '../../../../../types/widget-data';
 
-import type {PreparedAxis} from './types';
 import {
     DEFAULT_AXIS_LABEL_FONT_SIZE,
     DEFAULT_AXIS_LABEL_PADDING,
     DEFAULT_AXIS_TITLE_FONT_SIZE,
-} from './constants';
+} from '../../constants';
+import type {PreparedAxis} from './types';
 import {BaseTextStyle} from '../../../../../types/widget-data';
-import {getHorisontalSvgTextDimensions} from './utils';
+import {getHorisontalSvgTextHeight} from '../../utils';
 
 export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}): PreparedAxis => {
     const titleText = get(xAxis, 'title.text', '');
@@ -32,7 +32,7 @@ export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}):
             text: titleText,
             style: titleStyle,
             height: titleText
-                ? getHorisontalSvgTextDimensions({text: titleText, style: titleStyle})
+                ? getHorisontalSvgTextHeight({text: titleText, style: titleStyle})
                 : 0,
         },
         min: get(xAxis, 'min'),

@@ -16,6 +16,7 @@ const Template: Story = () => {
             data: [
                 {
                     type: 'pie',
+                    dataLabels: {enabled: true},
                     data: [
                         {
                             name: 'One',
@@ -23,18 +24,26 @@ const Template: Story = () => {
                         },
                         {
                             name: 'Two',
-                            value: 20,
+                            value: 130,
                         },
                         {
                             name: 'Three',
-                            value: 90,
+                            value: 50,
+                        },
+                        {
+                            name: 'Four',
+                            value: 95,
+                        },
+                        {
+                            name: 'Five',
+                            value: 100,
                         },
                     ],
                 },
             ],
         },
         title: {text: 'Basic pie'},
-        legend: {enabled: false},
+        legend: {enabled: true},
         tooltip: {enabled: false},
     };
 

@@ -35,20 +35,10 @@ export type PreparedBarXSeries = {
 } & BasePreparedSeries;
 
 export type PreparedPieSeries = BasePreparedSeries &
-    Required<
-        Pick<
-            PieSeries,
-            | 'type'
-            | 'center'
-            | 'radius'
-            | 'innerRadius'
-            | 'borderColor'
-            | 'borderWidth'
-            | 'borderRadius'
-        >
-    > & {
+    Required<Omit<PieSeries, 'data'>> & {
         data: PieSeriesData['value'];
         stackId: string;
+        label?: PieSeriesData['label'];
     };
 
 export type PreparedSeries = PreparedScatterSeries | PreparedBarXSeries | PreparedPieSeries;
