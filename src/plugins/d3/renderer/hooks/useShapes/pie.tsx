@@ -51,6 +51,7 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
         }
 
         const svgElement = select(ref.current);
+        const isLabelsEnabled = series[0]?.dataLabels?.enabled;
         let radiusRelatedToChart = Math.min(boundsWidth, boundsHeight) / 2;
 
         if (isLabelsEnabled) {
@@ -59,9 +60,9 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
         }
 
         let radius =
-            calculateNumericProperty({value: series.radius, base: radiusRelatedToChart}) ??
+            calculateNumericProperty({value: series[0]?.radius, base: radiusRelatedToChart}) ??
             radiusRelatedToChart;
-        const labelsArcRadius = series.radius ? radius : radiusRelatedToChart;
+        const labelsArcRadius = series[0]?.radius ? radius : radiusRelatedToChart;
 
         if (isLabelsEnabled) {
             // To have enough space for labels lines
@@ -87,12 +88,12 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
             .attr('d', arcGenerator)
             .attr('class', b('segment'))
             .attr('fill', (d) => d.data.color || '')
-            .style('stroke', series.borderColor || '')
-            .style('stroke-width', series.borderWidth ?? 1);
+            .style('stroke', series[0]?.borderColor || '')
+            .style('stroke-width', series[0]?.borderWidth ?? 1);
 
-        if (series.dataLabels?.enabled) {
+        if (series[0]?.dataLabels?.enabled) {
             const labelHeight = getHorisontalSvgTextHeight({text: 'tmp'});
-            const outerArc = arc<PieArcDatum<PieSeriesData>>()
+            const outerArc = arc<PieArcDatum<PreparedPieSeries>>()
                 .innerRadius(labelsArcRadius)
                 .outerRadius(labelsArcRadius);
             // Add the polylines between chart and labels

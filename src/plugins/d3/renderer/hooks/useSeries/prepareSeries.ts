@@ -63,9 +63,13 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
     const colorScale = scaleOrdinal(dataNames, DEFAULT_PALETTE);
 
     const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem) => {
-        const preparedSeries: PreparedPieSeries = {
+        const result: PreparedPieSeries = {
             type: 'pie',
             data: dataItem.value,
+            dataLabels: {
+                enabled: get(series, 'dataLabels.enabled', true),
+            },
+            label: dataItem.label,
             visible: typeof dataItem.visible === 'boolean' ? dataItem.visible : true,
             name: dataItem.name,
             color: dataItem.color || colorScale(dataItem.name),
@@ -82,7 +86,7 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
             stackId: getRandomCKId(),
         };
 
-        return preparedSeries;
+        return result;
     });
 
     return preparedSeries;
