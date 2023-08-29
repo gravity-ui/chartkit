@@ -5,11 +5,38 @@
   "license": "MIT",
   "repository": "git@github.com:gravity-ui/ChartKit.git",
   "main": "build/index.js",
-  "typings": "build/index.d.ts",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": "./build/index.js",
+    "./d3": "./build/plugins/d3/index.js",
+    "./highcharts": "./build/plugins/highcharts/index.js",
+    "./indicator": "./build/plugins/indicator/index.js",
+    "./yagr": "./build/plugins/yagr/index.js"
+  },
+  "typesVersions": {
+    "*": {
+      "index.d.ts": [
+        "./build/index.d.ts"
+      ],
+      "d3": [
+        "./build/plugins/d3/index.d.ts"
+      ],
+      "highcharts": [
+        "./build/plugins/highcharts/index.d.ts"
+      ],
+      "indicator": [
+        "./build/plugins/indicator/index.d.ts"
+      ],
+      "yagr": [
+        "./build/plugins/yagr/index.d.ts"
+      ]
+    }
+  },
   "files": [
     "build",
     "!**/__tests__/**",
-    "!**/__stories__/**"
+    "!**/__stories__/**",
+    "!**/mocks/**"
   ],
   "publishConfig": {
     "access": "public"
