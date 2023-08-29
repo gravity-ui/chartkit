@@ -75,13 +75,7 @@
   },
   "peerDependencies": {
     "@gravity-ui/uikit": "^5.0.0",
-    "highcharts": "^8.2.2",
     "react": "^16.0.0 || ^17.0.0 || ^18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "highcharts": {
-      "optional": true
-    }
   },
   "scripts": {
     "test": "jest",
