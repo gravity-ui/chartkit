@@ -40,6 +40,7 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
                             'required module is not imported.',
                     );
                 } else if (props.options) {
+                    // @ts-expect-error
                     chartRef.current = HighchartsComponent[constructorType](
                         containerRef.current,
                         props.options,
