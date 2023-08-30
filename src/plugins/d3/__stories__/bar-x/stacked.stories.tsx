@@ -48,6 +48,14 @@ const Template: Story = () => {
                         },
                     ],
                     name: 'Sales',
+                    dataLabels: {
+                        enabled: true,
+                        inside: true,
+                        style: {
+                            fontWeight: 'normal',
+                            fontColor: '#fff',
+                        },
+                    },
                 },
                 {
                     type: 'bar-x',
@@ -62,12 +70,11 @@ const Template: Story = () => {
                             category: 'B',
                             y: 25,
                         },
-                        {
-                            category: 'C',
-                            y: 0,
-                        },
                     ],
                     name: 'Discount',
+                    dataLabels: {
+                        enabled: true,
+                    },
                 },
             ],
         },

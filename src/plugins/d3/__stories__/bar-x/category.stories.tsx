@@ -29,16 +29,19 @@ const Template: Story = () => {
                     data: [
                         {
                             category: 'A',
-                            x: 10,
+                            label: 10,
                             y: 100,
                         },
                         {
                             category: 'B',
-                            x: 12,
+                            label: 12,
                             y: 80,
                         },
                     ],
                     name: 'AB',
+                    dataLabels: {
+                        enabled: true,
+                    },
                 },
                 {
                     type: 'bar-x',

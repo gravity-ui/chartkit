@@ -1,6 +1,7 @@
 import {
     BarXSeries,
     BarXSeriesData,
+    BaseTextStyle,
     PieSeries,
     PieSeriesData,
     RectLegendSymbolOptions,
@@ -33,6 +34,11 @@ export type PreparedBarXSeries = {
     type: BarXSeries['type'];
     data: BarXSeriesData[];
     stackId: string;
+    dataLabels: {
+        enabled: boolean;
+        inside: boolean;
+        style: BaseTextStyle;
+    };
 } & BasePreparedSeries;
 
 export type PreparedPieSeries = BasePreparedSeries &
