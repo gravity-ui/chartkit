@@ -3,9 +3,9 @@
   "version": "3.6.0",
   "description": "React component used to render charts based on any sources you need",
   "license": "MIT",
-  "repository": "git@github.com:gravity-ui/ChartKit.git",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "repository": "git@github.com:gravity-ui/chartkit.git",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
   "exports": {
     ".": "./build/index.js",
     "./d3": "./build/plugins/d3/index.js",
