@@ -8,7 +8,6 @@ import {settingsEventEmitter} from '../../../../libs/settings/settings';
 import {markChartPerformance, getChartPerformanceDuration, getRandomCKId} from '../../../../utils';
 import type {HighchartsWidgetData, StringParams} from '../../types';
 import {getGraph} from '../helpers/graph';
-import {initHighchartsModules} from '../helpers/init-highcharts-modules';
 import {initHighchartsLangOptions} from '../helpers/highcharts/highcharts';
 import {withSplitPane} from './withSplitPane/withSplitPane';
 
@@ -29,8 +28,6 @@ settingsEventEmitter.on('change-lang', {
     id: 'hc-lang-handler',
     action: initHighchartsLangOptions,
 });
-
-initHighchartsModules();
 
 export class HighchartsComponent extends React.PureComponent<Props, State> {
     static defaultProps: Partial<Props> = {
