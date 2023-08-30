@@ -4,6 +4,7 @@ import type {ChartKitWidget} from './widget';
 import {ChartKitError} from '../libs';
 
 export type {ChartKitHolidays} from './misc';
+export * from './widget-data';
 
 export type ChartKitLang = 'ru' | 'en';
 

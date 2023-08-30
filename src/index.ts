@@ -1,6 +1,9 @@
 import {ChartKit} from './components/ChartKit';
 import {settings} from './libs';
 
+export * from './types/widget-data';
+export * from './libs/chartkit-error/chartkit-error';
+
 export type {
     ChartKitLang,
     ChartKitOnLoadData,

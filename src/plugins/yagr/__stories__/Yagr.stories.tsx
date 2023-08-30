@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Meta, Story} from '@storybook/react';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
-import {CustomTooltipProps, TooltipHandlerData, YagrPlugin} from '../../../plugins';
 import {ChartKit} from '../../../components/ChartKit';
 import type {ChartKitRef} from '../../../types';
+import {CustomTooltipProps, TooltipHandlerData, YagrPlugin} from '../';
 import {getNewConfig, line10} from './mocks/line10';
 
 import '@gravity-ui/yagr/dist/index.css';
