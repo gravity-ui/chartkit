@@ -41,6 +41,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
     "@gravity-ui/date-utils": "^1.4.1",
