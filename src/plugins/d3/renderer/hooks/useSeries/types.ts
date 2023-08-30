@@ -32,6 +32,7 @@ export type PreparedScatterSeries = {
 export type PreparedBarXSeries = {
     type: BarXSeries['type'];
     data: BarXSeriesData[];
+    stackId: string;
 } & BasePreparedSeries;
 
 export type PreparedPieSeries = BasePreparedSeries &

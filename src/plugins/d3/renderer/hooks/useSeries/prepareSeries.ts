@@ -1,13 +1,19 @@
 import type {ScaleOrdinal} from 'd3';
 import {scaleOrdinal} from 'd3';
 import type {
+    BarXSeries,
     ChartKitWidgetSeries,
     PieSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types/widget-data';
 import type {PreparedLegend} from '../useChartOptions/types';
 import cloneDeep from 'lodash/cloneDeep';
-import type {PreparedLegendSymbol, PreparedPieSeries, PreparedSeries} from './types';
+import type {
+    PreparedBarXSeries,
+    PreparedLegendSymbol,
+    PreparedPieSeries,
+    PreparedSeries,
+} from './types';
 import get from 'lodash/get';
 import {DEFAULT_PALETTE} from '../../constants';
 import {DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
@@ -52,6 +58,36 @@ function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedS
     return [preparedSeries];
 }
 
+type PrepareBarXSeriesArgs = {
+    colorScale: ScaleOrdinal<string, string>;
+    series: BarXSeries[];
+    legend: PreparedLegend;
+};
+
+function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[] {
+    const {colorScale, series, legend} = args;
+    const commonStackId = getRandomCKId();
+
+    return series.map<PreparedBarXSeries>((singleSeries) => {
+        const name = singleSeries.name || '';
+        const color = singleSeries.color || colorScale(name);
+
+        return {
+            type: singleSeries.type,
+            color: color,
+            name: name,
+            visible: get(singleSeries, 'visible', true),
+            legend: {
+                enabled: get(singleSeries, 'legend.enabled', legend.enabled),
+                symbol: prepareLegendSymbol(singleSeries),
+            },
+            data: singleSeries.data,
+            stacking: singleSeries.stacking,
+            stackId: singleSeries.stacking === 'normal' ? commonStackId : getRandomCKId(),
+        };
+    }, []);
+}
+
 type PreparePieSeriesArgs = {
     series: PieSeries;
     legend: PreparedLegend;
@@ -94,19 +130,28 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
 }
 
 export function prepareSeries(args: {
-    series: ChartKitWidgetSeries;
+    type: ChartKitWidgetSeries['type'];
+    series: ChartKitWidgetSeries[];
     legend: PreparedLegend;
     colorScale: ScaleOrdinal<string, string>;
-}) {
-    const {series, legend, colorScale} = args;
+}): PreparedSeries[] {
+    const {type, series, legend, colorScale} = args;
 
-    switch (series.type) {
+    switch (type) {
         case 'pie': {
-            return preparePieSeries({series, legend});
+            return series.reduce<PreparedSeries[]>((acc, singleSeries) => {
+                acc.push(...preparePieSeries({series: singleSeries as PieSeries, legend}));
+                return acc;
+            }, []);
         }
-        case 'scatter':
         case 'bar-x': {
-            return prepareAxisRelatedSeries({series, legend, colorScale});
+            return prepareBarXSeries({series: series as BarXSeries[], legend, colorScale});
+        }
+        case 'scatter': {
+            return series.reduce<PreparedSeries[]>((acc, singleSeries) => {
+                acc.push(...prepareAxisRelatedSeries({series: singleSeries, legend, colorScale}));
+                return acc;
+            }, []);
         }
         default: {
             const seriesType = get(series, 'type');

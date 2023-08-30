@@ -1,4 +1,4 @@
-import {AxisDomain, select} from 'd3';
+import {AxisDomain, group, select} from 'd3';
 import get from 'lodash/get';
 import {dateTime} from '@gravity-ui/date-utils';
 
@@ -7,6 +7,7 @@ import type {
     ChartKitWidgetSeries,
     ChartKitWidgetAxisType,
     ChartKitWidgetAxisLabels,
+    BarXSeries,
 } from '../../../../types/widget-data';
 import {formatNumber} from '../../../shared';
 import type {FormatNumberOptions} from '../../../shared';
@@ -60,8 +61,42 @@ export const getDomainDataXBySeries = (series: UnknownSeries[]) => {
 };
 
 export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
-    return series.filter(isSeriesWithNumericalYValues).reduce<unknown[]>((acc, s) => {
-        acc.push(...s.data.map((d) => d.y));
+    const groupedSeries = group(series, (item) => item.type);
+
+    return Array.from(groupedSeries).reduce<unknown[]>((acc, [type, seriesList]) => {
+        switch (type) {
+            case 'bar-x': {
+                const barXSeries = seriesList as BarXSeries[];
+                const stackedSeries = group(barXSeries, (item) => item.stackId);
+
+                Array.from(stackedSeries).forEach(([, stack]) => {
+                    const values: Record<string, number> = {};
+
+                    stack.forEach((singleSeries) => {
+                        singleSeries.data.forEach((point) => {
+                            const key = String(point.x || point.category);
+                            if (typeof values[key] === 'undefined') {
+                                values[key] = 0;
+                            }
+
+                            if (point.y) {
+                                values[key] += point.y;
+                            }
+                        });
+                    });
+
+                    acc.push(...Object.values(values));
+                });
+
+                break;
+            }
+            default: {
+                seriesList.filter(isSeriesWithNumericalYValues).forEach((s) => {
+                    acc.push(...s.data.map((d) => d.y));
+                });
+            }
+        }
+
         return acc;
     }, []);
 };
