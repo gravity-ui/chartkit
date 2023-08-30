@@ -1,5 +1,5 @@
 import React from 'react';
-import {scaleOrdinal} from 'd3';
+import {group, scaleOrdinal} from 'd3';
 
 import type {ChartKitWidgetData} from '../../../../../types/widget-data';
 
@@ -26,16 +26,21 @@ export const useSeries = (args: Args) => {
         const seriesNames = getSeriesNames(series);
         const colorScale = scaleOrdinal(seriesNames, DEFAULT_PALETTE);
 
-        return series.reduce<PreparedSeries[]>((acc, singleSeries) => {
-            acc.push(
-                ...prepareSeries({
-                    series: singleSeries,
-                    legend,
-                    colorScale,
-                }),
-            );
-            return acc;
-        }, []);
+        const groupedSeries = group(series, (item) => item.type);
+        return Array.from(groupedSeries).reduce<PreparedSeries[]>(
+            (acc, [seriesType, seriesList]) => {
+                acc.push(
+                    ...prepareSeries({
+                        type: seriesType,
+                        series: seriesList,
+                        legend,
+                        colorScale,
+                    }),
+                );
+                return acc;
+            },
+            [],
+        );
     }, [series, legend]);
     const [activeLegendItems, setActiveLegendItems] = React.useState(
         getActiveLegendItems(preparedSeries),

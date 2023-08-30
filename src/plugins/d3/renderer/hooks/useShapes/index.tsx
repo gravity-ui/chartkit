@@ -1,12 +1,12 @@
 import React from 'react';
 import {group} from 'd3';
 
-import type {BarXSeries, ScatterSeries} from '../../../../../types/widget-data';
+import type {ScatterSeries} from '../../../../../types/widget-data';
 
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
 import type {ChartScale} from '../useAxisScales';
-import type {PreparedPieSeries, PreparedSeries} from '../';
+import type {PreparedBarXSeries, PreparedPieSeries, PreparedSeries} from '../';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
 import {prepareBarXSeries} from './bar-x';
 import {prepareScatterSeries} from './scatter';
@@ -58,7 +58,7 @@ export const useShapes = (args: Args) => {
                             ...prepareBarXSeries({
                                 top,
                                 left,
-                                series: chartSeries as BarXSeries[],
+                                series: chartSeries as PreparedBarXSeries[],
                                 xAxis,
                                 xScale,
                                 yAxis,

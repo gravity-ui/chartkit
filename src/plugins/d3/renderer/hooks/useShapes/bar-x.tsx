@@ -2,10 +2,10 @@ import React from 'react';
 import {ChartOptions} from '../useChartOptions/types';
 import {ChartScale} from '../useAxisScales';
 import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
-import {BarXSeries, BarXSeriesData} from '../../../../../types/widget-data';
+import {BarXSeriesData} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
-import {pointer, ScaleBand, ScaleLinear, ScaleTime} from 'd3';
-import {getRandomCKId} from '../../../../../utils';
+import {group, pointer, ScaleBand, ScaleLinear, ScaleTime} from 'd3';
+import {PreparedBarXSeries} from '../useSeries/types';
 
 const DEFAULT_BAR_RECT_WIDTH = 50;
 const DEFAULT_LINEAR_BAR_RECT_WIDTH = 20;
@@ -16,7 +16,7 @@ const b = block('d3-bar');
 type Args = {
     top: number;
     left: number;
-    series: BarXSeries[];
+    series: PreparedBarXSeries[];
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
@@ -95,43 +95,61 @@ export function prepareBarXSeries(args: Args) {
         onSeriesMouseLeave,
         svgContainer,
     } = args;
+
+    const stackedSeriesMap = group(series, (item) => item.stackId);
+
     const seriesData = series.map(({data}) => data).flat(2);
     const minPointDistance = minDiff(seriesData.map((item) => Number(item.x)));
 
-    return series.reduce<React.ReactElement[]>((result, item) => {
-        const randomKey = getRandomCKId();
+    const result: React.ReactElement[] = [];
 
-        item.data.forEach((point, i) => {
-            const rectProps = getRectProperties({
-                point,
-                xAxis,
-                xScale,
-                yAxis,
-                yScale,
-                minPointDistance,
+    Array.from(stackedSeriesMap).forEach(([stackId, stackedSeries]) => {
+        const stackHeights: Record<string, number> = {};
+        stackedSeries.forEach((item, seriesIndex) => {
+            item.data.forEach((point, i) => {
+                const rectProps = getRectProperties({
+                    point,
+                    xAxis,
+                    xScale,
+                    yAxis,
+                    yScale,
+                    minPointDistance,
+                });
+
+                if (!stackHeights[rectProps.x]) {
+                    stackHeights[rectProps.x] = 0;
+                }
+
+                const rectY = rectProps.y - stackHeights[rectProps.x];
+                stackHeights[rectProps.x] += rectProps.height + 1;
+
+                if (!rectProps.height) {
+                    return;
+                }
+
+                result.push(
+                    <rect
+                        key={`${i}-${seriesIndex}-${stackId}`}
+                        className={b('rect')}
+                        fill={item.color}
+                        {...rectProps}
+                        y={rectY}
+                        onMouseMove={function (e) {
+                            const [x, y] = pointer(e, svgContainer);
+                            onSeriesMouseMove?.({
+                                hovered: {
+                                    data: point,
+                                    series: item,
+                                },
+                                pointerPosition: [x - left, y - top],
+                            });
+                        }}
+                        onMouseLeave={onSeriesMouseLeave}
+                    />,
+                );
             });
-
-            result.push(
-                <rect
-                    key={`${i}-${randomKey}`}
-                    className={b('rect')}
-                    fill={item.color}
-                    {...rectProps}
-                    onMouseMove={function (e) {
-                        const [x, y] = pointer(e, svgContainer);
-                        onSeriesMouseMove?.({
-                            hovered: {
-                                data: point,
-                                series: item,
-                            },
-                            pointerPosition: [x - left, y - top],
-                        });
-                    }}
-                    onMouseLeave={onSeriesMouseLeave}
-                />,
-            );
         });
+    });
 
-        return result;
-    }, []);
+    return result;
 }
