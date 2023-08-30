@@ -56,19 +56,11 @@ export const useShapes = (args: Args) => {
                     if (xScale && yScale) {
                         acc.push(
                             <BarXSeriesShapes
+                                {...args}
                                 key="bar-x"
-                                {...{
-                                    top,
-                                    left,
-                                    series: chartSeries as PreparedBarXSeries[],
-                                    xAxis,
-                                    xScale,
-                                    yAxis,
-                                    yScale,
-                                    onSeriesMouseMove,
-                                    onSeriesMouseLeave,
-                                    svgContainer,
-                                }}
+                                series={chartSeries as PreparedBarXSeries[]}
+                                xScale={xScale}
+                                yScale={yScale}
                             />,
                         );
                     }
