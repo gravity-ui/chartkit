@@ -28,6 +28,6 @@ export type BaseSeriesData<T = any> = {
 
 export type BaseTextStyle = {
     fontSize: string;
-    fontWeight: string;
-    fontColor: string;
+    fontWeight?: string;
+    fontColor?: string;
 };

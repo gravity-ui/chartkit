@@ -172,10 +172,9 @@ export function BarXSeriesShapes(args: Args) {
                     });
 
                 if (item.dataLabels.enabled) {
-                    svgElement
+                    const selection = svgElement
                         .append('g')
                         .style('font-size', item.dataLabels.style.fontSize)
-                        .style('font-weight', item.dataLabels.style.fontWeight)
                         .selectAll('text')
                         .data(shapes)
                         .join('text')
@@ -189,8 +188,15 @@ export function BarXSeriesShapes(args: Args) {
 
                             return d.y - DEFAULT_LABEL_PADDING;
                         })
-                        .style('fill', item.dataLabels.style.fontColor)
                         .attr('text-anchor', 'middle');
+
+                    if (item.dataLabels.style.fontWeight) {
+                        selection.style('font-weight', item.dataLabels.style.fontWeight);
+                    }
+
+                    if (item.dataLabels.style.fontColor) {
+                        selection.style('fill', item.dataLabels.style.fontColor);
+                    }
                 }
             });
         });
