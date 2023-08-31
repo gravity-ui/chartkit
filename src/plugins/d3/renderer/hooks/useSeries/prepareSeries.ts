@@ -18,6 +18,12 @@ import get from 'lodash/get';
 import {DEFAULT_PALETTE} from '../../constants';
 import {DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
 import {getRandomCKId} from '../../../../../utils';
+import {BaseTextStyle} from '../../../../../types/widget-data';
+
+const DEFAULT_DATALABELS_STYLE: BaseTextStyle = {
+    fontSize: '11px',
+    fontWeight: 'bold',
+};
 
 function prepareLegendSymbol(series: ChartKitWidgetSeries): PreparedLegendSymbol {
     switch (series.type) {
@@ -84,6 +90,14 @@ function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[] {
             data: singleSeries.data,
             stacking: singleSeries.stacking,
             stackId: singleSeries.stacking === 'normal' ? commonStackId : getRandomCKId(),
+            dataLabels: {
+                enabled: singleSeries.dataLabels?.enabled || false,
+                inside:
+                    typeof singleSeries.dataLabels?.inside === 'boolean'
+                        ? singleSeries.dataLabels?.inside
+                        : false,
+                style: Object.assign({}, DEFAULT_DATALABELS_STYLE, singleSeries.dataLabels?.style),
+            },
         };
     }, []);
 }

@@ -9,6 +9,9 @@ export type BarXSeriesData<T = any> = BaseSeriesData<T> & {
     y?: number;
     /** Corresponding value of axis category */
     category?: string;
+
+    /** Data label value of the bar-x column. If not specified, the y value is used. */
+    label?: string | number;
 };
 
 export type BarXSeries<T = any> = BaseSeries & {
@@ -42,7 +45,11 @@ export type BarXSeries<T = any> = BaseSeries & {
     grouping?: boolean;
 
     dataLabels?: ChartKitWidgetSeriesOptions['dataLabels'] & {
-        /** Whether to align the data label inside the box or to the actual value point */
+        /**
+         * Whether to align the data label inside or outside the box
+         *
+         * @default false
+         * */
         inside?: boolean;
     };
 

@@ -8,7 +8,7 @@ import type {ChartOptions} from '../useChartOptions/types';
 import type {ChartScale} from '../useAxisScales';
 import type {PreparedBarXSeries, PreparedPieSeries, PreparedSeries} from '../';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
-import {prepareBarXSeries} from './bar-x';
+import {BarXSeriesShapes} from './bar-x';
 import {prepareScatterSeries} from './scatter';
 import {PieSeriesComponent} from './pie';
 
@@ -55,18 +55,13 @@ export const useShapes = (args: Args) => {
                 case 'bar-x': {
                     if (xScale && yScale) {
                         acc.push(
-                            ...prepareBarXSeries({
-                                top,
-                                left,
-                                series: chartSeries as PreparedBarXSeries[],
-                                xAxis,
-                                xScale,
-                                yAxis,
-                                yScale,
-                                onSeriesMouseMove,
-                                onSeriesMouseLeave,
-                                svgContainer,
-                            }),
+                            <BarXSeriesShapes
+                                {...args}
+                                key="bar-x"
+                                series={chartSeries as PreparedBarXSeries[]}
+                                xScale={xScale}
+                                yScale={yScale}
+                            />,
                         );
                     }
                     break;

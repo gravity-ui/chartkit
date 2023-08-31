@@ -24,3 +24,9 @@
         font-weight: bold;
     }
 }
+
+.chartkit-d3-bar-x {
+    &__label {
+        fill: var(--g-color-text-complementary);
+    }
+}

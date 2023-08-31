@@ -12,6 +12,8 @@ export type BaseSeries = {
          * @default true
          */
         enabled?: boolean;
+
+        style?: Partial<BaseTextStyle>;
     };
 };
 
@@ -26,4 +28,6 @@ export type BaseSeriesData<T = any> = {
 
 export type BaseTextStyle = {
     fontSize: string;
+    fontWeight?: string;
+    fontColor?: string;
 };
