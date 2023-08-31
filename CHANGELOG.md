@@ -8,9 +8,9 @@
 * Highcharts dependency removed from peer dependencies section ([#261](https://github.com/gravity-ui/chartkit/issues/261)). If you want to use chartkit Highcharts plugin you should comply with [Highcharts license](https://github.com/highcharts/highcharts/blob/master/license.txt) and consume Highcharts library via npm package or cdn. Note: plugin uses the Highcharts version 8.2.2.
 * Initializing of Highcharts modules  removed. The following is a list of modules that were previously initialized in the chartkit code: `highcharts-more`, `stock`, `solid-gauge`, `funnel`, `histogram-bellcurve`, `sankey`, `heatmap`, `treemap`, `variwide`, `streamgraph`, `drilldown`, `parallel-coordinates`, `pattern-fill`, `wordcloud`, `xrange`, `networkgraph`, `timeline`, `bullet`, `annotations`, `series-label`, `indicators`, `ema`, `venn`. [Here](https://github.com/highcharts/highcharts/tree/master/ts/masters) you can observe all the additions, modules and indicators. If you use some of them, you need to initialize it in your application. For example, you need to use `highcharts-more`, `treemap` module and `ema` indicator. The following code will add this functionality:
 ```js
-import Highcharts from 'highcharts’;
-import highchartsMore from 'highcharts/highcharts-more’;
-import treemap from 'highcharts/modules/treemap’;
+import Highcharts from 'highcharts';
+import highchartsMore from 'highcharts/highcharts-more';
+import treemap from 'highcharts/modules/treemap';
 import ema from 'highcharts/indicators/ema';
 
 highchartsMore(Highcharts);
