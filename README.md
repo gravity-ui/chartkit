@@ -19,7 +19,8 @@ import '@gravity-ui/uikit/styles/styles.scss';
 ```typescript
 import {ThemeProvider} from '@gravity-ui/uikit';
 import ChartKit, {settings} from '@gravity-ui/chartkit';
-import {YagrPlugin, YagrWidgetData} from '@gravity-ui/chartkit/build/plugins';
+import {YagrPlugin, YagrWidgetData} from '@gravity-ui/chartkit/yagr';
+import type {YagrPlugin} from '@gravity-ui/chartkit/yagr';
 
 import '@gravity-ui/uikit/styles/styles.scss';
 
