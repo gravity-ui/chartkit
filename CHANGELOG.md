@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.7.0](https://github.com/gravity-ui/chartkit/compare/v3.6.0...v3.7.0) (2023-08-31)
+
+
+### Features
+
+* **D3 plugin:** bar-x dataLabels option ([#260](https://github.com/gravity-ui/chartkit/issues/260)) ([4444f72](https://github.com/gravity-ui/chartkit/commit/4444f72530b23d8999b61e39bcb89d373dfde6e9))
+* **D3 plugin:** bar-x stacking option ([#255](https://github.com/gravity-ui/chartkit/issues/255)) ([2b9f47d](https://github.com/gravity-ui/chartkit/commit/2b9f47ddbc98d9a50d95c18637b69f3a97991b0d))
+
 ## [3.6.0](https://github.com/gravity-ui/chartkit/compare/v3.5.0...v3.6.0) (2023-08-28)
 
 
