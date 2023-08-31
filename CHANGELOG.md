@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/gravity-ui/chartkit/compare/v3.7.0...v4.0.0) (2023-08-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove Highcharts dependency ([#261](https://github.com/gravity-ui/chartkit/issues/261))
+
+### Features
+
+* remove Highcharts dependency ([#261](https://github.com/gravity-ui/chartkit/issues/261)) ([3bb316e](https://github.com/gravity-ui/chartkit/commit/3bb316e92903f669c425f90d067edc1e365ab0a2))
+
 ## [3.7.0](https://github.com/gravity-ui/chartkit/compare/v3.6.0...v3.7.0) (2023-08-31)
 
 
