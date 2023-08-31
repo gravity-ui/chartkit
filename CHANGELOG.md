@@ -5,11 +5,23 @@
 
 ### ⚠ BREAKING CHANGES
 
-* remove Highcharts dependency ([#261](https://github.com/gravity-ui/chartkit/issues/261))
+* Highcharts dependency removed from peer dependencies section ([#261](https://github.com/gravity-ui/chartkit/issues/261)). If you want to use chartkit Highcharts plugin you should comply with [Highcharts license](https://github.com/highcharts/highcharts/blob/master/license.txt) and consume Highcharts library via npm package or cdn. Note: plugin uses the Highcharts version 8.2.2.
+* Initializing of Highcharts modules  removed. The following is a list of modules that were previously initialized in the chartkit code: `highcharts-more`, `stock`, `solid-gauge`, `funnel`, `histogram-bellcurve`, `sankey`, `heatmap`, `treemap`, `variwide`, `streamgraph`, `drilldown`, `parallel-coordinates`, `pattern-fill`, `wordcloud`, `xrange`, `networkgraph`, `timeline`, `bullet`, `annotations`, `series-label`, `indicators`, `ema`, `venn`. [Here](https://github.com/highcharts/highcharts/tree/master/ts/masters) you can observe all the additions, modules and indicators. If you use some of them, you need to initialize it in your application. For example, you need to use `highcharts-more`, `treemap` module and `ema` indicator. The following code will add this functionality:
+```js
+import Highcharts from 'highcharts’;
+import highchartsMore from 'highcharts/highcharts-more’;
+import treemap from 'highcharts/modules/treemap’;
+import ema from 'highcharts/indicators/ema';
 
-### Features
-
-* remove Highcharts dependency ([#261](https://github.com/gravity-ui/chartkit/issues/261)) ([3bb316e](https://github.com/gravity-ui/chartkit/commit/3bb316e92903f669c425f90d067edc1e365ab0a2))
+highchartsMore(Highcharts);
+treemap(Highcharts);
+ema(Highcharts);
+```
+* File `src/plugins/index.ts` removed. We have completely separated the plugins code to eliminate the possibility of unnecessary code getting into the bundle of an application that uses Chartkit. Instead, separate entry points have been added for each plugin. For example, you can use this code to import the `Yagr plugin` and its types:
+```js
+import {YagrPlugin} from '@gravity-ui/chartkit/yagr';
+import type {YagrWidgetData} from '@gravity-ui/chartkit/yagr';
+```
 
 ## [3.7.0](https://github.com/gravity-ui/chartkit/compare/v3.6.0...v3.7.0) (2023-08-31)
 
