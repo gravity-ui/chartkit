@@ -145,9 +145,7 @@ export function BarXSeriesShapes(args: Args) {
                 });
 
                 svgElement
-                    .append('g')
-                    .attr('fill', item.color)
-                    .selectAll('rect')
+                    .selectAll('allRects')
                     .data(shapes)
                     .join('rect')
                     .attr('class', b('segment'))
@@ -155,6 +153,7 @@ export function BarXSeriesShapes(args: Args) {
                     .attr('y', (d) => d.y)
                     .attr('height', (d) => d.height)
                     .attr('width', (d) => d.width)
+                    .attr('fill', item.color)
                     .on('mousemove', (e, point) => {
                         const [x, y] = pointer(e, svgContainer);
                         onSeriesMouseMove?.({
@@ -173,9 +172,7 @@ export function BarXSeriesShapes(args: Args) {
 
                 if (item.dataLabels.enabled) {
                     const selection = svgElement
-                        .append('g')
-                        .style('font-size', item.dataLabels.style.fontSize)
-                        .selectAll('text')
+                        .selectAll('allLabels')
                         .data(shapes)
                         .join('text')
                         .text((d) => String(d.data.label || d.data.y))
@@ -188,7 +185,8 @@ export function BarXSeriesShapes(args: Args) {
 
                             return d.y - DEFAULT_LABEL_PADDING;
                         })
-                        .attr('text-anchor', 'middle');
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', item.dataLabels.style.fontSize);
 
                     if (item.dataLabels.style.fontWeight) {
                         selection.style('font-weight', item.dataLabels.style.fontWeight);
