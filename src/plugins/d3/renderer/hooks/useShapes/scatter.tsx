@@ -104,7 +104,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
             .enter()
             .append('circle')
             .attr('class', b('point'))
-            .attr('fill', series.color || '')
+            .attr('fill', (d) => d.color || series.color || '')
             .attr('r', (d) => d.radius || DEFAULT_SCATTER_POINT_RADIUS)
             .attr('cx', (d) => getCxAttr({point: d, xAxis, xScale}))
             .attr('cy', (d) => getCyAttr({point: d, yAxis, yScale}))

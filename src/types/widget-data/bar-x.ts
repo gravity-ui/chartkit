@@ -9,7 +9,6 @@ export type BarXSeriesData<T = any> = BaseSeriesData<T> & {
     y?: number;
     /** Corresponding value of axis category */
     category?: string;
-
     /** Data label value of the bar-x column. If not specified, the y value is used. */
     label?: string | number;
 };

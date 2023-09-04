@@ -6,8 +6,6 @@ export type PieSeriesData<T = any> = BaseSeriesData<T> & {
     value: number;
     /** The name of the pie segment (used in legend, tooltip etc). */
     name: string;
-    /** Individual color for the pie segment. */
-    color?: string;
     /** Initial visibility of the pie segment. */
     visible?: boolean;
     /** Initial data label of the pie segment. If not specified, the value is used. */

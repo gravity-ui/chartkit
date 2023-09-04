@@ -24,6 +24,8 @@ export type BaseSeriesData<T = any> = {
      * Here you can add additional data for your own event callbacks and formatter callbacks
      */
     custom?: T;
+    /** Individual color for the data chunk (point in scatter, segment in pie, bar etc) */
+    color?: string;
 };
 
 export type BaseTextStyle = {
