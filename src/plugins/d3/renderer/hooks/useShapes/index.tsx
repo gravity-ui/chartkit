@@ -2,6 +2,7 @@ import React from 'react';
 import {group} from 'd3';
 
 import type {ScatterSeries} from '../../../../../types/widget-data';
+import {getRandomCKId} from '../../../../../utils';
 
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
@@ -9,7 +10,7 @@ import type {ChartScale} from '../useAxisScales';
 import type {PreparedBarXSeries, PreparedPieSeries, PreparedSeries} from '../';
 import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
 import {BarXSeriesShapes} from './bar-x';
-import {prepareScatterSeries} from './scatter';
+import {ScatterSeriesShape} from './scatter';
 import {PieSeriesComponent} from './pie';
 
 import './styles.scss';
@@ -56,11 +57,17 @@ export const useShapes = (args: Args) => {
                     if (xScale && yScale) {
                         acc.push(
                             <BarXSeriesShapes
-                                {...args}
                                 key="bar-x"
                                 series={chartSeries as PreparedBarXSeries[]}
+                                xAxis={xAxis}
                                 xScale={xScale}
+                                yAxis={yAxis}
                                 yScale={yScale}
+                                top={top}
+                                left={left}
+                                svgContainer={svgContainer}
+                                onSeriesMouseMove={onSeriesMouseMove}
+                                onSeriesMouseLeave={onSeriesMouseLeave}
                             />,
                         );
                     }
@@ -68,27 +75,32 @@ export const useShapes = (args: Args) => {
                 }
                 case 'scatter': {
                     if (xScale && yScale) {
-                        acc.push(
-                            ...prepareScatterSeries({
-                                top,
-                                left,
-                                series: chartSeries as ScatterSeries[],
-                                xAxis,
-                                xScale,
-                                yAxis,
-                                yScale,
-                                onSeriesMouseMove,
-                                onSeriesMouseLeave,
-                                svgContainer,
-                            }),
-                        );
+                        const scatterShapes = chartSeries.map((scatterSeries, i) => {
+                            const id = getRandomCKId();
+                            return (
+                                <ScatterSeriesShape
+                                    key={`${i}-${id}`}
+                                    top={top}
+                                    left={left}
+                                    series={scatterSeries as ScatterSeries}
+                                    xAxis={xAxis}
+                                    xScale={xScale}
+                                    yAxis={yAxis}
+                                    yScale={yScale}
+                                    onSeriesMouseMove={onSeriesMouseMove}
+                                    onSeriesMouseLeave={onSeriesMouseLeave}
+                                    svgContainer={svgContainer}
+                                />
+                            );
+                        });
+                        acc.push(...scatterShapes);
                     }
                     break;
                 }
                 case 'pie': {
                     const groupedPieSeries = group(
                         chartSeries as PreparedPieSeries[],
-                        (item) => item.stackId,
+                        (pieSeries) => pieSeries.stackId,
                     );
                     acc.push(
                         ...Array.from(groupedPieSeries).map(([key, pieSeries]) => {
@@ -118,6 +130,8 @@ export const useShapes = (args: Args) => {
         yAxis,
         yScale,
         svgContainer,
+        left,
+        top,
         onSeriesMouseMove,
         onSeriesMouseLeave,
     ]);
