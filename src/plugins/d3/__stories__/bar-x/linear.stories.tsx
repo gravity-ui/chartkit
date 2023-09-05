@@ -19,12 +19,10 @@ const Template: Story = () => {
                     visible: true,
                     data: [
                         {
-                            category: 'A',
                             x: 10,
                             y: 100,
                         },
                         {
-                            category: 'B',
                             x: 12,
                             y: 80,
                         },
@@ -36,7 +34,6 @@ const Template: Story = () => {
                     visible: true,
                     data: [
                         {
-                            category: 'C',
                             x: 95.5,
                             y: 120,
                         },
@@ -62,7 +59,7 @@ const Template: Story = () => {
             },
         ],
         legend: {enabled: true},
-        tooltip: {enabled: false},
+        tooltip: {enabled: true},
     };
 
     if (!shown) {

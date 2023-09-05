@@ -1,8 +1,8 @@
 import React from 'react';
 import get from 'lodash/get';
-
-import type {ChartKitWidgetSeriesData, TooltipHoveredData} from '../../../../../types/widget-data';
-
+import {dateTime} from '@gravity-ui/date-utils';
+import type {ChartKitWidgetSeriesData, TooltipHoveredData} from '../../../../../types';
+import {formatNumber} from '../../../../shared';
 import type {PreparedAxis} from '../../hooks';
 import {getDataCategoryValue} from '../../utils';
 
@@ -12,21 +12,32 @@ type Props = {
     yAxis: PreparedAxis;
 };
 
-const getXRowData = (xAxis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
-    const categories = get(xAxis, 'categories', [] as string[]);
+const DEFAULT_DATE_FORMAT = 'DD.MM.YY';
 
-    return xAxis.type === 'category'
-        ? getDataCategoryValue({axisDirection: 'x', categories, data})
-        : (data as {x: number}).x;
+const getRowData = (fieldName: 'x' | 'y', axis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
+    const categories = get(axis, 'categories', [] as string[]);
+
+    switch (axis.type) {
+        case 'category': {
+            return getDataCategoryValue({axisDirection: fieldName, categories, data});
+        }
+        case 'datetime': {
+            const value = get(data, fieldName);
+            return dateTime({input: value}).format(DEFAULT_DATE_FORMAT);
+        }
+        case 'linear':
+        default: {
+            const value = get(data, fieldName) as unknown as number;
+            return formatNumber(value);
+        }
+    }
 };
 
-const getYRowData = (yAxis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
-    const categories = get(yAxis, 'categories', [] as string[]);
+const getXRowData = (xAxis: PreparedAxis, data: ChartKitWidgetSeriesData) =>
+    getRowData('x', xAxis, data);
 
-    return yAxis.type === 'category'
-        ? getDataCategoryValue({axisDirection: 'y', categories, data})
-        : (data as {y: number}).y;
-};
+const getYRowData = (yAxis: PreparedAxis, data: ChartKitWidgetSeriesData) =>
+    getRowData('y', yAxis, data);
 
 export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
     const {data, series} = hovered;

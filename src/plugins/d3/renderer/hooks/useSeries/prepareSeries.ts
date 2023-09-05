@@ -71,32 +71,37 @@ type PrepareBarXSeriesArgs = {
 };
 
 function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[] {
-    const {colorScale, series, legend} = args;
+    const {colorScale, series: seriesList, legend} = args;
     const commonStackId = getRandomCKId();
 
-    return series.map<PreparedBarXSeries>((singleSeries) => {
-        const name = singleSeries.name || '';
-        const color = singleSeries.color || colorScale(name);
+    return seriesList.map<PreparedBarXSeries>((series) => {
+        const name = series.name || '';
+        const color = series.color || colorScale(name);
+
+        let stackId = series.stackId;
+        if (!stackId) {
+            stackId = series.stacking === 'normal' ? commonStackId : getRandomCKId();
+        }
 
         return {
-            type: singleSeries.type,
+            type: series.type,
             color: color,
             name: name,
-            visible: get(singleSeries, 'visible', true),
+            visible: get(series, 'visible', true),
             legend: {
-                enabled: get(singleSeries, 'legend.enabled', legend.enabled),
-                symbol: prepareLegendSymbol(singleSeries),
+                enabled: get(series, 'legend.enabled', legend.enabled),
+                symbol: prepareLegendSymbol(series),
             },
-            data: singleSeries.data,
-            stacking: singleSeries.stacking,
-            stackId: singleSeries.stacking === 'normal' ? commonStackId : getRandomCKId(),
+            data: series.data,
+            stacking: series.stacking,
+            stackId,
             dataLabels: {
-                enabled: singleSeries.dataLabels?.enabled || false,
+                enabled: series.dataLabels?.enabled || false,
                 inside:
-                    typeof singleSeries.dataLabels?.inside === 'boolean'
-                        ? singleSeries.dataLabels?.inside
+                    typeof series.dataLabels?.inside === 'boolean'
+                        ? series.dataLabels?.inside
                         : false,
-                style: Object.assign({}, DEFAULT_DATALABELS_STYLE, singleSeries.dataLabels?.style),
+                style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),
             },
         };
     }, []);

@@ -18,7 +18,7 @@ const Template: Story = () => {
             labels: {enabled: true},
         },
         legend: {enabled: true},
-        tooltip: {enabled: false},
+        tooltip: {enabled: true},
         yAxis: [
             {
                 type: 'linear',
