@@ -4,6 +4,7 @@ import debounce from 'lodash/debounce';
 import type {DebouncedFunc} from 'lodash';
 
 import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
+import {getRandomCKId} from '../../../utils';
 
 import {Chart} from './components';
 
@@ -21,8 +22,10 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
         const [dimensions, setDimensions] = React.useState<Partial<ChartDimensions>>();
 
         const handleResize = React.useCallback(() => {
-            if (ref.current) {
-                const {top, left, width, height} = ref.current.getBoundingClientRect();
+            const parentElement = ref.current?.parentElement;
+
+            if (parentElement) {
+                const {top, left, width, height} = parentElement.getBoundingClientRect();
                 setDimensions({top, left, width, height});
             }
         }, []);
@@ -45,11 +48,13 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
 
         React.useEffect(() => {
             const selection = select(window);
-            selection.on('resize', debuncedHandleResize);
+            // https://github.com/d3/d3-selection/blob/main/README.md#handling-events
+            const eventName = `resize.${getRandomCKId()}`;
+            selection.on(eventName, debuncedHandleResize);
 
             return () => {
                 // https://d3js.org/d3-selection/events#selection_on
-                selection.on('resize', null);
+                selection.on(eventName, null);
             };
         }, [debuncedHandleResize]);
 
@@ -59,7 +64,14 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
         }, [handleResize]);
 
         return (
-            <div ref={ref} style={{width: '100%', height: '100%', position: 'relative'}}>
+            <div
+                ref={ref}
+                style={{
+                    width: dimensions?.width || '100%',
+                    height: dimensions?.height || '100%',
+                    position: 'relative',
+                }}
+            >
                 {dimensions?.width && dimensions?.height && (
                     <Chart
                         top={dimensions?.top || 0}
