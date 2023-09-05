@@ -153,7 +153,7 @@ export function BarXSeriesShapes(args: Args) {
                     .attr('y', (d) => d.y)
                     .attr('height', (d) => d.height)
                     .attr('width', (d) => d.width)
-                    .attr('fill', item.color)
+                    .attr('fill', (d) => d.data.color || item.color)
                     .on('mousemove', (e, point) => {
                         const [x, y] = pointer(e, svgContainer);
                         onSeriesMouseMove?.({
