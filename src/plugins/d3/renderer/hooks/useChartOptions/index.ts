@@ -23,6 +23,8 @@ export const useChartOptions = (args: Args): ChartOptions => {
         const preparedChart = getPreparedChart({
             chart,
             series,
+            preparedTitle,
+            preparedLegend,
             preparedXAxis,
             preparedY1Axis: preparedYAxis[0],
         });

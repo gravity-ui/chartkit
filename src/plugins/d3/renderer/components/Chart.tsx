@@ -40,9 +40,6 @@ export const Chart = (props: Props) => {
         width,
         height,
         margin: chart.margin,
-        legend,
-        title,
-        xAxis,
         yAxis,
     });
     const {preparedSeries, handleLegendItemClick} = useSeries({series: data.series, legend});
@@ -85,10 +82,7 @@ export const Chart = (props: Props) => {
                 <g
                     width={boundsWidth}
                     height={boundsHeight}
-                    transform={`translate(${[
-                        chart.margin.left,
-                        chart.margin.top + (title?.height || 0),
-                    ].join(',')})`}
+                    transform={`translate(${[chart.margin.left, chart.margin.top].join(',')})`}
                 >
                     {xScale && yScale && (
                         <React.Fragment>

@@ -12,15 +12,6 @@ const Template: Story = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
     const data: ChartKitWidgetData = {
-        legend: {enabled: true},
-        tooltip: {enabled: true},
-        yAxis: [
-            {
-                type: 'linear',
-                labels: {enabled: true},
-                min: 0,
-            },
-        ],
         series: {
             data: [
                 {
@@ -57,12 +48,21 @@ const Template: Story = () => {
                 },
             ],
         },
+        legend: {enabled: true},
         title: {text: 'Category axis'},
+        tooltip: {enabled: true},
         xAxis: {
             type: 'category',
             categories: ['A', 'B', 'C'],
             labels: {enabled: true},
         },
+        yAxis: [
+            {
+                type: 'linear',
+                labels: {enabled: true},
+                min: 0,
+            },
+        ],
     };
 
     if (!shown) {
