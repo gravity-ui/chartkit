@@ -6,9 +6,10 @@ import get from 'lodash/get';
 import type {ChartOptions} from '../useChartOptions/types';
 import {
     getOnlyVisibleSeries,
+    getDataCategoryValue,
     getDomainDataYBySeries,
-    isAxisRelatedSeries,
     getDomainDataXBySeries,
+    isAxisRelatedSeries,
     isSeriesWithCategoryValues,
 } from '../../utils';
 import {PreparedSeries} from '../useSeries/types';
@@ -35,10 +36,20 @@ const isNumericalArrayData = (data: unknown[]): data is number[] => {
     return data.every((d) => typeof d === 'number' || d === null);
 };
 
-const filterCategoriesByVisibleSeries = (categories: string[], series: PreparedSeries[]) => {
+const filterCategoriesByVisibleSeries = (
+    categories: string[],
+    series: PreparedSeries[],
+    axisType: 'x' | 'y',
+) => {
     return categories.filter((category) => {
         return series.some((s) => {
-            return isSeriesWithCategoryValues(s) && s.data.some((d) => d.category === category);
+            return (
+                isSeriesWithCategoryValues(s) &&
+                s.data.some((d) => {
+                    const dataCategory = getDataCategoryValue({axisType, categories, data: d});
+                    return dataCategory === category;
+                })
+            );
         });
     });
 };
@@ -78,6 +89,7 @@ const createScales = (args: Args) => {
                 const filteredCategories = filterCategoriesByVisibleSeries(
                     xCategories,
                     visibleSeries,
+                    'x',
                 );
                 xScale = scaleBand().domain(filteredCategories).range([0, boundsWidth]);
             }
@@ -125,6 +137,7 @@ const createScales = (args: Args) => {
                 const filteredCategories = filterCategoriesByVisibleSeries(
                     yCategories,
                     visibleSeries,
+                    'y',
                 );
                 yScale = scaleBand().domain(filteredCategories).range([boundsHeight, 0]);
             }

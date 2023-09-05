@@ -33,8 +33,14 @@ const shapeScatterSeriesData = (args: {data: Record<string, any>[]; groupBy: str
             x: d[map.x],
             y: d[map.y],
             radius: random(3, 6),
-            ...(map.category && {category: d[map.category]}),
         });
+
+        const dataItem = acc[seriesName][acc[seriesName].length - 1];
+
+        if (map.category && dataItem) {
+            // @ts-expect-error
+            dataItem[map.categoriesType] = d[map.category];
+        }
 
         return acc;
     }, {});
@@ -133,7 +139,7 @@ const Template: Story = () => {
     const shapedScatterSeriesData = shapeScatterSeriesData({
         data: penguins,
         groupBy,
-        map: {x, y, category},
+        map: {x, y, category, categoriesType},
     });
     const shapedScatterSeries = shapeScatterSeries(shapedScatterSeriesData);
     const data = shapeScatterChartData(shapedScatterSeries, categoriesType, categories);

@@ -5,6 +5,7 @@ import {dateTime} from '@gravity-ui/date-utils';
 import type {
     BaseTextStyle,
     ChartKitWidgetSeries,
+    ChartKitWidgetSeriesData,
     ChartKitWidgetAxisType,
     ChartKitWidgetAxisLabels,
     BarXSeries,
@@ -75,11 +76,12 @@ export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
                     stack.forEach((singleSeries) => {
                         singleSeries.data.forEach((point) => {
                             const key = String(point.x || point.category);
+
                             if (typeof values[key] === 'undefined') {
                                 values[key] = 0;
                             }
 
-                            if (point.y) {
+                            if (point.y && typeof point.y === 'number') {
                                 values[key] += point.y;
                             }
                         });
@@ -188,4 +190,38 @@ export const getHorisontalSvgTextHeight = (args: {
         .remove();
 
     return height;
+};
+
+export const getDataCategoryValue = (args: {
+    axisType: 'x' | 'y';
+    categories: string[];
+    data: ChartKitWidgetSeriesData;
+}) => {
+    const {axisType, categories, data} = args;
+
+    if ('category' in data && data.category) {
+        return data.category;
+    }
+
+    if (axisType === 'x') {
+        if ('x' in data && typeof data.x === 'string') {
+            return data.x;
+        }
+
+        if ('x' in data && typeof data.x === 'number') {
+            return categories[data.x];
+        }
+    }
+
+    if (axisType === 'y') {
+        if ('y' in data && typeof data.y === 'string') {
+            return data.y;
+        }
+
+        if ('y' in data && typeof data.y === 'number') {
+            return categories[data.y];
+        }
+    }
+
+    throw new Error('It seems you are trying to get category value from non-categorical data');
 };

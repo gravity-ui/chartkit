@@ -1,12 +1,10 @@
 import React from 'react';
+import get from 'lodash/get';
 
-import type {
-    ScatterSeriesData,
-    BarXSeriesData,
-    TooltipHoveredData,
-} from '../../../../../types/widget-data';
+import type {ChartKitWidgetSeriesData, TooltipHoveredData} from '../../../../../types/widget-data';
 
 import type {PreparedAxis} from '../../hooks';
+import {getDataCategoryValue} from '../../utils';
 
 type Props = {
     hovered: TooltipHoveredData;
@@ -14,14 +12,30 @@ type Props = {
     yAxis: PreparedAxis;
 };
 
+const getXRowData = (xAxis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
+    const categories = get(xAxis, 'categories', [] as string[]);
+
+    return xAxis.type === 'category'
+        ? getDataCategoryValue({axisType: 'x', categories, data})
+        : (data as {x: number}).x;
+};
+
+const getYRowData = (yAxis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
+    const categories = get(yAxis, 'categories', [] as string[]);
+
+    return yAxis.type === 'category'
+        ? getDataCategoryValue({axisType: 'y', categories, data})
+        : (data as {y: number}).y;
+};
+
 export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
     const {data, series} = hovered;
 
     switch (series.type) {
         case 'scatter': {
-            const scatterData = data as ScatterSeriesData;
-            const xRow = xAxis.type === 'category' ? scatterData.category : scatterData.x;
-            const yRow = yAxis.type === 'category' ? scatterData.category : scatterData.y;
+            const xRow = getXRowData(xAxis, data);
+            const yRow = getYRowData(yAxis, data);
+
             return (
                 <div>
                     <div>
@@ -36,9 +50,9 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
             );
         }
         case 'bar-x': {
-            const barXData = data as BarXSeriesData;
-            const xRow = xAxis.type === 'category' ? barXData.category : barXData.x;
-            const yRow = yAxis.type === 'category' ? barXData.category : barXData.y;
+            const xRow = getXRowData(xAxis, data);
+            const yRow = getYRowData(yAxis, data);
+
             return (
                 <div>
                     <div>{xRow}</div>

@@ -1,11 +1,16 @@
 import React from 'react';
-import {ChartOptions} from '../useChartOptions/types';
-import {ChartScale} from '../useAxisScales';
-import {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
-import {BarXSeriesData} from '../../../../../types/widget-data';
+import {group, pointer, select} from 'd3';
+import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
+import get from 'lodash/get';
+
+import type {BarXSeriesData} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
-import {group, pointer, ScaleBand, ScaleLinear, ScaleTime, select} from 'd3';
-import {PreparedBarXSeries} from '../useSeries/types';
+
+import {getDataCategoryValue} from '../../utils';
+import type {ChartScale} from '../useAxisScales';
+import type {ChartOptions} from '../useChartOptions/types';
+import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
+import type {PreparedBarXSeries} from '../useSeries/types';
 
 const DEFAULT_BAR_RECT_WIDTH = 50;
 const DEFAULT_LINEAR_BAR_RECT_WIDTH = 20;
@@ -44,8 +49,10 @@ const getRectProperties = (args: {
     if (xAxis.type === 'category') {
         const xBandScale = xScale as ScaleBand<string>;
         const maxWidth = xBandScale.bandwidth() - MIN_RECT_GAP;
+        const categories = get(xAxis, 'categories', [] as string[]);
+        const dataCategory = getDataCategoryValue({axisType: 'x', categories, data: point});
         width = Math.min(maxWidth, DEFAULT_BAR_RECT_WIDTH);
-        cx = (xBandScale(point.category as string) || 0) + xBandScale.step() / 2 - width / 2;
+        cx = (xBandScale(dataCategory) || 0) + xBandScale.step() / 2 - width / 2;
     } else {
         const xLinearScale = xScale as ScaleLinear<number, number> | ScaleTime<number, number>;
         const [min, max] = xLinearScale.domain();
