@@ -39,30 +39,28 @@ const prepareCategoricalScatterData = (args: {
     const yCategories = get(yAxis, 'categories', [] as string[]);
 
     return data.filter((d) => {
-        if (isXCategorical && isYCategorical) {
-            const xCategory = getDataCategoryValue({
+        const xCategory =
+            isXCategorical &&
+            getDataCategoryValue({
                 axisType: 'x',
                 categories: xCategories,
                 data: d,
             });
-            const yCategory = getDataCategoryValue({
+        const yCategory =
+            isYCategorical &&
+            getDataCategoryValue({
                 axisType: 'y',
                 categories: yCategories,
                 data: d,
             });
+
+        if (isXCategorical && isYCategorical) {
             return typeof xCategory === 'string' && typeof yCategory === 'string';
         }
 
         if (isYCategorical) {
-            const yCategory = getDataCategoryValue({
-                axisType: 'y',
-                categories: yCategories,
-                data: d,
-            });
             return typeof yCategory === 'string';
         }
-
-        const xCategory = getDataCategoryValue({axisType: 'x', categories: xCategories, data: d});
 
         return typeof xCategory === 'string';
     });
