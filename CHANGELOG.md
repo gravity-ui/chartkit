@@ -44,7 +44,7 @@ import type {YagrWidgetData} from '@gravity-ui/chartkit/yagr';
 
 ### Features
 
-* **d3 plugin:** add basic pie chart ([#244](https://github.com/gravity-ui/chartkit/issues/244)) ([c0559cd](https://github.com/gravity-ui/chartkit/commit/c0559cdf323b41747b9e7dcf1c5d05a9e8c677b1))
+* **D3 plugin:** add basic pie chart ([#244](https://github.com/gravity-ui/chartkit/issues/244)) ([c0559cd](https://github.com/gravity-ui/chartkit/commit/c0559cdf323b41747b9e7dcf1c5d05a9e8c677b1))
 
 
 ### Bug Fixes
@@ -99,7 +99,7 @@ import type {YagrWidgetData} from '@gravity-ui/chartkit/yagr';
 
 ### Features
 
-* add d3 plugin ([#217](https://github.com/gravity-ui/chartkit/issues/217)) ([9815fb0](https://github.com/gravity-ui/chartkit/commit/9815fb087f08413dcd489b7ee11585199d4bd310))
+* add D3 plugin ([#217](https://github.com/gravity-ui/chartkit/issues/217)) ([9815fb0](https://github.com/gravity-ui/chartkit/commit/9815fb087f08413dcd489b7ee11585199d4bd310))
 
 
 ### Bug Fixes
