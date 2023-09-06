@@ -30,7 +30,6 @@ const Template: Story = () => {
                 {
                     type: 'bar-x',
                     visible: true,
-                    stacking: 'normal',
                     data: [
                         {
                             category: 'A',
@@ -45,7 +44,6 @@ const Template: Story = () => {
                             y: 25,
                         },
                     ],
-                    stackId: 'min',
                     name: 'Min',
                     dataLabels: {
                         enabled: true,
@@ -54,7 +52,6 @@ const Template: Story = () => {
                 {
                     type: 'bar-x',
                     visible: true,
-                    stacking: 'normal',
                     data: [
                         {
                             category: 'A',
@@ -69,7 +66,6 @@ const Template: Story = () => {
                             y: 200,
                         },
                     ],
-                    stackId: 'mid',
                     name: 'Mid',
                     dataLabels: {
                         enabled: true,
@@ -78,7 +74,6 @@ const Template: Story = () => {
                 {
                     type: 'bar-x',
                     visible: true,
-                    stacking: 'normal',
                     data: [
                         {
                             category: 'A',
@@ -93,7 +88,6 @@ const Template: Story = () => {
                             y: 205,
                         },
                     ],
-                    stackId: 'max',
                     name: 'Max',
                     dataLabels: {
                         enabled: true,
