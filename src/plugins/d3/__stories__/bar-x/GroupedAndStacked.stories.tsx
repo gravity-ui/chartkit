@@ -33,15 +33,15 @@ const Template: Story = () => {
                     stacking: 'normal',
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 100,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 805,
                         },
                         {
-                            category: 'C',
+                            x: 'C',
                             y: 250,
                         },
                     ],
@@ -54,15 +54,15 @@ const Template: Story = () => {
                     stacking: 'normal',
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 40,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 80,
                         },
                         {
-                            category: 'C',
+                            x: 'C',
                             y: 25,
                         },
                     ],
@@ -75,15 +75,15 @@ const Template: Story = () => {
                     stacking: 'normal',
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 110,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 80,
                         },
                         {
-                            category: 'C',
+                            x: 'C',
                             y: 200,
                         },
                     ],
@@ -96,15 +96,15 @@ const Template: Story = () => {
                     stacking: 'normal',
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 110,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 80,
                         },
                         {
-                            category: 'C',
+                            x: 'C',
                             y: 200,
                         },
                     ],

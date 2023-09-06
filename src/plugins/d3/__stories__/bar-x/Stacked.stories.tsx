@@ -35,15 +35,15 @@ const Template: Story = () => {
                     stacking: 'normal',
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 100,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 80,
                         },
                         {
-                            category: 'C',
+                            x: 'C',
                             y: 120,
                         },
                     ],
@@ -63,11 +63,11 @@ const Template: Story = () => {
                     stacking: 'normal',
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 5,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 25,
                         },
                     ],

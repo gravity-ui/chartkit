@@ -32,15 +32,15 @@ const Template: Story = () => {
                     visible: true,
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 10,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 80,
                         },
                         {
-                            category: 'C',
+                            x: 'C',
                             y: 25,
                         },
                     ],
@@ -54,15 +54,15 @@ const Template: Story = () => {
                     visible: true,
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 110,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 80,
                         },
                         {
-                            category: 'C',
+                            x: 'C',
                             y: 200,
                         },
                     ],
@@ -76,15 +76,15 @@ const Template: Story = () => {
                     visible: true,
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 410,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
                             y: 580,
                         },
                         {
-                            category: 'C',
+                            x: 'C',
                             y: 205,
                         },
                     ],
