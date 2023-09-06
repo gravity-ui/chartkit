@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.0](https://github.com/gravity-ui/chartkit/compare/v4.1.0...v4.2.0) (2023-09-06)
+
+
+### Features
+
+* **D3 plugin:** grouped bar-x series ([#272](https://github.com/gravity-ui/chartkit/issues/272)) ([1751c88](https://github.com/gravity-ui/chartkit/commit/1751c882d29f5abe638587dfe8d36d2f65b18954))
+* **D3 plugin:** improve categories using ([#273](https://github.com/gravity-ui/chartkit/issues/273)) ([eabf291](https://github.com/gravity-ui/chartkit/commit/eabf291ef269ebdfff1db1a1a60eed06d42c34a6))
+
 ## [4.1.0](https://github.com/gravity-ui/chartkit/compare/v4.0.0...v4.1.0) (2023-09-06)
 
 
