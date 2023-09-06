@@ -1,6 +1,6 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react';
-import {withKnobs, object} from '@storybook/addon-knobs';
+import {object, withKnobs} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
@@ -12,43 +12,12 @@ const Template: Story = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
     const data: ChartKitWidgetData = {
-        series: {
-            data: [
-                {
-                    type: 'bar-x',
-                    visible: true,
-                    data: [
-                        {
-                            category: 'A',
-                            x: 10,
-                            y: 100,
-                        },
-                        {
-                            category: 'B',
-                            x: 12,
-                            y: 80,
-                        },
-                    ],
-                    name: 'AB',
-                },
-                {
-                    type: 'bar-x',
-                    visible: true,
-                    data: [
-                        {
-                            category: 'C',
-                            x: 95.5,
-                            y: 120,
-                        },
-                    ],
-                    name: 'C',
-                },
-            ],
-        },
-        title: {text: 'Linear axis'},
+        legend: {enabled: true},
+        tooltip: {enabled: true},
+        title: {text: 'Category axis'},
         xAxis: {
-            min: 0,
-            type: 'linear',
+            type: 'category',
+            categories: ['A', 'B', 'C'],
             labels: {enabled: true},
         },
         yAxis: [
@@ -56,13 +25,59 @@ const Template: Story = () => {
                 type: 'linear',
                 labels: {enabled: true},
                 min: 0,
-                ticks: {
-                    pixelInterval: 100,
-                },
             },
         ],
-        legend: {enabled: true},
-        tooltip: {enabled: false},
+        series: {
+            data: [
+                {
+                    type: 'bar-x',
+                    visible: true,
+                    stacking: 'normal',
+                    data: [
+                        {
+                            x: 'A',
+                            y: 100,
+                        },
+                        {
+                            x: 'B',
+                            y: 80,
+                        },
+                        {
+                            x: 'C',
+                            y: 120,
+                        },
+                    ],
+                    name: 'Sales',
+                    dataLabels: {
+                        enabled: true,
+                        inside: true,
+                        style: {
+                            fontWeight: 'normal',
+                            fontColor: '#fff',
+                        },
+                    },
+                },
+                {
+                    type: 'bar-x',
+                    visible: true,
+                    stacking: 'normal',
+                    data: [
+                        {
+                            x: 'A',
+                            y: 5,
+                        },
+                        {
+                            x: 'B',
+                            y: 25,
+                        },
+                    ],
+                    name: 'Discount',
+                    dataLabels: {
+                        enabled: true,
+                    },
+                },
+            ],
+        },
     };
 
     if (!shown) {
@@ -82,7 +97,7 @@ const Template: Story = () => {
     );
 };
 
-export const LinearXAxis = Template.bind({});
+export const Stacked = Template.bind({});
 
 const meta: Meta = {
     title: 'Plugins/D3/Bar-X',

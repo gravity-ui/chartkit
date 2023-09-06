@@ -1,9 +1,9 @@
-import React from 'react';
-import {group, pointer, select} from 'd3';
+import {max, pointer, select} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
+import React from 'react';
 import get from 'lodash/get';
 
-import type {BarXSeriesData} from '../../../../../types/widget-data';
+import type {BarXSeriesData} from '../../../../../types';
 import {block} from '../../../../../utils/cn';
 
 import {getDataCategoryValue} from '../../utils';
@@ -12,9 +12,11 @@ import type {ChartOptions} from '../useChartOptions/types';
 import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import type {PreparedBarXSeries} from '../useSeries/types';
 
-const DEFAULT_BAR_RECT_WIDTH = 50;
-const DEFAULT_LINEAR_BAR_RECT_WIDTH = 20;
+const RECT_PADDING = 0.1;
 const MIN_RECT_GAP = 1;
+const MAX_RECT_WIDTH = 50;
+const GROUP_PADDING = 0.1;
+const MIN_GROUP_GAP = 1;
 const DEFAULT_LABEL_PADDING = 7;
 
 const b = block('d3-bar-x');
@@ -32,60 +34,117 @@ type Args = {
     svgContainer: SVGSVGElement | null;
 };
 
-const getRectProperties = (args: {
-    point: BarXSeriesData;
+type ShapeData = {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    data: BarXSeriesData;
+    series: PreparedBarXSeries;
+};
+
+function prepareData(args: {
+    series: PreparedBarXSeries[];
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
     yScale: ChartScale;
-    minPointDistance: number;
-}) => {
-    const {point, xAxis, xScale, yAxis, yScale, minPointDistance} = args;
-    let cx: string | number | undefined;
-    let cy: string | number | undefined;
-    let width: number;
-    let height: number;
+}) {
+    const {series, xAxis, xScale, yScale} = args;
+    const categories = get(xAxis, 'categories', [] as string[]);
+
+    const data: Record<
+        string | number,
+        Record<string, {data: BarXSeriesData; series: PreparedBarXSeries}[]>
+    > = {};
+    series.forEach((s) => {
+        s.data.forEach((d) => {
+            const xValue =
+                xAxis.type === 'category'
+                    ? getDataCategoryValue({axisDirection: 'x', categories, data: d})
+                    : d.x;
+
+            if (xValue) {
+                if (!data[xValue]) {
+                    data[xValue] = {};
+                }
+
+                const xGroup = data[xValue];
+
+                if (!xGroup[s.stackId]) {
+                    xGroup[s.stackId] = [];
+                }
+
+                xGroup[s.stackId].push({data: d, series: s});
+            }
+        });
+    });
+
+    let bandWidth = Infinity;
 
     if (xAxis.type === 'category') {
         const xBandScale = xScale as ScaleBand<string>;
-        const maxWidth = xBandScale.bandwidth() - MIN_RECT_GAP;
-        const categories = get(xAxis, 'categories', [] as string[]);
-        const dataCategory = getDataCategoryValue({axisDirection: 'x', categories, data: point});
-        width = Math.min(maxWidth, DEFAULT_BAR_RECT_WIDTH);
-        cx = (xBandScale(dataCategory) || 0) + xBandScale.step() / 2 - width / 2;
+        bandWidth = xBandScale.bandwidth();
     } else {
         const xLinearScale = xScale as ScaleLinear<number, number> | ScaleTime<number, number>;
-        const [min, max] = xLinearScale.domain();
-        const range = xLinearScale.range();
-        const maxWidth =
-            ((range[1] - range[0]) * minPointDistance) / (Number(max) - Number(min)) - MIN_RECT_GAP;
+        const xValues = series.reduce<number[]>((acc, s) => {
+            s.data.forEach((dataItem) => acc.push(Number(dataItem.x)));
+            return acc;
+        }, []);
 
-        width = Math.min(Math.max(maxWidth, 1), DEFAULT_LINEAR_BAR_RECT_WIDTH);
-        cx = xLinearScale(point.x as number) - width / 2;
-    }
-
-    if (yAxis[0].type === 'linear') {
-        const yLinearScale = yScale as ScaleLinear<number, number>;
-        cy = yLinearScale(point.y as number);
-        height = yLinearScale(yLinearScale.domain()[0]) - cy;
-    } else {
-        throw Error(`The "${yAxis[0].type}" type for the Y axis is not supported`);
-    }
-
-    return {x: cx, y: cy, width, height};
-};
-
-function minDiff(arr: number[]) {
-    let result = Infinity;
-
-    for (let i = 0; i < arr.length - 1; i++) {
-        for (let j = i + 1; j < arr.length; j++) {
-            const diff = Math.abs(arr[i] - arr[j]);
-            if (diff < result) {
-                result = diff;
+        xValues.sort().forEach((xValue, index) => {
+            if (index > 0 && xValue !== xValues[index - 1]) {
+                const dist = xLinearScale(xValue) - xLinearScale(xValues[index - 1]);
+                if (dist < bandWidth) {
+                    bandWidth = dist;
+                }
             }
-        }
+        });
     }
+
+    const maxGroupSize = max(Object.values(data), (d) => Object.values(d).length) || 1;
+    const groupGap = Math.max(bandWidth * GROUP_PADDING, MIN_GROUP_GAP);
+    const maxGroupWidth = bandWidth - groupGap;
+    const rectGap = Math.max((maxGroupWidth / maxGroupSize) * RECT_PADDING, MIN_RECT_GAP);
+    const rectWidth = Math.min(maxGroupWidth / maxGroupSize - rectGap, MAX_RECT_WIDTH);
+
+    const result: ShapeData[] = [];
+
+    Object.entries(data).forEach(([xValue, val]) => {
+        const stacks = Object.values(val);
+        const currentGroupWidth = rectWidth * stacks.length + rectGap * (stacks.length - 1);
+        stacks.forEach((yValues, groupItemIndex) => {
+            let stackHeight = 0;
+            yValues.forEach((yValue) => {
+                let xCenter;
+                if (xAxis.type === 'category') {
+                    const xBandScale = xScale as ScaleBand<string>;
+                    xCenter = (xBandScale(xValue as string) || 0) + xBandScale.bandwidth() / 2;
+                } else {
+                    const xLinearScale = xScale as
+                        | ScaleLinear<number, number>
+                        | ScaleTime<number, number>;
+                    xCenter = xLinearScale(Number(xValue));
+                }
+                const x = xCenter - currentGroupWidth / 2 + (rectWidth + rectGap) * groupItemIndex;
+
+                const yLinearScale = yScale as ScaleLinear<number, number>;
+                const y = yLinearScale(yValue.data.y as number);
+                const height = yLinearScale(yLinearScale.domain()[0]) - y;
+
+                result.push({
+                    x,
+                    y: y - stackHeight,
+                    width: rectWidth,
+                    height,
+                    data: yValue.data,
+                    series: yValue.series,
+                });
+
+                stackHeight += height + 1;
+            });
+        });
+    });
 
     return result;
 }
@@ -114,97 +173,60 @@ export function BarXSeriesShapes(args: Args) {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
 
-        const xValues =
-            xAxis.type === 'category'
-                ? []
-                : series.reduce<number[]>((acc, {data}) => {
-                      data.forEach((dataItem) => acc.push(Number(dataItem.x)));
-                      return acc;
-                  }, []);
-        const minPointDistance = minDiff(xValues);
+        const shapes = prepareData({
+            series,
+            xAxis,
+            xScale,
+            yAxis,
+            yScale,
+        });
 
-        const stackedSeriesMap = group(series, (item) => item.stackId);
-        Array.from(stackedSeriesMap).forEach(([, stackedSeries]) => {
-            const stackHeights: Record<string, number> = {};
-            stackedSeries.forEach((item) => {
-                const shapes = item.data.map((dataItem) => {
-                    const rectProps = getRectProperties({
-                        point: dataItem,
-                        xAxis,
-                        xScale,
-                        yAxis,
-                        yScale,
-                        minPointDistance,
-                    });
-
-                    if (!stackHeights[rectProps.x]) {
-                        stackHeights[rectProps.x] = 0;
-                    }
-
-                    const rectY = rectProps.y - stackHeights[rectProps.x];
-                    stackHeights[rectProps.x] += rectProps.height + 1;
-
-                    return {
-                        ...rectProps,
-                        y: rectY,
-                        data: dataItem,
-                    };
+        svgElement
+            .selectAll('allRects')
+            .data(shapes)
+            .join('rect')
+            .attr('class', b('segment'))
+            .attr('x', (d) => d.x)
+            .attr('y', (d) => d.y)
+            .attr('height', (d) => d.height)
+            .attr('width', (d) => d.width)
+            .attr('fill', (d) => d.data.color || d.series.color)
+            .on('mousemove', (e, d) => {
+                const [x, y] = pointer(e, svgContainer);
+                onSeriesMouseMove?.({
+                    hovered: {
+                        data: d.data,
+                        series: d.series,
+                    },
+                    pointerPosition: [x - left, y - top],
                 });
-
-                svgElement
-                    .selectAll('allRects')
-                    .data(shapes)
-                    .join('rect')
-                    .attr('class', b('segment'))
-                    .attr('x', (d) => d.x)
-                    .attr('y', (d) => d.y)
-                    .attr('height', (d) => d.height)
-                    .attr('width', (d) => d.width)
-                    .attr('fill', (d) => d.data.color || item.color)
-                    .on('mousemove', (e, point) => {
-                        const [x, y] = pointer(e, svgContainer);
-                        onSeriesMouseMove?.({
-                            hovered: {
-                                data: point.data,
-                                series: item,
-                            },
-                            pointerPosition: [x - left, y - top],
-                        });
-                    })
-                    .on('mouseleave', () => {
-                        if (onSeriesMouseLeave) {
-                            onSeriesMouseLeave();
-                        }
-                    });
-
-                if (item.dataLabels.enabled) {
-                    const selection = svgElement
-                        .selectAll('allLabels')
-                        .data(shapes)
-                        .join('text')
-                        .text((d) => String(d.data.label || d.data.y))
-                        .attr('class', b('label'))
-                        .attr('x', (d) => d.x + d.width / 2)
-                        .attr('y', (d) => {
-                            if (item.dataLabels.inside) {
-                                return d.y + d.height / 2;
-                            }
-
-                            return d.y - DEFAULT_LABEL_PADDING;
-                        })
-                        .attr('text-anchor', 'middle')
-                        .style('font-size', item.dataLabels.style.fontSize);
-
-                    if (item.dataLabels.style.fontWeight) {
-                        selection.style('font-weight', item.dataLabels.style.fontWeight);
-                    }
-
-                    if (item.dataLabels.style.fontColor) {
-                        selection.style('fill', item.dataLabels.style.fontColor);
-                    }
+            })
+            .on('mouseleave', () => {
+                if (onSeriesMouseLeave) {
+                    onSeriesMouseLeave();
                 }
             });
-        });
+
+        const dataLabels = shapes.filter((s) => s.series.dataLabels.enabled);
+
+        svgElement
+            .selectAll('allLabels')
+            .data(dataLabels)
+            .join('text')
+            .text((d) => String(d.data.label || d.data.y))
+            .attr('class', b('label'))
+            .attr('x', (d) => d.x + d.width / 2)
+            .attr('y', (d) => {
+                if (d.series.dataLabels.inside) {
+                    return d.y + d.height / 2;
+                }
+
+                return d.y - DEFAULT_LABEL_PADDING;
+            })
+            .attr('text-anchor', 'middle')
+            .style('font-size', (d) => d.series.dataLabels.style.fontSize)
+            .style('font-weight', (d) => d.series.dataLabels.style.fontWeight || null)
+            .style('fill', (d) => d.series.dataLabels.style.fontColor || null);
     }, [
         onSeriesMouseMove,
         onSeriesMouseLeave,

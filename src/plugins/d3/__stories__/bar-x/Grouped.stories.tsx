@@ -4,21 +4,20 @@ import {object, withKnobs} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitRef} from '../../../../types';
-import type {ChartKitWidgetData} from '../../../../types/widget-data';
+import type {ChartKitWidgetData, ChartKitRef} from '../../../../types';
 import {D3Plugin} from '../..';
 
 const Template: Story = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
     const data: ChartKitWidgetData = {
-        title: {text: 'DateTime axis'},
+        tooltip: {enabled: true},
+        title: {text: 'Grouped'},
         xAxis: {
-            type: 'datetime',
+            type: 'category',
+            categories: ['A', 'B', 'C'],
             labels: {enabled: true},
         },
-        legend: {enabled: true},
-        tooltip: {enabled: false},
         yAxis: [
             {
                 type: 'linear',
@@ -33,26 +32,66 @@ const Template: Story = () => {
                     visible: true,
                     data: [
                         {
-                            x: Number(new Date(2022, 10, 10)),
-                            y: 100,
+                            x: 'A',
+                            y: 10,
                         },
                         {
-                            x: Number(new Date(2023, 2, 5)),
+                            x: 'B',
                             y: 80,
                         },
+                        {
+                            x: 'C',
+                            y: 25,
+                        },
                     ],
-                    name: 'AB',
+                    name: 'Min',
+                    dataLabels: {
+                        enabled: true,
+                    },
                 },
                 {
                     type: 'bar-x',
                     visible: true,
                     data: [
                         {
-                            x: Number(new Date(2022, 11, 25)),
-                            y: 120,
+                            x: 'A',
+                            y: 110,
+                        },
+                        {
+                            x: 'B',
+                            y: 80,
+                        },
+                        {
+                            x: 'C',
+                            y: 200,
                         },
                     ],
-                    name: 'C',
+                    name: 'Mid',
+                    dataLabels: {
+                        enabled: true,
+                    },
+                },
+                {
+                    type: 'bar-x',
+                    visible: true,
+                    data: [
+                        {
+                            x: 'A',
+                            y: 410,
+                        },
+                        {
+                            x: 'B',
+                            y: 580,
+                        },
+                        {
+                            x: 'C',
+                            y: 205,
+                        },
+                    ],
+                    name: 'Max',
+                    dataLabels: {
+                        enabled: true,
+                    },
                 },
             ],
         },
@@ -75,7 +114,7 @@ const Template: Story = () => {
     );
 };
 
-export const DatetimeXAxis = Template.bind({});
+export const Grouped = Template.bind({});
 
 const meta: Meta = {
     title: 'Plugins/D3/Bar-X',

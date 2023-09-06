@@ -4,17 +4,15 @@ import {object, withKnobs} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitRef} from '../../../../types';
-import type {ChartKitWidgetData} from '../../../../types/widget-data';
+import type {ChartKitWidgetData, ChartKitRef} from '../../../../types';
 import {D3Plugin} from '../..';
 
 const Template: Story = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
     const data: ChartKitWidgetData = {
-        legend: {enabled: true},
         tooltip: {enabled: true},
-        title: {text: 'Category axis'},
+        title: {text: 'Grouped and stacked'},
         xAxis: {
             type: 'category',
             categories: ['A', 'B', 'C'],
@@ -35,27 +33,20 @@ const Template: Story = () => {
                     stacking: 'normal',
                     data: [
                         {
-                            category: 'A',
+                            x: 'A',
                             y: 100,
                         },
                         {
-                            category: 'B',
-                            y: 80,
+                            x: 'B',
+                            y: 805,
                         },
                         {
-                            category: 'C',
-                            y: 120,
+                            x: 'C',
+                            y: 250,
                         },
                     ],
-                    name: 'Sales',
-                    dataLabels: {
-                        enabled: true,
-                        inside: true,
-                        style: {
-                            fontWeight: 'normal',
-                            fontColor: '#fff',
-                        },
-                    },
+                    stackId: 'stack1',
+                    name: 'Base1',
                 },
                 {
                     type: 'bar-x',
@@ -63,18 +54,62 @@ const Template: Story = () => {
                     stacking: 'normal',
                     data: [
                         {
-                            category: 'A',
-                            y: 5,
+                            x: 'A',
+                            y: 40,
                         },
                         {
-                            category: 'B',
+                            x: 'B',
+                            y: 80,
+                        },
+                        {
+                            x: 'C',
                             y: 25,
                         },
                     ],
-                    name: 'Discount',
-                    dataLabels: {
-                        enabled: true,
-                    },
+                    stackId: 'stack1',
+                    name: 'Extended1',
+                },
+                {
+                    type: 'bar-x',
+                    visible: true,
+                    stacking: 'normal',
+                    data: [
+                        {
+                            x: 'A',
+                            y: 110,
+                        },
+                        {
+                            x: 'B',
+                            y: 80,
+                        },
+                        {
+                            x: 'C',
+                            y: 200,
+                        },
+                    ],
+                    stackId: 'stack2',
+                    name: 'Base2',
+                },
+                {
+                    type: 'bar-x',
+                    visible: true,
+                    stacking: 'normal',
+                    data: [
+                        {
+                            x: 'A',
+                            y: 110,
+                        },
+                        {
+                            x: 'B',
+                            y: 80,
+                        },
+                        {
+                            x: 'C',
+                            y: 200,
+                        },
+                    ],
+                    stackId: 'stack2',
+                    name: 'Extended2',
                 },
             ],
         },
@@ -97,7 +132,7 @@ const Template: Story = () => {
     );
 };
 
-export const Stacked = Template.bind({});
+export const GroupedAndStacked = Template.bind({});
 
 const meta: Meta = {
     title: 'Plugins/D3/Bar-X',
