@@ -30,6 +30,7 @@ export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}):
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,
         },
+        lineColor: get(yAxis1, 'lineColor'),
         categories: get(yAxis1, 'categories'),
         timestamps: get(yAxis1, 'timestamps'),
         title: {

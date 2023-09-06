@@ -23,6 +23,7 @@ const Template: Story = () => {
                 type: 'linear',
                 labels: {enabled: true},
                 min: 0,
+                lineColor: 'transparent',
             },
         ],
         series: {

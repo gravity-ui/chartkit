@@ -26,6 +26,7 @@ export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}):
             numberFormat: get(xAxis, 'labels.numberFormat'),
             style: {fontSize: get(xAxis, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE)},
         },
+        lineColor: get(xAxis, 'lineColor'),
         categories: get(xAxis, 'categories'),
         timestamps: get(xAxis, 'timestamps'),
         title: {
