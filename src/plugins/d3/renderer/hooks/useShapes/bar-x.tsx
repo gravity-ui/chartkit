@@ -50,7 +50,7 @@ const getRectProperties = (args: {
         const xBandScale = xScale as ScaleBand<string>;
         const maxWidth = xBandScale.bandwidth() - MIN_RECT_GAP;
         const categories = get(xAxis, 'categories', [] as string[]);
-        const dataCategory = getDataCategoryValue({axisType: 'x', categories, data: point});
+        const dataCategory = getDataCategoryValue({axisDirection: 'x', categories, data: point});
         width = Math.min(maxWidth, DEFAULT_BAR_RECT_WIDTH);
         cx = (xBandScale(dataCategory) || 0) + xBandScale.step() / 2 - width / 2;
     } else {

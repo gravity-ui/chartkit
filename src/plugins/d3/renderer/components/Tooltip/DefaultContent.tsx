@@ -16,7 +16,7 @@ const getXRowData = (xAxis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
     const categories = get(xAxis, 'categories', [] as string[]);
 
     return xAxis.type === 'category'
-        ? getDataCategoryValue({axisType: 'x', categories, data})
+        ? getDataCategoryValue({axisDirection: 'x', categories, data})
         : (data as {x: number}).x;
 };
 
@@ -24,7 +24,7 @@ const getYRowData = (yAxis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
     const categories = get(yAxis, 'categories', [] as string[]);
 
     return yAxis.type === 'category'
-        ? getDataCategoryValue({axisType: 'y', categories, data})
+        ? getDataCategoryValue({axisDirection: 'y', categories, data})
         : (data as {y: number}).y;
 };
 

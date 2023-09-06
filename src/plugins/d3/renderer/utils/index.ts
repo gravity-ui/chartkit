@@ -1,5 +1,6 @@
 import {AxisDomain, group, select} from 'd3';
 import get from 'lodash/get';
+import isNil from 'lodash/isNil';
 import {dateTime} from '@gravity-ui/date-utils';
 
 import type {
@@ -17,6 +18,8 @@ import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
 export * from './math';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie'];
+
+export type AxisDirection = 'x' | 'y';
 
 type UnknownSeries = {type: ChartKitWidgetSeries['type']; data: unknown};
 
@@ -192,36 +195,47 @@ export const getHorisontalSvgTextHeight = (args: {
     return height;
 };
 
-export const getDataCategoryValue = (args: {
-    axisType: 'x' | 'y';
+const extractCategoryValue = (args: {
+    axisDirection: AxisDirection;
     categories: string[];
     data: ChartKitWidgetSeriesData;
 }) => {
-    const {axisType, categories, data} = args;
+    const {axisDirection, categories, data} = args;
+    const dataCategory = get(data, axisDirection);
+    let categoryValue: string | undefined;
 
     if ('category' in data && data.category) {
-        return data.category;
+        categoryValue = data.category;
     }
 
-    if (axisType === 'x') {
-        if ('x' in data && typeof data.x === 'string') {
-            return data.x;
-        }
-
-        if ('x' in data && typeof data.x === 'number') {
-            return categories[data.x];
-        }
+    if (typeof dataCategory === 'string') {
+        categoryValue = dataCategory;
     }
 
-    if (axisType === 'y') {
-        if ('y' in data && typeof data.y === 'string') {
-            return data.y;
-        }
-
-        if ('y' in data && typeof data.y === 'number') {
-            return categories[data.y];
-        }
+    if (typeof dataCategory === 'number') {
+        categoryValue = categories[dataCategory];
     }
 
-    throw new Error('It seems you are trying to get category value from non-categorical data');
+    if (isNil(categoryValue)) {
+        throw new Error('It seems you are trying to get non-existing category value');
+    }
+
+    return categoryValue;
+};
+
+export const getDataCategoryValue = (args: {
+    axisDirection: AxisDirection;
+    categories: string[];
+    data: ChartKitWidgetSeriesData;
+}) => {
+    const {axisDirection, categories, data} = args;
+    const categoryValue = extractCategoryValue({axisDirection, categories, data});
+
+    if (!categories.includes(categoryValue)) {
+        throw new Error(
+            'It seems you are trying to use category value that is not in categories array',
+        );
+    }
+
+    return categoryValue;
 };

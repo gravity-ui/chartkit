@@ -29,17 +29,22 @@ const shapeScatterSeriesData = (args: {data: Record<string, any>[]; groupBy: str
             acc[seriesName] = [];
         }
 
-        acc[seriesName].push({
-            x: d[map.x],
-            y: d[map.y],
-            radius: random(3, 6),
-        });
+        const categoriesType = map.categoriesType as 'x' | 'y' | 'none' | undefined;
+        const isCategorical = categoriesType === 'x' || categoriesType === 'y';
 
-        const dataItem = acc[seriesName][acc[seriesName].length - 1];
-
-        if (map.category && dataItem) {
-            // @ts-expect-error
-            dataItem[map.categoriesType] = d[map.category];
+        if (isCategorical && map.category) {
+            acc[seriesName].push({
+                x: d[map.x],
+                y: d[map.y],
+                radius: random(3, 6),
+                [map.categoriesType]: d[map.category],
+            });
+        } else if (!isCategorical) {
+            acc[seriesName].push({
+                x: d[map.x],
+                y: d[map.y],
+                radius: random(3, 6),
+            });
         }
 
         return acc;

@@ -8,7 +8,7 @@ import {block} from '../../../../../utils/cn';
 
 import {getDataCategoryValue} from '../../utils';
 import type {ChartScale} from '../useAxisScales';
-import type {ChartOptions, PreparedAxis} from '../useChartOptions/types';
+import type {PreparedAxis} from '../useChartOptions/types';
 import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 
 type ScatterSeriesShapeProps = {
@@ -27,54 +27,11 @@ type ScatterSeriesShapeProps = {
 const b = block('d3-scatter');
 const DEFAULT_SCATTER_POINT_RADIUS = 4;
 
-const prepareCategoricalScatterData = (args: {
-    data: ScatterSeriesData[];
-    xAxis: PreparedAxis;
-    yAxis: PreparedAxis;
-}) => {
-    const {data, xAxis, yAxis} = args;
-    const isXCategorical = xAxis.type === 'category';
-    const isYCategorical = yAxis.type === 'category';
-    const xCategories = get(xAxis, 'categories', [] as string[]);
-    const yCategories = get(yAxis, 'categories', [] as string[]);
-
-    return data.filter((d) => {
-        const xCategory =
-            isXCategorical &&
-            getDataCategoryValue({
-                axisType: 'x',
-                categories: xCategories,
-                data: d,
-            });
-        const yCategory =
-            isYCategorical &&
-            getDataCategoryValue({
-                axisType: 'y',
-                categories: yCategories,
-                data: d,
-            });
-
-        if (isXCategorical && isYCategorical) {
-            return typeof xCategory === 'string' && typeof yCategory === 'string';
-        }
-
-        if (isYCategorical) {
-            return typeof yCategory === 'string';
-        }
-
-        return typeof xCategory === 'string';
-    });
-};
-
 const prepareLinearScatterData = (data: ScatterSeriesData[]) => {
     return data.filter((d) => typeof d.x === 'number' && typeof d.y === 'number');
 };
 
-const getCxAttr = (args: {
-    point: ScatterSeriesData;
-    xAxis: ChartOptions['xAxis'];
-    xScale: ChartScale;
-}) => {
+const getCxAttr = (args: {point: ScatterSeriesData; xAxis: PreparedAxis; xScale: ChartScale}) => {
     const {point, xAxis, xScale} = args;
 
     let cx: number;
@@ -82,7 +39,7 @@ const getCxAttr = (args: {
     if (xAxis.type === 'category') {
         const xBandScale = xScale as ScaleBand<string>;
         const categories = get(xAxis, 'categories', [] as string[]);
-        const dataCategory = getDataCategoryValue({axisType: 'x', categories, data: point});
+        const dataCategory = getDataCategoryValue({axisDirection: 'x', categories, data: point});
         cx = (xBandScale(dataCategory) || 0) + xBandScale.step() / 2;
     } else {
         const xLinearScale = xScale as ScaleLinear<number, number> | ScaleTime<number, number>;
@@ -92,19 +49,15 @@ const getCxAttr = (args: {
     return cx;
 };
 
-const getCyAttr = (args: {
-    point: ScatterSeriesData;
-    yAxis: ChartOptions['yAxis'];
-    yScale: ChartScale;
-}) => {
+const getCyAttr = (args: {point: ScatterSeriesData; yAxis: PreparedAxis; yScale: ChartScale}) => {
     const {point, yAxis, yScale} = args;
 
     let cy: number;
 
-    if (yAxis[0].type === 'category') {
+    if (yAxis.type === 'category') {
         const yBandScale = yScale as ScaleBand<string>;
         const categories = get(yAxis, 'categories', [] as string[]);
-        const dataCategory = getDataCategoryValue({axisType: 'y', categories, data: point});
+        const dataCategory = getDataCategoryValue({axisDirection: 'y', categories, data: point});
         cy = (yBandScale(dataCategory) || 0) + yBandScale.step() / 2;
     } else {
         const yLinearScale = yScale as ScaleLinear<number, number> | ScaleTime<number, number>;
@@ -138,7 +91,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         svgElement.selectAll('*').remove();
         const preparedData =
             xAxis.type === 'category' || yAxis[0]?.type === 'category'
-                ? prepareCategoricalScatterData({data: series.data, xAxis, yAxis: yAxis[0]})
+                ? series.data
                 : prepareLinearScatterData(series.data);
 
         svgElement
@@ -150,7 +103,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
             .attr('fill', (d) => d.color || series.color || '')
             .attr('r', (d) => d.radius || DEFAULT_SCATTER_POINT_RADIUS)
             .attr('cx', (d) => getCxAttr({point: d, xAxis, xScale}))
-            .attr('cy', (d) => getCyAttr({point: d, yAxis, yScale}))
+            .attr('cy', (d) => getCyAttr({point: d, yAxis: yAxis[0], yScale}))
             .on('mousemove', (e, d) => {
                 const [x, y] = pointer(e, svgContainer);
                 onSeriesMouseMove?.({
