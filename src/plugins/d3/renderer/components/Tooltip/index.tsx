@@ -1,4 +1,5 @@
 import React from 'react';
+import isNil from 'lodash/isNil';
 
 import type {TooltipHoveredData} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
@@ -46,13 +47,17 @@ export const Tooltip = (props: TooltipProps) => {
         return undefined;
     }, [hovered, pointerPosition, size]);
     const content = React.useMemo(() => {
-        if (tooltip.renderer && hovered) {
-            return tooltip.renderer({hovered});
-        } else if (hovered) {
-            return <DefaultContent hovered={hovered} xAxis={xAxis} yAxis={yAxis} />;
+        if (!hovered) {
+            return null;
         }
 
-        return null;
+        const customTooltip = tooltip.renderer?.({hovered});
+
+        return isNil(customTooltip) ? (
+            <DefaultContent hovered={hovered} xAxis={xAxis} yAxis={yAxis} />
+        ) : (
+            customTooltip
+        );
     }, [hovered, tooltip, xAxis, yAxis]);
 
     if (!position || !hovered) {

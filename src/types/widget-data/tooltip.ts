@@ -7,5 +7,6 @@ export type TooltipHoveredData<T = any> = {
 
 export type ChartKitWidgetTooltip<T = any> = {
     enabled?: boolean;
+    /** Specifies the renderer for the tooltip. If returned null default tooltip renderer will be used. */
     renderer?: (data: {hovered: TooltipHoveredData<T>}) => React.ReactElement;
 };
