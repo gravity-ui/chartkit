@@ -20,16 +20,15 @@
 
 ### Features
 
-* add color property to scatter and bar data ([3bad0cf](https://github.com/gravity-ui/chartkit/commit/3bad0cfa571cdb56bf3b5eef73351ed3b6ceae62))
 * **D3 plugin:** add color property to scatter and bar data ([#265](https://github.com/gravity-ui/chartkit/issues/265)) ([3bad0cf](https://github.com/gravity-ui/chartkit/commit/3bad0cfa571cdb56bf3b5eef73351ed3b6ceae62))
+* update yagr to 3.7.13 ([#274](https://github.com/gravity-ui/chartkit/issues/274)) ([7b2bb4d](https://github.com/gravity-ui/chartkit/commit/7b2bb4d0b56495feafcef8d63a32adeb3cf3372d))
 
 
 ### Bug Fixes
 
-* **3 plugin:** fix chart.margin calculation ([#270](https://github.com/gravity-ui/chartkit/issues/270)) ([cc44cd0](https://github.com/gravity-ui/chartkit/commit/cc44cd0a9cead0a012ccc40d32bb2ca5b2e32105))
+* **D3 plugin:** fix chart.margin calculation ([#270](https://github.com/gravity-ui/chartkit/issues/270)) ([cc44cd0](https://github.com/gravity-ui/chartkit/commit/cc44cd0a9cead0a012ccc40d32bb2ca5b2e32105))
 * **D3 plugin:** fix resizing of several charts ([#266](https://github.com/gravity-ui/chartkit/issues/266)) ([380204e](https://github.com/gravity-ui/chartkit/commit/380204e7c1405869c8aae2c84965811ea8c5c5fb))
-* updated yagr to 3.7.12 ([#271](https://github.com/gravity-ui/chartkit/issues/271)) ([597a87c](https://github.com/gravity-ui/chartkit/commit/597a87c7430f4fbd044543876b82acd2ba93df16))
-* updated yagr to 3.7.13 ([#274](https://github.com/gravity-ui/chartkit/issues/274)) ([7b2bb4d](https://github.com/gravity-ui/chartkit/commit/7b2bb4d0b56495feafcef8d63a32adeb3cf3372d))
+
 
 ## [4.0.0](https://github.com/gravity-ui/chartkit/compare/v3.7.0...v4.0.0) (2023-08-31)
 
