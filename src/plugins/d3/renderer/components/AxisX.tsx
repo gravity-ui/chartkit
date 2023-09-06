@@ -3,14 +3,15 @@ import {axisBottom, select} from 'd3';
 import type {AxisScale, AxisDomain, Selection} from 'd3';
 
 import {block} from '../../../../utils/cn';
-import type {ChartOptions, ChartScale} from '../hooks';
+
+import type {ChartScale, PreparedAxis} from '../hooks';
 import {formatAxisTickLabel, parseTransformStyle} from '../utils';
 
 const b = block('d3-axis');
 const EMPTY_SPACE_BETWEEN_LABELS = 10;
 
 type Props = {
-    axis: ChartOptions['xAxis'];
+    axis: PreparedAxis;
     width: number;
     height: number;
     scale: ChartScale;
@@ -70,7 +71,10 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
         }
 
         svgElement.call(xAxisGenerator).attr('class', b());
-        svgElement.select('.domain').attr('d', `M0,0V0H${width}`);
+        svgElement
+            .select('.domain')
+            .attr('d', `M0,0V0H${width}`)
+            .style('stroke', axis.lineColor || '');
 
         if (axis.labels.enabled) {
             svgElement.selectAll('.tick text').style('font-size', axis.labels.style.fontSize);
