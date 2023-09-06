@@ -19,13 +19,13 @@ const Template: Story = () => {
                     visible: true,
                     data: [
                         {
-                            category: 'A',
                             label: 10,
+                            x: 'A',
                             y: 100,
                         },
                         {
-                            category: 'B',
                             label: 12,
+                            x: 'B',
                             y: 80,
                         },
                     ],
@@ -39,8 +39,7 @@ const Template: Story = () => {
                     visible: true,
                     data: [
                         {
-                            category: 'C',
-                            x: 95.5,
+                            x: 'C',
                             y: 120,
                         },
                     ],

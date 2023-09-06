@@ -6,11 +6,13 @@ import get from 'lodash/get';
 import type {ChartOptions} from '../useChartOptions/types';
 import {
     getOnlyVisibleSeries,
+    getDataCategoryValue,
     getDomainDataYBySeries,
-    isAxisRelatedSeries,
     getDomainDataXBySeries,
+    isAxisRelatedSeries,
     isSeriesWithCategoryValues,
 } from '../../utils';
+import type {AxisDirection} from '../../utils';
 import {PreparedSeries} from '../useSeries/types';
 
 export type ChartScale =
@@ -35,10 +37,22 @@ const isNumericalArrayData = (data: unknown[]): data is number[] => {
     return data.every((d) => typeof d === 'number' || d === null);
 };
 
-const filterCategoriesByVisibleSeries = (categories: string[], series: PreparedSeries[]) => {
+const filterCategoriesByVisibleSeries = (args: {
+    axisDirection: AxisDirection;
+    categories: string[];
+    series: PreparedSeries[];
+}) => {
+    const {axisDirection, categories, series} = args;
+
     return categories.filter((category) => {
         return series.some((s) => {
-            return isSeriesWithCategoryValues(s) && s.data.some((d) => d.category === category);
+            return (
+                isSeriesWithCategoryValues(s) &&
+                s.data.some((d) => {
+                    const dataCategory = getDataCategoryValue({axisDirection, categories, data: d});
+                    return dataCategory === category;
+                })
+            );
         });
     });
 };
@@ -75,10 +89,11 @@ const createScales = (args: Args) => {
         }
         case 'category': {
             if (xCategories) {
-                const filteredCategories = filterCategoriesByVisibleSeries(
-                    xCategories,
-                    visibleSeries,
-                );
+                const filteredCategories = filterCategoriesByVisibleSeries({
+                    axisDirection: 'x',
+                    categories: xCategories,
+                    series: visibleSeries,
+                });
                 xScale = scaleBand().domain(filteredCategories).range([0, boundsWidth]);
             }
 
@@ -122,10 +137,11 @@ const createScales = (args: Args) => {
         }
         case 'category': {
             if (yCategories) {
-                const filteredCategories = filterCategoriesByVisibleSeries(
-                    yCategories,
-                    visibleSeries,
-                );
+                const filteredCategories = filterCategoriesByVisibleSeries({
+                    axisDirection: 'y',
+                    categories: yCategories,
+                    series: visibleSeries,
+                });
                 yScale = scaleBand().domain(filteredCategories).range([boundsHeight, 0]);
             }
 

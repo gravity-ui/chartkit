@@ -29,12 +29,23 @@ const shapeScatterSeriesData = (args: {data: Record<string, any>[]; groupBy: str
             acc[seriesName] = [];
         }
 
-        acc[seriesName].push({
-            x: d[map.x],
-            y: d[map.y],
-            radius: random(3, 6),
-            ...(map.category && {category: d[map.category]}),
-        });
+        const categoriesType = map.categoriesType as 'x' | 'y' | 'none' | undefined;
+        const isCategorical = categoriesType === 'x' || categoriesType === 'y';
+
+        if (isCategorical && map.category) {
+            acc[seriesName].push({
+                x: d[map.x],
+                y: d[map.y],
+                radius: random(3, 6),
+                [map.categoriesType]: d[map.category],
+            });
+        } else if (!isCategorical) {
+            acc[seriesName].push({
+                x: d[map.x],
+                y: d[map.y],
+                radius: random(3, 6),
+            });
+        }
 
         return acc;
     }, {});
@@ -133,7 +144,7 @@ const Template: Story = () => {
     const shapedScatterSeriesData = shapeScatterSeriesData({
         data: penguins,
         groupBy,
-        map: {x, y, category},
+        map: {x, y, category, categoriesType},
     });
     const shapedScatterSeries = shapeScatterSeries(shapedScatterSeriesData);
     const data = shapeScatterChartData(shapedScatterSeries, categoriesType, categories);
