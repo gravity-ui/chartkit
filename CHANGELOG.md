@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.3.0](https://github.com/gravity-ui/chartkit/compare/v4.2.0...v4.3.0) (2023-09-06)
+
+
+### Features
+
+* **D3 plugin:** add `axis.lineColor` property & add default for users tooltip renderer ([#277](https://github.com/gravity-ui/chartkit/issues/277)) ([be22ea4](https://github.com/gravity-ui/chartkit/commit/be22ea4bc348c9215dc2003c491eb7e61d76d06f))
+
 ## [4.2.0](https://github.com/gravity-ui/chartkit/compare/v4.1.0...v4.2.0) (2023-09-06)
 
 
