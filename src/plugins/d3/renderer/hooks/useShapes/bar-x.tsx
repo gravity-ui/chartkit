@@ -162,6 +162,7 @@ export function BarXSeriesShapes(args: Args) {
         top,
         left,
         series,
+        seriesOptions,
         xAxis,
         xScale,
         yAxis,
@@ -183,6 +184,7 @@ export function BarXSeriesShapes(args: Args) {
 
         const shapes = prepareData({
             series,
+            seriesOptions,
             xAxis,
             xScale,
             yAxis,
