@@ -1,4 +1,4 @@
-import {max, pointer, select} from 'd3';
+import {ascending, descending, max, pointer, select, sort} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import React from 'react';
 import get from 'lodash/get';
@@ -60,6 +60,22 @@ function prepareData(args: {
     const barMaxWidth = get(seriesOptions, 'bar-x.barMaxWidth', defaultBarMaxWidth);
     const barPadding = get(seriesOptions, 'bar-x.barPadding', defaultBarPadding);
     const groupPadding = get(seriesOptions, 'bar-x.groupPadding', defaultGroupPadding);
+
+    const sortingOptions = get(seriesOptions, 'bar-x.dataSorting');
+    const comparator = sortingOptions?.direction === 'desc' ? descending : ascending;
+    const sortKey = (() => {
+        switch (sortingOptions?.key) {
+            case 'y': {
+                return 'data.y';
+            }
+            case 'name': {
+                return 'series.name';
+            }
+            default: {
+                return undefined;
+            }
+        }
+    })();
 
     const data: Record<
         string | number,
@@ -123,7 +139,11 @@ function prepareData(args: {
         const currentGroupWidth = rectWidth * stacks.length + rectGap * (stacks.length - 1);
         stacks.forEach((yValues, groupItemIndex) => {
             let stackHeight = 0;
-            yValues.forEach((yValue) => {
+
+            const sortedData = sortKey
+                ? sort(yValues, (a, b) => comparator(get(a, sortKey), get(b, sortKey)))
+                : yValues;
+            sortedData.forEach((yValue) => {
                 let xCenter;
                 if (xAxis.type === 'category') {
                     const xBandScale = xScale as ScaleBand<string>;
