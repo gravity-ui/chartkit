@@ -44,5 +44,20 @@ export type ChartKitWidgetSeriesOptions = {
          * @default 0.2
          */
         groupPadding?: number;
+
+        dataSorting?: {
+            /** Determines what data value should be used to sort by.
+             * Possible values are undefined to disable, "name" to sort by series name or "y"
+             *
+             * @default undefined
+             * */
+            key?: 'name' | 'y' | undefined;
+
+            /** Sorting direction.
+             *
+             * @default 'asc'
+             * */
+            direction?: 'asc' | 'desc';
+        };
     };
 };
