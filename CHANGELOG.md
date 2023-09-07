@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.4.0](https://github.com/gravity-ui/chartkit/compare/v4.3.0...v4.4.0) (2023-09-07)
+
+
+### Features
+
+* **D3 plugin:** add bar-x sorting setting ([#282](https://github.com/gravity-ui/chartkit/issues/282)) ([446b374](https://github.com/gravity-ui/chartkit/commit/446b37405cc34f2a7b8e69b773f3d148678f3a56))
+* **D3 plugin:** bar-x series options ([#280](https://github.com/gravity-ui/chartkit/issues/280)) ([637a64e](https://github.com/gravity-ui/chartkit/commit/637a64eaba65923d0457770107d76ce70bccc959))
+
 ## [4.3.0](https://github.com/gravity-ui/chartkit/compare/v4.2.0...v4.3.0) (2023-09-06)
 
 
