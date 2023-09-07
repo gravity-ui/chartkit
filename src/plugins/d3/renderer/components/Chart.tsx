@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type {ChartKitWidgetData} from '../../../../types/widget-data';
+import type {ChartKitWidgetData} from '../../../../types';
 import {block} from '../../../../utils/cn';
 
 import {AxisY} from './AxisY';
@@ -59,6 +59,7 @@ export const Chart = (props: Props) => {
         boundsWidth,
         boundsHeight,
         series: preparedSeries,
+        seriesOptions: data.series.options,
         xAxis,
         xScale,
         yAxis,

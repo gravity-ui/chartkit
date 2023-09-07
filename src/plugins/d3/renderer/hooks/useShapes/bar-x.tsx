@@ -3,7 +3,7 @@ import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import React from 'react';
 import get from 'lodash/get';
 
-import type {BarXSeriesData} from '../../../../../types';
+import type {BarXSeriesData, ChartKitWidgetSeriesOptions} from '../../../../../types';
 import {block} from '../../../../../utils/cn';
 
 import {getDataCategoryValue} from '../../utils';
@@ -11,11 +11,9 @@ import type {ChartScale} from '../useAxisScales';
 import type {ChartOptions} from '../useChartOptions/types';
 import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import type {PreparedBarXSeries} from '../useSeries/types';
+import {DEFAULT_BAR_X_SERIES_OPTIONS} from './defaults';
 
-const RECT_PADDING = 0.1;
 const MIN_RECT_GAP = 1;
-const MAX_RECT_WIDTH = 50;
-const GROUP_PADDING = 0.1;
 const MIN_GROUP_GAP = 1;
 const DEFAULT_LABEL_PADDING = 7;
 
@@ -25,6 +23,7 @@ type Args = {
     top: number;
     left: number;
     series: PreparedBarXSeries[];
+    seriesOptions?: ChartKitWidgetSeriesOptions;
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
@@ -45,13 +44,22 @@ type ShapeData = {
 
 function prepareData(args: {
     series: PreparedBarXSeries[];
+    seriesOptions?: ChartKitWidgetSeriesOptions;
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
     yScale: ChartScale;
 }) {
-    const {series, xAxis, xScale, yScale} = args;
+    const {series, seriesOptions, xAxis, xScale, yScale} = args;
     const categories = get(xAxis, 'categories', [] as string[]);
+    const {
+        barMaxWidth: defaultBarMaxWidth,
+        barPadding: defaultBarPadding,
+        groupPadding: defaultGroupPadding,
+    } = DEFAULT_BAR_X_SERIES_OPTIONS;
+    const barMaxWidth = get(seriesOptions, 'bar-x.barMaxWidth', defaultBarMaxWidth);
+    const barPadding = get(seriesOptions, 'bar-x.barPadding', defaultBarPadding);
+    const groupPadding = get(seriesOptions, 'bar-x.groupPadding', defaultGroupPadding);
 
     const data: Record<
         string | number,
@@ -103,10 +111,10 @@ function prepareData(args: {
     }
 
     const maxGroupSize = max(Object.values(data), (d) => Object.values(d).length) || 1;
-    const groupGap = Math.max(bandWidth * GROUP_PADDING, MIN_GROUP_GAP);
-    const maxGroupWidth = bandWidth - groupGap;
-    const rectGap = Math.max((maxGroupWidth / maxGroupSize) * RECT_PADDING, MIN_RECT_GAP);
-    const rectWidth = Math.min(maxGroupWidth / maxGroupSize - rectGap, MAX_RECT_WIDTH);
+    const groupGap = Math.max(bandWidth * groupPadding, MIN_GROUP_GAP);
+    const groupWidth = bandWidth - groupGap;
+    const rectGap = Math.max(bandWidth * barPadding, MIN_RECT_GAP);
+    const rectWidth = Math.min(groupWidth / maxGroupSize - rectGap, barMaxWidth);
 
     const result: ShapeData[] = [];
 
