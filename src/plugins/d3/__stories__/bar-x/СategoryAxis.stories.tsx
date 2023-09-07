@@ -13,6 +13,11 @@ const Template: Story = () => {
     const chartkitRef = React.useRef<ChartKitRef>();
     const data: ChartKitWidgetData = {
         series: {
+            options: {
+                'bar-x': {
+                    barMaxWidth: 10,
+                },
+            },
             data: [
                 {
                     type: 'bar-x',

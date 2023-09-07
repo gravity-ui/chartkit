@@ -1,7 +1,7 @@
 import React from 'react';
 import {group} from 'd3';
 
-import type {ScatterSeries} from '../../../../../types/widget-data';
+import type {ChartKitWidgetSeriesOptions, ScatterSeries} from '../../../../../types';
 import {getRandomCKId} from '../../../../../utils';
 
 import {getOnlyVisibleSeries} from '../../utils';
@@ -21,6 +21,7 @@ type Args = {
     boundsWidth: number;
     boundsHeight: number;
     series: PreparedSeries[];
+    seriesOptions?: ChartKitWidgetSeriesOptions;
     xAxis: ChartOptions['xAxis'];
     yAxis: ChartOptions['yAxis'];
     svgContainer: SVGSVGElement | null;
@@ -37,6 +38,7 @@ export const useShapes = (args: Args) => {
         boundsWidth,
         boundsHeight,
         series,
+        seriesOptions,
         xAxis,
         xScale,
         yAxis,
@@ -59,6 +61,7 @@ export const useShapes = (args: Args) => {
                             <BarXSeriesShapes
                                 key="bar-x"
                                 series={chartSeries as PreparedBarXSeries[]}
+                                seriesOptions={seriesOptions}
                                 xAxis={xAxis}
                                 xScale={xScale}
                                 yAxis={yAxis}

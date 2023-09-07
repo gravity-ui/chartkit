@@ -24,4 +24,25 @@ export type ChartKitWidgetSeriesOptions = {
         /** Callback function to render the data label */
         renderer?: (args: DataLabelRendererData) => React.SVGTextElementAttributes<SVGTextElement>;
     };
+
+    'bar-x'?: {
+        /** The maximum allowed pixel width for a column.
+         * This prevents the columns from becoming too wide when there is a small number of points in the chart.
+         *
+         * @default 50
+         */
+        barMaxWidth?: number;
+
+        /** Padding between each column or bar, in x axis units.
+         *
+         * @default 0.1
+         * */
+        barPadding?: number;
+
+        /** Padding between each value groups, in x axis units
+         *
+         * @default 0.2
+         */
+        groupPadding?: number;
+    };
 };
