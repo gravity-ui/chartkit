@@ -231,11 +231,5 @@ export const getDataCategoryValue = (args: {
     const {axisDirection, categories, data} = args;
     const categoryValue = extractCategoryValue({axisDirection, categories, data});
 
-    if (!categories.includes(categoryValue)) {
-        throw new Error(
-            'It seems you are trying to use category value that is not in categories array',
-        );
-    }
-
     return categoryValue;
 };
