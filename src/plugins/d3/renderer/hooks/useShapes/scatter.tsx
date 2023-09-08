@@ -88,18 +88,19 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         }
 
         const svgElement = select(ref.current);
-        svgElement.selectAll('*').remove();
         const preparedData =
             xAxis.type === 'category' || yAxis[0]?.type === 'category'
                 ? series.data
                 : prepareLinearScatterData(series.data);
 
         svgElement
-            .selectAll('allPoints')
+            .selectAll('circle')
             .data(preparedData)
-            .enter()
-            .append('circle')
-            .attr('class', b('point'))
+            .join(
+                (enter) => enter.append('circle').attr('class', b('point')),
+                (update) => update,
+                (exit) => exit.remove(),
+            )
             .attr('fill', (d) => d.color || series.color || '')
             .attr('r', (d) => d.radius || DEFAULT_SCATTER_POINT_RADIUS)
             .attr('cx', (d) => getCxAttr({point: d, xAxis, xScale}))

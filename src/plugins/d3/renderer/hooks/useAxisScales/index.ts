@@ -44,17 +44,16 @@ const filterCategoriesByVisibleSeries = (args: {
 }) => {
     const {axisDirection, categories, series} = args;
 
-    return categories.filter((category) => {
-        return series.some((s) => {
-            return (
-                isSeriesWithCategoryValues(s) &&
-                s.data.some((d) => {
-                    const dataCategory = getDataCategoryValue({axisDirection, categories, data: d});
-                    return dataCategory === category;
-                })
-            );
-        });
+    const visibleCategories = new Set();
+    series.forEach((s) => {
+        if (isSeriesWithCategoryValues(s)) {
+            s.data.forEach((d) => {
+                visibleCategories.add(getDataCategoryValue({axisDirection, categories, data: d}));
+            });
+        }
     });
+
+    return categories.filter((c) => visibleCategories.has(c));
 };
 
 const createScales = (args: Args) => {
