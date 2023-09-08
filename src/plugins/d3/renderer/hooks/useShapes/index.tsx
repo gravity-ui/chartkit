@@ -2,7 +2,6 @@ import React from 'react';
 import {group} from 'd3';
 
 import type {ChartKitWidgetSeriesOptions, ScatterSeries} from '../../../../../types';
-import {getRandomCKId} from '../../../../../utils';
 
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
@@ -79,10 +78,9 @@ export const useShapes = (args: Args) => {
                 case 'scatter': {
                     if (xScale && yScale) {
                         const scatterShapes = chartSeries.map((scatterSeries, i) => {
-                            const id = getRandomCKId();
                             return (
                                 <ScatterSeriesShape
-                                    key={`${i}-${id}`}
+                                    key={i}
                                     top={top}
                                     left={left}
                                     series={scatterSeries as ScatterSeries}
