@@ -99,6 +99,8 @@ export const Chart = (props: Props) => {
                                     width={boundsWidth}
                                     height={boundsHeight}
                                     scale={xScale}
+                                    chart={chart}
+                                    position={{top, left}}
                                 />
                             </g>
                         </React.Fragment>

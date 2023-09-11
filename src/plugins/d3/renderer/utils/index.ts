@@ -16,6 +16,7 @@ import type {FormatNumberOptions} from '../../../shared';
 import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
 
 export * from './math';
+export * from './text';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie'];
 
