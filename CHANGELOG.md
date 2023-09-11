@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.4.1](https://github.com/gravity-ui/chartkit/compare/v4.4.0...v4.4.1) (2023-09-11)
+
+
+### Bug Fixes
+
+* **D3 plugin:** fix AxisX render performance ([#285](https://github.com/gravity-ui/chartkit/issues/285)) ([0f31885](https://github.com/gravity-ui/chartkit/commit/0f3188561d88dee70e2fbc7a2a269215a7dff8a6))
+* **D3 plugin:** fix getDataCategoryValue performance ([#283](https://github.com/gravity-ui/chartkit/issues/283)) ([2f52c61](https://github.com/gravity-ui/chartkit/commit/2f52c619917cd207ccf99fc300790f7a6f420638))
+
 ## [4.4.0](https://github.com/gravity-ui/chartkit/compare/v4.3.0...v4.4.0) (2023-09-07)
 
 
