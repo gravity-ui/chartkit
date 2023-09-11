@@ -87,7 +87,6 @@ export const AxisX = ({axis, width, height, scale, chart, position}: Props) => {
             .remove();
 
         // add an ellipsis to the labels on the right that go beyond the boundaries of the chart
-        // const axisRect = (domain.node() as Element)?.getBoundingClientRect();
         const rightBound = position.left + chart.margin.left + width + chart.margin.right;
 
         svgElement.selectAll('.tick text').each(function () {
@@ -100,6 +99,7 @@ export const AxisX = ({axis, width, height, scale, chart, position}: Props) => {
             }
         });
 
+        // add an axis header if necessary
         if (axis.title.text) {
             const textY =
                 axis.title.height + parseInt(axis.labels.style.fontSize) + axis.labels.padding;
@@ -115,5 +115,5 @@ export const AxisX = ({axis, width, height, scale, chart, position}: Props) => {
         }
     }, [axis, width, height, scale]);
 
-    return <g ref={ref} x={0} />;
+    return <g ref={ref} />;
 };
