@@ -1,6 +1,6 @@
 import React from 'react';
 import {axisBottom, select} from 'd3';
-import type {AxisScale, AxisDomain, Selection} from 'd3';
+import type {AxisScale, AxisDomain} from 'd3';
 
 import {block} from '../../../../utils/cn';
 
@@ -15,26 +15,6 @@ type Props = {
     width: number;
     height: number;
     scale: ChartScale;
-};
-
-// Note: this method do not prepared for rotated labels
-const removeOverlappingXTicks = (axis: Selection<SVGGElement, unknown, null, undefined>) => {
-    const a = axis.selectAll('g.tick').nodes();
-
-    if (a.length <= 1) {
-        return;
-    }
-
-    for (let i = 0, x = 0; i < a.length; i++) {
-        const node = a[i] as Element;
-        const r = node.getBoundingClientRect();
-
-        if (r.left < x) {
-            node?.parentNode?.removeChild(node);
-        } else {
-            x = r.right + EMPTY_SPACE_BETWEEN_LABELS;
-        }
-    }
 };
 
 // FIXME: add overflow ellipsis for the labels that out of boundaries
@@ -102,7 +82,20 @@ export const AxisX = ({axis, width, height, scale}: Props) => {
                 .text(axis.title.text);
         }
 
-        removeOverlappingXTicks(svgElement);
+        let elementX = 0;
+        svgElement
+            .selectAll('.tick')
+            .filter(function () {
+                const node = this as unknown as Element;
+                const r = node.getBoundingClientRect();
+
+                if (r.left < elementX) {
+                    return true;
+                }
+                elementX = r.right + EMPTY_SPACE_BETWEEN_LABELS;
+                return false;
+            })
+            .remove();
     }, [axis, width, height, scale]);
 
     return <g ref={ref} />;
