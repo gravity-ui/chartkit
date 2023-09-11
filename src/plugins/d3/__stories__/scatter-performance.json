@@ -32636,7 +32636,8 @@
               "yLabel": "109 300"
             },
             "category": "Mbour",
-            "y": 109300
+            "y": 109300,
+            "radius": 10
           }
         ],
         "custom": {

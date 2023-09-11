@@ -73,15 +73,17 @@ const createScales = (args: Args) => {
     let xScale: ChartScale | undefined;
     let yScale: ChartScale | undefined;
 
+    const xAxisMinPadding = boundsWidth * xAxis.maxPadding;
+    const xRange = [0, boundsWidth - xAxisMinPadding];
+
     switch (xType) {
         case 'linear': {
             const domain = getDomainDataXBySeries(visibleSeries);
-            const range = [0, boundsWidth - boundsWidth * xAxis.maxPadding];
 
             if (isNumericalArrayData(domain)) {
                 const [domainXMin, xMax] = extent(domain) as [number, number];
                 const xMinValue = typeof xMin === 'number' ? xMin : domainXMin;
-                xScale = scaleLinear().domain([xMinValue, xMax]).range(range).nice();
+                xScale = scaleLinear().domain([xMinValue, xMax]).range(xRange).nice();
             }
 
             break;
@@ -94,22 +96,24 @@ const createScales = (args: Args) => {
                     series: visibleSeries,
                 });
                 xScale = scaleBand().domain(filteredCategories).range([0, boundsWidth]);
+
+                if (xScale.step() / 2 < xAxisMinPadding) {
+                    xScale.range(xRange);
+                }
             }
 
             break;
         }
         case 'datetime': {
-            const range = [0, boundsWidth - boundsWidth * xAxis.maxPadding];
-
             if (xTimestamps) {
                 const [xMin, xMax] = extent(xTimestamps) as [number, number];
-                xScale = scaleUtc().domain([xMin, xMax]).range(range).nice();
+                xScale = scaleUtc().domain([xMin, xMax]).range(xRange).nice();
             } else {
                 const domain = getDomainDataXBySeries(visibleSeries);
 
                 if (isNumericalArrayData(domain)) {
                     const [xMin, xMax] = extent(domain) as [number, number];
-                    xScale = scaleUtc().domain([xMin, xMax]).range(range).nice();
+                    xScale = scaleUtc().domain([xMin, xMax]).range(xRange).nice();
                 }
             }
 
