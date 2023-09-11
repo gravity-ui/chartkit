@@ -130,14 +130,9 @@ const getMarginRight = (args: {
     series: ChartKitWidgetData['series'];
     preparedXAxis: PreparedAxis;
 }) => {
-    const {chart, hasAxisRelatedSeries, series, preparedXAxis} = args;
-    let marginRight = get(chart, 'margin.right', 0);
+    const {chart} = args;
 
-    if (hasAxisRelatedSeries) {
-        marginRight += getAxisLabelMaxWidth({axis: preparedXAxis, series: series.data}) / 2;
-    }
-
-    return marginRight;
+    return get(chart, 'margin.right', 0);
 };
 
 export const getPreparedChart = (args: {
