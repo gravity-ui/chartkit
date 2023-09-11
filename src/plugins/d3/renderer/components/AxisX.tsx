@@ -4,8 +4,8 @@ import type {AxisScale, AxisDomain} from 'd3';
 
 import {block} from '../../../../utils/cn';
 
-import type {ChartScale, PreparedAxis, PreparedChart} from '../hooks';
-import {formatAxisTickLabel, parseTransformStyle, wrapText} from '../utils';
+import type {ChartScale, PreparedAxis} from '../hooks';
+import {formatAxisTickLabel, parseTransformStyle, setEllipsisForOverflowText} from '../utils';
 
 const b = block('d3-axis');
 const EMPTY_SPACE_BETWEEN_LABELS = 10;
@@ -15,12 +15,11 @@ type Props = {
     width: number;
     height: number;
     scale: ChartScale;
-    chart: PreparedChart;
-    position: {top: number; left: number};
+    chartWidth: number;
 };
 
 // FIXME: add overflow ellipsis for the labels that out of boundaries
-export const AxisX = ({axis, width, height, scale, chart, position}: Props) => {
+export const AxisX = ({axis, width, height, scale, chartWidth}: Props) => {
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -87,15 +86,13 @@ export const AxisX = ({axis, width, height, scale, chart, position}: Props) => {
             .remove();
 
         // add an ellipsis to the labels on the right that go beyond the boundaries of the chart
-        const rightBound = position.left + chart.margin.left + width + chart.margin.right;
-
         svgElement.selectAll('.tick text').each(function () {
             const node = this as unknown as SVGTextElement;
             const textRect = node.getBoundingClientRect();
 
-            if (textRect.right > rightBound) {
-                const maxWidth = textRect.width - (textRect.right - rightBound) * 2;
-                select(node).call(wrapText, maxWidth);
+            if (textRect.right > chartWidth) {
+                const maxWidth = textRect.width - (textRect.right - chartWidth) * 2;
+                select(node).call(setEllipsisForOverflowText, maxWidth);
             }
         });
 
@@ -111,7 +108,8 @@ export const AxisX = ({axis, width, height, scale, chart, position}: Props) => {
                 .attr('x', width / 2)
                 .attr('y', textY)
                 .attr('font-size', axis.title.style.fontSize)
-                .text(axis.title.text);
+                .text(axis.title.text)
+                .call(setEllipsisForOverflowText, width);
         }
     }, [axis, width, height, scale]);
 

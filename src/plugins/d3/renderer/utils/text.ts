@@ -1,6 +1,6 @@
 import {Selection} from 'd3-selection';
 
-export function wrapText(
+export function setEllipsisForOverflowText(
     selection: Selection<SVGTextElement, any, null, undefined>,
     maxWidth: number,
 ) {
@@ -11,7 +11,7 @@ export function wrapText(
     let textLength = tSpan.node()?.getComputedTextLength() || 0;
     while (textLength > maxWidth && text.length > 1) {
         text = text.slice(0, -1);
-        tSpan.text(text + '...');
+        tSpan.text(text + '…');
         textLength = tSpan.node()?.getComputedTextLength() || 0;
     }
 }
