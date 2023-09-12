@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.5.0](https://github.com/gravity-ui/chartkit/compare/v4.4.1...v4.5.0) (2023-09-12)
+
+
+### Features
+
+* updated yagr to 3.8.0 ([#288](https://github.com/gravity-ui/chartkit/issues/288)) ([6d851ca](https://github.com/gravity-ui/chartkit/commit/6d851ca7832362e8efbd34e6ba3745d87aceeead))
+
+
+### Bug Fixes
+
+* **D3 plugin:** fix right chart margin ([#286](https://github.com/gravity-ui/chartkit/issues/286)) ([7d81921](https://github.com/gravity-ui/chartkit/commit/7d81921073682357b622fcadf8c5cb8a667d95ba))
+
 ## [4.4.1](https://github.com/gravity-ui/chartkit/compare/v4.4.0...v4.4.1) (2023-09-11)
 
 
