@@ -2,7 +2,7 @@ import React from 'react';
 import range from 'lodash/range';
 import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
-import {boolean, number} from '@storybook/addon-knobs';
+import {boolean, number, select} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
@@ -31,29 +31,22 @@ const generateSeriesData = (seriesCount = 5): ScatterSeries[] => {
 const shapeData = (): ChartKitWidgetData => {
     return {
         legend: {
-            align: 'left',
+            align: select('Align', ['left', 'right', 'center'], 'left', 'legend'),
+            margin: number('Margin', 15, undefined, 'legend'),
+            itemDistance: number('Item distance', 20, undefined, 'legend'),
         },
         series: {
-            data: generateSeriesData(1000),
+            data: generateSeriesData(number('Amount of series', 100, undefined, 'legend')),
         },
         xAxis: {
-            grid: {
-                enabled: boolean('xAxis.grid.enabled', true),
-            },
             labels: {
-                enabled: boolean('xAxis.labels.enabled', true),
-            },
-            ticks: {
-                pixelInterval: number('xAxis.ticks.pixelInterval', 100),
+                enabled: boolean('Show labels', true, 'xAxis'),
             },
         },
         yAxis: [
             {
-                grid: {
-                    enabled: boolean('yAxis.grid.enabled', true),
-                },
                 labels: {
-                    enabled: boolean('yAxis.labels.enabled', true),
+                    enabled: boolean('Show labels', true, 'yAxis'),
                 },
             },
         ],
