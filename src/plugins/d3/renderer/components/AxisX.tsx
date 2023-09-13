@@ -1,5 +1,5 @@
 import React from 'react';
-import {axisBottom, select} from 'd3';
+import {axisBottom, ScaleLinear, select} from 'd3';
 import type {AxisScale, AxisDomain} from 'd3';
 
 import {block} from '../../../../utils/cn';
@@ -30,6 +30,10 @@ export const AxisX = ({axis, width, height, scale, chartWidth}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
         const tickSize = axis.grid.enabled ? height * -1 : 0;
+        const tickStep =
+            axis.type === 'category'
+                ? undefined
+                : (scale as ScaleLinear<number, number>).ticks()[0];
         let xAxisGenerator = axisBottom(scale as AxisScale<AxisDomain>)
             .tickSize(tickSize)
             .tickPadding(axis.labels.padding)
@@ -43,6 +47,7 @@ export const AxisX = ({axis, width, height, scale, chartWidth}: Props) => {
                     value,
                     dateFormat: axis.labels['dateFormat'],
                     numberFormat: axis.labels['numberFormat'],
+                    step: tickStep,
                 });
             });
 

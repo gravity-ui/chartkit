@@ -3,7 +3,7 @@ import {scaleBand, scaleLinear, scaleUtc, extent} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import type {ChartOptions} from '../useChartOptions/types';
+import type {ChartOptions, PreparedAxis} from '../useChartOptions/types';
 import {
     getOnlyVisibleSeries,
     getDataCategoryValue,
@@ -56,22 +56,70 @@ const filterCategoriesByVisibleSeries = (args: {
     return categories.filter((c) => visibleCategories.has(c));
 };
 
+export function createYScale(axis: PreparedAxis, series: PreparedSeries[], boundsHeight: number) {
+    const yType = get(axis, 'type', 'linear');
+    const yMin = get(axis, 'min');
+    const yCategories = get(axis, 'categories');
+    const yTimestamps = get(axis, 'timestamps');
+
+    switch (yType) {
+        case 'linear': {
+            const domain = getDomainDataYBySeries(series);
+            const range = [boundsHeight, boundsHeight * axis.maxPadding];
+
+            if (isNumericalArrayData(domain)) {
+                const [domainYMin, yMax] = extent(domain) as [number, number];
+                const yMinValue = typeof yMin === 'number' ? yMin : domainYMin;
+                return scaleLinear().domain([yMinValue, yMax]).range(range).nice();
+            }
+
+            break;
+        }
+        case 'category': {
+            if (yCategories) {
+                const filteredCategories = filterCategoriesByVisibleSeries({
+                    axisDirection: 'y',
+                    categories: yCategories,
+                    series: series,
+                });
+                return scaleBand().domain(filteredCategories).range([boundsHeight, 0]);
+            }
+
+            break;
+        }
+        case 'datetime': {
+            const range = [boundsHeight, boundsHeight * axis.maxPadding];
+
+            if (yTimestamps) {
+                const [yMin, yMax] = extent(yTimestamps) as [number, number];
+                return scaleUtc().domain([yMin, yMax]).range(range).nice();
+            } else {
+                const domain = getDomainDataYBySeries(series);
+
+                if (isNumericalArrayData(domain)) {
+                    const [yMin, yMax] = extent(domain) as [number, number];
+                    return scaleUtc().domain([yMin, yMax]).range(range).nice();
+                }
+            }
+
+            break;
+        }
+    }
+
+    throw new Error('Failed to create yScale');
+}
+
 const createScales = (args: Args) => {
     const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
     const xMin = get(xAxis, 'min');
     const xType = get(xAxis, 'type', 'linear');
     const xCategories = get(xAxis, 'categories');
     const xTimestamps = get(xAxis, 'timestamps');
-    const yType = get(yAxis[0], 'type', 'linear');
-    const yMin = get(yAxis[0], 'min');
-    const yCategories = get(yAxis[0], 'categories');
-    const yTimestamps = get(xAxis, 'timestamps');
     let visibleSeries = getOnlyVisibleSeries(series);
     // Reassign to all series in case of all series unselected,
     // otherwise we will get an empty space without grid
     visibleSeries = visibleSeries.length === 0 ? series : visibleSeries;
     let xScale: ChartScale | undefined;
-    let yScale: ChartScale | undefined;
 
     const xAxisMinPadding = boundsWidth * xAxis.maxPadding;
     const xRange = [0, boundsWidth - xAxisMinPadding];
@@ -125,55 +173,7 @@ const createScales = (args: Args) => {
         throw new Error('Failed to create xScale');
     }
 
-    switch (yType) {
-        case 'linear': {
-            const domain = getDomainDataYBySeries(visibleSeries);
-            const range = [boundsHeight, boundsHeight * yAxis[0].maxPadding];
-
-            if (isNumericalArrayData(domain)) {
-                const [domainYMin, yMax] = extent(domain) as [number, number];
-                const yMinValue = typeof yMin === 'number' ? yMin : domainYMin;
-                yScale = scaleLinear().domain([yMinValue, yMax]).range(range).nice();
-            }
-
-            break;
-        }
-        case 'category': {
-            if (yCategories) {
-                const filteredCategories = filterCategoriesByVisibleSeries({
-                    axisDirection: 'y',
-                    categories: yCategories,
-                    series: visibleSeries,
-                });
-                yScale = scaleBand().domain(filteredCategories).range([boundsHeight, 0]);
-            }
-
-            break;
-        }
-        case 'datetime': {
-            const range = [boundsHeight, boundsHeight * yAxis[0].maxPadding];
-
-            if (yTimestamps) {
-                const [yMin, yMax] = extent(yTimestamps) as [number, number];
-                yScale = scaleUtc().domain([yMin, yMax]).range(range).nice();
-            } else {
-                const domain = getDomainDataYBySeries(visibleSeries);
-
-                if (isNumericalArrayData(domain)) {
-                    const [yMin, yMax] = extent(domain) as [number, number];
-                    yScale = scaleUtc().domain([yMin, yMax]).range(range).nice();
-                }
-            }
-
-            break;
-        }
-    }
-
-    if (!yScale) {
-        throw new Error('Failed to create yScale');
-    }
-
-    return {xScale, yScale};
+    return {xScale, yScale: createYScale(yAxis[0], visibleSeries, boundsHeight)};
 };
 
 /**

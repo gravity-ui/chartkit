@@ -12,8 +12,8 @@ import type {
     BarXSeries,
 } from '../../../../types/widget-data';
 import {formatNumber} from '../../../shared';
-import type {FormatNumberOptions} from '../../../shared';
 import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
+import {getNumberUnitRate} from '../../../shared/format-number/format-number';
 
 export * from './math';
 export * from './text';
@@ -135,22 +135,14 @@ export const parseTransformStyle = (style: string | null): {x?: number; y?: numb
     return {x, y};
 };
 
-const defaultFormatNumberOptions: FormatNumberOptions = {
-    precision: 0,
-};
-
 export const formatAxisTickLabel = (args: {
     axisType: ChartKitWidgetAxisType;
     value: AxisDomain;
     dateFormat?: ChartKitWidgetAxisLabels['dateFormat'];
     numberFormat?: ChartKitWidgetAxisLabels['numberFormat'];
+    step?: number;
 }) => {
-    const {
-        axisType,
-        value,
-        dateFormat = 'DD.MM.YY',
-        numberFormat = defaultFormatNumberOptions,
-    } = args;
+    const {axisType, value, dateFormat = 'DD.MM.YY', numberFormat = {}, step} = args;
 
     switch (axisType) {
         case 'category': {
@@ -161,7 +153,8 @@ export const formatAxisTickLabel = (args: {
         }
         case 'linear':
         default: {
-            return formatNumber(value as number | string, numberFormat);
+            const unitRate = step ? getNumberUnitRate(step) : undefined;
+            return formatNumber(value as number | string, {unitRate, ...numberFormat});
         }
     }
 };
