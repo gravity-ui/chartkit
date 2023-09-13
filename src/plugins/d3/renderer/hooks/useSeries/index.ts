@@ -5,35 +5,46 @@ import type {ChartKitWidgetData} from '../../../../../types/widget-data';
 
 import {DEFAULT_PALETTE} from '../../constants';
 import {getSeriesNames} from '../../utils';
-import {PreparedLegend} from '../useChartOptions/types';
+import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
 import {getActiveLegendItems, getAllLegendItems} from './utils';
-import {PreparedSeries} from './types';
+import type {PreparedSeries, OnLegendItemClick} from './types';
+import {getPreparedLegend, getLegendComponents} from './prepare-legend';
 import {prepareSeries} from './prepareSeries';
 
-export type OnLegendItemClick = (data: {name: string; metaKey: boolean}) => void;
-
 type Args = {
-    legend: PreparedLegend;
+    chartWidth: number;
+    chartHeight: number;
+    chartMargin: PreparedChart['margin'];
+    legend: ChartKitWidgetData['legend'];
     series: ChartKitWidgetData['series'];
+    preparedYAxis: PreparedAxis[];
 };
 
 export const useSeries = (args: Args) => {
     const {
-        series: {data: series},
+        chartWidth,
+        chartHeight,
+        chartMargin,
         legend,
+        preparedYAxis,
+        series: {data: series},
     } = args;
+    const preparedLegend = React.useMemo(
+        () => getPreparedLegend({legend, series}),
+        [legend, series],
+    );
     const preparedSeries = React.useMemo<PreparedSeries[]>(() => {
         const seriesNames = getSeriesNames(series);
         const colorScale = scaleOrdinal(seriesNames, DEFAULT_PALETTE);
-
         const groupedSeries = group(series, (item) => item.type);
+
         return Array.from(groupedSeries).reduce<PreparedSeries[]>(
             (acc, [seriesType, seriesList]) => {
                 acc.push(
                     ...prepareSeries({
                         type: seriesType,
                         series: seriesList,
-                        legend,
+                        legend: preparedLegend,
                         colorScale,
                     }),
                 );
@@ -41,11 +52,10 @@ export const useSeries = (args: Args) => {
             },
             [],
         );
-    }, [series, legend]);
+    }, [series, preparedLegend]);
     const [activeLegendItems, setActiveLegendItems] = React.useState(
         getActiveLegendItems(preparedSeries),
     );
-
     const chartSeries = React.useMemo<PreparedSeries[]>(() => {
         return preparedSeries.map((singleSeries) => {
             if (singleSeries.legend.enabled) {
@@ -58,11 +68,16 @@ export const useSeries = (args: Args) => {
             return singleSeries;
         });
     }, [preparedSeries, activeLegendItems]);
-
-    // FIXME: remove effect. It initiates extra rerender
-    React.useEffect(() => {
-        setActiveLegendItems(getActiveLegendItems(preparedSeries));
-    }, [preparedSeries]);
+    const {legendConfig, legendItems} = React.useMemo(() => {
+        return getLegendComponents({
+            chartHeight,
+            chartMargin,
+            chartWidth,
+            series: chartSeries,
+            preparedLegend,
+            preparedYAxis,
+        });
+    }, [chartWidth, chartHeight, chartMargin, chartSeries, preparedLegend, preparedYAxis]);
 
     const handleLegendItemClick: OnLegendItemClick = React.useCallback(
         ({name, metaKey}) => {
@@ -85,5 +100,16 @@ export const useSeries = (args: Args) => {
         [preparedSeries, activeLegendItems],
     );
 
-    return {preparedSeries: chartSeries, handleLegendItemClick};
+    // FIXME: remove effect. It initiates extra rerender
+    React.useEffect(() => {
+        setActiveLegendItems(getActiveLegendItems(preparedSeries));
+    }, [preparedSeries]);
+
+    return {
+        legendItems,
+        legendConfig,
+        preparedLegend,
+        preparedSeries: chartSeries,
+        handleLegendItemClick,
+    };
 };

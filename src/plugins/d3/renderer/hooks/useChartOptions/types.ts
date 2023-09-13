@@ -4,7 +4,6 @@ import type {
     ChartKitWidgetAxis,
     ChartKitWidgetAxisType,
     ChartKitWidgetAxisLabels,
-    ChartKitWidgetLegend,
     ChartMargin,
 } from '../../../../../types/widget-data';
 
@@ -15,10 +14,6 @@ type PreparedAxisLabels = Omit<ChartKitWidgetAxisLabels, 'enabled' | 'padding' |
 
 export type PreparedChart = {
     margin: ChartMargin;
-};
-
-export type PreparedLegend = Required<ChartKitWidgetLegend> & {
-    height: number;
 };
 
 export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
@@ -49,7 +44,6 @@ export type PreparedTooltip = ChartKitWidgetData['tooltip'] & {
 
 export type ChartOptions = {
     chart: PreparedChart;
-    legend: PreparedLegend;
     tooltip: PreparedTooltip;
     xAxis: PreparedAxis;
     yAxis: PreparedAxis[];

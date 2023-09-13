@@ -5,15 +5,14 @@ import get from 'lodash/get';
 import type {ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types/widget-data';
 
 import {
+    isAxisRelatedSeries,
     formatAxisTickLabel,
     getDomainDataYBySeries,
     getHorisontalSvgTextHeight,
-    isAxisRelatedSeries,
 } from '../../utils';
+import type {PreparedAxis, PreparedChart, PreparedTitle} from './types';
 
-import type {PreparedAxis, PreparedChart, PreparedTitle, PreparedLegend} from './types';
-
-const AXIS_WIDTH = 1;
+const AXIS_LINE_WIDTH = 1;
 
 const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetSeries[]}) => {
     const {axis, series} = args;
@@ -35,6 +34,8 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
         case 'linear': {
             const domain = getDomainDataYBySeries(series) as number[];
             maxDomainValue = max(domain) as number;
+            // maxDomainValue (sometimes) is not the largest value in domain cause of using .nice() method
+            (maxDomainValue as number) *= 10;
         }
     }
 
@@ -82,28 +83,6 @@ const getMarginTop = (args: {
     return marginTop;
 };
 
-const getMarginBottom = (args: {
-    chart: ChartKitWidgetData['chart'];
-    hasAxisRelatedSeries: boolean;
-    preparedLegend: PreparedLegend;
-    preparedXAxis: PreparedAxis;
-}) => {
-    const {chart, hasAxisRelatedSeries, preparedLegend, preparedXAxis} = args;
-    let marginBottom = get(chart, 'margin.bottom', 0) + preparedLegend.height;
-
-    if (hasAxisRelatedSeries) {
-        marginBottom +=
-            preparedXAxis.title.height +
-            getHorisontalSvgTextHeight({text: 'Tmp', style: preparedXAxis.labels.style});
-
-        if (preparedXAxis.labels.enabled) {
-            marginBottom += preparedXAxis.labels.padding;
-        }
-    }
-
-    return marginBottom;
-};
-
 const getMarginLeft = (args: {
     chart: ChartKitWidgetData['chart'];
     hasAxisRelatedSeries: boolean;
@@ -115,7 +94,7 @@ const getMarginLeft = (args: {
 
     if (hasAxisRelatedSeries) {
         marginLeft +=
-            AXIS_WIDTH +
+            AXIS_LINE_WIDTH +
             preparedY1Axis.labels.padding +
             getAxisLabelMaxWidth({axis: preparedY1Axis, series: series.data}) +
             preparedY1Axis.title.height;
@@ -133,20 +112,14 @@ const getMarginRight = (args: {chart: ChartKitWidgetData['chart']}) => {
 export const getPreparedChart = (args: {
     chart: ChartKitWidgetData['chart'];
     series: ChartKitWidgetData['series'];
-    preparedLegend: PreparedLegend;
     preparedXAxis: PreparedAxis;
     preparedY1Axis: PreparedAxis;
     preparedTitle?: PreparedTitle;
 }): PreparedChart => {
-    const {chart, series, preparedLegend, preparedXAxis, preparedY1Axis, preparedTitle} = args;
+    const {chart, series, preparedXAxis, preparedY1Axis, preparedTitle} = args;
     const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
     const marginTop = getMarginTop({chart, hasAxisRelatedSeries, preparedY1Axis, preparedTitle});
-    const marginBottom = getMarginBottom({
-        chart,
-        hasAxisRelatedSeries,
-        preparedLegend,
-        preparedXAxis,
-    });
+    const marginBottom = get(chart, 'margin.bottom', 0);
     const marginLeft = getMarginLeft({chart, hasAxisRelatedSeries, series, preparedY1Axis});
     const marginRight = getMarginRight({chart});
 
