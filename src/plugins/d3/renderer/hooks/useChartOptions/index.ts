@@ -22,7 +22,6 @@ export const useChartOptions = (args: Args): ChartOptions => {
             chart,
             series,
             preparedTitle,
-            preparedXAxis,
             preparedY1Axis: preparedYAxis[0],
         });
         return {

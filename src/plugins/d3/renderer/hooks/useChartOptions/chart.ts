@@ -112,11 +112,10 @@ const getMarginRight = (args: {chart: ChartKitWidgetData['chart']}) => {
 export const getPreparedChart = (args: {
     chart: ChartKitWidgetData['chart'];
     series: ChartKitWidgetData['series'];
-    preparedXAxis: PreparedAxis;
     preparedY1Axis: PreparedAxis;
     preparedTitle?: PreparedTitle;
 }): PreparedChart => {
-    const {chart, series, preparedXAxis, preparedY1Axis, preparedTitle} = args;
+    const {chart, series, preparedY1Axis, preparedTitle} = args;
     const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
     const marginTop = getMarginTop({chart, hasAxisRelatedSeries, preparedY1Axis, preparedTitle});
     const marginBottom = get(chart, 'margin.bottom', 0);
