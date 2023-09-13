@@ -16,7 +16,7 @@ export const useChartOptions = (args: Args): ChartOptions => {
     const options: ChartOptions = React.useMemo(() => {
         const preparedTitle = getPreparedTitle({title});
         const preparedTooltip = getPreparedTooltip({tooltip});
-        const preparedYAxis = getPreparedYAxis({yAxis});
+        const preparedYAxis = getPreparedYAxis({series: series.data, yAxis});
         const preparedXAxis = getPreparedXAxis({xAxis});
         const preparedChart = getPreparedChart({
             chart,

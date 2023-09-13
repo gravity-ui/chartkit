@@ -31,7 +31,6 @@
     }
 
     &__item-text {
-        font-size: 12px;
         fill: var(--g-color-text-secondary);
 
         &_unselected {
@@ -44,7 +43,6 @@
     }
 
     &__pagination {
-        font-size: 12px;
         fill: var(--g-color-text-primary);
         user-select: none;
     }

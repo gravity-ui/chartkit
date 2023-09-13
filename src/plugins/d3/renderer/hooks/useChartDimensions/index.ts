@@ -34,7 +34,11 @@ const getBottomOffset = (args: {
     preparedXAxis: PreparedAxis;
 }) => {
     const {hasAxisRelatedSeries, preparedLegend, preparedXAxis} = args;
-    let result = preparedLegend.height + preparedLegend.paddingTop;
+    let result = 0;
+
+    if (preparedLegend.enabled) {
+        result += preparedLegend.height + preparedLegend.margin;
+    }
 
     if (hasAxisRelatedSeries) {
         result += getHeightOccupiedByXAxis(preparedXAxis);

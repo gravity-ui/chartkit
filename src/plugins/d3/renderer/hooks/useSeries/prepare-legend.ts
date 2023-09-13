@@ -1,16 +1,17 @@
+import clone from 'lodash/clone';
 import get from 'lodash/get';
+import merge from 'lodash/merge';
 import {select} from 'd3';
 
-import {block} from '../../../../../utils/cn';
 import type {ChartKitWidgetData} from '../../../../../types/widget-data';
 
+import {legendDefaults} from '../../constants';
+import {getHorisontalSvgTextHeight} from '../../utils';
 import {getBoundsWidth} from '../useChartDimensions';
 import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
 import type {PreparedLegend, PreparedSeries, LegendConfig, LegendItem} from './types';
 
-const b = block('d3-legend');
-const LEGEND_LINE_HEIGHT = 15;
-const LEGEND_PADDING_TOP = 20;
+type LegendItemWithoutTextWidth = Omit<LegendItem, 'textWidth'>;
 
 export const getPreparedLegend = (args: {
     legend: ChartKitWidgetData['legend'];
@@ -18,20 +19,25 @@ export const getPreparedLegend = (args: {
 }): PreparedLegend => {
     const {legend, series} = args;
     const enabled = typeof legend?.enabled === 'boolean' ? legend?.enabled : series.length > 1;
-    const height = enabled ? LEGEND_LINE_HEIGHT : 0;
+    const defaultItemStyle = clone(legendDefaults.itemStyle);
+    const itemStyle = get(legend, 'itemStyle');
+    const computedItemStyle = merge(defaultItemStyle, itemStyle);
+    const lineHeight = getHorisontalSvgTextHeight({text: 'Tmp', style: computedItemStyle});
+    const height = enabled ? lineHeight : 0;
 
     return {
-        align: legend?.align || 'center',
+        align: get(legend, 'align', legendDefaults.align),
         enabled,
-        itemDistance: legend?.itemDistance || 20,
         height,
-        lineHeight: LEGEND_LINE_HEIGHT,
-        paddingTop: LEGEND_PADDING_TOP,
+        itemDistance: get(legend, 'itemDistance', legendDefaults.itemDistance),
+        itemStyle: computedItemStyle,
+        lineHeight,
+        margin: get(legend, 'margin', legendDefaults.margin),
     };
 };
 
 const getFlattenLegendItems = (series: PreparedSeries[]) => {
-    return series.reduce<LegendItem[]>((acc, s) => {
+    return series.reduce<LegendItemWithoutTextWidth[]>((acc, s) => {
         const legendEnabled = get(s, 'legend.enabled', true);
 
         if (legendEnabled) {
@@ -46,11 +52,11 @@ const getFlattenLegendItems = (series: PreparedSeries[]) => {
 };
 
 const getGroupedLegendItems = (args: {
-    boundsWidth: number;
-    items: LegendItem[];
+    maxLegendWidth: number;
+    items: LegendItemWithoutTextWidth[];
     preparedLegend: PreparedLegend;
 }) => {
-    const {boundsWidth, items, preparedLegend} = args;
+    const {maxLegendWidth, items, preparedLegend} = args;
     const result: LegendItem[][] = [[]];
     let textWidthsInLine: number[] = [0];
     let lineIndex = 0;
@@ -59,17 +65,19 @@ const getGroupedLegendItems = (args: {
         select(document.body)
             .append('text')
             .text(item.name)
-            .attr('class', b('item-text'))
+            .style('font-size', preparedLegend.itemStyle.fontSize)
             .each(function () {
+                const resultItem = clone(item) as LegendItem;
                 const textWidth = this.getBoundingClientRect().width;
+                resultItem.textWidth = textWidth;
                 textWidthsInLine.push(textWidth);
                 const textsWidth = textWidthsInLine.reduce((acc, width) => acc + width, 0);
-                result[lineIndex].push(item);
+                result[lineIndex].push(resultItem);
                 const symbolsWidth = result[lineIndex].reduce((acc, {symbol}) => {
                     return acc + symbol.width + symbol.padding;
                 }, 0);
                 const distancesWidth = (result[lineIndex].length - 1) * preparedLegend.itemDistance;
-                const isOverfilled = boundsWidth < textsWidth + symbolsWidth + distancesWidth;
+                const isOverfilled = maxLegendWidth < textsWidth + symbolsWidth + distancesWidth;
 
                 if (isOverfilled) {
                     result[lineIndex].pop();
@@ -77,7 +85,7 @@ const getGroupedLegendItems = (args: {
                     textWidthsInLine = [textWidth];
                     const nextLineIndex = lineIndex;
                     result[nextLineIndex] = [];
-                    result[nextLineIndex].push(item);
+                    result[nextLineIndex].push(resultItem);
                 }
             })
             .remove();
@@ -95,33 +103,28 @@ export const getLegendComponents = (args: {
     preparedYAxis: PreparedAxis[];
 }) => {
     const {chartWidth, chartHeight, chartMargin, series, preparedLegend, preparedYAxis} = args;
-    const approximatelyBoundsWidth = getBoundsWidth({chartWidth, chartMargin, preparedYAxis});
-    const approximatelyBoundsHeight =
-        (chartHeight - chartMargin.top - chartMargin.bottom - preparedLegend.paddingTop) / 2;
+    const maxLegendWidth = getBoundsWidth({chartWidth, chartMargin, preparedYAxis});
+    const maxLegendHeight =
+        (chartHeight - chartMargin.top - chartMargin.bottom - preparedLegend.margin) / 2;
     const flattenLegendItems = getFlattenLegendItems(series);
     const items = getGroupedLegendItems({
-        boundsWidth: approximatelyBoundsWidth,
+        maxLegendWidth,
         items: flattenLegendItems,
         preparedLegend,
     });
     let legendHeight = preparedLegend.lineHeight * items.length;
     let pagination: LegendConfig['pagination'] | undefined;
 
-    if (approximatelyBoundsHeight < legendHeight) {
-        legendHeight = approximatelyBoundsHeight;
-        const limit = Math.floor(approximatelyBoundsHeight / preparedLegend.lineHeight) - 1;
-        const capacity = items.slice(0, limit).reduce((acc, line) => {
-            return acc + line.length;
-        }, 0);
-        const allItemsCount = items.reduce((acc, line) => {
-            return acc + line.length;
-        }, 0);
-        const maxPage = Math.ceil(allItemsCount / capacity);
+    if (maxLegendHeight < legendHeight) {
+        const limit = Math.floor(maxLegendHeight / preparedLegend.lineHeight);
+        const maxPage = Math.ceil(items.length / limit);
         pagination = {limit, maxPage};
+        legendHeight = maxLegendHeight;
     }
 
     preparedLegend.height = legendHeight;
-    const top = chartHeight - chartMargin.bottom - preparedLegend.height;
+    const top =
+        chartHeight - chartMargin.bottom - preparedLegend.height + preparedLegend.lineHeight / 2;
     const offset: LegendConfig['offset'] = {left: chartMargin.left, top};
 
     return {legendConfig: {offset, pagination}, legendItems: items};

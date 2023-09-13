@@ -46,10 +46,11 @@ const appendPaginator = (args: {
     container: Selection<SVGGElement, unknown, null, undefined>;
     offset: number;
     maxPage: number;
+    legend: PreparedLegend;
     transform: string;
     onArrowClick: (offset: number) => void;
 }) => {
-    const {container, offset, transform, maxPage, onArrowClick} = args;
+    const {container, offset, maxPage, legend, transform, onArrowClick} = args;
     const paginationLine = container.append('g').attr('class', b('pagination'));
     let computedWidth = 0;
     paginationLine
@@ -58,6 +59,7 @@ const appendPaginator = (args: {
         .attr('class', function () {
             return b('pagination-arrow', {inactive: offset === 0});
         })
+        .style('font-size', legend.itemStyle.fontSize)
         .each(function () {
             computedWidth += this.getComputedTextLength();
         })
@@ -71,6 +73,7 @@ const appendPaginator = (args: {
         .text(`${offset + 1}/${maxPage}`)
         .attr('class', b('pagination-counter'))
         .attr('x', computedWidth)
+        .style('font-size', legend.itemStyle.fontSize)
         .each(function () {
             computedWidth += this.getComputedTextLength();
         });
@@ -81,6 +84,7 @@ const appendPaginator = (args: {
             return b('pagination-arrow', {inactive: offset === maxPage - 1});
         })
         .attr('x', computedWidth)
+        .style('font-size', legend.itemStyle.fontSize)
         .on('click', function () {
             if (offset + 1 < maxPage) {
                 onArrowClick(offset + 1);
@@ -121,18 +125,10 @@ export const Legend = (props: Props) => {
                 .attr('class', b('item'))
                 .on('click', function (e, d) {
                     onItemClick({name: d.name, metaKey: e.metaKey});
+                })
+                .each(function (d) {
+                    textWidths.push(d.textWidth);
                 });
-            legendLine
-                .selectAll('*')
-                .data(line)
-                .append('text')
-                .text(function (d) {
-                    return d.name;
-                })
-                .each(function () {
-                    textWidths.push(this.getComputedTextLength());
-                })
-                .remove();
             legendItemTemplate
                 .append('rect')
                 .attr('x', function (legendItem, i) {
@@ -178,6 +174,7 @@ export const Legend = (props: Props) => {
                 .text(function (d) {
                     return ('name' in d && d.name) as string;
                 })
+                .style('font-size', legend.itemStyle.fontSize)
                 .style('alignment-baseline', 'middle');
 
             const contentWidth = legendLine.node()?.getBoundingClientRect().width || 0;
@@ -200,6 +197,7 @@ export const Legend = (props: Props) => {
                 container: svgElement,
                 offset: paginationOffset,
                 maxPage: config.pagination.maxPage,
+                legend,
                 transform,
                 onArrowClick: setPaginationOffset,
             });

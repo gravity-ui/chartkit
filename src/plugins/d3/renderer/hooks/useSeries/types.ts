@@ -19,7 +19,6 @@ export type PreparedLegendSymbol = RectLegendSymbol;
 export type PreparedLegend = Required<ChartKitWidgetLegend> & {
     height: number;
     lineHeight: number;
-    paddingTop: number;
 };
 
 export type OnLegendItemClick = (data: {name: string; metaKey: boolean}) => void;
@@ -28,6 +27,7 @@ export type LegendItem = {
     color: string;
     name: string;
     symbol: PreparedLegendSymbol;
+    textWidth: number;
     visible?: boolean;
 };
 

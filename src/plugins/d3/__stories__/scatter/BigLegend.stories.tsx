@@ -30,7 +30,6 @@ const generateSeriesData = (seriesCount = 5): ScatterSeries[] => {
 
 const shapeData = (): ChartKitWidgetData => {
     return {
-        chart: {margin: {bottom: 0}},
         legend: {
             align: 'left',
         },

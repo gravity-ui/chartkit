@@ -10,6 +10,7 @@ import type {
 type PreparedAxisLabels = Omit<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'style'> &
     Required<Pick<ChartKitWidgetAxisLabels, 'enabled' | 'padding'>> & {
         style: BaseTextStyle;
+        maxWidth?: number;
     };
 
 export type PreparedChart = {

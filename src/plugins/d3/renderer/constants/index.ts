@@ -1,3 +1,5 @@
+export * from './defaults';
+
 export const DEFAULT_PALETTE = [
     '#4DA2F1',
     '#FF3D64',
