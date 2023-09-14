@@ -24,6 +24,10 @@
 
     &__item-shape {
         fill: var(--g-color-base-misc-medium);
+
+        &_unselected {
+            fill: var(--g-color-text-hint);
+        }
     }
 
     &__item-text {
@@ -35,6 +39,30 @@
 
         &:hover {
             fill: var(--g-color-text-complementary);
+        }
+    }
+
+    &__pagination {
+        fill: var(--g-color-text-primary);
+        user-select: none;
+    }
+
+    &__pagination-counter,
+    &__pagination-arrow {
+        alignment-baseline: middle;
+    }
+
+    &__pagination-arrow {
+        fill: var(--g-color-text-brand);
+        cursor: pointer;
+
+        &_inactive {
+            fill: var(--g-color-base-generic-accent-disabled);
+            cursor: inherit;
+        }
+
+        &:hover:not(#{&}_inactive) {
+            fill: var(--g-color-base-brand-hover);
         }
     }
 }

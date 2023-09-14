@@ -6,10 +6,10 @@ import type {
     PieSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types/widget-data';
-import type {PreparedLegend} from '../useChartOptions/types';
 import cloneDeep from 'lodash/cloneDeep';
 import type {
     PreparedBarXSeries,
+    PreparedLegend,
     PreparedLegendSymbol,
     PreparedPieSeries,
     PreparedSeries,

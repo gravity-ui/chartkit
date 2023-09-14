@@ -3,20 +3,21 @@ import React from 'react';
 import type {ChartKitWidgetData} from '../../../../types';
 import {block} from '../../../../utils/cn';
 
+import {
+    useAxisScales,
+    useChartDimensions,
+    useChartEvents,
+    useChartOptions,
+    useSeries,
+    useShapes,
+    useTooltip,
+} from '../hooks';
+import {isAxisRelatedSeries} from '../utils';
 import {AxisY} from './AxisY';
 import {AxisX} from './AxisX';
 import {Legend} from './Legend';
 import {Title} from './Title';
 import {Tooltip} from './Tooltip';
-import {
-    useChartDimensions,
-    useChartEvents,
-    useChartOptions,
-    useAxisScales,
-    useSeries,
-    useShapes,
-    useTooltip,
-} from '../hooks';
 
 import './styles.scss';
 
@@ -31,18 +32,29 @@ type Props = {
 };
 
 export const Chart = (props: Props) => {
-    const {top, left, width, height, data} = props;
     // FIXME: add data validation
+    const {top, left, width, height, data} = props;
     const svgRef = React.createRef<SVGSVGElement>();
     const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
-    const {chart, legend, title, tooltip, xAxis, yAxis} = useChartOptions(data);
+    const {chart, title, tooltip, xAxis, yAxis} = useChartOptions(data);
+    const {legendItems, legendConfig, preparedSeries, preparedLegend, handleLegendItemClick} =
+        useSeries({
+            chartWidth: width,
+            chartHeight: height,
+            chartMargin: chart.margin,
+            series: data.series,
+            legend: data.legend,
+            preparedYAxis: yAxis,
+        });
     const {boundsWidth, boundsHeight} = useChartDimensions({
+        hasAxisRelatedSeries: data.series.data.some(isAxisRelatedSeries),
         width,
         height,
         margin: chart.margin,
-        yAxis,
+        preparedLegend,
+        preparedXAxis: xAxis,
+        preparedYAxis: yAxis,
     });
-    const {preparedSeries, handleLegendItemClick} = useSeries({series: data.series, legend});
     const {xScale, yScale} = useAxisScales({
         boundsWidth,
         boundsHeight,
@@ -106,14 +118,13 @@ export const Chart = (props: Props) => {
                     )}
                     {shapes}
                 </g>
-                {legend.enabled && (
+                {preparedLegend.enabled && (
                     <Legend
-                        width={boundsWidth}
-                        offsetWidth={chart.margin.left}
-                        height={legend.height}
-                        legend={legend}
-                        offsetHeight={height - legend.height / 2}
                         chartSeries={preparedSeries}
+                        boundsWidth={boundsWidth}
+                        legend={preparedLegend}
+                        items={legendItems}
+                        config={legendConfig}
                         onItemClick={handleLegendItemClick}
                     />
                 )}

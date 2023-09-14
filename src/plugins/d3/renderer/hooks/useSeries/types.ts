@@ -2,6 +2,7 @@ import {
     BarXSeries,
     BarXSeriesData,
     BaseTextStyle,
+    ChartKitWidgetLegend,
     PieSeries,
     PieSeriesData,
     RectLegendSymbolOptions,
@@ -14,6 +15,32 @@ export type RectLegendSymbol = {
 } & Required<RectLegendSymbolOptions>;
 
 export type PreparedLegendSymbol = RectLegendSymbol;
+
+export type PreparedLegend = Required<ChartKitWidgetLegend> & {
+    height: number;
+    lineHeight: number;
+};
+
+export type OnLegendItemClick = (data: {name: string; metaKey: boolean}) => void;
+
+export type LegendItem = {
+    color: string;
+    name: string;
+    symbol: PreparedLegendSymbol;
+    textWidth: number;
+    visible?: boolean;
+};
+
+export type LegendConfig = {
+    offset: {
+        left: number;
+        top: number;
+    };
+    pagination?: {
+        limit: number;
+        maxPage: number;
+    };
+};
 
 type BasePreparedSeries = {
     color: string;

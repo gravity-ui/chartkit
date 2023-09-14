@@ -1,16 +1,83 @@
+import {select, max} from 'd3';
+import type {AxisDomain} from 'd3';
 import get from 'lodash/get';
 
-import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types/widget-data';
+import type {
+    BaseTextStyle,
+    ChartKitWidgetData,
+    ChartKitWidgetSeries,
+} from '../../../../../types/widget-data';
 
 import {
     DEFAULT_AXIS_LABEL_FONT_SIZE,
     DEFAULT_AXIS_LABEL_PADDING,
     DEFAULT_AXIS_TITLE_FONT_SIZE,
 } from '../../constants';
-import {getHorisontalSvgTextHeight} from '../../utils';
+import {getDomainDataYBySeries, getHorisontalSvgTextHeight, formatAxisTickLabel} from '../../utils';
 import type {PreparedAxis} from './types';
 
-export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}): PreparedAxis[] => {
+const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetSeries[]}) => {
+    const {axis, series} = args;
+    let maxDomainValue: AxisDomain;
+    let width = 0;
+
+    switch (axis.type) {
+        case 'category': {
+            const yCategories = get(axis, 'categories', [] as string[]);
+            maxDomainValue = [...yCategories].sort((c1, c2) => c2.length - c1.length)[0];
+            break;
+        }
+        case 'datetime': {
+            const yTimestamps = get(axis, 'timestamps');
+            const domain = yTimestamps || (getDomainDataYBySeries(series) as number[]);
+            maxDomainValue = max(domain) as number;
+            break;
+        }
+        case 'linear': {
+            const domain = getDomainDataYBySeries(series) as number[];
+            maxDomainValue = max(domain) as number;
+        }
+    }
+
+    let formattedValue = '';
+
+    if (axis.labels.enabled) {
+        formattedValue = formatAxisTickLabel({
+            axisType: axis.type,
+            value: maxDomainValue,
+            dateFormat: axis.labels['dateFormat'],
+            numberFormat: axis.labels['numberFormat'],
+        });
+    }
+
+    select(document.body)
+        .append('text')
+        .style('font-size', axis.labels.style.fontSize)
+        .text(formattedValue)
+        .each(function () {
+            width = this.getBoundingClientRect().width;
+        })
+        .remove();
+
+    return width;
+};
+
+const applyLabelsMaxWidth = (args: {
+    series: ChartKitWidgetSeries[];
+    preparedYAxis: PreparedAxis;
+}) => {
+    const {series, preparedYAxis} = args;
+    const maxWidth = getAxisLabelMaxWidth({axis: preparedYAxis, series});
+    preparedYAxis.labels.maxWidth = maxWidth;
+};
+
+export const getPreparedYAxis = ({
+    series,
+    yAxis,
+}: {
+    series: ChartKitWidgetSeries[];
+    yAxis: ChartKitWidgetData['yAxis'];
+}): PreparedAxis[] => {
     // FIXME: add support for n axises
     const yAxis1 = yAxis?.[0];
 
@@ -49,6 +116,8 @@ export const getPreparedYAxis = ({yAxis}: {yAxis: ChartKitWidgetData['yAxis']}):
             pixelInterval: get(yAxis1, 'ticks.pixelInterval'),
         },
     };
+
+    applyLabelsMaxWidth({series, preparedYAxis: preparedY1Axis});
 
     return [preparedY1Axis];
 };
