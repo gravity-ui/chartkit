@@ -142,7 +142,7 @@ export const formatAxisTickLabel = (args: {
     numberFormat?: ChartKitWidgetAxisLabels['numberFormat'];
     step?: number;
 }) => {
-    const {axisType, value, dateFormat = 'DD.MM.YY', numberFormat = {}, step} = args;
+    const {axisType, value, dateFormat = 'DD.MM.YY', numberFormat, step} = args;
 
     switch (axisType) {
         case 'category': {

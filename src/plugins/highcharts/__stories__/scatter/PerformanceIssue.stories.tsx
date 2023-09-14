@@ -4,7 +4,7 @@ import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitRef} from '../../../../types';
-import {HighchartsPlugin} from '../..';
+import {HighchartsPlugin, HighchartsWidgetData} from '../..';
 import {randomNormal} from 'd3';
 
 const Template: Story = () => {
@@ -34,7 +34,7 @@ const Template: Story = () => {
                     type: 'scatter',
                 },
             },
-        };
+        } as unknown as HighchartsWidgetData;
     }, []);
 
     if (!shown) {
@@ -44,7 +44,6 @@ const Template: Story = () => {
 
     return (
         <div style={{height: '300px', width: '100%'}}>
-            {/* @ts-ignore */}
             <ChartKit ref={chartkitRef} type="highcharts" data={widgetData} />
         </div>
     );
