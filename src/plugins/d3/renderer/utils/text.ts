@@ -1,7 +1,8 @@
-import {Selection} from 'd3-selection';
+import type {Selection} from 'd3';
+import {select} from 'd3';
 
 export function setEllipsisForOverflowText(
-    selection: Selection<SVGTextElement, any, null, undefined>,
+    selection: Selection<SVGTextElement, unknown, null, unknown>,
     maxWidth: number,
 ) {
     let text = selection.text();
@@ -14,4 +15,13 @@ export function setEllipsisForOverflowText(
         tSpan.text(text + '…');
         textLength = tSpan.node()?.getComputedTextLength() || 0;
     }
+}
+
+export function setEllipsisForOverflowTexts(
+    selection: Selection<SVGTextElement, string, any, unknown>,
+    maxWidth: number,
+) {
+    selection.each(function () {
+        setEllipsisForOverflowText(select(this), maxWidth);
+    });
 }

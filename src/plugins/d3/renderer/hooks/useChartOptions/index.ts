@@ -9,10 +9,14 @@ import {getPreparedXAxis} from './x-axis';
 import {getPreparedYAxis} from './y-axis';
 import type {ChartOptions} from './types';
 
-type Args = ChartKitWidgetData;
+type Args = {
+    data: ChartKitWidgetData;
+};
 
 export const useChartOptions = (args: Args): ChartOptions => {
-    const {chart, series, title, tooltip, xAxis, yAxis} = args;
+    const {
+        data: {chart, series, title, tooltip, xAxis, yAxis},
+    } = args;
     const options: ChartOptions = React.useMemo(() => {
         const preparedTitle = getPreparedTitle({title});
         const preparedTooltip = getPreparedTooltip({tooltip});

@@ -1,5 +1,4 @@
-import {select, max} from 'd3';
-import type {AxisDomain} from 'd3';
+import {select, ScaleLinear} from 'd3';
 import get from 'lodash/get';
 
 import type {
@@ -13,53 +12,46 @@ import {
     DEFAULT_AXIS_LABEL_PADDING,
     DEFAULT_AXIS_TITLE_FONT_SIZE,
 } from '../../constants';
-import {getDomainDataYBySeries, getHorisontalSvgTextHeight, formatAxisTickLabel} from '../../utils';
+import {getHorisontalSvgTextHeight, formatAxisTickLabel} from '../../utils';
 import type {PreparedAxis} from './types';
+import {createYScale} from '../useAxisScales';
+import {PreparedSeries} from '../useSeries/types';
 
 const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetSeries[]}) => {
     const {axis, series} = args;
-    let maxDomainValue: AxisDomain;
-    let width = 0;
 
-    switch (axis.type) {
-        case 'category': {
-            const yCategories = get(axis, 'categories', [] as string[]);
-            maxDomainValue = [...yCategories].sort((c1, c2) => c2.length - c1.length)[0];
-            break;
-        }
-        case 'datetime': {
-            const yTimestamps = get(axis, 'timestamps');
-            const domain = yTimestamps || (getDomainDataYBySeries(series) as number[]);
-            maxDomainValue = max(domain) as number;
-            break;
-        }
-        case 'linear': {
-            const domain = getDomainDataYBySeries(series) as number[];
-            maxDomainValue = max(domain) as number;
-        }
+    if (!axis.labels.enabled) {
+        return 0;
     }
 
-    let formattedValue = '';
+    const scale = createYScale(axis, series as PreparedSeries[], 1) as ScaleLinear<number, number>;
+    const ticks = axis.type === 'category' ? axis.categories || [] : scale.ticks();
+    const tickStep = axis.type === 'category' ? undefined : Number(ticks[0]);
 
-    if (axis.labels.enabled) {
-        formattedValue = formatAxisTickLabel({
-            axisType: axis.type,
-            value: maxDomainValue,
-            dateFormat: axis.labels['dateFormat'],
-            numberFormat: axis.labels['numberFormat'],
+    // ToDo: it is necessary to filter data, since we do not draw overlapping ticks
+
+    const svg = select(document.body).append('svg');
+    const text = svg.append('g').append('text').style('font-size', axis.labels.style.fontSize);
+    text.selectAll('tspan')
+        .data(ticks as (string | number)[])
+        .enter()
+        .append('tspan')
+        .attr('x', 0)
+        .attr('dy', 0)
+        .text((d) => {
+            return formatAxisTickLabel({
+                axisType: axis.type,
+                value: d,
+                dateFormat: axis.labels['dateFormat'],
+                numberFormat: axis.labels['numberFormat'],
+                step: tickStep,
+            });
         });
-    }
 
-    select(document.body)
-        .append('text')
-        .style('font-size', axis.labels.style.fontSize)
-        .text(formattedValue)
-        .each(function () {
-            width = this.getBoundingClientRect().width;
-        })
-        .remove();
+    const maxWidth = (text.node() as SVGTextElement).getBoundingClientRect()?.width || 0;
+    svg.remove();
 
-    return width;
+    return maxWidth;
 };
 
 const applyLabelsMaxWidth = (args: {
@@ -67,8 +59,8 @@ const applyLabelsMaxWidth = (args: {
     preparedYAxis: PreparedAxis;
 }) => {
     const {series, preparedYAxis} = args;
-    const maxWidth = getAxisLabelMaxWidth({axis: preparedYAxis, series});
-    preparedYAxis.labels.maxWidth = maxWidth;
+
+    preparedYAxis.labels.maxWidth = getAxisLabelMaxWidth({axis: preparedYAxis, series});
 };
 
 export const getPreparedYAxis = ({

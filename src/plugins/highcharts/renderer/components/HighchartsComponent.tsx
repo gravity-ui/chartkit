@@ -53,7 +53,7 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
             const configOptions = Object.assign(
                 {
                     nonBodyScroll,
-                    drillDownData: nextProps.data.config.drillDown,
+                    drillDownData: nextProps.data.config?.drillDown,
                     splitTooltip: nextProps.splitTooltip,
                     highcharts: libraryConfig,
                     entryId,

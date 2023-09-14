@@ -5,6 +5,19 @@ import type {FormatOptions, FormatNumberOptions} from './types';
 
 const i18n = makeInstance('chartkit-units', {ru, en});
 
+function getUnitRate(value: number, exponent: number, unitsI18nKeys: string[]) {
+    let resultUnitRate = 1;
+    while (
+        Math.abs(value / Math.pow(exponent, resultUnitRate)) >= 1 &&
+        resultUnitRate < 10 &&
+        i18n(unitsI18nKeys[resultUnitRate])
+    ) {
+        resultUnitRate++;
+    }
+
+    return resultUnitRate - 1;
+}
+
 const unitFormatter = ({
     exponent,
     unitsI18nKeys,
@@ -22,20 +35,8 @@ const unitFormatter = ({
             i18nInstance.setLang(lang);
         }
 
-        let resultUnitRate;
-        if (typeof unitRate === 'number') {
-            resultUnitRate = unitRate;
-        } else {
-            resultUnitRate = 1;
-            while (
-                Math.abs(value / Math.pow(exponent, resultUnitRate)) >= 1 &&
-                resultUnitRate < 10 &&
-                i18n(unitsI18nKeys[resultUnitRate])
-            ) {
-                resultUnitRate++;
-            }
-            resultUnitRate--;
-        }
+        const resultUnitRate =
+            typeof unitRate === 'number' ? unitRate : getUnitRate(value, exponent, unitsI18nKeys);
 
         let result: number | string = value / Math.pow(exponent, resultUnitRate);
         if (typeof precision === 'number') {
@@ -71,17 +72,22 @@ export const formatDuration = unitFormatter({
     unitsI18nKeys: ['value_short-milliseconds', 'value_short-seconds', 'value_short-minutes'],
 });
 
+const BASE_NUMBER_FORMAT_UNIT_KEYS = [
+    'value_short-empty',
+    'value_short-k',
+    'value_short-m',
+    'value_short-b',
+    'value_short-t',
+];
+
 const baseFormatNumber = unitFormatter({
     exponent: 1000,
     unitDelimiterI18nKey: 'value_number-delimiter',
-    unitsI18nKeys: [
-        'value_short-empty',
-        'value_short-k',
-        'value_short-m',
-        'value_short-b',
-        'value_short-t',
-    ],
+    unitsI18nKeys: BASE_NUMBER_FORMAT_UNIT_KEYS,
 });
+
+export const getNumberUnitRate = (value: number) =>
+    getUnitRate(value, 1000, BASE_NUMBER_FORMAT_UNIT_KEYS);
 
 const NUMBER_UNIT_RATE_BY_UNIT = {
     default: 0,

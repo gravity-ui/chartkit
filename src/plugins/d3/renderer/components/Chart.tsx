@@ -36,7 +36,9 @@ export const Chart = (props: Props) => {
     const {top, left, width, height, data} = props;
     const svgRef = React.createRef<SVGSVGElement>();
     const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
-    const {chart, title, tooltip, xAxis, yAxis} = useChartOptions(data);
+    const {chart, title, tooltip, xAxis, yAxis} = useChartOptions({
+        data,
+    });
     const {legendItems, legendConfig, preparedSeries, preparedLegend, handleLegendItemClick} =
         useSeries({
             chartWidth: width,

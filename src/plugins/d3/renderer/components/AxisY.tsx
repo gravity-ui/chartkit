@@ -1,14 +1,20 @@
 import React from 'react';
-import {axisLeft, select} from 'd3';
-import type {AxisScale, AxisDomain, Selection} from 'd3';
+import {axisLeft, ScaleLinear, select} from 'd3';
+import type {AxisScale, AxisDomain} from 'd3';
 
 import {block} from '../../../../utils/cn';
 
 import type {ChartScale, PreparedAxis} from '../hooks';
-import {formatAxisTickLabel, parseTransformStyle} from '../utils';
+import {
+    formatAxisTickLabel,
+    parseTransformStyle,
+    setEllipsisForOverflowText,
+    setEllipsisForOverflowTexts,
+} from '../utils';
 
 const b = block('d3-axis');
 const EMPTY_SPACE_BETWEEN_LABELS = 10;
+const MAX_WIDTH = 80;
 
 type Props = {
     axises: PreparedAxis[];
@@ -17,27 +23,6 @@ type Props = {
     scale: ChartScale;
 };
 
-// Note: this method do not prepared for rotated labels
-const removeOverlappingYTicks = (axis: Selection<SVGGElement, unknown, null, undefined>) => {
-    const a = axis.selectAll('g.tick').nodes();
-
-    if (a.length <= 1) {
-        return;
-    }
-
-    for (let i = 0, x = 0; i < a.length; i++) {
-        const node = a[i] as Element;
-        const r = node.getBoundingClientRect();
-
-        if (r.bottom > x && i !== 0) {
-            node?.parentNode?.removeChild(node);
-        } else {
-            x = r.top - EMPTY_SPACE_BETWEEN_LABELS;
-        }
-    }
-};
-
-// FIXME: add overflow ellipsis for the labels that out of boundaries
 export const AxisY = ({axises, width, height, scale}: Props) => {
     const ref = React.useRef<SVGGElement>(null);
 
@@ -50,6 +35,10 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
         const tickSize = axis.grid.enabled ? width * -1 : 0;
+        const tickStep =
+            axis.type === 'category'
+                ? undefined
+                : (scale as ScaleLinear<number, number>).ticks()[0];
         let yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
             .tickSize(tickSize)
             .tickPadding(axis.labels.padding)
@@ -63,6 +52,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
                     value,
                     dateFormat: axis.labels['dateFormat'],
                     numberFormat: axis.labels['numberFormat'],
+                    step: tickStep,
                 });
             });
 
@@ -78,10 +68,12 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             .style('stroke', axis.lineColor || '');
 
         if (axis.labels.enabled) {
-            svgElement
-                .selectAll('.tick text')
+            const tickTexts = svgElement
+                .selectAll<SVGTextElement, string>('.tick text')
                 .style('font-size', axis.labels.style.fontSize)
                 .style('transform', 'translateY(-1px)');
+
+            tickTexts.call(setEllipsisForOverflowTexts, MAX_WIDTH);
         }
 
         const transformStyle = svgElement.select('.tick').attr('transform');
@@ -91,6 +83,23 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             // Remove stroke from tick that has the same y coordinate like domain
             svgElement.select('.tick line').style('stroke', 'none');
         }
+
+        // remove overlapping ticks
+        // Note: this method do not prepared for rotated labels
+        let elementY = 0;
+        svgElement
+            .selectAll('.tick')
+            .filter(function (_d, index) {
+                const node = this as unknown as Element;
+                const r = node.getBoundingClientRect();
+
+                if (r.bottom > elementY && index !== 0) {
+                    return true;
+                }
+                elementY = r.top - EMPTY_SPACE_BETWEEN_LABELS;
+                return false;
+            })
+            .remove();
 
         if (axis.title.text) {
             const textY = axis.title.height + axis.labels.padding;
@@ -103,10 +112,9 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
                 .attr('dx', -height / 2)
                 .attr('font-size', axis.title.style.fontSize)
                 .attr('transform', 'rotate(-90)')
-                .text(axis.title.text);
+                .text(axis.title.text)
+                .call(setEllipsisForOverflowText, height);
         }
-
-        removeOverlappingYTicks(svgElement);
     }, [axises, width, height, scale]);
 
     return <g ref={ref} />;
