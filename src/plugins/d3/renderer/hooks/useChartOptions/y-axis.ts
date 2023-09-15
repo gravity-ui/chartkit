@@ -1,4 +1,5 @@
-import {select, ScaleLinear, AxisDomain} from 'd3';
+import type {ScaleLinear, AxisDomain} from 'd3';
+import {select} from 'd3';
 import get from 'lodash/get';
 
 import type {
@@ -30,7 +31,7 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
             ? axis.categories || []
             : (scale as ScaleLinear<number, number>).ticks();
 
-    // ToDo: it is necessary to filter data, since we do not draw overlapping ticks
+    // FIXME: it is necessary to filter data, since we do not draw overlapping ticks
 
     const step = getClosestPointsRange(axis, ticks);
     const svg = select(document.body).append('svg');

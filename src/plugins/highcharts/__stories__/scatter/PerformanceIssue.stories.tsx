@@ -13,7 +13,7 @@ const Template: Story = () => {
 
     const widgetData = React.useMemo(() => {
         const categories = Array.from({length: 5000}).map((_, i) => String(i));
-        const randomFn = randomNormal(0, 1000);
+        const randomFn = randomNormal(0, 10);
 
         return {
             data: {

@@ -1,3 +1,4 @@
+import {range} from 'd3';
 import React from 'react';
 import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
@@ -13,7 +14,6 @@ import type {
     ScatterSeriesData,
 } from '../../../../types/widget-data';
 import {D3Plugin} from '../..';
-import {range} from 'd3';
 
 const rowData: ScatterSeriesData<string>[] = [
     {
