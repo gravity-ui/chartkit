@@ -7,16 +7,18 @@ import type {
     BaseTextStyle,
     ChartKitWidgetSeries,
     ChartKitWidgetSeriesData,
-    ChartKitWidgetAxisType,
-    ChartKitWidgetAxisLabels,
     BarXSeries,
 } from '../../../../types/widget-data';
 import {formatNumber} from '../../../shared';
 import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
 import {getNumberUnitRate} from '../../../shared/format-number/format-number';
+import {PreparedAxis} from '../hooks';
+import {getDefaultDateFormat} from './time';
 
 export * from './math';
 export * from './text';
+export * from './time';
+export * from './axis';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie'];
 
@@ -136,25 +138,29 @@ export const parseTransformStyle = (style: string | null): {x?: number; y?: numb
 };
 
 export const formatAxisTickLabel = (args: {
-    axisType: ChartKitWidgetAxisType;
+    axis: PreparedAxis;
     value: AxisDomain;
-    dateFormat?: ChartKitWidgetAxisLabels['dateFormat'];
-    numberFormat?: ChartKitWidgetAxisLabels['numberFormat'];
     step?: number;
 }) => {
-    const {axisType, value, dateFormat = 'DD.MM.YY', numberFormat, step} = args;
+    const {axis, value, step} = args;
 
-    switch (axisType) {
+    switch (axis.type) {
         case 'category': {
             return value as string;
         }
         case 'datetime': {
-            return dateTime({input: value as number | string}).format(dateFormat);
+            const date = value as number;
+            const format = axis.labels.dateFormat || getDefaultDateFormat(step);
+
+            return dateTime({input: date}).format(format);
         }
         case 'linear':
         default: {
-            const unitRate = step ? getNumberUnitRate(step) : undefined;
-            return formatNumber(value as number | string, {unitRate, ...numberFormat});
+            const numberFormat = {
+                unitRate: value && step ? getNumberUnitRate(step) : undefined,
+                ...axis.labels.numberFormat,
+            };
+            return formatNumber(value as number | string, numberFormat);
         }
     }
 };
@@ -227,3 +233,11 @@ export const getDataCategoryValue = (args: {
 
     return categoryValue;
 };
+
+export function getClosestPointsRange(axis: PreparedAxis, points: AxisDomain[]) {
+    if (axis.type === 'category') {
+        return undefined;
+    }
+
+    return (points[1] as number) - (points[0] as number);
+}

@@ -13,7 +13,7 @@ const Template: Story = () => {
 
     const widgetData: ChartKitWidgetData = React.useMemo(() => {
         const categories = Array.from({length: 5000}).map((_, i) => String(i));
-        const randomFn = randomNormal(0, 10);
+        const randomFn = randomNormal(0, 1200);
 
         return {
             xAxis: {

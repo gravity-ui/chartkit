@@ -5,7 +5,13 @@ import type {AxisScale, AxisDomain} from 'd3';
 import {block} from '../../../../utils/cn';
 
 import type {ChartScale, PreparedAxis} from '../hooks';
-import {formatAxisTickLabel, parseTransformStyle, setEllipsisForOverflowText} from '../utils';
+import {
+    formatAxisTickLabel,
+    getClosestPointsRange,
+    parseTransformStyle,
+    setEllipsisForOverflowText,
+    getTicksCount,
+} from '../utils';
 
 const b = block('d3-axis');
 const EMPTY_SPACE_BETWEEN_LABELS = 10;
@@ -30,10 +36,9 @@ export const AxisX = ({axis, width, height, scale, chartWidth}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
         const tickSize = axis.grid.enabled ? height * -1 : 0;
-        const tickStep =
-            axis.type === 'category'
-                ? undefined
-                : (scale as ScaleLinear<number, number>).ticks()[0];
+        const ticks =
+            axis.type === 'category' ? [] : (scale as ScaleLinear<number, number>).ticks();
+        const tickStep = getClosestPointsRange(axis, ticks);
         let xAxisGenerator = axisBottom(scale as AxisScale<AxisDomain>)
             .tickSize(tickSize)
             .tickPadding(axis.labels.padding)
@@ -43,16 +48,14 @@ export const AxisX = ({axis, width, height, scale, chartWidth}: Props) => {
                 }
 
                 return formatAxisTickLabel({
-                    axisType: axis.type,
+                    axis,
                     value,
-                    dateFormat: axis.labels['dateFormat'],
-                    numberFormat: axis.labels['numberFormat'],
                     step: tickStep,
                 });
             });
 
-        if (axis.ticks.pixelInterval) {
-            const ticksCount = width / axis.ticks.pixelInterval;
+        const ticksCount = getTicksCount({axis, range: width});
+        if (ticksCount) {
             xAxisGenerator = xAxisGenerator.ticks(ticksCount);
         }
 

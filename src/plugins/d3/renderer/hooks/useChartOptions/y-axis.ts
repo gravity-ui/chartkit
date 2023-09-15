@@ -1,4 +1,4 @@
-import {select, ScaleLinear} from 'd3';
+import {select, ScaleLinear, AxisDomain} from 'd3';
 import get from 'lodash/get';
 
 import type {
@@ -12,7 +12,7 @@ import {
     DEFAULT_AXIS_LABEL_PADDING,
     DEFAULT_AXIS_TITLE_FONT_SIZE,
 } from '../../constants';
-import {getHorisontalSvgTextHeight, formatAxisTickLabel} from '../../utils';
+import {getHorisontalSvgTextHeight, formatAxisTickLabel, getClosestPointsRange} from '../../utils';
 import type {PreparedAxis} from './types';
 import {createYScale} from '../useAxisScales';
 import {PreparedSeries} from '../useSeries/types';
@@ -24,12 +24,15 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
         return 0;
     }
 
-    const scale = createYScale(axis, series as PreparedSeries[], 1) as ScaleLinear<number, number>;
-    const ticks = axis.type === 'category' ? axis.categories || [] : scale.ticks();
-    const tickStep = axis.type === 'category' ? undefined : Number(ticks[0]);
+    const scale = createYScale(axis, series as PreparedSeries[], 1);
+    const ticks: AxisDomain[] =
+        axis.type === 'category'
+            ? axis.categories || []
+            : (scale as ScaleLinear<number, number>).ticks();
 
     // ToDo: it is necessary to filter data, since we do not draw overlapping ticks
 
+    const step = getClosestPointsRange(axis, ticks);
     const svg = select(document.body).append('svg');
     const text = svg.append('g').append('text').style('font-size', axis.labels.style.fontSize);
     text.selectAll('tspan')
@@ -40,11 +43,9 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
         .attr('dy', 0)
         .text((d) => {
             return formatAxisTickLabel({
-                axisType: axis.type,
+                axis,
                 value: d,
-                dateFormat: axis.labels['dateFormat'],
-                numberFormat: axis.labels['numberFormat'],
-                step: tickStep,
+                step,
             });
         });
 

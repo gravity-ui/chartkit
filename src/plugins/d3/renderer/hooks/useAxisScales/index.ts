@@ -109,29 +109,23 @@ export function createYScale(axis: PreparedAxis, series: PreparedSeries[], bound
     throw new Error('Failed to create yScale');
 }
 
-const createScales = (args: Args) => {
-    const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
-    const xMin = get(xAxis, 'min');
-    const xType = get(xAxis, 'type', 'linear');
-    const xCategories = get(xAxis, 'categories');
-    const xTimestamps = get(xAxis, 'timestamps');
-    let visibleSeries = getOnlyVisibleSeries(series);
-    // Reassign to all series in case of all series unselected,
-    // otherwise we will get an empty space without grid
-    visibleSeries = visibleSeries.length === 0 ? series : visibleSeries;
-    let xScale: ChartScale | undefined;
+export function createXScale(axis: PreparedAxis, series: PreparedSeries[], boundsWidth: number) {
+    const xMin = get(axis, 'min');
+    const xType = get(axis, 'type', 'linear');
+    const xCategories = get(axis, 'categories');
+    const xTimestamps = get(axis, 'timestamps');
 
-    const xAxisMinPadding = boundsWidth * xAxis.maxPadding;
+    const xAxisMinPadding = boundsWidth * axis.maxPadding;
     const xRange = [0, boundsWidth - xAxisMinPadding];
 
     switch (xType) {
         case 'linear': {
-            const domain = getDomainDataXBySeries(visibleSeries);
+            const domain = getDomainDataXBySeries(series);
 
             if (isNumericalArrayData(domain)) {
                 const [domainXMin, xMax] = extent(domain) as [number, number];
                 const xMinValue = typeof xMin === 'number' ? xMin : domainXMin;
-                xScale = scaleLinear().domain([xMinValue, xMax]).range(xRange).nice();
+                return scaleLinear().domain([xMinValue, xMax]).range(xRange).nice();
             }
 
             break;
@@ -141,13 +135,15 @@ const createScales = (args: Args) => {
                 const filteredCategories = filterCategoriesByVisibleSeries({
                     axisDirection: 'x',
                     categories: xCategories,
-                    series: visibleSeries,
+                    series: series,
                 });
-                xScale = scaleBand().domain(filteredCategories).range([0, boundsWidth]);
+                const xScale = scaleBand().domain(filteredCategories).range([0, boundsWidth]);
 
                 if (xScale.step() / 2 < xAxisMinPadding) {
                     xScale.range(xRange);
                 }
+
+                return xScale;
             }
 
             break;
@@ -155,13 +151,13 @@ const createScales = (args: Args) => {
         case 'datetime': {
             if (xTimestamps) {
                 const [xMin, xMax] = extent(xTimestamps) as [number, number];
-                xScale = scaleUtc().domain([xMin, xMax]).range(xRange).nice();
+                return scaleUtc().domain([xMin, xMax]).range(xRange).nice();
             } else {
-                const domain = getDomainDataXBySeries(visibleSeries);
+                const domain = getDomainDataXBySeries(series);
 
                 if (isNumericalArrayData(domain)) {
                     const [xMin, xMax] = extent(domain) as [number, number];
-                    xScale = scaleUtc().domain([xMin, xMax]).range(xRange).nice();
+                    return scaleUtc().domain([xMin, xMax]).range(xRange).nice();
                 }
             }
 
@@ -169,11 +165,20 @@ const createScales = (args: Args) => {
         }
     }
 
-    if (!xScale) {
-        throw new Error('Failed to create xScale');
-    }
+    throw new Error('Failed to create xScale');
+}
 
-    return {xScale, yScale: createYScale(yAxis[0], visibleSeries, boundsHeight)};
+const createScales = (args: Args) => {
+    const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
+    let visibleSeries = getOnlyVisibleSeries(series);
+    // Reassign to all series in case of all series unselected,
+    // otherwise we will get an empty space without grid
+    visibleSeries = visibleSeries.length === 0 ? series : visibleSeries;
+
+    return {
+        xScale: createXScale(xAxis, visibleSeries, boundsWidth),
+        yScale: createYScale(yAxis[0], visibleSeries, boundsHeight),
+    };
 };
 
 /**
