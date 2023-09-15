@@ -1,7 +1,8 @@
+import {range} from 'd3';
 import React from 'react';
 import random from 'lodash/random';
 import {Meta, Story} from '@storybook/react';
-import {boolean, number} from '@storybook/addon-knobs';
+import {date} from '@storybook/addon-knobs';
 import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
@@ -16,45 +17,43 @@ import {D3Plugin} from '../..';
 
 const rowData: ScatterSeriesData<string>[] = [
     {
-        x: 1690686000000,
         y: 86.71905594602345,
         custom: 'green',
     },
     {
-        x: 1690426800000,
         y: 86.73089353359981,
         custom: 'yellow',
     },
     {
-        x: 1690254000000,
         y: 86.53675705168267,
         custom: 'red',
     },
     {
-        x: 1690772400000,
         y: 86.47880981408552,
         custom: 'blue',
     },
     {
-        x: 1690340400000,
         y: 86.4108836764148,
         custom: 'gray',
     },
     {
-        x: 1690599600000,
         y: 86.73440096266042,
         custom: 'pink',
     },
     {
-        x: 1690513200000,
         y: 86.64935929597681,
         custom: 'purple',
     },
 ];
 
 const shapeData = (data: Record<string, any>[]): ChartKitWidgetData<string> => {
-    const scatterData: ScatterSeriesData[] = data.map((d) => ({
-        x: d.x,
+    const startDate = date('startDate', new Date(2023, 6, 28, 6)).valueOf();
+    const endDate = date('endDate', new Date(2023, 6, 30, 6)).valueOf();
+    const step = (endDate - startDate) / data.length;
+    const dates = range(rowData.length).map((d) => startDate + step * d);
+
+    const scatterData: ScatterSeriesData[] = data.map((d, i) => ({
+        x: dates[i],
         y: d.y,
         radius: random(3, 6),
         custom: d.custom,
@@ -72,25 +71,10 @@ const shapeData = (data: Record<string, any>[]): ChartKitWidgetData<string> => {
         },
         xAxis: {
             type: 'datetime',
-            timestamps: data.map((d) => d.x),
-            grid: {
-                enabled: boolean('xAxis.grid.enabled', true),
-            },
-            labels: {
-                enabled: boolean('xAxis.labels.enabled', true),
-            },
-            ticks: {
-                pixelInterval: number('xAxis.ticks.pixelInterval', 100),
-            },
         },
         yAxis: [
             {
-                grid: {
-                    enabled: boolean('yAxis.grid.enabled', true),
-                },
-                labels: {
-                    enabled: boolean('yAxis.labels.enabled', true),
-                },
+                lineColor: 'transparent',
             },
         ],
         tooltip: {
