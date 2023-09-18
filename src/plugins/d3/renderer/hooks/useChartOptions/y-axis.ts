@@ -1,5 +1,4 @@
 import type {AxisDomain, AxisScale} from 'd3';
-import {select} from 'd3';
 import get from 'lodash/get';
 
 import type {
@@ -18,6 +17,7 @@ import {
     formatAxisTickLabel,
     getClosestPointsRange,
     getScaleTicks,
+    getLabelsMaxWidth,
 } from '../../utils';
 import type {PreparedAxis} from './types';
 import {createYScale} from '../useAxisScales';
@@ -36,26 +36,18 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
     // FIXME: it is necessary to filter data, since we do not draw overlapping ticks
 
     const step = getClosestPointsRange(axis, ticks);
-    const svg = select(document.body).append('svg');
-    const text = svg.append('g').append('text').style('font-size', axis.labels.style.fontSize);
-    text.selectAll('tspan')
-        .data(ticks as (string | number)[])
-        .enter()
-        .append('tspan')
-        .attr('x', 0)
-        .attr('dy', 0)
-        .text((d) => {
-            return formatAxisTickLabel({
-                axis,
-                value: d,
-                step,
-            });
-        });
+    const labels = (ticks as (string | number)[]).map((tick) =>
+        formatAxisTickLabel({
+            axis,
+            value: tick,
+            step,
+        }),
+    );
 
-    const maxWidth = (text.node() as SVGTextElement).getBoundingClientRect()?.width || 0;
-    svg.remove();
-
-    return maxWidth;
+    return getLabelsMaxWidth({
+        labels,
+        style: axis.labels.style,
+    });
 };
 
 const applyLabelsMaxWidth = (args: {

@@ -1,5 +1,7 @@
 import type {AxisDomain, AxisScale, Selection} from 'd3';
 import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
+import {BaseTextStyle} from '../../../../../types';
+import {hasOverlappingLabels} from '../text';
 
 type AxisBottomArgs = {
     scale: AxisScale<AxisDomain>;
@@ -9,6 +11,7 @@ type AxisBottomArgs = {
         labelFormat: (value: any) => string;
         labelsPaddings?: number;
         labelsDistance?: number;
+        labelsStyle?: BaseTextStyle;
         size: number;
         autoRotation?: boolean;
     };
@@ -37,20 +40,6 @@ function addDomain(
         .attr('d', `M0,0V0H${size}`);
 }
 
-function hasOverlappingLabels(nodes: SVGTextElement[], padding = 0) {
-    let elementX = 0;
-
-    return nodes.some(function (node) {
-        const r = node.getBoundingClientRect();
-
-        if (r.left < elementX) {
-            return true;
-        }
-        elementX = r.right + padding;
-        return false;
-    });
-}
-
 export function axisBottom(args: AxisBottomArgs) {
     const {
         scale,
@@ -58,6 +47,7 @@ export function axisBottom(args: AxisBottomArgs) {
             labelFormat,
             labelsPaddings = 0,
             labelsDistance = 0,
+            labelsStyle,
             size: tickSize,
             count: ticksCount,
             maxTickCount,
@@ -82,7 +72,7 @@ export function axisBottom(args: AxisBottomArgs) {
                     .attr('fill', 'currentColor')
                     .attr('y', spacing)
                     .attr('dy', '0.71em')
-                    .text((d) => labelFormat(d));
+                    .text(labelFormat);
 
                 return tick;
             })
@@ -93,7 +83,14 @@ export function axisBottom(args: AxisBottomArgs) {
         const labels = selection.selectAll('.tick text');
         const labelNodes = labels.nodes() as SVGTextElement[];
 
-        if (hasOverlappingLabels(labelNodes, labelsPaddings)) {
+        const overlapping = hasOverlappingLabels({
+            width: domainSize,
+            labels: values.map(labelFormat),
+            padding: labelsPaddings,
+            style: labelsStyle,
+        });
+
+        if (overlapping) {
             if (autoRotation) {
                 const labelHeight = labelNodes[0]?.getBoundingClientRect()?.height;
                 const labelOffset = (labelHeight / 2 + labelsDistance) / 2;
@@ -121,6 +118,6 @@ export function axisBottom(args: AxisBottomArgs) {
 
         selection.call(addDomain, {size: domainSize, color: domainColor});
 
-        selection.attr('text-anchor', 'middle');
+        selection.attr('text-anchor', 'middle').style('font-size', labelsStyle?.fontSize || '');
     };
 }

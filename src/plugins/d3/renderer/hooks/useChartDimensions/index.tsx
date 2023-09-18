@@ -62,6 +62,7 @@ const getHeightOccupiedByXAxis = ({
             padding: preparedXAxis.labels.padding,
             style: preparedXAxis.labels.style,
         });
+
         const labelsHeight = overlapping
             ? getLabelsMaxHeight({
                   labels,
@@ -101,16 +102,16 @@ export const useChartDimensions = (args: Args) => {
         args;
 
     return React.useMemo(() => {
-        console.log('useChartDimensions');
         const hasAxisRelatedSeries = preparedSeries.some(isAxisRelatedSeries);
+        const boundsWidth = getBoundsWidth({chartWidth: width, chartMargin: margin, preparedYAxis});
         const bottomOffset = getBottomOffset({
             hasAxisRelatedSeries,
             preparedLegend,
             preparedXAxis,
             preparedSeries,
-            width,
+            width: boundsWidth,
         });
-        const boundsWidth = getBoundsWidth({chartWidth: width, chartMargin: margin, preparedYAxis});
+
         const boundsHeight = height - margin.top - margin.bottom - bottomOffset;
 
         return {boundsWidth, boundsHeight};

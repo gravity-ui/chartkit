@@ -1,5 +1,5 @@
 import React from 'react';
-import {axisLeft, ScaleLinear, select} from 'd3';
+import {axisLeft, select} from 'd3';
 import type {AxisScale, AxisDomain} from 'd3';
 
 import {block} from '../../../../utils/cn';
@@ -12,6 +12,7 @@ import {
     setEllipsisForOverflowText,
     setEllipsisForOverflowTexts,
     getTicksCount,
+    getScaleTicks,
 } from '../utils';
 
 const b = block('d3-axis');
@@ -36,7 +37,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
         const tickSize = axis.grid.enabled ? width * -1 : 0;
-        const step = getClosestPointsRange(axis, (scale as ScaleLinear<number, number>).ticks());
+        const step = getClosestPointsRange(axis, getScaleTicks(scale as AxisScale<AxisDomain>));
 
         let yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
             .tickSize(tickSize)

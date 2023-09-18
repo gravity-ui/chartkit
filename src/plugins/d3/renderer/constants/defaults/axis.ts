@@ -1,5 +1,5 @@
 export const axisLabelsDefaults = {
     distance: 10,
-    padding: 5,
+    padding: 10,
     fontSize: 11,
 };

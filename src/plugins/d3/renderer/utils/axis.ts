@@ -68,8 +68,6 @@ export function getXAxisItems({
 }
 
 export function getMaxTickCount({axis, width}: {axis: PreparedAxis; width: number}) {
-    const minTickWidth =
-        (width - axis.labels.padding) /
-        (parseInt(axis.labels.style.fontSize) + axis.labels.padding);
+    const minTickWidth = parseInt(axis.labels.style.fontSize) + axis.labels.padding;
     return Math.floor(width / minTickWidth);
 }

@@ -11,6 +11,7 @@ import {
     setEllipsisForOverflowText,
     getTicksCount,
     getScaleTicks,
+    getMaxTickCount,
 } from '../utils';
 import {axisBottom} from '../utils/axis-generators';
 
@@ -52,11 +53,6 @@ export const AxisX = React.memo(({axis, width, height, scale, chartWidth}: Props
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
 
-        const minTickWidth =
-            (width - axis.labels.padding) /
-            (parseInt(axis.labels.style.fontSize) + axis.labels.padding);
-        const maxTickCount = Math.floor(width / minTickWidth);
-
         const xAxisGenerator = axisBottom({
             scale: scale as AxisScale<AxisDomain>,
             ticks: {
@@ -64,8 +60,9 @@ export const AxisX = React.memo(({axis, width, height, scale, chartWidth}: Props
                 labelFormat: getLabelFormatter({axis, scale}),
                 labelsPaddings: axis.labels.padding,
                 labelsDistance: axis.labels.distance,
+                labelsStyle: axis.labels.style,
                 count: getTicksCount({axis, range: width}),
-                maxTickCount: maxTickCount,
+                maxTickCount: getMaxTickCount({axis, width}),
                 autoRotation: axis.labels.autoRotation,
             },
             domain: {
