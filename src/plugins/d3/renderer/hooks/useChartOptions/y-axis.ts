@@ -1,4 +1,4 @@
-import type {ScaleLinear, AxisDomain} from 'd3';
+import type {AxisDomain, AxisScale} from 'd3';
 import {select} from 'd3';
 import get from 'lodash/get';
 
@@ -9,11 +9,16 @@ import type {
 } from '../../../../../types/widget-data';
 
 import {
+    axisLabelsDefaults,
     DEFAULT_AXIS_LABEL_FONT_SIZE,
-    DEFAULT_AXIS_LABEL_PADDING,
     DEFAULT_AXIS_TITLE_FONT_SIZE,
 } from '../../constants';
-import {getHorisontalSvgTextHeight, formatAxisTickLabel, getClosestPointsRange} from '../../utils';
+import {
+    getHorisontalSvgTextHeight,
+    formatAxisTickLabel,
+    getClosestPointsRange,
+    getScaleTicks,
+} from '../../utils';
 import type {PreparedAxis} from './types';
 import {createYScale} from '../useAxisScales';
 import {PreparedSeries} from '../useSeries/types';
@@ -26,10 +31,7 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
     }
 
     const scale = createYScale(axis, series as PreparedSeries[], 1);
-    const ticks: AxisDomain[] =
-        axis.type === 'category'
-            ? axis.categories || []
-            : (scale as ScaleLinear<number, number>).ticks();
+    const ticks: AxisDomain[] = getScaleTicks(scale as AxisScale<AxisDomain>);
 
     // FIXME: it is necessary to filter data, since we do not draw overlapping ticks
 
@@ -86,7 +88,8 @@ export const getPreparedYAxis = ({
         type: get(yAxis1, 'type', 'linear'),
         labels: {
             enabled: get(yAxis1, 'labels.enabled', true),
-            padding: get(yAxis1, 'labels.padding', DEFAULT_AXIS_LABEL_PADDING),
+            distance: get(yAxis1, 'labels.distance', axisLabelsDefaults.distance),
+            padding: get(yAxis1, 'labels.padding', axisLabelsDefaults.padding),
             dateFormat: get(yAxis1, 'labels.dateFormat'),
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,

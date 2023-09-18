@@ -1,5 +1,5 @@
 import React from 'react';
-import {axisBottom, ScaleLinear, select} from 'd3';
+import {select} from 'd3';
 import type {AxisScale, AxisDomain} from 'd3';
 
 import {block} from '../../../../utils/cn';
@@ -8,13 +8,13 @@ import type {ChartScale, PreparedAxis} from '../hooks';
 import {
     formatAxisTickLabel,
     getClosestPointsRange,
-    parseTransformStyle,
     setEllipsisForOverflowText,
     getTicksCount,
+    getScaleTicks,
 } from '../utils';
+import {axisBottom} from '../utils/axis-generators';
 
 const b = block('d3-axis');
-const EMPTY_SPACE_BETWEEN_LABELS = 10;
 
 type Props = {
     axis: PreparedAxis;
@@ -24,8 +24,24 @@ type Props = {
     chartWidth: number;
 };
 
-// FIXME: add overflow ellipsis for the labels that out of boundaries
-export const AxisX = ({axis, width, height, scale, chartWidth}: Props) => {
+function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale}) {
+    const ticks = getScaleTicks(scale as AxisScale<AxisDomain>);
+    const tickStep = getClosestPointsRange(axis, ticks);
+
+    return (value: any) => {
+        if (!axis.labels.enabled) {
+            return '';
+        }
+
+        return formatAxisTickLabel({
+            axis,
+            value,
+            step: tickStep,
+        });
+    };
+}
+
+export const AxisX = React.memo(({axis, width, height, scale, chartWidth}: Props) => {
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -35,71 +51,44 @@ export const AxisX = ({axis, width, height, scale, chartWidth}: Props) => {
 
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
-        const tickSize = axis.grid.enabled ? height * -1 : 0;
-        const ticks =
-            axis.type === 'category' ? [] : (scale as ScaleLinear<number, number>).ticks();
-        const tickStep = getClosestPointsRange(axis, ticks);
-        let xAxisGenerator = axisBottom(scale as AxisScale<AxisDomain>)
-            .tickSize(tickSize)
-            .tickPadding(axis.labels.padding)
-            .tickFormat((value) => {
-                if (!axis.labels.enabled) {
-                    return '';
-                }
 
-                return formatAxisTickLabel({
-                    axis,
-                    value,
-                    step: tickStep,
-                });
-            });
+        const minTickWidth =
+            (width - axis.labels.padding) /
+            (parseInt(axis.labels.style.fontSize) + axis.labels.padding);
+        const maxTickCount = Math.floor(width / minTickWidth);
 
-        const ticksCount = getTicksCount({axis, range: width});
-        if (ticksCount) {
-            xAxisGenerator = xAxisGenerator.ticks(ticksCount);
-        }
+        const xAxisGenerator = axisBottom({
+            scale: scale as AxisScale<AxisDomain>,
+            ticks: {
+                size: axis.grid.enabled ? height * -1 : 0,
+                labelFormat: getLabelFormatter({axis, scale}),
+                labelsPaddings: axis.labels.padding,
+                labelsDistance: axis.labels.distance,
+                count: getTicksCount({axis, range: width}),
+                maxTickCount: maxTickCount,
+                autoRotation: axis.labels.autoRotation,
+            },
+            domain: {
+                size: width,
+                color: axis.lineColor,
+            },
+        });
 
         svgElement.call(xAxisGenerator).attr('class', b());
-        svgElement
-            .select('.domain')
-            .attr('d', `M0,0V0H${width}`)
-            .style('stroke', axis.lineColor || '');
 
         if (axis.labels.enabled) {
-            svgElement.selectAll('.tick text').style('font-size', axis.labels.style.fontSize);
+            svgElement.style('font-size', axis.labels.style.fontSize);
         }
-
-        const transformStyle = svgElement.select('.tick').attr('transform');
-        const {x} = parseTransformStyle(transformStyle);
-
-        if (x === 0) {
-            // Remove tick that has the same x coordinate like domain
-            svgElement.select('.tick').remove();
-        }
-
-        // remove overlapping labels
-        let elementX = 0;
-        svgElement
-            .selectAll('.tick')
-            .filter(function () {
-                const node = this as unknown as Element;
-                const r = node.getBoundingClientRect();
-
-                if (r.left < elementX) {
-                    return true;
-                }
-                elementX = r.right + EMPTY_SPACE_BETWEEN_LABELS;
-                return false;
-            })
-            .remove();
 
         // add an ellipsis to the labels on the right that go beyond the boundaries of the chart
         svgElement.selectAll('.tick text').each(function () {
             const node = this as unknown as SVGTextElement;
-            const textRect = node.getBoundingClientRect();
+            const textRect = node.getBBox();
+            const matrix = node.transform.baseVal.consolidate()?.matrix || ({} as SVGMatrix);
+            const right = matrix.a * textRect.right + matrix.c * textRect.bottom + matrix.e;
 
-            if (textRect.right > chartWidth) {
-                const maxWidth = textRect.width - (textRect.right - chartWidth) * 2;
+            if (right > chartWidth) {
+                const maxWidth = textRect.width - (right - chartWidth) * 2;
                 select(node).call(setEllipsisForOverflowText, maxWidth);
             }
         });
@@ -122,4 +111,4 @@ export const AxisX = ({axis, width, height, scale, chartWidth}: Props) => {
     }, [axis, width, height, scale]);
 
     return <g ref={ref} />;
-};
+});

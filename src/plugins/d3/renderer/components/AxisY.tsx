@@ -15,7 +15,6 @@ import {
 } from '../utils';
 
 const b = block('d3-axis');
-const EMPTY_SPACE_BETWEEN_LABELS = 10;
 const MAX_WIDTH = 80;
 
 type Props = {
@@ -41,7 +40,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
 
         let yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
             .tickSize(tickSize)
-            .tickPadding(axis.labels.padding)
+            .tickPadding(axis.labels.distance)
             .tickFormat((value) => {
                 if (!axis.labels.enabled) {
                     return '';
@@ -94,13 +93,13 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
                 if (r.bottom > elementY && index !== 0) {
                     return true;
                 }
-                elementY = r.top - EMPTY_SPACE_BETWEEN_LABELS;
+                elementY = r.top - axis.labels.padding;
                 return false;
             })
             .remove();
 
         if (axis.title.text) {
-            const textY = axis.title.height + axis.labels.padding;
+            const textY = axis.title.height + axis.labels.distance;
 
             svgElement
                 .append('text')
