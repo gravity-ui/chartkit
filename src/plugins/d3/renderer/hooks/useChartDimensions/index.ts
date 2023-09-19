@@ -1,6 +1,9 @@
-import type {ChartMargin} from '../../../../../types/widget-data';
+import {AxisDomain, AxisScale} from 'd3';
+import React from 'react';
 
-import type {PreparedAxis, PreparedLegend} from '../../hooks';
+import type {ChartMargin} from '../../../../../types';
+import type {PreparedAxis, PreparedLegend, PreparedSeries} from '../../hooks';
+import {createXScale} from '../../hooks';
 import {
     formatAxisTickLabel,
     getClosestPointsRange,
@@ -13,9 +16,6 @@ import {
     isAxisRelatedSeries,
 } from '../../utils';
 import {getBoundsWidth} from './utils';
-import {createXScale, PreparedSeries} from '../../hooks';
-import {AxisDomain, AxisScale} from 'd3';
-import React from 'react';
 
 export {getBoundsWidth} from './utils';
 
