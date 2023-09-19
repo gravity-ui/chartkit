@@ -25,6 +25,7 @@ export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}):
             padding: get(xAxis, 'labels.padding', axisLabelsDefaults.padding),
             dateFormat: get(xAxis, 'labels.dateFormat'),
             numberFormat: get(xAxis, 'labels.numberFormat'),
+            autoRotation: get(xAxis, 'labels.autoRotation', true),
             style: {fontSize: get(xAxis, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE)},
         },
         lineColor: get(xAxis, 'lineColor'),

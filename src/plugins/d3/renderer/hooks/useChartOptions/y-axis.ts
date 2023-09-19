@@ -82,6 +82,7 @@ export const getPreparedYAxis = ({
             enabled: get(yAxis1, 'labels.enabled', true),
             distance: get(yAxis1, 'labels.distance', axisLabelsDefaults.distance),
             padding: get(yAxis1, 'labels.padding', axisLabelsDefaults.padding),
+            autoRotation: get(yAxis1, 'labels.autoRotation', false),
             dateFormat: get(yAxis1, 'labels.dateFormat'),
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,
