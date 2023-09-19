@@ -13,6 +13,7 @@ import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
 import type {PreparedBarXSeries} from '../useSeries/types';
 import {DEFAULT_BAR_X_SERIES_OPTIONS} from './defaults';
 
+const MIN_RECT_WIDTH = 1;
 const MIN_RECT_GAP = 1;
 const MIN_GROUP_GAP = 1;
 const DEFAULT_LABEL_PADDING = 7;
@@ -130,7 +131,10 @@ function prepareData(args: {
     const groupGap = Math.max(bandWidth * groupPadding, MIN_GROUP_GAP);
     const groupWidth = bandWidth - groupGap;
     const rectGap = Math.max(bandWidth * barPadding, MIN_RECT_GAP);
-    const rectWidth = Math.min(groupWidth / maxGroupSize - rectGap, barMaxWidth);
+    const rectWidth = Math.max(
+        MIN_RECT_WIDTH,
+        Math.min(groupWidth / maxGroupSize - rectGap, barMaxWidth),
+    );
 
     const result: ShapeData[] = [];
 

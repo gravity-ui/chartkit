@@ -1,7 +1,8 @@
 import type {AxisDomain, AxisScale, Selection} from 'd3';
-import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
+import {select} from 'd3';
 import {BaseTextStyle} from '../../../../../types';
-import {hasOverlappingLabels} from '../text';
+import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
+import {hasOverlappingLabels, setEllipsisForOverflowText} from '../text';
 
 type AxisBottomArgs = {
     scale: AxisScale<AxisDomain>;
@@ -61,6 +62,9 @@ export function axisBottom(args: AxisBottomArgs) {
     const values = getXAxisItems({scale, count: ticksCount, maxCount: maxTickCount});
 
     return function (selection: Selection<SVGGElement, unknown, null, undefined>) {
+        const x = selection.node()?.getBoundingClientRect()?.x || 0;
+        const right = x + domainSize;
+
         selection
             .selectAll('.tick')
             .data(values)
@@ -80,6 +84,15 @@ export function axisBottom(args: AxisBottomArgs) {
                 return `translate(${position(d as AxisDomain) + offset},0)`;
             });
 
+        // Remove tick that has the same x coordinate like domain
+        selection
+            .select('.tick')
+            .filter((d) => {
+                return position(d as AxisDomain) === 0;
+            })
+            .select('line')
+            .remove();
+
         const labels = selection.selectAll('.tick text');
         const labelNodes = labels.nodes() as SVGTextElement[];
 
@@ -90,34 +103,64 @@ export function axisBottom(args: AxisBottomArgs) {
             style: labelsStyle,
         });
 
-        if (overlapping) {
-            if (autoRotation) {
-                const labelHeight = labelNodes[0]?.getBoundingClientRect()?.height;
-                const labelOffset = (labelHeight / 2 + labelsMargin) / 2;
-                labels
-                    .attr('text-anchor', 'end')
-                    .attr('transform', `rotate(-45) translate(-${labelOffset}, -${labelOffset})`);
-            } else {
-                // remove overlapping labels
-                let elementX = 0;
-                selection
-                    .selectAll('.tick')
-                    .filter(function () {
-                        const node = this as unknown as Element;
-                        const r = node.getBoundingClientRect();
+        const rotationAngle = overlapping && autoRotation ? '-45' : undefined;
 
-                        if (r.left < elementX) {
-                            return true;
-                        }
-                        elementX = r.right + labelsPaddings;
-                        return false;
-                    })
-                    .remove();
-            }
+        if (rotationAngle) {
+            const labelHeight = labelNodes[0]?.getBoundingClientRect()?.height;
+            const labelOffset = (labelHeight / 2 + labelsMargin) / 2;
+            labels
+                .attr('text-anchor', 'end')
+                .attr(
+                    'transform',
+                    `rotate(${rotationAngle}) translate(-${labelOffset}, -${labelOffset})`,
+                );
+        } else {
+            // remove overlapping labels
+            let elementX = 0;
+            selection
+                .selectAll('.tick')
+                .filter(function () {
+                    const node = this as unknown as Element;
+                    const r = node.getBoundingClientRect();
+
+                    if (r.left < elementX) {
+                        return true;
+                    }
+                    elementX = r.right + labelsPaddings;
+                    return false;
+                })
+                .remove();
+
+            // add an ellipsis to the labels that go beyond the boundaries of the chart
+            labels.each(function (_d, i, nodes) {
+                if (i === nodes.length - 1) {
+                    const currentElement = this as SVGTextElement;
+                    const prevElement = nodes[i - 1] as SVGTextElement;
+                    const text = select(currentElement);
+
+                    const currentElementPosition = currentElement.getBoundingClientRect();
+                    const prevElementPosition = prevElement?.getBoundingClientRect();
+
+                    const lackingSpace = Math.max(0, currentElementPosition.right - right);
+                    if (lackingSpace) {
+                        const remainSpace =
+                            right - (prevElementPosition?.right || 0) - labelsPaddings;
+
+                        const translateX = currentElementPosition.width / 2 - lackingSpace;
+                        text.attr('text-anchor', 'end').attr(
+                            'transform',
+                            `translate(${translateX},0)`,
+                        );
+
+                        setEllipsisForOverflowText(text, remainSpace);
+                    }
+                }
+            });
         }
 
-        selection.call(addDomain, {size: domainSize, color: domainColor});
-
-        selection.attr('text-anchor', 'middle').style('font-size', labelsStyle?.fontSize || '');
+        selection
+            .call(addDomain, {size: domainSize, color: domainColor})
+            .attr('text-anchor', 'middle')
+            .style('font-size', labelsStyle?.fontSize || '');
     };
 }

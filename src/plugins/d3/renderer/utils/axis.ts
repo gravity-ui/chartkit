@@ -50,18 +50,11 @@ export function getXAxisItems({
     count?: number;
     maxCount: number;
 }) {
-    const offset = getXAxisOffset();
     let values = getScaleTicks(scale, count);
-    const position = getXTickPosition({scale, offset});
 
     if (values.length > maxCount) {
         const step = Math.ceil(values.length / maxCount);
         values = values.filter((_: AxisDomain, i: number) => i % step === 0);
-    }
-
-    // Remove tick that has the same x coordinate like domain
-    if (values.length && position(values[0]) === 0) {
-        values = values.slice(1);
     }
 
     return values;
