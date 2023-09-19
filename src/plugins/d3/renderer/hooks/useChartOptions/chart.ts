@@ -39,7 +39,7 @@ const getMarginLeft = (args: {
     if (hasAxisRelatedSeries) {
         marginLeft +=
             AXIS_LINE_WIDTH +
-            preparedY1Axis.labels.padding +
+            preparedY1Axis.labels.margin +
             (preparedY1Axis.labels.maxWidth || 0) +
             preparedY1Axis.title.height;
     }

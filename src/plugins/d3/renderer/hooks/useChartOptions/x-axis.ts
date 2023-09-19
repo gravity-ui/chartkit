@@ -3,8 +3,8 @@ import get from 'lodash/get';
 import type {ChartKitWidgetData} from '../../../../../types/widget-data';
 
 import {
+    axisLabelsDefaults,
     DEFAULT_AXIS_LABEL_FONT_SIZE,
-    DEFAULT_AXIS_LABEL_PADDING,
     DEFAULT_AXIS_TITLE_FONT_SIZE,
 } from '../../constants';
 import type {PreparedAxis} from './types';
@@ -21,9 +21,11 @@ export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}):
         type: get(xAxis, 'type', 'linear'),
         labels: {
             enabled: get(xAxis, 'labels.enabled', true),
-            padding: get(xAxis, 'labels.padding', DEFAULT_AXIS_LABEL_PADDING),
+            margin: get(xAxis, 'labels.margin', axisLabelsDefaults.margin),
+            padding: get(xAxis, 'labels.padding', axisLabelsDefaults.padding),
             dateFormat: get(xAxis, 'labels.dateFormat'),
             numberFormat: get(xAxis, 'labels.numberFormat'),
+            autoRotation: get(xAxis, 'labels.autoRotation', true),
             style: {fontSize: get(xAxis, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE)},
         },
         lineColor: get(xAxis, 'lineColor'),

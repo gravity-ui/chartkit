@@ -1,5 +1,4 @@
-import type {ScaleLinear, AxisDomain} from 'd3';
-import {select} from 'd3';
+import type {AxisDomain, AxisScale} from 'd3';
 import get from 'lodash/get';
 
 import type {
@@ -9,11 +8,17 @@ import type {
 } from '../../../../../types/widget-data';
 
 import {
+    axisLabelsDefaults,
     DEFAULT_AXIS_LABEL_FONT_SIZE,
-    DEFAULT_AXIS_LABEL_PADDING,
     DEFAULT_AXIS_TITLE_FONT_SIZE,
 } from '../../constants';
-import {getHorisontalSvgTextHeight, formatAxisTickLabel, getClosestPointsRange} from '../../utils';
+import {
+    getHorisontalSvgTextHeight,
+    formatAxisTickLabel,
+    getClosestPointsRange,
+    getScaleTicks,
+    getLabelsMaxWidth,
+} from '../../utils';
 import type {PreparedAxis} from './types';
 import {createYScale} from '../useAxisScales';
 import {PreparedSeries} from '../useSeries/types';
@@ -26,34 +31,23 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
     }
 
     const scale = createYScale(axis, series as PreparedSeries[], 1);
-    const ticks: AxisDomain[] =
-        axis.type === 'category'
-            ? axis.categories || []
-            : (scale as ScaleLinear<number, number>).ticks();
+    const ticks: AxisDomain[] = getScaleTicks(scale as AxisScale<AxisDomain>);
 
     // FIXME: it is necessary to filter data, since we do not draw overlapping ticks
 
     const step = getClosestPointsRange(axis, ticks);
-    const svg = select(document.body).append('svg');
-    const text = svg.append('g').append('text').style('font-size', axis.labels.style.fontSize);
-    text.selectAll('tspan')
-        .data(ticks as (string | number)[])
-        .enter()
-        .append('tspan')
-        .attr('x', 0)
-        .attr('dy', 0)
-        .text((d) => {
-            return formatAxisTickLabel({
-                axis,
-                value: d,
-                step,
-            });
-        });
+    const labels = (ticks as (string | number)[]).map((tick) =>
+        formatAxisTickLabel({
+            axis,
+            value: tick,
+            step,
+        }),
+    );
 
-    const maxWidth = (text.node() as SVGTextElement).getBoundingClientRect()?.width || 0;
-    svg.remove();
-
-    return maxWidth;
+    return getLabelsMaxWidth({
+        labels,
+        style: axis.labels.style,
+    });
 };
 
 const applyLabelsMaxWidth = (args: {
@@ -86,7 +80,9 @@ export const getPreparedYAxis = ({
         type: get(yAxis1, 'type', 'linear'),
         labels: {
             enabled: get(yAxis1, 'labels.enabled', true),
-            padding: get(yAxis1, 'labels.padding', DEFAULT_AXIS_LABEL_PADDING),
+            margin: get(yAxis1, 'labels.margin', axisLabelsDefaults.margin),
+            padding: get(yAxis1, 'labels.padding', axisLabelsDefaults.padding),
+            autoRotation: get(yAxis1, 'labels.autoRotation', false),
             dateFormat: get(yAxis1, 'labels.dateFormat'),
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,

@@ -6,11 +6,27 @@ export type ChartKitWidgetAxisType = 'category' | 'datetime' | 'linear';
 export type ChartKitWidgetAxisLabels = {
     /** Enable or disable the axis labels. */
     enabled?: boolean;
-    /** The pixel padding for axis labels. */
+
+    /** The label's pixel distance from the perimeter of the plot area.
+     *
+     * @default: 10
+     */
+    margin?: number;
+
+    /** The pixel padding for axis labels, to ensure white space between them.
+     *
+     * @defaults: 5
+     * */
     padding?: number;
+
     dateFormat?: string;
     numberFormat?: FormatNumberOptions;
     style?: Partial<BaseTextStyle>;
+
+    /** For horizontal axes, enable label rotation to prevent overlapping labels.
+     * If there is enough space, labels are not rotated.
+     * As the chart gets narrower, it will start rotating the labels -45 degrees. */
+    autoRotation?: boolean;
 };
 
 export type ChartKitWidgetAxis = {

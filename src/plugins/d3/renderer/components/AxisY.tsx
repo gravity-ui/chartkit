@@ -1,5 +1,5 @@
 import React from 'react';
-import {axisLeft, ScaleLinear, select} from 'd3';
+import {axisLeft, select} from 'd3';
 import type {AxisScale, AxisDomain} from 'd3';
 
 import {block} from '../../../../utils/cn';
@@ -12,10 +12,10 @@ import {
     setEllipsisForOverflowText,
     setEllipsisForOverflowTexts,
     getTicksCount,
+    getScaleTicks,
 } from '../utils';
 
 const b = block('d3-axis');
-const EMPTY_SPACE_BETWEEN_LABELS = 10;
 const MAX_WIDTH = 80;
 
 type Props = {
@@ -37,11 +37,11 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
         const tickSize = axis.grid.enabled ? width * -1 : 0;
-        const step = getClosestPointsRange(axis, (scale as ScaleLinear<number, number>).ticks());
+        const step = getClosestPointsRange(axis, getScaleTicks(scale as AxisScale<AxisDomain>));
 
         let yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
             .tickSize(tickSize)
-            .tickPadding(axis.labels.padding)
+            .tickPadding(axis.labels.margin)
             .tickFormat((value) => {
                 if (!axis.labels.enabled) {
                     return '';
@@ -94,13 +94,13 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
                 if (r.bottom > elementY && index !== 0) {
                     return true;
                 }
-                elementY = r.top - EMPTY_SPACE_BETWEEN_LABELS;
+                elementY = r.top - axis.labels.padding;
                 return false;
             })
             .remove();
 
         if (axis.title.text) {
-            const textY = axis.title.height + axis.labels.padding;
+            const textY = axis.title.height + axis.labels.margin;
 
             svgElement
                 .append('text')

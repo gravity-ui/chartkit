@@ -12,7 +12,6 @@ import {
     useShapes,
     useTooltip,
 } from '../hooks';
-import {isAxisRelatedSeries} from '../utils';
 import {AxisY} from './AxisY';
 import {AxisX} from './AxisX';
 import {Legend} from './Legend';
@@ -49,13 +48,13 @@ export const Chart = (props: Props) => {
             preparedYAxis: yAxis,
         });
     const {boundsWidth, boundsHeight} = useChartDimensions({
-        hasAxisRelatedSeries: data.series.data.some(isAxisRelatedSeries),
         width,
         height,
         margin: chart.margin,
         preparedLegend,
         preparedXAxis: xAxis,
         preparedYAxis: yAxis,
+        preparedSeries: preparedSeries,
     });
     const {xScale, yScale} = useAxisScales({
         boundsWidth,
