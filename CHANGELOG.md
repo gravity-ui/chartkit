@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.6.0](https://github.com/gravity-ui/chartkit/compare/v4.5.0...v4.6.0) (2023-09-19)
+
+
+### Features
+
+* **D3 plugin:** add paginated legend ([#289](https://github.com/gravity-ui/chartkit/issues/289)) ([0846585](https://github.com/gravity-ui/chartkit/commit/08465850d3d512267aeda17d622c59103d35968e))
+* **D3 plugin:** auto rotate overlapping labels ([#293](https://github.com/gravity-ui/chartkit/issues/293)) ([25ddd06](https://github.com/gravity-ui/chartkit/commit/25ddd06598872e977954a317ce920001f88033d0))
+
+
+### Bug Fixes
+
+* **D3 plugin:** default datetime axis labels formatter ([#292](https://github.com/gravity-ui/chartkit/issues/292)) ([ed1289e](https://github.com/gravity-ui/chartkit/commit/ed1289eea359a94732d5665181266af5e4b226aa))
+* **D3 plugin:** use units for number label formatter ([#290](https://github.com/gravity-ui/chartkit/issues/290)) ([70c36df](https://github.com/gravity-ui/chartkit/commit/70c36dfec058782e26b84c72017cc80c3a6e3066))
+
 ## [4.5.0](https://github.com/gravity-ui/chartkit/compare/v4.4.1...v4.5.0) (2023-09-12)
 
 
