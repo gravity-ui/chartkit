@@ -8,7 +8,7 @@ import type {
 } from '../../../../../types/widget-data';
 
 type PreparedAxisLabels = Omit<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'style'> &
-    Required<Pick<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'distance'>> & {
+    Required<Pick<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'margin'>> & {
         style: BaseTextStyle;
         maxWidth?: number;
     };

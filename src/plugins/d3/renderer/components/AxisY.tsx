@@ -41,7 +41,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
 
         let yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
             .tickSize(tickSize)
-            .tickPadding(axis.labels.distance)
+            .tickPadding(axis.labels.margin)
             .tickFormat((value) => {
                 if (!axis.labels.enabled) {
                     return '';
@@ -100,7 +100,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             .remove();
 
         if (axis.title.text) {
-            const textY = axis.title.height + axis.labels.distance;
+            const textY = axis.title.height + axis.labels.margin;
 
             svgElement
                 .append('text')

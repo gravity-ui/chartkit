@@ -10,7 +10,7 @@ type AxisBottomArgs = {
         maxTickCount: number;
         labelFormat: (value: any) => string;
         labelsPaddings?: number;
-        labelsDistance?: number;
+        labelsMargin?: number;
         labelsStyle?: BaseTextStyle;
         size: number;
         autoRotation?: boolean;
@@ -46,7 +46,7 @@ export function axisBottom(args: AxisBottomArgs) {
         ticks: {
             labelFormat,
             labelsPaddings = 0,
-            labelsDistance = 0,
+            labelsMargin = 0,
             labelsStyle,
             size: tickSize,
             count: ticksCount,
@@ -56,7 +56,7 @@ export function axisBottom(args: AxisBottomArgs) {
         domain: {size: domainSize, color: domainColor},
     } = args;
     const offset = getXAxisOffset();
-    const spacing = Math.max(tickSize, 0) + labelsDistance;
+    const spacing = Math.max(tickSize, 0) + labelsMargin;
     const position = getXTickPosition({scale, offset});
     const values = getXAxisItems({scale, count: ticksCount, maxCount: maxTickCount});
 
@@ -93,7 +93,7 @@ export function axisBottom(args: AxisBottomArgs) {
         if (overlapping) {
             if (autoRotation) {
                 const labelHeight = labelNodes[0]?.getBoundingClientRect()?.height;
-                const labelOffset = (labelHeight / 2 + labelsDistance) / 2;
+                const labelOffset = (labelHeight / 2 + labelsMargin) / 2;
                 labels
                     .attr('text-anchor', 'end')
                     .attr('transform', `rotate(-45) translate(-${labelOffset}, -${labelOffset})`);

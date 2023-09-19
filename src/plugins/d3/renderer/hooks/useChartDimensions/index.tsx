@@ -70,7 +70,7 @@ const getHeightOccupiedByXAxis = ({
                   transform: 'rotate(-45)',
               })
             : getHorisontalSvgTextHeight({text: 'Tmp', style: preparedXAxis.labels.style});
-        height += preparedXAxis.labels.distance + labelsHeight;
+        height += preparedXAxis.labels.margin + labelsHeight;
     }
 
     return height;

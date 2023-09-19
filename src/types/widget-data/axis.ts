@@ -11,7 +11,7 @@ export type ChartKitWidgetAxisLabels = {
      *
      * @default: 10
      */
-    distance?: number;
+    margin?: number;
 
     /** The pixel padding for axis labels, to ensure white space between them.
      *

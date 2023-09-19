@@ -21,7 +21,7 @@ export const getPreparedXAxis = ({xAxis}: {xAxis: ChartKitWidgetData['xAxis']}):
         type: get(xAxis, 'type', 'linear'),
         labels: {
             enabled: get(xAxis, 'labels.enabled', true),
-            distance: get(xAxis, 'labels.distance', axisLabelsDefaults.distance),
+            margin: get(xAxis, 'labels.margin', axisLabelsDefaults.margin),
             padding: get(xAxis, 'labels.padding', axisLabelsDefaults.padding),
             dateFormat: get(xAxis, 'labels.dateFormat'),
             numberFormat: get(xAxis, 'labels.numberFormat'),

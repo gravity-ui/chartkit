@@ -59,7 +59,7 @@ export const AxisX = React.memo(({axis, width, height, scale, chartWidth}: Props
                 size: axis.grid.enabled ? height * -1 : 0,
                 labelFormat: getLabelFormatter({axis, scale}),
                 labelsPaddings: axis.labels.padding,
-                labelsDistance: axis.labels.distance,
+                labelsMargin: axis.labels.margin,
                 labelsStyle: axis.labels.style,
                 count: getTicksCount({axis, range: width}),
                 maxTickCount: getMaxTickCount({axis, width}),
