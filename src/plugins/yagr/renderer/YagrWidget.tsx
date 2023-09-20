@@ -6,6 +6,7 @@ import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist
 import {i18n} from '../../../i18n';
 import type {ChartKitWidgetRef} from '../../../types';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
+import {getChartPerformanceDuration, markChartPerformance} from '../../../utils';
 import {useWidgetData} from './useWidgetData';
 import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from './utils';
 import {Yagr, YagrWidgetProps} from '../types';
@@ -28,6 +29,7 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
 
         const yagrRef = React.useRef<YagrReactRef>(null);
         const [yagr, setYagr] = React.useState<Yagr>();
+        markChartPerformance(id);
 
         if (!data || isEmpty(data)) {
             throw new ChartKitError({
@@ -41,10 +43,9 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
         const handleChartLoading: NonNullable<YagrChartProps['onChartLoad']> = React.useCallback(
             (chart, {renderTime}) => {
                 onLoad?.({...data, widget: chart, widgetRendering: renderTime});
-                onRender?.({renderTime});
                 setYagr(chart);
             },
-            [onLoad, onRender, data, setYagr],
+            [onLoad, data, setYagr],
         );
 
         const onWindowResize = React.useCallback(() => {
@@ -100,6 +101,11 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
         React.useLayoutEffect(() => {
             onChartLoad?.({widget: yagr});
         }, [yagr, onChartLoad]);
+
+        React.useLayoutEffect(() => {
+            // FIXME: move this logic to Yagr cause of this method does not triggered in case of rerendering Yagr component itself
+            onRender?.({renderTime: getChartPerformanceDuration(id)});
+        });
 
         return (
             <React.Fragment>
