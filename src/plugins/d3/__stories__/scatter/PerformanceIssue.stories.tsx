@@ -43,7 +43,6 @@ const Template: Story = () => {
 
     return (
         <div style={{height: '300px', width: '100%'}}>
-            {/* @ts-ignore */}
             <ChartKit ref={chartkitRef} type="d3" data={widgetData} onRender={action('onRender')} />
         </div>
     );

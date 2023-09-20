@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 import type {DebouncedFunc} from 'lodash';
 
 import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
-import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../utils';
+import {getRandomCKId} from '../../../utils';
 
 import {Chart} from './components';
 
@@ -17,27 +17,21 @@ type ChartDimensions = {
 
 const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'d3'>>(
     function D3Widget(props, forwardedRef) {
-        const {id, data, onRender} = props;
+        const {data, onLoad, onRender} = props;
         const ref = React.useRef<HTMLDivElement>(null);
         const debounced = React.useRef<DebouncedFunc<() => void> | undefined>();
         const [dimensions, setDimensions] = React.useState<Partial<ChartDimensions>>();
 
-        const chartId = React.useMemo(() => `${id}_${getRandomCKId()}`, [data, id]);
+        //FIXME: add chartPerfomance data to callbacks;
+        React.useLayoutEffect(() => {
+            if (onLoad) {
+                onLoad({});
+            }
 
-        React.useEffect(() => {
-            markChartPerformance(chartId);
-            const channel = new MessageChannel();
-
-            channel.port1.onmessage = function () {
-                if (onRender) {
-                    onRender({renderTime: getChartPerformanceDuration(chartId)});
-                }
-            };
-
-            requestAnimationFrame(function () {
-                channel.port2.postMessage(undefined);
-            });
-        }, [chartId, onRender]);
+            if (onRender) {
+                onRender({});
+            }
+        }, []);
 
         const handleResize = React.useCallback(() => {
             const parentElement = ref.current?.parentElement;

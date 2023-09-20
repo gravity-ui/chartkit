@@ -1,5 +1,6 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
@@ -44,7 +45,12 @@ const Template: Story = () => {
 
     return (
         <div style={{height: '300px', width: '100%'}}>
-            <ChartKit ref={chartkitRef} type="highcharts" data={widgetData} />
+            <ChartKit
+                ref={chartkitRef}
+                type="highcharts"
+                data={widgetData}
+                onLoad={action('onLoad')}
+            />
         </div>
     );
 };
