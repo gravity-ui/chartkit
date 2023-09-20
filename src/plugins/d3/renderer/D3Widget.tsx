@@ -17,9 +17,21 @@ type ChartDimensions = {
 
 const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'d3'>>(
     function D3Widget(props, forwardedRef) {
+        const {data, onLoad, onRender} = props;
         const ref = React.useRef<HTMLDivElement>(null);
         const debounced = React.useRef<DebouncedFunc<() => void> | undefined>();
         const [dimensions, setDimensions] = React.useState<Partial<ChartDimensions>>();
+
+        //FIXME: add chartPerfomance data to callbacks;
+        React.useLayoutEffect(() => {
+            if (onLoad) {
+                onLoad({});
+            }
+
+            if (onRender) {
+                onRender({});
+            }
+        }, []);
 
         const handleResize = React.useCallback(() => {
             const parentElement = ref.current?.parentElement;
@@ -78,7 +90,7 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
                         left={dimensions.left || 0}
                         width={dimensions.width}
                         height={dimensions.height}
-                        data={props.data}
+                        data={data}
                     />
                 )}
             </div>

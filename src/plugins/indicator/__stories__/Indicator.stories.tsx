@@ -1,5 +1,6 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react';
+import {action} from '@storybook/addon-actions';
 import {withKnobs, boolean, color as colorKnob, radios, text} from '@storybook/addon-knobs';
 import {cloneDeep} from 'lodash';
 import {Button} from '@gravity-ui/uikit';
@@ -48,7 +49,13 @@ const Template: Story = () => {
 
     return (
         <div style={{height: 300, width: '100%'}}>
-            <ChartKit ref={chartkitRef} id="1" type="indicator" data={resultData} />
+            <ChartKit
+                ref={chartkitRef}
+                id="1"
+                type="indicator"
+                data={resultData}
+                onLoad={action('onLoad')}
+            />
         </div>
     );
 };
