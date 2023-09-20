@@ -7,7 +7,7 @@ export function setEllipsisForOverflowText(
     maxWidth: number,
 ) {
     let text = selection.text();
-    selection.text(null).attr('text-anchor', 'left').append('title').text(text);
+    selection.text(null).append('title').text(text);
     const tSpan = selection.append('tspan').text(text);
 
     let textLength = tSpan.node()?.getComputedTextLength() || 0;

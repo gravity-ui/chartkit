@@ -112,7 +112,6 @@ export const Chart = (props: Props) => {
                                     width={boundsWidth}
                                     height={boundsHeight}
                                     scale={xScale}
-                                    chartWidth={width}
                                 />
                             </g>
                         </React.Fragment>

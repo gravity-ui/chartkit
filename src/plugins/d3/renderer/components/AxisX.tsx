@@ -22,7 +22,6 @@ type Props = {
     width: number;
     height: number;
     scale: ChartScale;
-    chartWidth: number;
 };
 
 function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale}) {
@@ -42,16 +41,13 @@ function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale
     };
 }
 
-export const AxisX = React.memo(({axis, width, height, scale, chartWidth}: Props) => {
+export const AxisX = React.memo(({axis, width, height, scale}: Props) => {
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
         if (!ref.current) {
             return;
         }
-
-        const svgElement = select(ref.current);
-        svgElement.selectAll('*').remove();
 
         const xAxisGenerator = axisBottom({
             scale: scale as AxisScale<AxisDomain>,
@@ -71,24 +67,13 @@ export const AxisX = React.memo(({axis, width, height, scale, chartWidth}: Props
             },
         });
 
-        svgElement.call(xAxisGenerator).attr('class', b());
+        const svgElement = select(ref.current);
+        svgElement.selectAll('*').remove();
 
-        if (axis.labels.enabled) {
-            svgElement.style('font-size', axis.labels.style.fontSize);
-        }
-
-        // add an ellipsis to the labels on the right that go beyond the boundaries of the chart
-        svgElement.selectAll('.tick text').each(function () {
-            const node = this as unknown as SVGTextElement;
-            const textRect = node.getBBox();
-            const matrix = node.transform.baseVal.consolidate()?.matrix || ({} as SVGMatrix);
-            const right = matrix.a * textRect.right + matrix.c * textRect.bottom + matrix.e;
-
-            if (right > chartWidth) {
-                const maxWidth = textRect.width - (right - chartWidth) * 2;
-                select(node).call(setEllipsisForOverflowText, maxWidth);
-            }
-        });
+        svgElement
+            .call(xAxisGenerator)
+            .attr('class', b())
+            .style('font-size', axis.labels.style.fontSize);
 
         // add an axis header if necessary
         if (axis.title.text) {
