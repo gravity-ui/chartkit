@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.6.1](https://github.com/gravity-ui/chartkit/compare/v4.6.0...v4.6.1) (2023-09-20)
+
+
+### Bug Fixes
+
+* **D3 plugin:** bar-x min column width ([#294](https://github.com/gravity-ui/chartkit/issues/294)) ([05ea715](https://github.com/gravity-ui/chartkit/commit/05ea7151e5ca0b334f914b663c1d1f51d41c66ef))
+* **D3 plugin:** fix onRender callback ([#297](https://github.com/gravity-ui/chartkit/issues/297)) ([daefbfd](https://github.com/gravity-ui/chartkit/commit/daefbfd2557ae728fe44fe117bcbe3a87e235712))
+
 ## [4.6.0](https://github.com/gravity-ui/chartkit/compare/v4.5.0...v4.6.0) (2023-09-19)
 
 
