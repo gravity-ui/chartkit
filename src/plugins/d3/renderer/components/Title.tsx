@@ -19,7 +19,10 @@ export const Title = (props: Props) => {
             dy={height / 2}
             dominantBaseline="middle"
             textAnchor="middle"
-            style={{fontSize: style?.fontSize, lineHeight: `${height}px`}}
+            style={{
+                lineHeight: `${height}px`,
+                ...style,
+            }}
         >
             <tspan>{text}</tspan>
         </text>
