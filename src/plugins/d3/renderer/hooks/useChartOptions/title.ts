@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 
-import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types/widget-data';
+import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types';
 
 import {getHorisontalSvgTextHeight} from '../../utils';
 import type {PreparedTitle} from './types';
@@ -16,6 +16,7 @@ export const getPreparedTitle = ({
     const titleText = get(title, 'text');
     const titleStyle: BaseTextStyle = {
         fontSize: get(title, 'style.fontSize', DEFAULT_TITLE_FONT_SIZE),
+        fontWeight: get(title, 'style.fontWeight'),
     };
     const titleHeight = titleText
         ? getHorisontalSvgTextHeight({text: titleText, style: titleStyle}) + TITLE_PADDINGS
