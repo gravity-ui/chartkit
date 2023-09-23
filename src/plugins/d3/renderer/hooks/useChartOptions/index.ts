@@ -1,11 +1,10 @@
 import React from 'react';
 
-import type {ChartKitWidgetData} from '../../../../../types/widget-data';
+import type {ChartKitWidgetData} from '../../../../../types';
 
 import {getPreparedChart} from './chart';
 import {getPreparedTitle} from './title';
 import {getPreparedTooltip} from './tooltip';
-import {getPreparedXAxis} from './x-axis';
 import {getPreparedYAxis} from './y-axis';
 import type {ChartOptions} from './types';
 
@@ -15,13 +14,12 @@ type Args = {
 
 export const useChartOptions = (args: Args): ChartOptions => {
     const {
-        data: {chart, series, title, tooltip, xAxis, yAxis},
+        data: {chart, series, title, tooltip, yAxis},
     } = args;
     const options: ChartOptions = React.useMemo(() => {
         const preparedTitle = getPreparedTitle({title});
         const preparedTooltip = getPreparedTooltip({tooltip});
         const preparedYAxis = getPreparedYAxis({series: series.data, yAxis});
-        const preparedXAxis = getPreparedXAxis({xAxis});
         const preparedChart = getPreparedChart({
             chart,
             series,
@@ -32,10 +30,9 @@ export const useChartOptions = (args: Args): ChartOptions => {
             chart: preparedChart,
             title: preparedTitle,
             tooltip: preparedTooltip,
-            xAxis: preparedXAxis,
             yAxis: preparedYAxis,
         };
-    }, [chart, title, tooltip, series, xAxis, yAxis]);
+    }, [chart, title, tooltip, series, yAxis]);
 
     return options;
 };

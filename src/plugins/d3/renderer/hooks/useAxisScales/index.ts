@@ -14,6 +14,7 @@ import {
 } from '../../utils';
 import type {AxisDirection} from '../../utils';
 import {PreparedSeries} from '../useSeries/types';
+import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
 
 export type ChartScale =
     | ScaleLinear<number, number>
@@ -24,7 +25,7 @@ type Args = {
     boundsWidth: number;
     boundsHeight: number;
     series: PreparedSeries[];
-    xAxis: ChartOptions['xAxis'];
+    xAxis: PreparedAxis;
     yAxis: ChartOptions['yAxis'];
 };
 
@@ -40,7 +41,7 @@ const isNumericalArrayData = (data: unknown[]): data is number[] => {
 const filterCategoriesByVisibleSeries = (args: {
     axisDirection: AxisDirection;
     categories: string[];
-    series: PreparedSeries[];
+    series: (PreparedSeries | ChartKitWidgetSeries)[];
 }) => {
     const {axisDirection, categories, series} = args;
 
@@ -109,13 +110,18 @@ export function createYScale(axis: PreparedAxis, series: PreparedSeries[], bound
     throw new Error('Failed to create yScale');
 }
 
-export function createXScale(axis: PreparedAxis, series: PreparedSeries[], boundsWidth: number) {
+export function createXScale(
+    axis: PreparedAxis | ChartKitWidgetAxis,
+    series: (PreparedSeries | ChartKitWidgetSeries)[],
+    boundsWidth: number,
+) {
     const xMin = get(axis, 'min');
     const xType = get(axis, 'type', 'linear');
     const xCategories = get(axis, 'categories');
     const xTimestamps = get(axis, 'timestamps');
+    const maxPadding = get(axis, 'maxPadding', 0);
 
-    const xAxisMinPadding = boundsWidth * axis.maxPadding;
+    const xAxisMinPadding = boundsWidth * maxPadding;
     const xRange = [0, boundsWidth - xAxisMinPadding];
 
     switch (xType) {

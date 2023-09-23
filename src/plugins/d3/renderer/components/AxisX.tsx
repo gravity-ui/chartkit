@@ -59,7 +59,7 @@ export const AxisX = React.memo(({axis, width, height, scale}: Props) => {
                 labelsStyle: axis.labels.style,
                 count: getTicksCount({axis, range: width}),
                 maxTickCount: getMaxTickCount({axis, width}),
-                autoRotation: axis.labels.autoRotation,
+                rotation: axis.labels.rotation,
             },
             domain: {
                 size: width,
@@ -77,15 +77,15 @@ export const AxisX = React.memo(({axis, width, height, scale}: Props) => {
 
         // add an axis header if necessary
         if (axis.title.text) {
-            const textY =
-                axis.title.height + parseInt(axis.labels.style.fontSize) + axis.labels.padding;
+            const y =
+                axis.title.height + axis.title.margin + axis.labels.height + axis.labels.margin;
 
             svgElement
                 .append('text')
                 .attr('class', b('title'))
                 .attr('text-anchor', 'middle')
                 .attr('x', width / 2)
-                .attr('y', textY)
+                .attr('y', y)
                 .attr('font-size', axis.title.style.fontSize)
                 .text(axis.title.text)
                 .call(setEllipsisForOverflowText, width);

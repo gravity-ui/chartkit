@@ -1,6 +1,7 @@
 import type {Selection} from 'd3';
 import {select} from 'd3';
 import {BaseTextStyle} from '../../../../types';
+import {rotateLabels} from './axis';
 
 export function setEllipsisForOverflowText(
     selection: Selection<SVGTextElement, unknown, null, unknown>,
@@ -58,19 +59,24 @@ function renderLabels(
     selection: Selection<SVGSVGElement, unknown, null, undefined>,
     {
         labels,
-        style,
-        transform,
+        style = {},
+        attrs = {},
     }: {
         labels: string[];
-        style?: BaseTextStyle;
-        transform?: string;
+        style?: Record<string, string>;
+        attrs?: Record<string, string>;
     },
 ) {
-    const text = selection
-        .append('g')
-        .append('text')
-        .attr('transform', transform || '')
-        .style('font-size', style?.fontSize || '');
+    const text = selection.append('g').append('text');
+
+    Object.entries(style).forEach(([name, value]) => {
+        text.style(name, value);
+    });
+
+    Object.entries(attrs).forEach(([name, value]) => {
+        text.attr(name, value);
+    });
+
     text.selectAll('tspan')
         .data(labels)
         .enter()
@@ -88,11 +94,12 @@ export function getLabelsMaxWidth({
     transform,
 }: {
     labels: string[];
-    style?: BaseTextStyle;
+    style?: Record<string, string>;
     transform?: string;
 }) {
     const svg = select(document.body).append('svg');
-    svg.call(renderLabels, {labels, style, transform});
+    const attrs: Record<string, string> = transform ? {transform: transform} : {};
+    svg.call(renderLabels, {labels, style, attrs});
 
     const maxWidth = (svg.select('g').node() as Element)?.getBoundingClientRect()?.width || 0;
     svg.remove();
@@ -103,14 +110,17 @@ export function getLabelsMaxWidth({
 export function getLabelsMaxHeight({
     labels,
     style,
-    transform,
+    rotation,
 }: {
     labels: string[];
-    style?: BaseTextStyle;
-    transform?: string;
+    style?: Record<string, string>;
+    rotation?: number;
 }) {
     const svg = select(document.body).append('svg');
-    svg.call(renderLabels, {labels, style, transform});
+    const textSelection = renderLabels(svg, {labels, style});
+    if (rotation) {
+        rotateLabels(textSelection, {rotation, margin: 0});
+    }
 
     const maxHeight = (svg.select('g').node() as Element)?.getBoundingClientRect()?.height || 0;
     svg.remove();

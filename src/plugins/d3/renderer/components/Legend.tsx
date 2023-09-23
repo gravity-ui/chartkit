@@ -123,12 +123,14 @@ export const Legend = (props: Props) => {
                 .enter()
                 .append('g')
                 .attr('class', b('item'))
+                .attr('transform', 'translate(0, )')
                 .on('click', function (e, d) {
                     onItemClick({name: d.name, metaKey: e.metaKey});
                 })
                 .each(function (d) {
                     textWidths.push(d.textWidth);
                 });
+
             legendItemTemplate
                 .append('rect')
                 .attr('x', function (legendItem, i) {
@@ -140,8 +142,7 @@ export const Legend = (props: Props) => {
                     );
                 })
                 .attr('y', (legendItem) => {
-                    const lineOffset = legend.lineHeight * lineIndex;
-                    return config.offset.top + lineOffset - legendItem.symbol.height / 2;
+                    return Math.max(0, (legend.lineHeight - legendItem.symbol.height) / 2);
                 })
                 .attr('width', (legendItem) => {
                     return legendItem.symbol.width;
@@ -166,7 +167,7 @@ export const Legend = (props: Props) => {
                         textWidths.slice(0, i).reduce((acc, tw) => acc + tw, 0)
                     );
                 })
-                .attr('y', config.offset.top + legend.lineHeight * lineIndex)
+                .attr('height', legend.lineHeight)
                 .attr('class', function (d) {
                     const mods = {selected: d.visible, unselected: !d.visible};
                     return b('item-text', mods);
@@ -175,7 +176,7 @@ export const Legend = (props: Props) => {
                     return ('name' in d && d.name) as string;
                 })
                 .style('font-size', legend.itemStyle.fontSize)
-                .style('alignment-baseline', 'middle');
+                .style('alignment-baseline', 'before-edge');
 
             const contentWidth = legendLine.node()?.getBoundingClientRect().width || 0;
             const {left} = getLegendPosition({
@@ -184,8 +185,9 @@ export const Legend = (props: Props) => {
                 offsetWidth: config.offset.left,
                 contentWidth,
             });
+            const top = config.offset.top + legend.lineHeight * lineIndex;
 
-            legendLine.attr('transform', `translate(${[left, 0].join(',')})`);
+            legendLine.attr('transform', `translate(${[left, top].join(',')})`);
         });
 
         if (config.pagination) {

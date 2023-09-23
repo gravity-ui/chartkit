@@ -7,10 +7,15 @@ import type {
     ChartMargin,
 } from '../../../../../types/widget-data';
 
-type PreparedAxisLabels = Omit<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'style'> &
-    Required<Pick<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'margin'>> & {
+type PreparedAxisLabels = Omit<
+    ChartKitWidgetAxisLabels,
+    'enabled' | 'padding' | 'style' | 'autoRotation'
+> &
+    Required<Pick<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'margin' | 'rotation'>> & {
         style: BaseTextStyle;
         maxWidth?: number;
+        rotation: number;
+        height: number;
     };
 
 export type PreparedChart = {
@@ -23,6 +28,7 @@ export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
     title: {
         height: number;
         text: string;
+        margin: number;
         style: BaseTextStyle;
     };
     min?: number;
@@ -46,7 +52,6 @@ export type PreparedTooltip = ChartKitWidgetData['tooltip'] & {
 export type ChartOptions = {
     chart: PreparedChart;
     tooltip: PreparedTooltip;
-    xAxis: PreparedAxis;
     yAxis: PreparedAxis[];
     title?: PreparedTitle;
 };

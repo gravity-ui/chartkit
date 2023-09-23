@@ -1,8 +1,8 @@
 import type {AxisDomain, AxisScale, Selection} from 'd3';
 import {select} from 'd3';
 import {BaseTextStyle} from '../../../../../types';
-import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
-import {hasOverlappingLabels, setEllipsisForOverflowText} from '../text';
+import {getXAxisItems, getXAxisOffset, getXTickPosition, rotateLabels} from '../axis';
+import {setEllipsisForOverflowText} from '../text';
 
 type AxisBottomArgs = {
     scale: AxisScale<AxisDomain>;
@@ -14,7 +14,7 @@ type AxisBottomArgs = {
         labelsMargin?: number;
         labelsStyle?: BaseTextStyle;
         size: number;
-        autoRotation?: boolean;
+        rotation: number;
     };
     domain: {
         size: number;
@@ -52,7 +52,7 @@ export function axisBottom(args: AxisBottomArgs) {
             size: tickSize,
             count: ticksCount,
             maxTickCount,
-            autoRotation = true,
+            rotation,
         },
         domain: {size: domainSize, color: domainColor},
     } = args;
@@ -93,27 +93,10 @@ export function axisBottom(args: AxisBottomArgs) {
             .select('line')
             .remove();
 
-        const labels = selection.selectAll('.tick text');
-        const labelNodes = labels.nodes() as SVGTextElement[];
+        const labels = selection.selectAll<SVGTextElement, unknown>('.tick text');
 
-        const overlapping = hasOverlappingLabels({
-            width: domainSize,
-            labels: values.map(labelFormat),
-            padding: labelsPaddings,
-            style: labelsStyle,
-        });
-
-        const rotationAngle = overlapping && autoRotation ? '-45' : undefined;
-
-        if (rotationAngle) {
-            const labelHeight = labelNodes[0]?.getBoundingClientRect()?.height;
-            const labelOffset = (labelHeight / 2 + labelsMargin) / 2;
-            labels
-                .attr('text-anchor', 'end')
-                .attr(
-                    'transform',
-                    `rotate(${rotationAngle}) translate(-${labelOffset}, -${labelOffset})`,
-                );
+        if (rotation) {
+            rotateLabels(labels, {rotation, margin: labelsMargin});
         } else {
             // remove overlapping labels
             let elementX = 0;

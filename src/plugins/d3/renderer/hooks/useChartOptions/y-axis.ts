@@ -10,7 +10,7 @@ import type {
 import {
     axisLabelsDefaults,
     DEFAULT_AXIS_LABEL_FONT_SIZE,
-    DEFAULT_AXIS_TITLE_FONT_SIZE,
+    yAxisTitleDefaults,
 } from '../../constants';
 import {
     getHorisontalSvgTextHeight,
@@ -74,7 +74,7 @@ export const getPreparedYAxis = ({
     };
     const y1TitleText = get(yAxis1, 'title.text', '');
     const y1TitleStyle: BaseTextStyle = {
-        fontSize: get(yAxis1, 'title.style.fontSize', DEFAULT_AXIS_TITLE_FONT_SIZE),
+        fontSize: get(yAxis1, 'title.style.fontSize', yAxisTitleDefaults.fontSize),
     };
     const preparedY1Axis: PreparedAxis = {
         type: get(yAxis1, 'type', 'linear'),
@@ -82,16 +82,18 @@ export const getPreparedYAxis = ({
             enabled: get(yAxis1, 'labels.enabled', true),
             margin: get(yAxis1, 'labels.margin', axisLabelsDefaults.margin),
             padding: get(yAxis1, 'labels.padding', axisLabelsDefaults.padding),
-            autoRotation: get(yAxis1, 'labels.autoRotation', false),
             dateFormat: get(yAxis1, 'labels.dateFormat'),
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,
+            rotation: 0,
+            height: 0,
         },
         lineColor: get(yAxis1, 'lineColor'),
         categories: get(yAxis1, 'categories'),
         timestamps: get(yAxis1, 'timestamps'),
         title: {
             text: y1TitleText,
+            margin: get(yAxis1, 'title.margin', yAxisTitleDefaults.margin),
             style: y1TitleStyle,
             height: y1TitleText
                 ? getHorisontalSvgTextHeight({text: y1TitleText, style: y1TitleStyle})

@@ -17,6 +17,7 @@ import {AxisX} from './AxisX';
 import {Legend} from './Legend';
 import {Title} from './Title';
 import {Tooltip, TooltipTriggerArea} from './Tooltip';
+import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
 
 import './styles.scss';
 
@@ -37,9 +38,13 @@ export const Chart = (props: Props) => {
     const dispatcher = React.useMemo(() => {
         return getD3Dispatcher();
     }, []);
-    const {chart, title, tooltip, xAxis, yAxis} = useChartOptions({
+    const {chart, title, tooltip, yAxis} = useChartOptions({
         data,
     });
+    const xAxis = React.useMemo(
+        () => getPreparedXAxis({xAxis: data.xAxis, width, series: data.series.data}),
+        [data, width],
+    );
     const {
         legendItems,
         legendConfig,

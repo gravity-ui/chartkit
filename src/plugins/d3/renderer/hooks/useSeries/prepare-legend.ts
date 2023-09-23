@@ -123,8 +123,7 @@ export const getLegendComponents = (args: {
     }
 
     preparedLegend.height = legendHeight;
-    const top =
-        chartHeight - chartMargin.bottom - preparedLegend.height + preparedLegend.lineHeight / 2;
+    const top = chartHeight - chartMargin.top - chartMargin.bottom - preparedLegend.height;
     const offset: LegendConfig['offset'] = {left: chartMargin.left, top};
 
     return {legendConfig: {offset, pagination}, legendItems: items};

@@ -1,25 +1,18 @@
 import get from 'lodash/get';
 
-import type {ChartKitWidgetData} from '../../../../../types/widget-data';
+import type {ChartKitWidgetData} from '../../../../../types';
 
-import {isAxisRelatedSeries, getHorisontalSvgTextHeight} from '../../utils';
+import {isAxisRelatedSeries} from '../../utils';
 import type {PreparedAxis, PreparedChart, PreparedTitle} from './types';
 
 const AXIS_LINE_WIDTH = 1;
 
 const getMarginTop = (args: {
     chart: ChartKitWidgetData['chart'];
-    hasAxisRelatedSeries: boolean;
-    preparedY1Axis: PreparedAxis;
     preparedTitle?: PreparedTitle;
 }) => {
-    const {chart, hasAxisRelatedSeries, preparedY1Axis, preparedTitle} = args;
+    const {chart, preparedTitle} = args;
     let marginTop = get(chart, 'margin.top', 0);
-
-    if (hasAxisRelatedSeries) {
-        marginTop +=
-            getHorisontalSvgTextHeight({text: 'Tmp', style: preparedY1Axis.labels.style}) / 2;
-    }
 
     if (preparedTitle?.height) {
         marginTop += preparedTitle.height;
@@ -61,7 +54,7 @@ export const getPreparedChart = (args: {
 }): PreparedChart => {
     const {chart, series, preparedY1Axis, preparedTitle} = args;
     const hasAxisRelatedSeries = series.data.some(isAxisRelatedSeries);
-    const marginTop = getMarginTop({chart, hasAxisRelatedSeries, preparedY1Axis, preparedTitle});
+    const marginTop = getMarginTop({chart, preparedTitle});
     const marginBottom = get(chart, 'margin.bottom', 0);
     const marginLeft = getMarginLeft({chart, hasAxisRelatedSeries, preparedY1Axis});
     const marginRight = getMarginRight({chart});
