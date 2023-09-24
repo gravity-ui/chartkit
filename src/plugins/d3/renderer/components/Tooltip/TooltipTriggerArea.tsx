@@ -44,10 +44,11 @@ export const TooltipTriggerArea = (args: Args) => {
     }, [shapesData, calculationType]);
 
     const handleXprimaryMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
+        console.log(e.target);
         const {left, top} = rectRef.current?.getBoundingClientRect() || {left: 0, top: 0};
         const [pointerX, pointerY] = pointer(e, svgContainer);
         const barWidthOffset = (shapesData[0] as PreparedBarXData).width / 2;
-        const xPosition = pointerX - left - barWidthOffset;
+        const xPosition = pointerX - left - barWidthOffset - window.pageXOffset;
         const xDataIndex = bisector((d) => d).center(xData, xPosition);
         const xNodes = Array.from(
             rectRef.current?.parentElement?.querySelectorAll(`[x="${xData[xDataIndex]}"]`) || [],
@@ -58,7 +59,7 @@ export const TooltipTriggerArea = (args: Args) => {
         if (xNodes.length === 1 && isNodeContainsData(xNodes[0])) {
             hoverShapeData = [xNodes[0].__data__];
         } else if (xNodes.length > 1 && xNodes.every(isNodeContainsData)) {
-            const yPosition = pointerY - top;
+            const yPosition = pointerY - top - window.pageYOffset;
             const xyNode = xNodes.find((node, i) => {
                 const {y, height} = node.__data__ as PreparedBarXData;
                 if (i === xNodes.length - 1) {
