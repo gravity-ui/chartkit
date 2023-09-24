@@ -30,5 +30,5 @@ export type TooltipDataChunk<T = any> =
 export type ChartKitWidgetTooltip<T = any> = {
     enabled?: boolean;
     /** Specifies the renderer for the tooltip. If returned null default tooltip renderer will be used. */
-    renderer?: (args: {hovered: TooltipDataChunk<T>[]}) => React.ReactElement;
+    renderer?: (args: {hovered: TooltipDataChunk<T>[]}) => React.ReactElement | null;
 };

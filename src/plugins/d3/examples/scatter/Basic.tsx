@@ -48,7 +48,12 @@ export const Basic = () => {
         },
         tooltip: {
             renderer: (d) => {
-                const point = d.hovered.data as ScatterSeriesData;
+                const point = d.hovered[0]?.data as ScatterSeriesData;
+
+                if (!point) {
+                    return null;
+                }
+
                 const title = point.custom.title;
                 const score = point.custom.user_score;
                 const date = dateTime({input: point.custom.date}).format('DD MMM YYYY');

@@ -3,7 +3,7 @@ import throttle from 'lodash/throttle';
 import {bisector, pointer, sort} from 'd3';
 import type {Dispatch} from 'd3';
 
-import type {ChartScale, ShapeData, PreparedBarXData, PointerPosition} from '../../hooks';
+import type {ShapeData, PreparedBarXData, PointerPosition} from '../../hooks';
 
 type Args = {
     boundsWidth: number;
@@ -13,7 +13,6 @@ type Args = {
     offsetLeft: number;
     shapesData: ShapeData[];
     svgContainer: SVGSVGElement | null;
-    xScale?: ChartScale;
 };
 
 type CalculationType = 'x-primary' | 'none';
@@ -32,16 +31,8 @@ const getCalculationType = (shapesData: ShapeData[]): CalculationType => {
 };
 
 export const TooltipTriggerArea = (args: Args) => {
-    const {
-        boundsWidth,
-        boundsHeight,
-        dispatcher,
-        offsetTop,
-        offsetLeft,
-        shapesData,
-        svgContainer,
-        xScale,
-    } = args;
+    const {boundsWidth, boundsHeight, dispatcher, offsetTop, offsetLeft, shapesData, svgContainer} =
+        args;
     const rectRef = React.useRef<SVGRectElement>(null);
     const calculationType = React.useMemo(() => {
         return getCalculationType(shapesData);
@@ -54,9 +45,9 @@ export const TooltipTriggerArea = (args: Args) => {
 
     const handleXprimaryMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
         const {left, top} = rectRef.current?.getBoundingClientRect() || {left: 0, top: 0};
-        const [x, y] = pointer(e, svgContainer);
-        const isXLinearOrTimeScale = xScale && 'invert' in xScale;
-        const xPosition = x - left - (isXLinearOrTimeScale ? 0 : offsetLeft);
+        const [pointerX, pointerY] = pointer(e, svgContainer);
+        const barWidthOffset = (shapesData[0] as PreparedBarXData).width / 2;
+        const xPosition = pointerX - left - barWidthOffset;
         const xDataIndex = bisector((d) => d).center(xData, xPosition);
         const xNodes = Array.from(
             rectRef.current?.parentElement?.querySelectorAll(`[x="${xData[xDataIndex]}"]`) || [],
@@ -67,18 +58,22 @@ export const TooltipTriggerArea = (args: Args) => {
         if (xNodes.length === 1 && isNodeContainsData(xNodes[0])) {
             hoverShapeData = [xNodes[0].__data__];
         } else if (xNodes.length > 1 && xNodes.every(isNodeContainsData)) {
-            const yData = xNodes.map((node) => (node.__data__ as PreparedBarXData).y);
-            const yPosition = y - top;
-            const yDataIndex = bisector((d) => d).center(yData, yPosition);
+            const yPosition = pointerY - top;
+            const xyNode = xNodes.find((node, i) => {
+                const {y, height} = node.__data__ as PreparedBarXData;
+                if (i === xNodes.length - 1) {
+                    return yPosition <= y + height;
+                }
+                return yPosition >= y && yPosition <= y + height;
+            });
 
-            if (xNodes[yDataIndex]) {
-                xNodes.reverse();
-                hoverShapeData = [xNodes[yDataIndex].__data__];
+            if (xyNode) {
+                hoverShapeData = [xyNode.__data__];
             }
         }
 
         if (hoverShapeData) {
-            const position: PointerPosition = [x - offsetLeft, y - offsetTop];
+            const position: PointerPosition = [pointerX - offsetLeft, pointerY - offsetTop];
             dispatcher.call('hover-shape', e.target, hoverShapeData, position);
         }
     };

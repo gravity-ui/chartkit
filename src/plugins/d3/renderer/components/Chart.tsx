@@ -124,7 +124,6 @@ export const Chart = (props: Props) => {
                             offsetTop={top}
                             shapesData={shapesData}
                             svgContainer={svgRef.current}
-                            xScale={xScale}
                         />
                     )}
                 </g>
