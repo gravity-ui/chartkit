@@ -1,67 +1,40 @@
-import {ascending, descending, max, pointer, select, sort} from 'd3';
+import {ascending, descending, max, sort} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
-import React from 'react';
 import get from 'lodash/get';
 
-import type {BarXSeriesData, ChartKitWidgetSeriesOptions} from '../../../../../types';
-import {block} from '../../../../../utils/cn';
+import {TooltipDataChunkType} from '../../../../../../constants';
+import type {BarXSeriesData, TooltipDataChunkBarX} from '../../../../../../types';
 
-import {getDataCategoryValue} from '../../utils';
-import type {ChartScale} from '../useAxisScales';
-import type {ChartOptions} from '../useChartOptions/types';
-import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
-import type {PreparedBarXSeries} from '../useSeries/types';
-import {DEFAULT_BAR_X_SERIES_OPTIONS} from './defaults';
+import {getDataCategoryValue} from '../../../utils';
+import type {ChartScale} from '../../useAxisScales';
+import type {ChartOptions} from '../../useChartOptions/types';
+import type {PreparedBarXSeries, PreparedSeriesOptions} from '../../useSeries/types';
 
 const MIN_RECT_WIDTH = 1;
 const MIN_RECT_GAP = 1;
 const MIN_GROUP_GAP = 1;
-const DEFAULT_LABEL_PADDING = 7;
 
-const b = block('d3-bar-x');
-
-type Args = {
-    top: number;
-    left: number;
-    series: PreparedBarXSeries[];
-    seriesOptions?: ChartKitWidgetSeriesOptions;
-    xAxis: ChartOptions['xAxis'];
-    xScale: ChartScale;
-    yAxis: ChartOptions['yAxis'];
-    yScale: ChartScale;
-    onSeriesMouseMove?: OnSeriesMouseMove;
-    onSeriesMouseLeave?: OnSeriesMouseLeave;
-    svgContainer: SVGSVGElement | null;
-};
-
-type ShapeData = {
+export type PreparedBarXData = Omit<TooltipDataChunkBarX, 'series'> & {
     x: number;
     y: number;
     width: number;
     height: number;
-    data: BarXSeriesData;
     series: PreparedBarXSeries;
 };
 
-function prepareData(args: {
+export const prepareBarXData = (args: {
     series: PreparedBarXSeries[];
-    seriesOptions?: ChartKitWidgetSeriesOptions;
+    seriesOptions: PreparedSeriesOptions;
     xAxis: ChartOptions['xAxis'];
     xScale: ChartScale;
     yAxis: ChartOptions['yAxis'];
     yScale: ChartScale;
-}) {
+}): PreparedBarXData[] => {
     const {series, seriesOptions, xAxis, xScale, yScale} = args;
     const categories = get(xAxis, 'categories', [] as string[]);
-    const {
-        barMaxWidth: defaultBarMaxWidth,
-        barPadding: defaultBarPadding,
-        groupPadding: defaultGroupPadding,
-    } = DEFAULT_BAR_X_SERIES_OPTIONS;
-    const barMaxWidth = get(seriesOptions, 'bar-x.barMaxWidth', defaultBarMaxWidth);
-    const barPadding = get(seriesOptions, 'bar-x.barPadding', defaultBarPadding);
-    const groupPadding = get(seriesOptions, 'bar-x.groupPadding', defaultGroupPadding);
-
+    const barMaxWidth = get(seriesOptions, 'bar-x.barMaxWidth');
+    const barPadding = get(seriesOptions, 'bar-x.barPadding');
+    const groupPadding = get(seriesOptions, 'bar-x.groupPadding');
     const sortingOptions = get(seriesOptions, 'bar-x.dataSorting');
     const comparator = sortingOptions?.direction === 'desc' ? descending : ascending;
     const sortKey = (() => {
@@ -136,7 +109,7 @@ function prepareData(args: {
         Math.min(groupWidth / maxGroupSize - rectGap, barMaxWidth),
     );
 
-    const result: ShapeData[] = [];
+    const result: PreparedBarXData[] = [];
 
     Object.entries(data).forEach(([xValue, val]) => {
         const stacks = Object.values(val);
@@ -149,6 +122,7 @@ function prepareData(args: {
                 : yValues;
             sortedData.forEach((yValue) => {
                 let xCenter;
+
                 if (xAxis.type === 'category') {
                     const xBandScale = xScale as ScaleBand<string>;
                     xCenter = (xBandScale(xValue as string) || 0) + xBandScale.bandwidth() / 2;
@@ -158,13 +132,14 @@ function prepareData(args: {
                         | ScaleTime<number, number>;
                     xCenter = xLinearScale(Number(xValue));
                 }
-                const x = xCenter - currentGroupWidth / 2 + (rectWidth + rectGap) * groupItemIndex;
 
+                const x = xCenter - currentGroupWidth / 2 + (rectWidth + rectGap) * groupItemIndex;
                 const yLinearScale = yScale as ScaleLinear<number, number>;
                 const y = yLinearScale(yValue.data.y as number);
                 const height = yLinearScale(yLinearScale.domain()[0]) - y;
 
                 result.push({
+                    type: TooltipDataChunkType.BAR_X,
                     x,
                     y: y - stackHeight,
                     width: rectWidth,
@@ -179,100 +154,4 @@ function prepareData(args: {
     });
 
     return result;
-}
-
-export function BarXSeriesShapes(args: Args) {
-    const {
-        top,
-        left,
-        series,
-        seriesOptions,
-        xAxis,
-        xScale,
-        yAxis,
-        yScale,
-        onSeriesMouseMove,
-        onSeriesMouseLeave,
-        svgContainer,
-    } = args;
-
-    const ref = React.useRef<SVGGElement>(null);
-
-    React.useEffect(() => {
-        if (!ref.current) {
-            return;
-        }
-
-        const svgElement = select(ref.current);
-        svgElement.selectAll('*').remove();
-
-        const shapes = prepareData({
-            series,
-            seriesOptions,
-            xAxis,
-            xScale,
-            yAxis,
-            yScale,
-        });
-
-        svgElement
-            .selectAll('allRects')
-            .data(shapes)
-            .join('rect')
-            .attr('class', b('segment'))
-            .attr('x', (d) => d.x)
-            .attr('y', (d) => d.y)
-            .attr('height', (d) => d.height)
-            .attr('width', (d) => d.width)
-            .attr('fill', (d) => d.data.color || d.series.color)
-            .on('mousemove', (e, d) => {
-                const [x, y] = pointer(e, svgContainer);
-                onSeriesMouseMove?.({
-                    hovered: {
-                        data: d.data,
-                        series: d.series,
-                    },
-                    pointerPosition: [x - left, y - top],
-                });
-            })
-            .on('mouseleave', () => {
-                if (onSeriesMouseLeave) {
-                    onSeriesMouseLeave();
-                }
-            });
-
-        const dataLabels = shapes.filter((s) => s.series.dataLabels.enabled);
-
-        svgElement
-            .selectAll('allLabels')
-            .data(dataLabels)
-            .join('text')
-            .text((d) => String(d.data.label || d.data.y))
-            .attr('class', b('label'))
-            .attr('x', (d) => d.x + d.width / 2)
-            .attr('y', (d) => {
-                if (d.series.dataLabels.inside) {
-                    return d.y + d.height / 2;
-                }
-
-                return d.y - DEFAULT_LABEL_PADDING;
-            })
-            .attr('text-anchor', 'middle')
-            .style('font-size', (d) => d.series.dataLabels.style.fontSize)
-            .style('font-weight', (d) => d.series.dataLabels.style.fontWeight || null)
-            .style('fill', (d) => d.series.dataLabels.style.fontColor || null);
-    }, [
-        onSeriesMouseMove,
-        onSeriesMouseLeave,
-        svgContainer,
-        xAxis,
-        xScale,
-        yAxis,
-        yScale,
-        series,
-        left,
-        top,
-    ]);
-
-    return <g ref={ref} className={b()} />;
-}
+};

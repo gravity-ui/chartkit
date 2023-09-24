@@ -3,10 +3,10 @@ import React from 'react';
 import type {ChartKitWidgetData} from '../../../../types';
 import {block} from '../../../../utils/cn';
 
+import {getD3Dispatcher} from '../d3-dispatcher';
 import {
     useAxisScales,
     useChartDimensions,
-    useChartEvents,
     useChartOptions,
     useSeries,
     useShapes,
@@ -16,7 +16,7 @@ import {AxisY} from './AxisY';
 import {AxisX} from './AxisX';
 import {Legend} from './Legend';
 import {Title} from './Title';
-import {Tooltip} from './Tooltip';
+import {Tooltip, TooltipTriggerArea} from './Tooltip';
 
 import './styles.scss';
 
@@ -34,19 +34,27 @@ export const Chart = (props: Props) => {
     // FIXME: add data validation
     const {top, left, width, height, data} = props;
     const svgRef = React.createRef<SVGSVGElement>();
-    const {chartHovered, handleMouseEnter, handleMouseLeave} = useChartEvents();
+    const dispatcher = React.useMemo(() => {
+        return getD3Dispatcher();
+    }, []);
     const {chart, title, tooltip, xAxis, yAxis} = useChartOptions({
         data,
     });
-    const {legendItems, legendConfig, preparedSeries, preparedLegend, handleLegendItemClick} =
-        useSeries({
-            chartWidth: width,
-            chartHeight: height,
-            chartMargin: chart.margin,
-            series: data.series,
-            legend: data.legend,
-            preparedYAxis: yAxis,
-        });
+    const {
+        legendItems,
+        legendConfig,
+        preparedSeries,
+        preparedSeriesOptions,
+        preparedLegend,
+        handleLegendItemClick,
+    } = useSeries({
+        chartWidth: width,
+        chartHeight: height,
+        chartMargin: chart.margin,
+        series: data.series,
+        legend: data.legend,
+        preparedYAxis: yAxis,
+    });
     const {boundsWidth, boundsHeight} = useChartDimensions({
         width,
         height,
@@ -63,35 +71,25 @@ export const Chart = (props: Props) => {
         xAxis,
         yAxis,
     });
-    const {hovered, pointerPosition, handleSeriesMouseMove, handleSeriesMouseLeave} = useTooltip({
-        tooltip,
-    });
-    const {shapes} = useShapes({
+    const {hovered, pointerPosition} = useTooltip({dispatcher, tooltip});
+    const {shapes, shapesData} = useShapes({
         top,
         left,
         boundsWidth,
         boundsHeight,
+        dispatcher,
         series: preparedSeries,
-        seriesOptions: data.series.options,
+        seriesOptions: preparedSeriesOptions,
         xAxis,
         xScale,
         yAxis,
         yScale,
         svgContainer: svgRef.current,
-        onSeriesMouseMove: handleSeriesMouseMove,
-        onSeriesMouseLeave: handleSeriesMouseLeave,
     });
 
     return (
         <React.Fragment>
-            <svg
-                ref={svgRef}
-                className={b({hovered: chartHovered})}
-                width={width}
-                height={height}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-            >
+            <svg ref={svgRef} className={b()} width={width} height={height}>
                 {title && <Title {...title} chartWidth={width} />}
                 <g
                     width={boundsWidth}
@@ -117,6 +115,18 @@ export const Chart = (props: Props) => {
                         </React.Fragment>
                     )}
                     {shapes}
+                    {tooltip?.enabled && Boolean(shapesData.length) && (
+                        <TooltipTriggerArea
+                            boundsWidth={boundsWidth}
+                            boundsHeight={boundsHeight}
+                            dispatcher={dispatcher}
+                            offsetLeft={left}
+                            offsetTop={top}
+                            shapesData={shapesData}
+                            svgContainer={svgRef.current}
+                            xScale={xScale}
+                        />
+                    )}
                 </g>
                 {preparedLegend.enabled && (
                     <Legend
@@ -130,11 +140,12 @@ export const Chart = (props: Props) => {
                 )}
             </svg>
             <Tooltip
-                hovered={hovered}
-                pointerPosition={pointerPosition}
+                dispatcher={dispatcher}
                 tooltip={tooltip}
                 xAxis={xAxis}
                 yAxis={yAxis[0]}
+                hovered={hovered}
+                pointerPosition={pointerPosition}
             />
         </React.Fragment>
     );

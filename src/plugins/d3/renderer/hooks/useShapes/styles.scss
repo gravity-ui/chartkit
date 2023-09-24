@@ -1,15 +1,6 @@
 .chartkit-d3-scatter {
     &__point {
         stroke-width: 1px;
-
-        .chartkit-d3_hovered & {
-            opacity: 0.5;
-        }
-
-        &:hover {
-            stroke: #fff;
-            opacity: 1;
-        }
     }
 }
 
@@ -28,5 +19,6 @@
 .chartkit-d3-bar-x {
     &__label {
         fill: var(--g-color-text-complementary);
+        user-select: none;
     }
 }

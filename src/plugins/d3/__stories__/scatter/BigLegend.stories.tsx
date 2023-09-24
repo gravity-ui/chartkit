@@ -36,7 +36,7 @@ const shapeData = (): ChartKitWidgetData => {
             itemDistance: number('Item distance', 20, undefined, 'legend'),
         },
         series: {
-            data: generateSeriesData(number('Amount of series', 100, undefined, 'legend')),
+            data: generateSeriesData(number('Amount of series', 1000, undefined, 'legend')),
         },
         xAxis: {
             labels: {

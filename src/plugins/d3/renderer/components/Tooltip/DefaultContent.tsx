@@ -1,13 +1,13 @@
 import React from 'react';
 import get from 'lodash/get';
 import {dateTime} from '@gravity-ui/date-utils';
-import type {ChartKitWidgetSeriesData, TooltipHoveredData} from '../../../../../types';
+import type {ChartKitWidgetSeriesData, TooltipDataChunk} from '../../../../../types';
 import {formatNumber} from '../../../../shared';
-import type {PreparedAxis} from '../../hooks';
+import type {PreparedAxis, PreparedPieSeries} from '../../hooks';
 import {getDataCategoryValue} from '../../utils';
 
 type Props = {
-    hovered: TooltipHoveredData;
+    hovered: TooltipDataChunk;
     xAxis: PreparedAxis;
     yAxis: PreparedAxis;
 };
@@ -72,6 +72,16 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                             <b>{series.name}</b>: {yRow}
                         </span>
                     </div>
+                </div>
+            );
+        }
+        case 'pie': {
+            const pieSeries = series as PreparedPieSeries;
+
+            return (
+                <div>
+                    <span>{pieSeries.name || pieSeries.innerName}&nbsp;</span>
+                    <span>{pieSeries.value}</span>
                 </div>
             );
         }

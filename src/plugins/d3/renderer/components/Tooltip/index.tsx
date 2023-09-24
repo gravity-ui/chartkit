@@ -1,25 +1,29 @@
 import React from 'react';
 import isNil from 'lodash/isNil';
+import type {Dispatch} from 'd3';
 
-import type {TooltipHoveredData} from '../../../../../types/widget-data';
+import type {TooltipDataChunk} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
 
 import type {PointerPosition, PreparedAxis, PreparedTooltip} from '../../hooks';
 import {DefaultContent} from './DefaultContent';
 
+export * from './TooltipTriggerArea';
+
 const b = block('d3-tooltip');
 const POINTER_OFFSET_X = 20;
 
 type TooltipProps = {
+    dispatcher: Dispatch<object>;
     tooltip: PreparedTooltip;
     xAxis: PreparedAxis;
     yAxis: PreparedAxis;
-    hovered?: TooltipHoveredData;
+    hovered?: TooltipDataChunk[];
     pointerPosition?: PointerPosition;
 };
 
 export const Tooltip = (props: TooltipProps) => {
-    const {hovered, pointerPosition, tooltip, xAxis, yAxis} = props;
+    const {tooltip, xAxis, yAxis, hovered, pointerPosition} = props;
     const ref = React.useRef<HTMLDivElement>(null);
     const size = React.useMemo(() => {
         if (ref.current && hovered) {
@@ -27,6 +31,7 @@ export const Tooltip = (props: TooltipProps) => {
             return {width, height};
         }
         return undefined;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hovered, pointerPosition]);
     const position = React.useMemo(() => {
         if (hovered && pointerPosition && size) {
@@ -54,7 +59,7 @@ export const Tooltip = (props: TooltipProps) => {
         const customTooltip = tooltip.renderer?.({hovered});
 
         return isNil(customTooltip) ? (
-            <DefaultContent hovered={hovered} xAxis={xAxis} yAxis={yAxis} />
+            <DefaultContent hovered={hovered[0]} xAxis={xAxis} yAxis={yAxis} />
         ) : (
             customTooltip
         );

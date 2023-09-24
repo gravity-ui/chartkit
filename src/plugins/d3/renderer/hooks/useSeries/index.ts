@@ -9,6 +9,7 @@ import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
 import {getActiveLegendItems, getAllLegendItems} from './utils';
 import type {PreparedSeries, OnLegendItemClick} from './types';
 import {getPreparedLegend, getLegendComponents} from './prepare-legend';
+import {getPreparedOptions} from './prepare-options';
 import {prepareSeries} from './prepareSeries';
 
 type Args = {
@@ -27,7 +28,7 @@ export const useSeries = (args: Args) => {
         chartMargin,
         legend,
         preparedYAxis,
-        series: {data: series},
+        series: {data: series, options: seriesOptions},
     } = args;
     const preparedLegend = React.useMemo(
         () => getPreparedLegend({legend, series}),
@@ -53,11 +54,16 @@ export const useSeries = (args: Args) => {
             [],
         );
     }, [series, preparedLegend]);
+    const preparedSeriesOptions = React.useMemo(() => {
+        return getPreparedOptions(seriesOptions);
+    }, [seriesOptions]);
     const [activeLegendItems, setActiveLegendItems] = React.useState(
         getActiveLegendItems(preparedSeries),
     );
     const chartSeries = React.useMemo<PreparedSeries[]>(() => {
-        return preparedSeries.map((singleSeries) => {
+        return preparedSeries.map((singleSeries, i) => {
+            singleSeries.innerName = `Series ${i + 1}`;
+
             if (singleSeries.legend.enabled) {
                 return {
                     ...singleSeries,
@@ -110,6 +116,7 @@ export const useSeries = (args: Args) => {
         legendConfig,
         preparedLegend,
         preparedSeries: chartSeries,
+        preparedSeriesOptions,
         handleLegendItemClick,
     };
 };
