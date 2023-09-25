@@ -1,7 +1,6 @@
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import {TooltipDataChunkType} from '../../../../../../constants';
 import type {TooltipDataChunkScatter, ScatterSeriesData} from '../../../../../../types/widget-data';
 
 import {getDataCategoryValue} from '../../../utils';
@@ -71,7 +70,6 @@ export const prepareScatterData = (args: {
                 : getFilteredLinearScatterData(s.data);
         const preparedData: PreparedScatterData[] = filteredData.map((d) => {
             return {
-                type: TooltipDataChunkType.SCATTER,
                 data: d,
                 series: s,
                 cx: getCxAttr({point: d, xAxis, xScale}),

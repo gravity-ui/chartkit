@@ -4,7 +4,6 @@ import kebabCase from 'lodash/kebabCase';
 import {arc, color, pie, pointer, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum, Selection} from 'd3';
 
-import {TooltipDataChunkType} from '../../../../../constants';
 import type {PieSeries, TooltipDataChunkPie} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
 
@@ -43,13 +42,7 @@ type LabelSelection = Selection<
 >;
 
 const preparePieData = (series: PreparedPieSeries[]): PreparedPieData[] => {
-    return series.map((s) => {
-        return {
-            type: TooltipDataChunkType.PIE,
-            series: s,
-            data: s.data,
-        };
-    });
+    return series.map((s) => ({series: s, data: s.data}));
 };
 
 const getCenter = (
@@ -88,9 +81,7 @@ const getOpacity = (args: {
 const isNodeContainsPieData = (
     node?: Element,
 ): node is Element & {__data__: PieArcDatum<PreparedPieData>} => {
-    const data = get(node, '__data__');
-    const dataType = get(node, '__data__.data.type');
-    return Boolean(data && dataType === TooltipDataChunkType.PIE);
+    return Boolean(get(node, '__data__'));
 };
 
 export function PieSeriesComponent(args: PreparePieSeriesArgs) {

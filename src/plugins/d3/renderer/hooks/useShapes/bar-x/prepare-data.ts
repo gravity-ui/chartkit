@@ -2,7 +2,6 @@ import {ascending, descending, max, sort} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import {TooltipDataChunkType} from '../../../../../../constants';
 import type {BarXSeriesData, TooltipDataChunkBarX} from '../../../../../../types';
 
 import {getDataCategoryValue} from '../../../utils';
@@ -139,7 +138,6 @@ export const prepareBarXData = (args: {
                 const height = yLinearScale(yLinearScale.domain()[0]) - y;
 
                 result.push({
-                    type: TooltipDataChunkType.BAR_X,
                     x,
                     y: y - stackHeight,
                     width: rectWidth,

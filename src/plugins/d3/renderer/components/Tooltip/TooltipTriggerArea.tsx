@@ -44,7 +44,6 @@ export const TooltipTriggerArea = (args: Args) => {
     }, [shapesData, calculationType]);
 
     const handleXprimaryMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
-        console.log(e.target);
         const {left, top} = rectRef.current?.getBoundingClientRect() || {left: 0, top: 0};
         const [pointerX, pointerY] = pointer(e, svgContainer);
         const barWidthOffset = (shapesData[0] as PreparedBarXData).width / 2;

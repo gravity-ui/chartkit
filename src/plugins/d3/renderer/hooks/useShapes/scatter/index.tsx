@@ -3,7 +3,6 @@ import get from 'lodash/get';
 import {color, pointer, select} from 'd3';
 import type {BaseType, Dispatch, Selection} from 'd3';
 
-import {TooltipDataChunkType} from '../../../../../../constants';
 import {block} from '../../../../../../utils/cn';
 
 import {PreparedSeriesOptions} from '../../useSeries/types';
@@ -41,9 +40,7 @@ const DEFAULT_SCATTER_POINT_RADIUS = 4;
 const isNodeContainsScatterData = (
     node?: Element,
 ): node is Element & {__data__: PreparedScatterData} => {
-    const data = get(node, '__data__');
-    const dataType = get(node, '__data__.type');
-    return Boolean(data && dataType === TooltipDataChunkType.SCATTER);
+    return Boolean(get(node, '__data__'));
 };
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
@@ -112,7 +109,8 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 });
             }
 
-            if (data?.[0] && data[0].type === TooltipDataChunkType.SCATTER) {
+            // check data type
+            if (data?.[0]) {
                 const className = b('point');
                 const points = svgElement.selectAll<BaseType, PreparedScatterData>(
                     `.${className}[cx="${data[0].cx}"][cy="${data[0].cy}"]`,
