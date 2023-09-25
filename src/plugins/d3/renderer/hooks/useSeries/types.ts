@@ -47,7 +47,7 @@ export type LegendConfig = {
 type BasePreparedSeries = {
     color: string;
     name: string;
-    innerName: string;
+    id: string;
     visible: boolean;
     legend: {
         enabled: boolean;

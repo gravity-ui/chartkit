@@ -80,7 +80,7 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
 
             return (
                 <div>
-                    <span>{pieSeries.name || pieSeries.innerName}&nbsp;</span>
+                    <span>{pieSeries.name || pieSeries.id}&nbsp;</span>
                     <span>{pieSeries.value}</span>
                 </div>
             );

@@ -71,7 +71,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 .attr('cx', (d) => d.cx)
                 .attr('cy', (d) => d.cy);
 
-            stateRef.current.seriesState[preparedData[0].series.innerName] = {
+            stateRef.current.seriesState[preparedData[0].series.id] = {
                 selection,
                 hovered: false,
                 inactive: false,
@@ -133,7 +133,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
 
                 // Hovered and inactive styles uses only in case of multiple series
                 if (Object.keys(stateRef.current.seriesState).length > 1) {
-                    const hoveredSeriesName = data[0].series.innerName;
+                    const hoveredSeriesName = data[0].series.id;
 
                     Object.entries(stateRef.current.seriesState).forEach(([name, state]) => {
                         if (hoveredSeriesName === name && !state.hovered) {

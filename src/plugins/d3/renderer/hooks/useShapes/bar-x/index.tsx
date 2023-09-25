@@ -101,14 +101,14 @@ export const BarXSeriesShapes = (args: Args) => {
             }
 
             if (inactiveEnabled) {
-                const hoveredSeries = data.map((d) => d.series.innerName);
+                const hoveredSeries = data.map((d) => d.series.id);
                 rectSelection.attr('opacity', (d) => {
-                    return hoveredSeries.includes(d.series.innerName)
+                    return hoveredSeries.includes(d.series.id)
                         ? null
                         : inactiveOptions?.opacity || null;
                 });
                 labelSelection.attr('opacity', (d) => {
-                    return hoveredSeries.includes(d.series.innerName)
+                    return hoveredSeries.includes(d.series.id)
                         ? null
                         : inactiveOptions?.opacity || null;
                 });

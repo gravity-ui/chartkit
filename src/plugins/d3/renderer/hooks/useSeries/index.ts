@@ -62,7 +62,7 @@ export const useSeries = (args: Args) => {
     );
     const chartSeries = React.useMemo<PreparedSeries[]>(() => {
         return preparedSeries.map((singleSeries, i) => {
-            singleSeries.innerName = `Series ${i + 1}`;
+            singleSeries.id = `Series ${i + 1}`;
 
             if (singleSeries.legend.enabled) {
                 return {

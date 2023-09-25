@@ -7,6 +7,8 @@ import type {ShapeData, PreparedBarXData, PointerPosition} from '../../hooks';
 import {extractD3DataFromNode, isNodeContainsD3Data} from '../../utils';
 import type {NodeWithD3Data} from '../../utils';
 
+const THROTTLE_DELAY = 50;
+
 type Args = {
     boundsWidth: number;
     boundsHeight: number;
@@ -88,7 +90,7 @@ export const TooltipTriggerArea = (args: Args) => {
         }
     };
 
-    const throttledHandleMouseMove = throttle(handleMouseMove, 50);
+    const throttledHandleMouseMove = throttle(handleMouseMove, THROTTLE_DELAY);
 
     const handleMouseLeave = () => {
         throttledHandleMouseMove.cancel();

@@ -89,7 +89,7 @@ function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[] {
             type: series.type,
             color: color,
             name: name,
-            innerName: '',
+            id: '',
             visible: get(series, 'visible', true),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),
@@ -132,7 +132,7 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
             value: dataItem.value,
             visible: typeof dataItem.visible === 'boolean' ? dataItem.visible : true,
             name: dataItem.name,
-            innerName: '',
+            id: '',
             color: dataItem.color || colorScale(dataItem.name),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),

@@ -77,7 +77,7 @@ const getOpacity = (args: {
 }) => {
     const {data, hoveredData, opacity} = args;
 
-    if (data.series.innerName !== hoveredData?.series.innerName) {
+    if (data.series.id !== hoveredData?.series.id) {
         return opacity || null;
     }
 
@@ -241,7 +241,7 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
                 dispatcher.call('hover-shape', {}, undefined);
             });
 
-        const eventName = `hover-shape.pie-${kebabCase(preparedData[0].series.innerName)}`;
+        const eventName = `hover-shape.pie-${kebabCase(preparedData[0].series.id)}`;
         dispatcher.on(eventName, (datas?: PreparedPieData[]) => {
             const data = datas?.[0];
             const hoverEnabled = hoverOptions?.enabled;
@@ -251,7 +251,7 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
                 segmentSelection.attr('fill', (d) => {
                     const fillColor = d.data.series.color;
 
-                    if (d.data.series.innerName === data.series.innerName) {
+                    if (d.data.series.id === data.series.id) {
                         return (
                             color(fillColor)?.brighter(hoverOptions?.brightness).toString() ||
                             fillColor
