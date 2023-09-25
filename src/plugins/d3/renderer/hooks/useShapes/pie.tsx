@@ -1,24 +1,55 @@
 import React from 'react';
-import {arc, pie, select} from 'd3';
-import type {PieArcDatum} from 'd3';
+import get from 'lodash/get';
+import kebabCase from 'lodash/kebabCase';
+import {arc, color, pie, pointer, select} from 'd3';
+import type {BaseType, Dispatch, PieArcDatum, Selection} from 'd3';
 
-import type {PieSeries} from '../../../../../types/widget-data';
+import type {PieSeries, TooltipDataChunkPie} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
 
-import {calculateNumericProperty, getHorisontalSvgTextHeight} from '../../utils';
-import type {OnSeriesMouseLeave, OnSeriesMouseMove} from '../useTooltip/types';
-import {PreparedPieSeries} from '../useSeries/types';
+import {
+    calculateNumericProperty,
+    extractD3DataFromNode,
+    getHorisontalSvgTextHeight,
+    isNodeContainsD3Data,
+} from '../../utils';
+import type {NodeWithD3Data} from '../../utils';
+import {PreparedPieSeries, PreparedSeriesOptions} from '../useSeries/types';
+
+const b = block('d3-pie');
 
 type PreparePieSeriesArgs = {
     boundsWidth: number;
     boundsHeight: number;
+    dispatcher: Dispatch<object>;
+    top: number;
+    left: number;
     series: PreparedPieSeries[];
+    seriesOptions: PreparedSeriesOptions;
     svgContainer: SVGSVGElement | null;
-    onSeriesMouseMove?: OnSeriesMouseMove;
-    onSeriesMouseLeave?: OnSeriesMouseLeave;
 };
 
-const b = block('d3-pie');
+type PreparedPieData = Omit<TooltipDataChunkPie, 'series'> & {
+    series: PreparedPieSeries;
+};
+
+type PolylineSelection = Selection<
+    SVGPolylineElement,
+    PieArcDatum<PreparedPieData>,
+    SVGGElement,
+    unknown
+>;
+
+type LabelSelection = Selection<
+    BaseType | SVGTextElement,
+    PieArcDatum<PreparedPieData>,
+    SVGGElement,
+    unknown
+>;
+
+const preparePieData = (series: PreparedPieSeries[]): PreparedPieData[] => {
+    return series.map((s) => ({series: s, data: s.data}));
+};
 
 const getCenter = (
     boundsWidth: number,
@@ -39,18 +70,40 @@ const getCenter = (
     return [resultX, resultY];
 };
 
+const getOpacity = (args: {
+    data: PreparedPieData;
+    hoveredData?: PreparedPieData;
+    opacity?: number;
+}) => {
+    const {data, hoveredData, opacity} = args;
+
+    if (data.series.id !== hoveredData?.series.id) {
+        return opacity || null;
+    }
+
+    return null;
+};
+
+const isNodeContainsPieData = (
+    node?: Element,
+): node is NodeWithD3Data<PieArcDatum<PreparedPieData>> => {
+    return isNodeContainsD3Data(node);
+};
+
 export function PieSeriesComponent(args: PreparePieSeriesArgs) {
-    const {boundsWidth, boundsHeight, series, onSeriesMouseMove, onSeriesMouseLeave, svgContainer} =
+    const {boundsWidth, boundsHeight, dispatcher, top, left, series, seriesOptions, svgContainer} =
         args;
     const ref = React.useRef<SVGGElement>(null);
     const [x, y] = getCenter(boundsWidth, boundsHeight, series[0]?.center);
 
     React.useEffect(() => {
         if (!ref.current) {
-            return;
+            return () => {};
         }
 
         const svgElement = select(ref.current);
+        const hoverOptions = get(seriesOptions, 'pie.states.hover');
+        const inactiveOptions = get(seriesOptions, 'pie.states.inactive');
         const isLabelsEnabled = series[0]?.dataLabels?.enabled;
         let radiusRelatedToChart = Math.min(boundsWidth, boundsHeight) / 2;
 
@@ -71,43 +124,49 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
 
         const innerRadius =
             calculateNumericProperty({value: series[0].innerRadius, base: radius}) ?? 0;
-        const pieGenerator = pie<PreparedPieSeries>().value((d) => d.data);
-        const visibleData = series.filter((d) => d.visible);
+        const preparedData = preparePieData(series);
+        const pieGenerator = pie<PreparedPieData>().value((d) => d.data.value);
+        const visibleData = preparedData.filter((d) => d.series.visible);
         const dataReady = pieGenerator(visibleData);
-        const arcGenerator = arc<PieArcDatum<PreparedPieSeries>>()
+        const arcGenerator = arc<PieArcDatum<PreparedPieData>>()
             .innerRadius(innerRadius)
             .outerRadius(radius)
-            .cornerRadius((d) => d.data.borderRadius);
+            .cornerRadius((d) => d.data.series.borderRadius);
         svgElement.selectAll('*').remove();
 
-        svgElement
-            .selectAll('allSlices')
+        const segmentSelection = svgElement
+            .selectAll('segments')
             .data(dataReady)
             .enter()
             .append('path')
             .attr('d', arcGenerator)
             .attr('class', b('segment'))
-            .attr('fill', (d) => d.data.color || '')
+            .attr('fill', (d) => d.data.series.color)
             .style('stroke', series[0]?.borderColor || '')
             .style('stroke-width', series[0]?.borderWidth ?? 1);
 
+        let polylineSelection: PolylineSelection | undefined;
+        let labelSelection: LabelSelection | undefined;
+
         if (series[0]?.dataLabels?.enabled) {
             const labelHeight = getHorisontalSvgTextHeight({text: 'tmp'});
-            const outerArc = arc<PieArcDatum<PreparedPieSeries>>()
+            const outerArc = arc<PieArcDatum<PreparedPieData>>()
                 .innerRadius(labelsArcRadius)
                 .outerRadius(labelsArcRadius);
+            const polylineArc = arc<PieArcDatum<PreparedPieData>>()
+                .innerRadius(radius)
+                .outerRadius(radius);
             // Add the polylines between chart and labels
-            svgElement
-                .selectAll('allPolylines')
+            polylineSelection = svgElement
+                .selectAll('polylines')
                 .data(dataReady)
                 .enter()
                 .append('polyline')
-                .attr('stroke', (d) => d.data.color || '')
-                .style('fill', 'none')
+                .attr('stroke', (d) => d.data.series.color || '')
                 .attr('stroke-width', 1)
                 .attr('points', (d) => {
                     // Line insertion in the slice
-                    const posA = arcGenerator.centroid(d);
+                    const posA = polylineArc.centroid(d);
                     // Line break: we use the other arc generator that has been built only for that
                     const posB = outerArc.centroid(d);
                     const posC = outerArc.centroid(d);
@@ -136,14 +195,16 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
                     }
 
                     return result.join(' ');
-                });
+                })
+                .attr('pointer-events', 'none')
+                .style('fill', 'none');
 
             // Add the polylines between chart and labels
-            svgElement
-                .selectAll('allLabels')
+            labelSelection = svgElement
+                .selectAll('labels')
                 .data(dataReady)
                 .join('text')
-                .text((d) => d.data.label || d.value)
+                .text((d) => d.data.series.label || d.value)
                 .attr('class', b('label'))
                 .attr('transform', (d) => {
                     const pos = outerArc.centroid(d);
@@ -152,12 +213,79 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
                     pos[1] += labelHeight / 4;
                     return `translate(${pos})`;
                 })
+                .attr('pointer-events', 'none')
                 .style('text-anchor', (d) => {
                     const midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
                     return midangle < Math.PI ? 'start' : 'end';
                 });
         }
-    }, [boundsWidth, boundsHeight, series, onSeriesMouseMove, onSeriesMouseLeave, svgContainer]);
+
+        svgElement
+            .on('mousemove', (e) => {
+                const segment = e.target;
+
+                if (!isNodeContainsPieData(segment)) {
+                    return;
+                }
+
+                const [pointerX, pointerY] = pointer(e, svgContainer);
+                const segmentData = extractD3DataFromNode(segment).data;
+                dispatcher.call(
+                    'hover-shape',
+                    {},
+                    [segmentData],
+                    [pointerX - left, pointerY - top],
+                );
+            })
+            .on('mouseleave', () => {
+                dispatcher.call('hover-shape', {}, undefined);
+            });
+
+        const eventName = `hover-shape.pie-${kebabCase(preparedData[0].series.id)}`;
+        dispatcher.on(eventName, (datas?: PreparedPieData[]) => {
+            const data = datas?.[0];
+            const hoverEnabled = hoverOptions?.enabled;
+            const inactiveEnabled = inactiveOptions?.enabled;
+
+            if (hoverEnabled && data) {
+                segmentSelection.attr('fill', (d) => {
+                    const fillColor = d.data.series.color;
+
+                    if (d.data.series.id === data.series.id) {
+                        return (
+                            color(fillColor)?.brighter(hoverOptions?.brightness).toString() ||
+                            fillColor
+                        );
+                    }
+
+                    return fillColor;
+                });
+            } else if (hoverEnabled) {
+                segmentSelection.attr('fill', (d) => d.data.series.color);
+            }
+
+            if (inactiveEnabled && data) {
+                const opacity = inactiveOptions?.opacity;
+                segmentSelection.attr('opacity', (d) => {
+                    return getOpacity({data: d.data, hoveredData: data, opacity});
+                });
+                polylineSelection?.attr('opacity', (d) => {
+                    return getOpacity({data: d.data, hoveredData: data, opacity});
+                });
+                labelSelection?.attr('opacity', (d) => {
+                    return getOpacity({data: d.data, hoveredData: data, opacity});
+                });
+            } else if (inactiveEnabled) {
+                segmentSelection.attr('opacity', null);
+                polylineSelection?.attr('opacity', null);
+                labelSelection?.attr('opacity', null);
+            }
+        });
+
+        return () => {
+            dispatcher.on(eventName, null);
+        };
+    }, [boundsWidth, boundsHeight, dispatcher, top, left, series, seriesOptions, svgContainer]);
 
     return <g ref={ref} className={b()} transform={`translate(${x}, ${y})`} />;
 }

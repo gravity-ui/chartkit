@@ -1,35 +1,40 @@
 import React from 'react';
+import type {Dispatch} from 'd3';
 
-import type {TooltipHoveredData} from '../../../../../types/widget-data';
+import type {TooltipDataChunk} from '../../../../../types/widget-data';
 
 import {PreparedTooltip} from '../useChartOptions/types';
-import type {PointerPosition, OnSeriesMouseMove, OnSeriesMouseLeave} from './types';
+import type {PointerPosition} from './types';
 
 type Args = {
+    dispatcher: Dispatch<object>;
     tooltip: PreparedTooltip;
 };
 
-export const useTooltip = ({tooltip}: Args) => {
-    const [hovered, setTooltipHoveredData] = React.useState<TooltipHoveredData | undefined>();
-    const [pointerPosition, setPointerPosition] = React.useState<PointerPosition | undefined>();
+type TooltipState = {
+    hovered?: TooltipDataChunk[];
+    pointerPosition?: PointerPosition;
+};
 
-    const handleSeriesMouseMove = React.useCallback<OnSeriesMouseMove>(
-        ({pointerPosition: nextPointerPosition, hovered: nextHovered}) => {
-            setTooltipHoveredData(nextHovered);
-            setPointerPosition(nextPointerPosition);
-        },
-        [],
-    );
+export const useTooltip = ({dispatcher, tooltip}: Args) => {
+    const [{hovered, pointerPosition}, setTooltipState] = React.useState<TooltipState>({});
 
-    const handleSeriesMouseLeave = React.useCallback<OnSeriesMouseLeave>(() => {
-        setTooltipHoveredData(undefined);
-        setPointerPosition(undefined);
-    }, []);
+    React.useEffect(() => {
+        if (tooltip?.enabled) {
+            dispatcher.on(
+                'hover-shape.tooltip',
+                (nextHovered?: TooltipDataChunk[], nextPointerPosition?: PointerPosition) => {
+                    setTooltipState({hovered: nextHovered, pointerPosition: nextPointerPosition});
+                },
+            );
+        }
 
-    return {
-        hovered,
-        pointerPosition,
-        handleSeriesMouseMove: tooltip.enabled ? handleSeriesMouseMove : undefined,
-        handleSeriesMouseLeave: tooltip.enabled ? handleSeriesMouseLeave : undefined,
-    };
+        return () => {
+            if (tooltip?.enabled) {
+                dispatcher.on('hover-shape.tooltip', null);
+            }
+        };
+    }, [dispatcher, tooltip]);
+
+    return {hovered, pointerPosition};
 };

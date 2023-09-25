@@ -10,6 +10,8 @@ import {
     ScatterSeriesData,
 } from '../../../../../types/widget-data';
 
+import type {SeriesOptionsDefaults} from '../../constants';
+
 export type RectLegendSymbol = {
     shape: 'rect';
 } & Required<RectLegendSymbolOptions>;
@@ -45,6 +47,7 @@ export type LegendConfig = {
 type BasePreparedSeries = {
     color: string;
     name: string;
+    id: string;
     visible: boolean;
     legend: {
         enabled: boolean;
@@ -70,9 +73,12 @@ export type PreparedBarXSeries = {
 
 export type PreparedPieSeries = BasePreparedSeries &
     Required<Omit<PieSeries, 'data'>> & {
-        data: PieSeriesData['value'];
+        data: PieSeriesData;
+        value: PieSeriesData['value'];
         stackId: string;
         label?: PieSeriesData['label'];
     };
 
 export type PreparedSeries = PreparedScatterSeries | PreparedBarXSeries | PreparedPieSeries;
+
+export type PreparedSeriesOptions = SeriesOptionsDefaults;

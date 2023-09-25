@@ -1,12 +1,19 @@
+import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
 import type {ScaleOrdinal} from 'd3';
 import {scaleOrdinal} from 'd3';
+
 import type {
     BarXSeries,
     ChartKitWidgetSeries,
     PieSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types/widget-data';
-import cloneDeep from 'lodash/cloneDeep';
+import {getRandomCKId} from '../../../../../utils';
+import {BaseTextStyle} from '../../../../../types/widget-data';
+
+import {DEFAULT_PALETTE} from '../../constants';
+import {DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
 import type {
     PreparedBarXSeries,
     PreparedLegend,
@@ -14,11 +21,6 @@ import type {
     PreparedPieSeries,
     PreparedSeries,
 } from './types';
-import get from 'lodash/get';
-import {DEFAULT_PALETTE} from '../../constants';
-import {DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
-import {getRandomCKId} from '../../../../../utils';
-import {BaseTextStyle} from '../../../../../types/widget-data';
 
 const DEFAULT_DATALABELS_STYLE: BaseTextStyle = {
     fontSize: '11px',
@@ -87,6 +89,7 @@ function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[] {
             type: series.type,
             color: color,
             name: name,
+            id: '',
             visible: get(series, 'visible', true),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),
@@ -121,13 +124,15 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
     const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem) => {
         const result: PreparedPieSeries = {
             type: 'pie',
-            data: dataItem.value,
+            data: dataItem,
             dataLabels: {
                 enabled: get(series, 'dataLabels.enabled', true),
             },
             label: dataItem.label,
+            value: dataItem.value,
             visible: typeof dataItem.visible === 'boolean' ? dataItem.visible : true,
             name: dataItem.name,
+            id: '',
             color: dataItem.color || colorScale(dataItem.name),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),

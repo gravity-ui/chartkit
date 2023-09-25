@@ -63,7 +63,7 @@ const Template: Story = () => {
         },
         title: {text: 'Styled pies'},
         legend: {enabled: false},
-        tooltip: {enabled: false},
+        tooltip: {enabled: true},
     };
 
     if (!shown) {

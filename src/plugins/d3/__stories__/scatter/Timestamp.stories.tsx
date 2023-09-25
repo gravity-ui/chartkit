@@ -79,7 +79,7 @@ const shapeData = (data: Record<string, any>[]): ChartKitWidgetData<string> => {
         ],
         tooltip: {
             renderer: ({hovered}) => {
-                const d = hovered.data as ScatterSeriesData<string>;
+                const d = hovered[0].data as ScatterSeriesData<string>;
                 return <div style={{color: d.custom}}>{dateTime({input: d.x}).format('LL')}</div>;
             },
         },

@@ -1,31 +1,39 @@
 import React from 'react';
-import {group} from 'd3';
-
-import type {ChartKitWidgetSeriesOptions, ScatterSeries} from '../../../../../types';
+import {Dispatch, group} from 'd3';
 
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartOptions} from '../useChartOptions/types';
 import type {ChartScale} from '../useAxisScales';
-import type {PreparedBarXSeries, PreparedPieSeries, PreparedSeries} from '../';
-import type {OnSeriesMouseMove, OnSeriesMouseLeave} from '../useTooltip/types';
-import {BarXSeriesShapes} from './bar-x';
-import {ScatterSeriesShape} from './scatter';
+import type {
+    PreparedBarXSeries,
+    PreparedPieSeries,
+    PreparedScatterSeries,
+    PreparedSeries,
+    PreparedSeriesOptions,
+} from '../';
+import {BarXSeriesShapes, prepareBarXData} from './bar-x';
+import type {PreparedBarXData} from './bar-x';
+import {ScatterSeriesShape, prepareScatterData} from './scatter';
+import type {PreparedScatterData} from './scatter';
 import {PieSeriesComponent} from './pie';
 
 import './styles.scss';
+
+export type {PreparedBarXData} from './bar-x';
+export type {PreparedScatterData} from './scatter';
+export type ShapeData = PreparedBarXData | PreparedScatterData;
 
 type Args = {
     top: number;
     left: number;
     boundsWidth: number;
     boundsHeight: number;
+    dispatcher: Dispatch<object>;
     series: PreparedSeries[];
-    seriesOptions?: ChartKitWidgetSeriesOptions;
+    seriesOptions: PreparedSeriesOptions;
     xAxis: ChartOptions['xAxis'];
     yAxis: ChartOptions['yAxis'];
     svgContainer: SVGSVGElement | null;
-    onSeriesMouseMove?: OnSeriesMouseMove;
-    onSeriesMouseLeave?: OnSeriesMouseLeave;
     xScale?: ChartScale;
     yScale?: ChartScale;
 };
@@ -36,6 +44,7 @@ export const useShapes = (args: Args) => {
         left,
         boundsWidth,
         boundsHeight,
+        dispatcher,
         series,
         seriesOptions,
         xAxis,
@@ -43,58 +52,57 @@ export const useShapes = (args: Args) => {
         yAxis,
         yScale,
         svgContainer,
-        onSeriesMouseMove,
-        onSeriesMouseLeave,
     } = args;
 
-    const shapes = React.useMemo(() => {
+    const shapesComponents = React.useMemo(() => {
         const visibleSeries = getOnlyVisibleSeries(series);
         const groupedSeries = group(visibleSeries, (item) => item.type);
-
-        return Array.from(groupedSeries).reduce<React.ReactElement[]>((acc, item) => {
+        const shapesData: ShapeData[] = [];
+        const shapes = Array.from(groupedSeries).reduce<React.ReactElement[]>((acc, item) => {
             const [seriesType, chartSeries] = item;
             switch (seriesType) {
                 case 'bar-x': {
                     if (xScale && yScale) {
+                        const preparedData = prepareBarXData({
+                            series: chartSeries as PreparedBarXSeries[],
+                            seriesOptions,
+                            xAxis,
+                            xScale,
+                            yAxis,
+                            yScale,
+                        });
                         acc.push(
                             <BarXSeriesShapes
                                 key="bar-x"
-                                series={chartSeries as PreparedBarXSeries[]}
+                                dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
-                                xAxis={xAxis}
-                                xScale={xScale}
-                                yAxis={yAxis}
-                                yScale={yScale}
-                                top={top}
-                                left={left}
-                                svgContainer={svgContainer}
-                                onSeriesMouseMove={onSeriesMouseMove}
-                                onSeriesMouseLeave={onSeriesMouseLeave}
+                                preparedData={preparedData}
                             />,
                         );
+                        shapesData.push(...preparedData);
                     }
                     break;
                 }
                 case 'scatter': {
                     if (xScale && yScale) {
-                        const scatterShapes = chartSeries.map((scatterSeries, i) => {
-                            return (
-                                <ScatterSeriesShape
-                                    key={i}
-                                    top={top}
-                                    left={left}
-                                    series={scatterSeries as ScatterSeries}
-                                    xAxis={xAxis}
-                                    xScale={xScale}
-                                    yAxis={yAxis}
-                                    yScale={yScale}
-                                    onSeriesMouseMove={onSeriesMouseMove}
-                                    onSeriesMouseLeave={onSeriesMouseLeave}
-                                    svgContainer={svgContainer}
-                                />
-                            );
+                        const preparedDatas = prepareScatterData({
+                            series: chartSeries as PreparedScatterSeries[],
+                            xAxis,
+                            xScale,
+                            yAxis: yAxis[0],
+                            yScale,
                         });
-                        acc.push(...scatterShapes);
+                        acc.push(
+                            <ScatterSeriesShape
+                                key="scatter"
+                                dispatcher={dispatcher}
+                                top={top}
+                                left={left}
+                                preparedDatas={preparedDatas}
+                                seriesOptions={seriesOptions}
+                                svgContainer={svgContainer}
+                            />,
+                        );
                     }
                     break;
                 }
@@ -110,9 +118,11 @@ export const useShapes = (args: Args) => {
                                     key={`pie-${key}`}
                                     boundsWidth={boundsWidth}
                                     boundsHeight={boundsHeight}
+                                    dispatcher={dispatcher}
+                                    top={top}
+                                    left={left}
                                     series={pieSeries}
-                                    onSeriesMouseMove={onSeriesMouseMove}
-                                    onSeriesMouseLeave={onSeriesMouseLeave}
+                                    seriesOptions={seriesOptions}
                                     svgContainer={svgContainer}
                                 />
                             );
@@ -122,10 +132,14 @@ export const useShapes = (args: Args) => {
             }
             return acc;
         }, []);
+
+        return {shapes, shapesData};
     }, [
         boundsWidth,
         boundsHeight,
+        dispatcher,
         series,
+        seriesOptions,
         xAxis,
         xScale,
         yAxis,
@@ -133,9 +147,7 @@ export const useShapes = (args: Args) => {
         svgContainer,
         left,
         top,
-        onSeriesMouseMove,
-        onSeriesMouseLeave,
     ]);
 
-    return {shapes};
+    return {shapes: shapesComponents.shapes, shapesData: shapesComponents.shapesData};
 };
