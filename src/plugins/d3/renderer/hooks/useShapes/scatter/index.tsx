@@ -105,7 +105,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
 
             if (hoverEnabled) {
                 stateRef.current.hoveredSelections.forEach((selection) => {
-                    selection.attr('stroke', null).attr('fill', (d) => d.series.color);
+                    selection.attr('fill', (d) => d.series.color);
                 });
             }
 
@@ -117,16 +117,13 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 );
 
                 if (hoverEnabled) {
-                    points
-                        // FIXME: replace with marker after supporting such feature
-                        .attr('stroke', 'var(--g-color-text-primary)')
-                        .attr('fill', (d) => {
-                            const fillColor = d.series.color;
-                            return (
-                                color(fillColor)?.brighter(hoverOptions?.brightness).toString() ||
-                                fillColor
-                            );
-                        });
+                    points.attr('fill', (d) => {
+                        const fillColor = d.series.color;
+                        return (
+                            color(fillColor)?.brighter(hoverOptions?.brightness).toString() ||
+                            fillColor
+                        );
+                    });
                 }
 
                 stateRef.current.hoveredSelections = [points];
