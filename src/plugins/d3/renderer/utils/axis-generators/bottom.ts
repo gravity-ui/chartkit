@@ -41,9 +41,14 @@ function addDomain(
         .attr('d', `M0,0V0H${size}`);
 }
 
-function calculateCos(deg: number, precision = 4) {
+function calculateCos(deg: number, precision = 2) {
     const factor = Math.pow(10, precision);
     return Math.floor(Math.cos((Math.PI / 180) * deg) * factor) / factor;
+}
+
+function calculateSin(deg: number, precision = 2) {
+    const factor = Math.pow(10, precision);
+    return Math.floor(Math.sin((Math.PI / 180) * deg) * factor) / factor;
 }
 
 export function axisBottom(args: AxisBottomArgs) {
@@ -76,7 +81,9 @@ export function axisBottom(args: AxisBottomArgs) {
         let transform = `translate(0, ${labelHeight + labelsMargin}px)`;
         if (rotation) {
             const labelsOffsetTop = labelHeight * calculateCos(rotation) + labelsMargin;
-            transform = `translate(0, ${labelsOffsetTop}px) rotate(${rotation}deg)`;
+            // shift by half the element with middle alignment
+            const labelsOffsetLeft = (calculateSin(rotation) * labelHeight) / 4;
+            transform = `translate(${-labelsOffsetLeft}px, ${labelsOffsetTop}px) rotate(${rotation}deg)`;
         }
 
         selection
@@ -114,18 +121,8 @@ export function axisBottom(args: AxisBottomArgs) {
 
         const labels = selection.selectAll<SVGTextElement, unknown>('.tick text');
 
-        if (rotation) {
-            // labels.attr('text-anchor', rotation > 0 ? 'start' : 'end');
-            // .style('transform-box', 'fill-box')
-            // .style('transform', `rotate(${rotation}deg)`);
-            // if (rotation < 0) {
-            //     labels.style('transform-origin', function () {
-            //         const labelWidth = (this as Element)?.getBoundingClientRect()?.width || 0;
-            //         return `${labelWidth}px ${labelsMargin}px`;
-            //     });
-            // }
-            // rotateLabels(labels, {rotation, margin: labelsMargin});
-        } else {
+        // FIXME: handle rotated overlapping labels (with a smarter approach)
+        if (!rotation) {
             // remove overlapping labels
             let elementX = 0;
             selection
@@ -171,7 +168,6 @@ export function axisBottom(args: AxisBottomArgs) {
 
         selection
             .call(addDomain, {size: domainSize, color: domainColor})
-            // .attr('text-anchor', 'middle')
             .style('font-size', labelsStyle?.fontSize || '');
     };
 }

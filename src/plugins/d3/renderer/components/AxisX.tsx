@@ -70,10 +70,7 @@ export const AxisX = React.memo(({axis, width, height, scale}: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
 
-        svgElement
-            .call(xAxisGenerator)
-            .attr('class', b())
-            .style('font-size', axis.labels.style.fontSize);
+        svgElement.call(xAxisGenerator).attr('class', b());
 
         // add an axis header if necessary
         if (axis.title.text) {
