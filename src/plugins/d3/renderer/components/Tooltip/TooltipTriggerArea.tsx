@@ -4,6 +4,8 @@ import {bisector, pointer, sort} from 'd3';
 import type {Dispatch} from 'd3';
 
 import type {ShapeData, PreparedBarXData, PointerPosition} from '../../hooks';
+import {extractD3DataFromNode, isNodeContainsD3Data} from '../../utils';
+import type {NodeWithD3Data} from '../../utils';
 
 type Args = {
     boundsWidth: number;
@@ -17,9 +19,8 @@ type Args = {
 
 type CalculationType = 'x-primary' | 'none';
 
-// https://d3js.org/d3-selection/joining#selection_data
-const isNodeContainsData = (node?: Element): node is Element & {__data__: ShapeData} => {
-    return Boolean(node && '__data__' in node);
+const isNodeContainsData = (node?: Element): node is NodeWithD3Data<ShapeData> => {
+    return isNodeContainsD3Data(node);
 };
 
 const getCalculationType = (shapesData: ShapeData[]): CalculationType => {
@@ -56,11 +57,11 @@ export const TooltipTriggerArea = (args: Args) => {
         let hoverShapeData: ShapeData[] | undefined;
 
         if (xNodes.length === 1 && isNodeContainsData(xNodes[0])) {
-            hoverShapeData = [xNodes[0].__data__];
+            hoverShapeData = [extractD3DataFromNode(xNodes[0])];
         } else if (xNodes.length > 1 && xNodes.every(isNodeContainsData)) {
             const yPosition = pointerY - top - window.pageYOffset;
             const xyNode = xNodes.find((node, i) => {
-                const {y, height} = node.__data__ as PreparedBarXData;
+                const {y, height} = extractD3DataFromNode(node) as PreparedBarXData;
                 if (i === xNodes.length - 1) {
                     return yPosition <= y + height;
                 }
@@ -68,7 +69,7 @@ export const TooltipTriggerArea = (args: Args) => {
             });
 
             if (xyNode) {
-                hoverShapeData = [xyNode.__data__];
+                hoverShapeData = [extractD3DataFromNode(xyNode)];
             }
         }
 

@@ -7,7 +7,13 @@ import type {BaseType, Dispatch, PieArcDatum, Selection} from 'd3';
 import type {PieSeries, TooltipDataChunkPie} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
 
-import {calculateNumericProperty, getHorisontalSvgTextHeight} from '../../utils';
+import {
+    calculateNumericProperty,
+    extractD3DataFromNode,
+    getHorisontalSvgTextHeight,
+    isNodeContainsD3Data,
+} from '../../utils';
+import type {NodeWithD3Data} from '../../utils';
 import {PreparedPieSeries, PreparedSeriesOptions} from '../useSeries/types';
 
 const b = block('d3-pie');
@@ -80,8 +86,8 @@ const getOpacity = (args: {
 
 const isNodeContainsPieData = (
     node?: Element,
-): node is Element & {__data__: PieArcDatum<PreparedPieData>} => {
-    return Boolean(get(node, '__data__'));
+): node is NodeWithD3Data<PieArcDatum<PreparedPieData>> => {
+    return isNodeContainsD3Data(node);
 };
 
 export function PieSeriesComponent(args: PreparePieSeriesArgs) {
@@ -223,7 +229,7 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
                 }
 
                 const [pointerX, pointerY] = pointer(e, svgContainer);
-                const segmentData = segment.__data__.data;
+                const segmentData = extractD3DataFromNode(segment).data;
                 dispatcher.call(
                     'hover-shape',
                     {},

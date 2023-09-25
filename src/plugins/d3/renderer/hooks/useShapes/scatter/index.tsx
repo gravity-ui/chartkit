@@ -5,6 +5,8 @@ import type {BaseType, Dispatch, Selection} from 'd3';
 
 import {block} from '../../../../../../utils/cn';
 
+import {extractD3DataFromNode, isNodeContainsD3Data} from '../../../utils';
+import type {NodeWithD3Data} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
 import type {PreparedScatterData} from './prepare-data';
 
@@ -37,10 +39,8 @@ type ChartState = {
 const b = block('d3-scatter');
 const DEFAULT_SCATTER_POINT_RADIUS = 4;
 
-const isNodeContainsScatterData = (
-    node?: Element,
-): node is Element & {__data__: PreparedScatterData} => {
-    return Boolean(get(node, '__data__'));
+const isNodeContainsScatterData = (node?: Element): node is NodeWithD3Data<PreparedScatterData> => {
+    return isNodeContainsD3Data(node);
 };
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
@@ -87,7 +87,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 }
 
                 const [pointerX, pointerY] = pointer(e, svgContainer);
-                const segmentData = point.__data__;
+                const segmentData = extractD3DataFromNode(point);
                 dispatcher.call(
                     'hover-shape',
                     {},
