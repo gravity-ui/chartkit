@@ -6,10 +6,28 @@ export const getBoundsWidth = (args: {
     preparedYAxis: PreparedAxis[];
 }) => {
     const {chartWidth, chartMargin, preparedYAxis} = args;
-    const yAxisTitleHeight =
-        preparedYAxis.reduce((acc, axis) => {
-            return acc + (axis.title.height || 0);
-        }, 0) || 0;
 
-    return chartWidth - chartMargin.right - chartMargin.left - yAxisTitleHeight;
+    return (
+        chartWidth -
+        chartMargin.right -
+        chartMargin.left -
+        getWidthOccupiedByYAxis({preparedAxis: preparedYAxis})
+    );
 };
+
+export function getWidthOccupiedByYAxis(args: {preparedAxis: PreparedAxis[]}) {
+    const {preparedAxis} = args;
+    let result = 0;
+
+    preparedAxis.forEach((axis) => {
+        if (axis.title.text) {
+            result += axis.title.height + axis.title.margin;
+        }
+
+        if (axis.labels.enabled) {
+            result += axis.labels.margin + axis.labels.width;
+        }
+    });
+
+    return result;
+}

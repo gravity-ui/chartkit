@@ -1,5 +1,5 @@
 import {PreparedAxis} from '../hooks';
-import {AxisDomain, AxisScale, ScaleBand, Selection} from 'd3';
+import {AxisDomain, AxisScale, ScaleBand} from 'd3';
 
 export function getTicksCount({axis, range}: {axis: PreparedAxis; range: number}) {
     let ticksCount: number | undefined;
@@ -63,27 +63,4 @@ export function getXAxisItems({
 export function getMaxTickCount({axis, width}: {axis: PreparedAxis; width: number}) {
     const minTickWidth = parseInt(axis.labels.style.fontSize) + axis.labels.padding;
     return Math.floor(width / minTickWidth);
-}
-
-export function rotateLabels(
-    selection: Selection<SVGTextElement, unknown, any, unknown>,
-    {
-        rotation,
-        margin,
-    }: {
-        rotation: number;
-        margin: number;
-    },
-) {
-    selection
-        .attr('text-anchor', rotation > 0 ? 'start' : 'end')
-        .style('transform-box', 'fill-box')
-        .style('transform', `rotate(${rotation}deg)`);
-
-    if (rotation < 0) {
-        selection.style('transform-origin', function () {
-            const labelWidth = (this as Element)?.getBoundingClientRect()?.width || 0;
-            return `${labelWidth}px ${margin}px`;
-        });
-    }
 }

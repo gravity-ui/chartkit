@@ -20,6 +20,7 @@ import {Tooltip, TooltipTriggerArea} from './Tooltip';
 import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
 
 import './styles.scss';
+import {getWidthOccupiedByYAxis} from '../hooks/useChartDimensions/utils';
 
 const b = block('d3');
 
@@ -92,6 +93,9 @@ export const Chart = (props: Props) => {
         svgContainer: svgRef.current,
     });
 
+    const boundsOffsetTop = chart.margin.top;
+    const boundsOffsetLeft = chart.margin.left + getWidthOccupiedByYAxis({preparedAxis: yAxis});
+
     return (
         <React.Fragment>
             <svg ref={svgRef} className={b()} width={width} height={height}>
@@ -99,7 +103,7 @@ export const Chart = (props: Props) => {
                 <g
                     width={boundsWidth}
                     height={boundsHeight}
-                    transform={`translate(${[chart.margin.left, chart.margin.top].join(',')})`}
+                    transform={`translate(${[boundsOffsetLeft, boundsOffsetTop].join(',')})`}
                 >
                     {xScale && yScale && (
                         <React.Fragment>

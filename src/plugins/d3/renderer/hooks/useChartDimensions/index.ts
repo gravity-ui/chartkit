@@ -17,20 +17,6 @@ type Args = {
     preparedSeries: PreparedSeries[];
 };
 
-const getHeightOccupiedByXAxis = ({preparedXAxis}: {preparedXAxis: PreparedAxis}) => {
-    let height = 0;
-
-    if (preparedXAxis.title) {
-        height += preparedXAxis.title.height + preparedXAxis.title.margin;
-    }
-
-    if (preparedXAxis.labels.enabled) {
-        height += preparedXAxis.labels.margin + preparedXAxis.labels.height;
-    }
-
-    return height;
-};
-
 const getBottomOffset = (args: {
     hasAxisRelatedSeries: boolean;
     preparedLegend: PreparedLegend;
@@ -44,10 +30,14 @@ const getBottomOffset = (args: {
     }
 
     if (hasAxisRelatedSeries) {
-        result += getHeightOccupiedByXAxis({preparedXAxis});
-    }
+        if (preparedXAxis.title) {
+            result += preparedXAxis.title.height + preparedXAxis.title.margin;
+        }
 
-    console.log({result, preparedLegend, xAxis: getHeightOccupiedByXAxis({preparedXAxis})});
+        if (preparedXAxis.labels.enabled) {
+            result += preparedXAxis.labels.margin + preparedXAxis.labels.height;
+        }
+    }
 
     return result;
 };

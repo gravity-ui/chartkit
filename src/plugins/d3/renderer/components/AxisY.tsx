@@ -100,7 +100,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             .remove();
 
         if (axis.title.text) {
-            const textY = axis.title.height + axis.labels.margin;
+            const textY = axis.title.margin + axis.labels.margin + axis.labels.width;
 
             svgElement
                 .append('text')

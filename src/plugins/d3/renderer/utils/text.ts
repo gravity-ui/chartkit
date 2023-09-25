@@ -1,7 +1,6 @@
 import type {Selection} from 'd3';
 import {select} from 'd3';
 import {BaseTextStyle} from '../../../../types';
-import {rotateLabels} from './axis';
 
 export function setEllipsisForOverflowText(
     selection: Selection<SVGTextElement, unknown, null, unknown>,
@@ -119,7 +118,9 @@ export function getLabelsMaxHeight({
     const svg = select(document.body).append('svg');
     const textSelection = renderLabels(svg, {labels, style});
     if (rotation) {
-        rotateLabels(textSelection, {rotation, margin: 0});
+        textSelection
+            .attr('text-anchor', rotation > 0 ? 'start' : 'end')
+            .style('transform', `rotate(${rotation}deg)`);
     }
 
     const maxHeight = (svg.select('g').node() as Element)?.getBoundingClientRect()?.height || 0;

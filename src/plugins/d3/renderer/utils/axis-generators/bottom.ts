@@ -1,8 +1,8 @@
 import type {AxisDomain, AxisScale, Selection} from 'd3';
 import {select} from 'd3';
 import {BaseTextStyle} from '../../../../../types';
-import {getXAxisItems, getXAxisOffset, getXTickPosition, rotateLabels} from '../axis';
-import {setEllipsisForOverflowText} from '../text';
+import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
+import {getLabelsMaxHeight, setEllipsisForOverflowText} from '../text';
 
 type AxisBottomArgs = {
     scale: AxisScale<AxisDomain>;
@@ -41,6 +41,11 @@ function addDomain(
         .attr('d', `M0,0V0H${size}`);
 }
 
+function calculateCos(deg: number, precision = 4) {
+    const factor = Math.pow(10, precision);
+    return Math.floor(Math.cos((Math.PI / 180) * deg) * factor) / factor;
+}
+
 export function axisBottom(args: AxisBottomArgs) {
     const {
         scale,
@@ -57,13 +62,22 @@ export function axisBottom(args: AxisBottomArgs) {
         domain: {size: domainSize, color: domainColor},
     } = args;
     const offset = getXAxisOffset();
-    const spacing = Math.max(tickSize, 0) + labelsMargin;
     const position = getXTickPosition({scale, offset});
     const values = getXAxisItems({scale, count: ticksCount, maxCount: maxTickCount});
+    const labelHeight = getLabelsMaxHeight({
+        labels: values,
+        style: {'font-size': labelsStyle?.fontSize || ''},
+    });
 
     return function (selection: Selection<SVGGElement, unknown, null, undefined>) {
         const x = selection.node()?.getBoundingClientRect()?.x || 0;
         const right = x + domainSize;
+
+        let transform = `translate(0, ${labelHeight + labelsMargin}px)`;
+        if (rotation) {
+            const labelsOffsetTop = labelHeight * calculateCos(rotation) + labelsMargin;
+            transform = `translate(0, ${labelsOffsetTop}px) rotate(${rotation}deg)`;
+        }
 
         selection
             .selectAll('.tick')
@@ -73,10 +87,15 @@ export function axisBottom(args: AxisBottomArgs) {
                 const tick = el.append('g').attr('class', 'tick');
                 tick.append('line').attr('stroke', 'currentColor').attr('y2', tickSize);
                 tick.append('text')
+                    .text(labelFormat)
                     .attr('fill', 'currentColor')
-                    .attr('y', spacing)
-                    .attr('dy', '0.71em')
-                    .text(labelFormat);
+                    .attr('text-anchor', () => {
+                        if (rotation) {
+                            return rotation > 0 ? 'start' : 'end';
+                        }
+                        return 'middle';
+                    })
+                    .style('transform', transform);
 
                 return tick;
             })
@@ -96,7 +115,16 @@ export function axisBottom(args: AxisBottomArgs) {
         const labels = selection.selectAll<SVGTextElement, unknown>('.tick text');
 
         if (rotation) {
-            rotateLabels(labels, {rotation, margin: labelsMargin});
+            // labels.attr('text-anchor', rotation > 0 ? 'start' : 'end');
+            // .style('transform-box', 'fill-box')
+            // .style('transform', `rotate(${rotation}deg)`);
+            // if (rotation < 0) {
+            //     labels.style('transform-origin', function () {
+            //         const labelWidth = (this as Element)?.getBoundingClientRect()?.width || 0;
+            //         return `${labelWidth}px ${labelsMargin}px`;
+            //     });
+            // }
+            // rotateLabels(labels, {rotation, margin: labelsMargin});
         } else {
             // remove overlapping labels
             let elementX = 0;
@@ -143,7 +171,7 @@ export function axisBottom(args: AxisBottomArgs) {
 
         selection
             .call(addDomain, {size: domainSize, color: domainColor})
-            .attr('text-anchor', 'middle')
+            // .attr('text-anchor', 'middle')
             .style('font-size', labelsStyle?.fontSize || '');
     };
 }

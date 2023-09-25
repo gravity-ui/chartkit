@@ -13,9 +13,9 @@ type PreparedAxisLabels = Omit<
 > &
     Required<Pick<ChartKitWidgetAxisLabels, 'enabled' | 'padding' | 'margin' | 'rotation'>> & {
         style: BaseTextStyle;
-        maxWidth?: number;
         rotation: number;
         height: number;
+        width: number;
     };
 
 export type PreparedChart = {

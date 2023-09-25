@@ -46,7 +46,10 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
 
     return getLabelsMaxWidth({
         labels,
-        style: axis.labels.style,
+        style: {
+            'font-size': axis.labels.style.fontSize,
+            'font-weight': axis.labels.style.fontWeight || '',
+        },
     });
 };
 
@@ -56,7 +59,7 @@ const applyLabelsMaxWidth = (args: {
 }) => {
     const {series, preparedYAxis} = args;
 
-    preparedYAxis.labels.maxWidth = getAxisLabelMaxWidth({axis: preparedYAxis, series});
+    preparedYAxis.labels.width = getAxisLabelMaxWidth({axis: preparedYAxis, series});
 };
 
 export const getPreparedYAxis = ({
@@ -86,6 +89,7 @@ export const getPreparedYAxis = ({
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,
             rotation: 0,
+            width: 0,
             height: 0,
         },
         lineColor: get(yAxis1, 'lineColor'),

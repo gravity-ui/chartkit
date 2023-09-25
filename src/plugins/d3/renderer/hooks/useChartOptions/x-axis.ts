@@ -93,6 +93,7 @@ export const getPreparedXAxis = ({
             numberFormat: get(xAxis, 'labels.numberFormat'),
             rotation: get(xAxis, 'labels.rotation', 0),
             style: {fontSize: get(xAxis, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE)},
+            width: 0,
             height: 0,
         },
         lineColor: get(xAxis, 'lineColor'),
