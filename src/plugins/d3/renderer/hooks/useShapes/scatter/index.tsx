@@ -109,7 +109,6 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 });
             }
 
-            // check data type
             if (data?.[0]) {
                 const className = b('point');
                 const points = svgElement.selectAll<BaseType, PreparedScatterData>(
