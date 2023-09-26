@@ -2,7 +2,7 @@ import get from 'lodash/get';
 
 import type {ChartKitWidgetData} from '../../../../../types';
 
-import type {PreparedAxis, PreparedChart, PreparedTitle} from './types';
+import type {PreparedChart, PreparedTitle} from './types';
 
 const getMarginTop = (args: {
     chart: ChartKitWidgetData['chart'];
@@ -26,8 +26,6 @@ const getMarginRight = (args: {chart: ChartKitWidgetData['chart']}) => {
 
 export const getPreparedChart = (args: {
     chart: ChartKitWidgetData['chart'];
-    series: ChartKitWidgetData['series'];
-    preparedY1Axis: PreparedAxis;
     preparedTitle?: PreparedTitle;
 }): PreparedChart => {
     const {chart, preparedTitle} = args;

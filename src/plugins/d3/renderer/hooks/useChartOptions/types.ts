@@ -52,6 +52,5 @@ export type PreparedTooltip = ChartKitWidgetData['tooltip'] & {
 export type ChartOptions = {
     chart: PreparedChart;
     tooltip: PreparedTooltip;
-    yAxis: PreparedAxis[];
     title?: PreparedTitle;
 };
