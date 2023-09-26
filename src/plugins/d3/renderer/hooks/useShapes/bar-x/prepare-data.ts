@@ -6,7 +6,7 @@ import type {BarXSeriesData, TooltipDataChunkBarX} from '../../../../../../types
 
 import {getDataCategoryValue} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
-import type {ChartOptions} from '../../useChartOptions/types';
+import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedBarXSeries, PreparedSeriesOptions} from '../../useSeries/types';
 
 const MIN_RECT_WIDTH = 1;
@@ -24,9 +24,9 @@ export type PreparedBarXData = Omit<TooltipDataChunkBarX, 'series'> & {
 export const prepareBarXData = (args: {
     series: PreparedBarXSeries[];
     seriesOptions: PreparedSeriesOptions;
-    xAxis: ChartOptions['xAxis'];
+    xAxis: PreparedAxis;
     xScale: ChartScale;
-    yAxis: ChartOptions['yAxis'];
+    yAxis: PreparedAxis[];
     yScale: ChartScale;
 }): PreparedBarXData[] => {
     const {series, seriesOptions, xAxis, xScale, yScale} = args;

@@ -10,7 +10,7 @@ import type {
 import {
     axisLabelsDefaults,
     DEFAULT_AXIS_LABEL_FONT_SIZE,
-    DEFAULT_AXIS_TITLE_FONT_SIZE,
+    yAxisTitleDefaults,
 } from '../../constants';
 import {
     getHorisontalSvgTextHeight,
@@ -46,7 +46,10 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
 
     return getLabelsMaxWidth({
         labels,
-        style: axis.labels.style,
+        style: {
+            'font-size': axis.labels.style.fontSize,
+            'font-weight': axis.labels.style.fontWeight || '',
+        },
     });
 };
 
@@ -56,7 +59,7 @@ const applyLabelsMaxWidth = (args: {
 }) => {
     const {series, preparedYAxis} = args;
 
-    preparedYAxis.labels.maxWidth = getAxisLabelMaxWidth({axis: preparedYAxis, series});
+    preparedYAxis.labels.width = getAxisLabelMaxWidth({axis: preparedYAxis, series});
 };
 
 export const getPreparedYAxis = ({
@@ -68,30 +71,34 @@ export const getPreparedYAxis = ({
 }): PreparedAxis[] => {
     // FIXME: add support for n axises
     const yAxis1 = yAxis?.[0];
+    const labelsEnabled = get(yAxis1, 'labels.enabled', true);
 
     const y1LabelsStyle: BaseTextStyle = {
         fontSize: get(yAxis1, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE),
     };
     const y1TitleText = get(yAxis1, 'title.text', '');
     const y1TitleStyle: BaseTextStyle = {
-        fontSize: get(yAxis1, 'title.style.fontSize', DEFAULT_AXIS_TITLE_FONT_SIZE),
+        fontSize: get(yAxis1, 'title.style.fontSize', yAxisTitleDefaults.fontSize),
     };
     const preparedY1Axis: PreparedAxis = {
         type: get(yAxis1, 'type', 'linear'),
         labels: {
-            enabled: get(yAxis1, 'labels.enabled', true),
-            margin: get(yAxis1, 'labels.margin', axisLabelsDefaults.margin),
-            padding: get(yAxis1, 'labels.padding', axisLabelsDefaults.padding),
-            autoRotation: get(yAxis1, 'labels.autoRotation', false),
+            enabled: labelsEnabled,
+            margin: labelsEnabled ? get(yAxis1, 'labels.margin', axisLabelsDefaults.margin) : 0,
+            padding: labelsEnabled ? get(yAxis1, 'labels.padding', axisLabelsDefaults.padding) : 0,
             dateFormat: get(yAxis1, 'labels.dateFormat'),
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,
+            rotation: 0,
+            width: 0,
+            height: 0,
         },
         lineColor: get(yAxis1, 'lineColor'),
         categories: get(yAxis1, 'categories'),
         timestamps: get(yAxis1, 'timestamps'),
         title: {
             text: y1TitleText,
+            margin: get(yAxis1, 'title.margin', yAxisTitleDefaults.margin),
             style: y1TitleStyle,
             height: y1TitleText
                 ? getHorisontalSvgTextHeight({text: y1TitleText, style: y1TitleStyle})
@@ -107,7 +114,9 @@ export const getPreparedYAxis = ({
         },
     };
 
-    applyLabelsMaxWidth({series, preparedYAxis: preparedY1Axis});
+    if (labelsEnabled) {
+        applyLabelsMaxWidth({series, preparedYAxis: preparedY1Axis});
+    }
 
     return [preparedY1Axis];
 };

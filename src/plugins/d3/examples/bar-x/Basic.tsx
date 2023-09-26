@@ -40,6 +40,7 @@ export const BasicBarXChart = () => {
                 text: 'Game Platforms',
             },
         },
+        yAxis: [{title: {text: 'Number of games released'}}],
     };
 
     return <ChartKit type="d3" data={widgetData} />;

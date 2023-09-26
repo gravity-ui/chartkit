@@ -12,6 +12,7 @@
     }
 
     &__title {
+        alignment-baseline: after-edge;
         fill: var(--g-color-text-secondary);
     }
 }
@@ -32,6 +33,7 @@
 
     &__item-text {
         fill: var(--g-color-text-secondary);
+        alignment-baseline: before-edge;
 
         &_unselected {
             fill: var(--g-color-text-hint);

@@ -2,7 +2,7 @@ import React from 'react';
 import {Dispatch, group} from 'd3';
 
 import {getOnlyVisibleSeries} from '../../utils';
-import type {ChartOptions} from '../useChartOptions/types';
+import type {PreparedAxis} from '../useChartOptions/types';
 import type {ChartScale} from '../useAxisScales';
 import type {
     PreparedBarXSeries,
@@ -31,8 +31,8 @@ type Args = {
     dispatcher: Dispatch<object>;
     series: PreparedSeries[];
     seriesOptions: PreparedSeriesOptions;
-    xAxis: ChartOptions['xAxis'];
-    yAxis: ChartOptions['yAxis'];
+    xAxis: PreparedAxis;
+    yAxis: PreparedAxis[];
     svgContainer: SVGSVGElement | null;
     xScale?: ChartScale;
     yScale?: ChartScale;

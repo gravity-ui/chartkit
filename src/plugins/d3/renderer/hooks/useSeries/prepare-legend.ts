@@ -10,6 +10,7 @@ import {getHorisontalSvgTextHeight} from '../../utils';
 import {getBoundsWidth} from '../useChartDimensions';
 import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
 import type {PreparedLegend, PreparedSeries, LegendConfig, LegendItem} from './types';
+import {getWidthOccupiedByYAxis} from '../useChartDimensions/utils';
 
 type LegendItemWithoutTextWidth = Omit<LegendItem, 'textWidth'>;
 
@@ -116,16 +117,19 @@ export const getLegendComponents = (args: {
     let pagination: LegendConfig['pagination'] | undefined;
 
     if (maxLegendHeight < legendHeight) {
-        const limit = Math.floor(maxLegendHeight / preparedLegend.lineHeight);
+        // extra line for paginator
+        const limit = Math.floor(maxLegendHeight / preparedLegend.lineHeight) - 1;
         const maxPage = Math.ceil(items.length / limit);
         pagination = {limit, maxPage};
         legendHeight = maxLegendHeight;
     }
 
     preparedLegend.height = legendHeight;
-    const top =
-        chartHeight - chartMargin.bottom - preparedLegend.height + preparedLegend.lineHeight / 2;
-    const offset: LegendConfig['offset'] = {left: chartMargin.left, top};
+    const top = chartHeight - chartMargin.bottom - preparedLegend.height;
+    const offset: LegendConfig['offset'] = {
+        left: chartMargin.left + getWidthOccupiedByYAxis({preparedAxis: preparedYAxis}),
+        top,
+    };
 
     return {legendConfig: {offset, pagination}, legendItems: items};
 };

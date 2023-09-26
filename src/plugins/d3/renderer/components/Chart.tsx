@@ -17,6 +17,9 @@ import {AxisX} from './AxisX';
 import {Legend} from './Legend';
 import {Title} from './Title';
 import {Tooltip, TooltipTriggerArea} from './Tooltip';
+import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
+import {getWidthOccupiedByYAxis} from '../hooks/useChartDimensions/utils';
+import {getPreparedYAxis} from '../hooks/useChartOptions/y-axis';
 
 import './styles.scss';
 
@@ -37,9 +40,19 @@ export const Chart = (props: Props) => {
     const dispatcher = React.useMemo(() => {
         return getD3Dispatcher();
     }, []);
-    const {chart, title, tooltip, xAxis, yAxis} = useChartOptions({
+    const {chart, title, tooltip} = useChartOptions({
         data,
     });
+    const xAxis = React.useMemo(
+        () => getPreparedXAxis({xAxis: data.xAxis, width, series: data.series.data}),
+        [data, width],
+    );
+
+    const yAxis = React.useMemo(
+        () => getPreparedYAxis({series: data.series.data, yAxis: data.yAxis}),
+        [data, width],
+    );
+
     const {
         legendItems,
         legendConfig,
@@ -87,6 +100,9 @@ export const Chart = (props: Props) => {
         svgContainer: svgRef.current,
     });
 
+    const boundsOffsetTop = chart.margin.top;
+    const boundsOffsetLeft = chart.margin.left + getWidthOccupiedByYAxis({preparedAxis: yAxis});
+
     return (
         <React.Fragment>
             <svg ref={svgRef} className={b()} width={width} height={height}>
@@ -94,7 +110,7 @@ export const Chart = (props: Props) => {
                 <g
                     width={boundsWidth}
                     height={boundsHeight}
-                    transform={`translate(${[chart.margin.left, chart.margin.top].join(',')})`}
+                    transform={`translate(${[boundsOffsetLeft, boundsOffsetTop].join(',')})`}
                 >
                     {xScale && yScale && (
                         <React.Fragment>

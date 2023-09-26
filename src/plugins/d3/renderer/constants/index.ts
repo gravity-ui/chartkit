@@ -24,4 +24,3 @@ export const DEFAULT_PALETTE = [
 ];
 
 export const DEFAULT_AXIS_LABEL_FONT_SIZE = '11px';
-export const DEFAULT_AXIS_TITLE_FONT_SIZE = '14px';
