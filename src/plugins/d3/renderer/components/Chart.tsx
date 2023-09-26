@@ -18,9 +18,9 @@ import {Legend} from './Legend';
 import {Title} from './Title';
 import {Tooltip, TooltipTriggerArea} from './Tooltip';
 import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
+import {getWidthOccupiedByYAxis} from '../hooks/useChartDimensions/utils';
 
 import './styles.scss';
-import {getWidthOccupiedByYAxis} from '../hooks/useChartDimensions/utils';
 
 const b = block('d3');
 
