@@ -145,7 +145,7 @@ export const Legend = (props: Props) => {
                     return getXPosition(i);
                 })
                 .attr('y', (legendItem) => {
-                    return Math.max(0, (legend.lineHeight - legendItem.symbol.height) / 2);
+                    return (legend.lineHeight - legendItem.symbol.height) / 2;
                 })
                 .attr('width', (legendItem) => {
                     return legendItem.symbol.width;
@@ -172,8 +172,7 @@ export const Legend = (props: Props) => {
                 .text(function (d) {
                     return ('name' in d && d.name) as string;
                 })
-                .style('font-size', legend.itemStyle.fontSize)
-                .style('alignment-baseline', 'before-edge');
+                .style('font-size', legend.itemStyle.fontSize);
 
             const contentWidth = legendLine.node()?.getBoundingClientRect().width || 0;
             const {left} = getLegendPosition({

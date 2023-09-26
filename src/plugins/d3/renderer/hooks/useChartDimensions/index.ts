@@ -30,7 +30,7 @@ const getBottomOffset = (args: {
     }
 
     if (hasAxisRelatedSeries) {
-        if (preparedXAxis.title) {
+        if (preparedXAxis.title.text) {
             result += preparedXAxis.title.height + preparedXAxis.title.margin;
         }
 

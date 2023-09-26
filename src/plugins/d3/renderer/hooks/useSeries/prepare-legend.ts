@@ -118,7 +118,7 @@ export const getLegendComponents = (args: {
 
     if (maxLegendHeight < legendHeight) {
         // extra line for paginator
-        const limit = Math.floor(maxLegendHeight / (preparedLegend.lineHeight + 1));
+        const limit = Math.floor(maxLegendHeight / preparedLegend.lineHeight) - 1;
         const maxPage = Math.ceil(items.length / limit);
         pagination = {limit, maxPage};
         legendHeight = maxLegendHeight;

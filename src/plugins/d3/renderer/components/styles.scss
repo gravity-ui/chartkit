@@ -33,6 +33,7 @@
 
     &__item-text {
         fill: var(--g-color-text-secondary);
+        alignment-baseline: before-edge;
 
         &_unselected {
             fill: var(--g-color-text-hint);
