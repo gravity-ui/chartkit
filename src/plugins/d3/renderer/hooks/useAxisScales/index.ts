@@ -3,7 +3,7 @@ import {scaleBand, scaleLinear, scaleUtc, extent} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import type {ChartOptions, PreparedAxis} from '../useChartOptions/types';
+import type {PreparedAxis} from '../useChartOptions/types';
 import {
     getOnlyVisibleSeries,
     getDataCategoryValue,
@@ -26,7 +26,7 @@ type Args = {
     boundsHeight: number;
     series: PreparedSeries[];
     xAxis: PreparedAxis;
-    yAxis: ChartOptions['yAxis'];
+    yAxis: PreparedAxis[];
 };
 
 type ReturnValue = {
