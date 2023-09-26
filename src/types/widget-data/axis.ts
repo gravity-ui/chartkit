@@ -23,6 +23,10 @@ export type ChartKitWidgetAxisLabels = {
      * If there is enough space, labels are not rotated.
      * As the chart gets narrower, it will start rotating the labels -45 degrees. */
     autoRotation?: boolean;
+    /** Rotation of the labels in degrees.
+     *
+     * @default: 0
+     */
     rotation?: number;
 };
 
@@ -38,7 +42,7 @@ export type ChartKitWidgetAxis = {
         text?: string;
         /** The pixel distance between the axis labels or line and the title.
          *
-         * Defaults to 4 for horizontal axes, 10 for vertical.
+         * Defaults to 4 for horizontal axes, 8 for vertical.
          * */
         margin?: number;
     };

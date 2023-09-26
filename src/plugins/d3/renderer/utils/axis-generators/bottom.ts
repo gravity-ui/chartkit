@@ -81,8 +81,7 @@ export function axisBottom(args: AxisBottomArgs) {
         let transform = `translate(0, ${labelHeight + labelsMargin}px)`;
         if (rotation) {
             const labelsOffsetTop = labelHeight * calculateCos(rotation) + labelsMargin;
-            // shift by half the element with middle alignment
-            const labelsOffsetLeft = (calculateSin(rotation) * labelHeight) / 4;
+            const labelsOffsetLeft = calculateSin(rotation) * labelHeight;
             transform = `translate(${-labelsOffsetLeft}px, ${labelsOffsetTop}px) rotate(${rotation}deg)`;
         }
 
@@ -102,7 +101,8 @@ export function axisBottom(args: AxisBottomArgs) {
                         }
                         return 'middle';
                     })
-                    .style('transform', transform);
+                    .style('transform', transform)
+                    .style('alignment-baseline', 'after-edge');
 
                 return tick;
             })

@@ -71,6 +71,7 @@ export const getPreparedYAxis = ({
 }): PreparedAxis[] => {
     // FIXME: add support for n axises
     const yAxis1 = yAxis?.[0];
+    const labelsEnabled = get(yAxis1, 'labels.enabled', true);
 
     const y1LabelsStyle: BaseTextStyle = {
         fontSize: get(yAxis1, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE),
@@ -82,9 +83,9 @@ export const getPreparedYAxis = ({
     const preparedY1Axis: PreparedAxis = {
         type: get(yAxis1, 'type', 'linear'),
         labels: {
-            enabled: get(yAxis1, 'labels.enabled', true),
-            margin: get(yAxis1, 'labels.margin', axisLabelsDefaults.margin),
-            padding: get(yAxis1, 'labels.padding', axisLabelsDefaults.padding),
+            enabled: labelsEnabled,
+            margin: labelsEnabled ? get(yAxis1, 'labels.margin', axisLabelsDefaults.margin) : 0,
+            padding: labelsEnabled ? get(yAxis1, 'labels.padding', axisLabelsDefaults.padding) : 0,
             dateFormat: get(yAxis1, 'labels.dateFormat'),
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,
@@ -113,7 +114,9 @@ export const getPreparedYAxis = ({
         },
     };
 
-    applyLabelsMaxWidth({series, preparedYAxis: preparedY1Axis});
+    if (labelsEnabled) {
+        applyLabelsMaxWidth({series, preparedYAxis: preparedY1Axis});
+    }
 
     return [preparedY1Axis];
 };

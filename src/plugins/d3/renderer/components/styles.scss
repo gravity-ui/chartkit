@@ -12,6 +12,7 @@
     }
 
     &__title {
+        alignment-baseline: after-edge;
         fill: var(--g-color-text-secondary);
     }
 }

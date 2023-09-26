@@ -5,7 +5,7 @@ import type {
     ChartKitWidgetAxisType,
     ChartKitWidgetAxisLabels,
     ChartMargin,
-} from '../../../../../types/widget-data';
+} from '../../../../../types';
 
 type PreparedAxisLabels = Omit<
     ChartKitWidgetAxisLabels,

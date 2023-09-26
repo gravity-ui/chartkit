@@ -10,10 +10,10 @@ const axisTitleDefaults = {
 
 export const xAxisTitleDefaults = {
     ...axisTitleDefaults,
-    margin: 0,
+    margin: 4,
 };
 
 export const yAxisTitleDefaults = {
     ...axisTitleDefaults,
-    margin: 10,
+    margin: 8,
 };

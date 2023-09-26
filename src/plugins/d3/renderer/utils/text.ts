@@ -8,7 +8,7 @@ export function setEllipsisForOverflowText(
 ) {
     let text = selection.text();
     selection.text(null).append('title').text(text);
-    const tSpan = selection.append('tspan').text(text);
+    const tSpan = selection.append('tspan').text(text).style('alignment-baseline', 'inherit');
 
     let textLength = tSpan.node()?.getComputedTextLength() || 0;
     while (textLength > maxWidth && text.length > 1) {
