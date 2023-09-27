@@ -12,6 +12,9 @@ export type PreparedScatterData = Omit<TooltipDataChunkScatter, 'series'> & {
     cx: number;
     cy: number;
     series: PreparedScatterSeries;
+    hovered: boolean;
+    active: boolean;
+    id: number;
 };
 
 const getCxAttr = (args: {point: ScatterSeriesData; xAxis: PreparedAxis; xScale: ChartScale}) => {
@@ -60,24 +63,25 @@ export const prepareScatterData = (args: {
     xScale: ChartScale;
     yAxis: PreparedAxis;
     yScale: ChartScale;
-}): PreparedScatterData[][] => {
+}): PreparedScatterData[] => {
     const {series, xAxis, xScale, yAxis, yScale} = args;
 
-    return series.reduce<PreparedScatterData[][]>((acc, s) => {
+    return series.reduce<PreparedScatterData[]>((acc, s) => {
         const filteredData =
             xAxis.type === 'category' || yAxis.type === 'category'
                 ? s.data
                 : getFilteredLinearScatterData(s.data);
-        const preparedData: PreparedScatterData[] = filteredData.map((d) => {
-            return {
+        filteredData.forEach((d) => {
+            acc.push({
                 data: d,
                 series: s,
                 cx: getCxAttr({point: d, xAxis, xScale}),
                 cy: getCyAttr({point: d, yAxis, yScale}),
-            };
+                hovered: false,
+                active: true,
+                id: acc.length - 1,
+            });
         });
-
-        acc.push(preparedData);
 
         return acc;
     }, []);
