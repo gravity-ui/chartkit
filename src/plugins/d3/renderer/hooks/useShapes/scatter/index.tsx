@@ -9,7 +9,6 @@ import {extractD3DataFromNode, isNodeContainsD3Data} from '../../../utils';
 import type {NodeWithD3Data} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
 import type {PreparedScatterData} from './prepare-data';
-import cloneDeep from 'lodash/cloneDeep';
 
 export {prepareScatterData} from './prepare-data';
 export type {PreparedScatterData} from './prepare-data';
@@ -18,7 +17,7 @@ type ScatterSeriesShapeProps = {
     dispatcher: Dispatch<object>;
     top: number;
     left: number;
-    preparedDatas: PreparedScatterData[];
+    preparedData: PreparedScatterData[];
     seriesOptions: PreparedSeriesOptions;
     svgContainer: SVGSVGElement | null;
 };
@@ -39,8 +38,7 @@ const isNodeContainsScatterData = (node?: Element): node is NodeWithD3Data<Prepa
 };
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
-    const {dispatcher, top, left, preparedDatas, seriesOptions, svgContainer} = props;
-    const preparedData = cloneDeep(preparedDatas);
+    const {dispatcher, top, left, preparedData, seriesOptions, svgContainer} = props;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -146,7 +144,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         return () => {
             dispatcher.on('hover-shape.scatter', null);
         };
-    }, [dispatcher, top, left, preparedDatas, seriesOptions, svgContainer]);
+    }, [dispatcher, top, left, preparedData, seriesOptions, svgContainer]);
 
     return <g ref={ref} className={b()} />;
 }
