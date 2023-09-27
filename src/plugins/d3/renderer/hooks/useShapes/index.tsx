@@ -85,7 +85,7 @@ export const useShapes = (args: Args) => {
                 }
                 case 'scatter': {
                     if (xScale && yScale) {
-                        const preparedDatas = prepareScatterData({
+                        const preparedData = prepareScatterData({
                             series: chartSeries as PreparedScatterSeries[],
                             xAxis,
                             xScale,
@@ -98,7 +98,7 @@ export const useShapes = (args: Args) => {
                                 dispatcher={dispatcher}
                                 top={top}
                                 left={left}
-                                preparedDatas={preparedDatas}
+                                preparedData={preparedData}
                                 seriesOptions={seriesOptions}
                                 svgContainer={svgContainer}
                             />,

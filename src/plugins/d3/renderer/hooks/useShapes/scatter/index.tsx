@@ -17,36 +17,29 @@ type ScatterSeriesShapeProps = {
     dispatcher: Dispatch<object>;
     top: number;
     left: number;
-    preparedDatas: PreparedScatterData[][];
+    preparedData: PreparedScatterData[];
     seriesOptions: PreparedSeriesOptions;
     svgContainer: SVGSVGElement | null;
 };
 
-type SeriesState = Record<
-    string,
-    {
-        selection: Selection<BaseType, any, SVGGElement, PreparedScatterData>;
-        hovered: boolean;
-        inactive: boolean;
-    }
->;
-
-type ChartState = {
-    hoveredSelections: Selection<BaseType, any, SVGGElement, PreparedScatterData>[];
-    seriesState: SeriesState;
-};
-
 const b = block('d3-scatter');
 const DEFAULT_SCATTER_POINT_RADIUS = 4;
+const EMPTY_SELECTION = null as unknown as Selection<
+    BaseType,
+    PreparedScatterData,
+    SVGGElement,
+    unknown
+>;
+
+const key = (d: unknown) => (d as PreparedScatterData).id || -1;
 
 const isNodeContainsScatterData = (node?: Element): node is NodeWithD3Data<PreparedScatterData> => {
     return isNodeContainsD3Data(node);
 };
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
-    const {dispatcher, top, left, preparedDatas, seriesOptions, svgContainer} = props;
+    const {dispatcher, top, left, preparedData, seriesOptions, svgContainer} = props;
     const ref = React.useRef<SVGGElement>(null);
-    const stateRef = React.useRef<ChartState>({hoveredSelections: [], seriesState: {}});
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -56,27 +49,19 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         const svgElement = select(ref.current);
         const hoverOptions = get(seriesOptions, 'scatter.states.hover');
         const inactiveOptions = get(seriesOptions, 'scatter.states.inactive');
-        svgElement.selectAll('*').remove();
-        preparedDatas.forEach((preparedData, i) => {
-            const selection = svgElement
-                .selectAll(`points-${i}`)
-                .data(preparedData)
-                .join(
-                    (enter) => enter.append('circle').attr('class', b('point')),
-                    (update) => update,
-                    (exit) => exit.remove(),
-                )
-                .attr('fill', (d) => d.data.color || d.series.color || '')
-                .attr('r', (d) => d.data.radius || DEFAULT_SCATTER_POINT_RADIUS)
-                .attr('cx', (d) => d.cx)
-                .attr('cy', (d) => d.cy);
 
-            stateRef.current.seriesState[preparedData[0].series.id] = {
-                selection,
-                hovered: false,
-                inactive: false,
-            };
-        });
+        const selection = svgElement
+            .selectAll(`circle`)
+            .data(preparedData, key)
+            .join(
+                (enter) => enter.append('circle').attr('class', b('point')),
+                (update) => update,
+                (exit) => exit.remove(),
+            )
+            .attr('fill', (d) => d.data.color || d.series.color || '')
+            .attr('r', (d) => d.data.radius || DEFAULT_SCATTER_POINT_RADIUS)
+            .attr('cx', (d) => d.cx)
+            .attr('cy', (d) => d.cy);
 
         svgElement
             .on('mousemove', (e) => {
@@ -99,72 +84,67 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 dispatcher.call('hover-shape', {}, undefined);
             });
 
+        const hoverEnabled = hoverOptions?.enabled;
+        const inactiveEnabled = inactiveOptions?.enabled;
+
         dispatcher.on('hover-shape.scatter', (data?: PreparedScatterData[]) => {
-            const hoverEnabled = hoverOptions?.enabled;
-            const inactiveEnabled = inactiveOptions?.enabled;
+            const selectedPoint: PreparedScatterData | undefined = data?.[0];
 
-            if (hoverEnabled) {
-                stateRef.current.hoveredSelections.forEach((selection) => {
-                    selection.attr('fill', (d) => d.series.color);
-                });
-            }
-
-            if (data?.[0]) {
-                const className = b('point');
-                const points = svgElement.selectAll<BaseType, PreparedScatterData>(
-                    `.${className}[cx="${data[0].cx}"][cy="${data[0].cy}"]`,
+            const updates: PreparedScatterData[] = [];
+            preparedData.forEach((p) => {
+                const hovered = Boolean(
+                    hoverEnabled &&
+                        selectedPoint &&
+                        p.cx === selectedPoint.cx &&
+                        p.cy === selectedPoint.cy,
                 );
-
-                if (hoverEnabled) {
-                    points.attr('fill', (d) => {
-                        const fillColor = d.series.color;
-                        return (
-                            color(fillColor)?.brighter(hoverOptions?.brightness).toString() ||
-                            fillColor
-                        );
-                    });
+                if (p.hovered !== hovered) {
+                    p.hovered = hovered;
+                    updates.push(p);
                 }
 
-                stateRef.current.hoveredSelections = [points];
-
-                // Hovered and inactive styles uses only in case of multiple series
-                if (Object.keys(stateRef.current.seriesState).length > 1) {
-                    const hoveredSeriesName = data[0].series.id;
-
-                    Object.entries(stateRef.current.seriesState).forEach(([name, state]) => {
-                        if (hoveredSeriesName === name && !state.hovered) {
-                            stateRef.current.seriesState[name].hovered = true;
-                            stateRef.current.seriesState[name].inactive = false;
-
-                            if (inactiveEnabled) {
-                                state.selection.attr('opacity', null);
-                            }
-                        } else if (hoveredSeriesName !== name) {
-                            stateRef.current.seriesState[name].hovered = false;
-                            stateRef.current.seriesState[name].inactive = true;
-
-                            if (inactiveEnabled) {
-                                state.selection.attr('opacity', inactiveOptions.opacity || null);
-                            }
-                        }
-                    });
+                const active = Boolean(
+                    !inactiveEnabled || !selectedPoint || selectedPoint.series.id === p.series.id,
+                );
+                if (p.active !== active) {
+                    p.active = active;
+                    updates.push(p);
                 }
-            } else if (!data) {
-                Object.entries(stateRef.current.seriesState).forEach(([name, state]) => {
-                    if (inactiveEnabled) {
-                        state.selection.attr('opacity', 1);
-                    }
+            });
 
-                    stateRef.current.seriesState[name].hovered = false;
-                    stateRef.current.seriesState[name].inactive = false;
-                });
-            }
+            selection.data(updates, key).join(
+                () => EMPTY_SELECTION,
+                (update) => {
+                    update
+                        .attr('fill', (d) => {
+                            const initialColor = d.data.color || d.series.color || '';
+                            if (d.hovered) {
+                                return (
+                                    color(initialColor)
+                                        ?.brighter(hoverOptions?.brightness)
+                                        .toString() || initialColor
+                                );
+                            }
+                            return initialColor;
+                        })
+                        .attr('opacity', function (d) {
+                            if (!d.active) {
+                                return inactiveOptions?.opacity || null;
+                            }
+
+                            return null;
+                        });
+
+                    return update;
+                },
+                (exit) => exit,
+            );
         });
 
         return () => {
             dispatcher.on('hover-shape.scatter', null);
         };
-    }, [dispatcher, top, left, preparedDatas, seriesOptions, svgContainer]);
+    }, [dispatcher, top, left, preparedData, seriesOptions, svgContainer]);
 
     return <g ref={ref} className={b()} />;
 }
