@@ -3,6 +3,7 @@ import {select} from 'd3';
 import {BaseTextStyle} from '../../../../../types';
 import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
 import {getLabelsMaxHeight, setEllipsisForOverflowText} from '../text';
+import {calculateCos, calculateSin} from '../math';
 
 type AxisBottomArgs = {
     scale: AxisScale<AxisDomain>;
@@ -13,6 +14,8 @@ type AxisBottomArgs = {
         labelsPaddings?: number;
         labelsMargin?: number;
         labelsStyle?: BaseTextStyle;
+        labelsMaxWidth?: number;
+        labelsLineHeight: number;
         size: number;
         rotation: number;
     };
@@ -41,16 +44,6 @@ function addDomain(
         .attr('d', `M0,0V0H${size}`);
 }
 
-function calculateCos(deg: number, precision = 2) {
-    const factor = Math.pow(10, precision);
-    return Math.floor(Math.cos((Math.PI / 180) * deg) * factor) / factor;
-}
-
-function calculateSin(deg: number, precision = 2) {
-    const factor = Math.pow(10, precision);
-    return Math.floor(Math.sin((Math.PI / 180) * deg) * factor) / factor;
-}
-
 export function axisBottom(args: AxisBottomArgs) {
     const {
         scale,
@@ -58,7 +51,9 @@ export function axisBottom(args: AxisBottomArgs) {
             labelFormat,
             labelsPaddings = 0,
             labelsMargin = 0,
+            labelsMaxWidth = Infinity,
             labelsStyle,
+            labelsLineHeight,
             size: tickSize,
             count: ticksCount,
             maxTickCount,
@@ -81,7 +76,10 @@ export function axisBottom(args: AxisBottomArgs) {
         let transform = `translate(0, ${labelHeight + labelsMargin}px)`;
         if (rotation) {
             const labelsOffsetTop = labelHeight * calculateCos(rotation) + labelsMargin;
-            const labelsOffsetLeft = calculateSin(rotation) * labelHeight;
+            let labelsOffsetLeft = calculateSin(rotation) * labelHeight;
+            if (Math.abs(rotation) % 360 === 90) {
+                labelsOffsetLeft += ((rotation > 0 ? -1 : 1) * labelHeight) / 2;
+            }
             transform = `translate(${-labelsOffsetLeft}px, ${labelsOffsetTop}px) rotate(${rotation}deg)`;
         }
 
@@ -122,7 +120,13 @@ export function axisBottom(args: AxisBottomArgs) {
         const labels = selection.selectAll<SVGTextElement, unknown>('.tick text');
 
         // FIXME: handle rotated overlapping labels (with a smarter approach)
-        if (!rotation) {
+        if (rotation) {
+            const maxWidth =
+                labelsMaxWidth * calculateCos(rotation) + labelsLineHeight * calculateSin(rotation);
+            labels.each(function () {
+                setEllipsisForOverflowText(select(this), maxWidth);
+            });
+        } else {
             // remove overlapping labels
             let elementX = 0;
             selection

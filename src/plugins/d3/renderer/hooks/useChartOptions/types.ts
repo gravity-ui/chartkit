@@ -16,6 +16,8 @@ type PreparedAxisLabels = Omit<
         rotation: number;
         height: number;
         width: number;
+        lineHeight: number;
+        maxWidth: number;
     };
 
 export type PreparedChart = {

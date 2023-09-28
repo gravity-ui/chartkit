@@ -10,11 +10,12 @@ export function setEllipsisForOverflowText(
     selection.text(null).append('title').text(text);
     const tSpan = selection.append('tspan').text(text).style('alignment-baseline', 'inherit');
 
-    let textLength = tSpan.node()?.getComputedTextLength() || 0;
+    let textLength = tSpan.node()?.getBoundingClientRect()?.width || 0;
+
     while (textLength > maxWidth && text.length > 1) {
         text = text.slice(0, -1);
         tSpan.text(text + '…');
-        textLength = tSpan.node()?.getComputedTextLength() || 0;
+        textLength = tSpan.node()?.getBoundingClientRect()?.width || 0;
     }
 }
 
@@ -90,15 +91,17 @@ function renderLabels(
 export function getLabelsMaxWidth({
     labels,
     style,
-    transform,
+    rotation,
 }: {
     labels: string[];
     style?: Record<string, string>;
-    transform?: string;
+    rotation?: number;
 }) {
     const svg = select(document.body).append('svg');
-    const attrs: Record<string, string> = transform ? {transform: transform} : {};
-    svg.call(renderLabels, {labels, style, attrs});
+    const textSelection = renderLabels(svg, {labels, style});
+    if (rotation) {
+        textSelection.attr('text-anchor', 'end').style('transform', `rotate(${rotation}deg)`);
+    }
 
     const maxWidth = (svg.select('g').node() as Element)?.getBoundingClientRect()?.width || 0;
     svg.remove();

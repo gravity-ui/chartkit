@@ -49,3 +49,13 @@ export const calculateNumericProperty = (args: {value?: string | number | null; 
 
     return value;
 };
+
+export function calculateCos(deg: number, precision = 2) {
+    const factor = Math.pow(10, precision);
+    return Math.floor(Math.cos((Math.PI / 180) * deg) * factor) / factor;
+}
+
+export function calculateSin(deg: number, precision = 2) {
+    const factor = Math.pow(10, precision);
+    return Math.floor(Math.sin((Math.PI / 180) * deg) * factor) / factor;
+}

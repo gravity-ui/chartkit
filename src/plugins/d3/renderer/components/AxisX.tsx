@@ -57,6 +57,8 @@ export const AxisX = React.memo(({axis, width, height, scale}: Props) => {
                 labelsPaddings: axis.labels.padding,
                 labelsMargin: axis.labels.margin,
                 labelsStyle: axis.labels.style,
+                labelsMaxWidth: axis.labels.maxWidth,
+                labelsLineHeight: axis.labels.lineHeight,
                 count: getTicksCount({axis, range: width}),
                 maxTickCount: getMaxTickCount({axis, width}),
                 rotation: axis.labels.rotation,
