@@ -94,6 +94,9 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
         if (axis.labels.enabled) {
             const tickTexts = svgElement
                 .selectAll<SVGTextElement, string>('.tick text')
+                // The offset must be applied before the labels are rotated.
+                // Therefore, we reset the values and make an offset in transform  attribute.
+                // FIXME: give up axisLeft(d3) and switch to our own generation method
                 .attr('x', null)
                 .attr('dy', null)
                 .style('font-size', axis.labels.style.fontSize)
