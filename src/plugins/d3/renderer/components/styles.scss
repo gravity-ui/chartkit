@@ -5,6 +5,7 @@
 
     & .tick text {
         color: var(--g-color-text-secondary);
+        alignment-baseline: after-edge;
     }
 
     & .tick line {

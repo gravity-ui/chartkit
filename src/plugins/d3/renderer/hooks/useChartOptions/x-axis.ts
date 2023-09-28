@@ -8,6 +8,7 @@ import {
 } from '../../constants';
 import type {PreparedAxis} from './types';
 import {
+    calculateCos,
     formatAxisTickLabel,
     getClosestPointsRange,
     getHorisontalSvgTextHeight,
@@ -54,7 +55,6 @@ function getLabelSettings({
 
     const defaultRotation = overlapping && autoRotation ? -45 : 0;
     const rotation = axis.labels.rotation || defaultRotation;
-
     const labelsHeight = rotation
         ? getLabelsMaxHeight({
               labels,
@@ -64,9 +64,10 @@ function getLabelSettings({
               },
               rotation,
           })
-        : getHorisontalSvgTextHeight({text: 'Tmp', style: axis.labels.style});
+        : axis.labels.lineHeight;
+    const maxHeight = rotation ? calculateCos(rotation) * axis.labels.maxWidth : labelsHeight;
 
-    return {height: labelsHeight, rotation};
+    return {height: Math.min(maxHeight, labelsHeight), rotation};
 }
 
 export const getPreparedXAxis = ({
@@ -82,6 +83,9 @@ export const getPreparedXAxis = ({
     const titleStyle: BaseTextStyle = {
         fontSize: get(xAxis, 'title.style.fontSize', xAxisTitleDefaults.fontSize),
     };
+    const labelsStyle = {
+        fontSize: get(xAxis, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE),
+    };
 
     const preparedXAxis: PreparedAxis = {
         type: get(xAxis, 'type', 'linear'),
@@ -92,9 +96,11 @@ export const getPreparedXAxis = ({
             dateFormat: get(xAxis, 'labels.dateFormat'),
             numberFormat: get(xAxis, 'labels.numberFormat'),
             rotation: get(xAxis, 'labels.rotation', 0),
-            style: {fontSize: get(xAxis, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE)},
+            style: labelsStyle,
             width: 0,
             height: 0,
+            lineHeight: getHorisontalSvgTextHeight({text: 'Tmp', style: labelsStyle}),
+            maxWidth: get(xAxis, 'labels.maxWidth', axisLabelsDefaults.maxWidth),
         },
         lineColor: get(xAxis, 'lineColor'),
         categories: get(xAxis, 'categories'),

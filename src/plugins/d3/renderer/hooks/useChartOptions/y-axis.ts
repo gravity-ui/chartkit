@@ -1,12 +1,7 @@
 import type {AxisDomain, AxisScale} from 'd3';
 import get from 'lodash/get';
 
-import type {
-    BaseTextStyle,
-    ChartKitWidgetData,
-    ChartKitWidgetSeries,
-} from '../../../../../types/widget-data';
-
+import type {BaseTextStyle, ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types';
 import {
     axisLabelsDefaults,
     DEFAULT_AXIS_LABEL_FONT_SIZE,
@@ -50,16 +45,8 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
             'font-size': axis.labels.style.fontSize,
             'font-weight': axis.labels.style.fontWeight || '',
         },
+        rotation: axis.labels.rotation,
     });
-};
-
-const applyLabelsMaxWidth = (args: {
-    series: ChartKitWidgetSeries[];
-    preparedYAxis: PreparedAxis;
-}) => {
-    const {series, preparedYAxis} = args;
-
-    preparedYAxis.labels.width = getAxisLabelMaxWidth({axis: preparedYAxis, series});
 };
 
 export const getPreparedYAxis = ({
@@ -89,9 +76,11 @@ export const getPreparedYAxis = ({
             dateFormat: get(yAxis1, 'labels.dateFormat'),
             numberFormat: get(yAxis1, 'labels.numberFormat'),
             style: y1LabelsStyle,
-            rotation: 0,
+            rotation: get(yAxis1, 'labels.rotation', 0),
             width: 0,
             height: 0,
+            lineHeight: getHorisontalSvgTextHeight({text: 'TmpLabel', style: y1LabelsStyle}),
+            maxWidth: get(yAxis1, 'labels.maxWidth', axisLabelsDefaults.maxWidth),
         },
         lineColor: get(yAxis1, 'lineColor'),
         categories: get(yAxis1, 'categories'),
@@ -115,7 +104,7 @@ export const getPreparedYAxis = ({
     };
 
     if (labelsEnabled) {
-        applyLabelsMaxWidth({series, preparedYAxis: preparedY1Axis});
+        preparedY1Axis.labels.width = getAxisLabelMaxWidth({axis: preparedY1Axis, series});
     }
 
     return [preparedY1Axis];

@@ -180,19 +180,16 @@ export const getHorisontalSvgTextHeight = (args: {
     style?: Partial<BaseTextStyle>;
 }) => {
     const {text, style} = args;
-    const textSelection = select(document.body).append('text').text(text);
+    const container = select(document.body).append('svg');
+    const textSelection = container.append('text').text(text);
     const fontSize = get(style, 'fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE);
-    let height = 0;
 
     if (fontSize) {
-        textSelection.style('font-size', fontSize);
+        textSelection.style('font-size', fontSize).style('alignment-baseline', 'after-edge');
     }
 
-    textSelection
-        .each(function () {
-            height = this.getBoundingClientRect().height;
-        })
-        .remove();
+    const height = textSelection.node()?.getBoundingClientRect().height || 0;
+    container.remove();
 
     return height;
 };

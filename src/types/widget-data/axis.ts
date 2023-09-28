@@ -28,6 +28,11 @@ export type ChartKitWidgetAxisLabels = {
      * @default: 0
      */
     rotation?: number;
+    /** Maximum length in pixels of each label (with a rotation angle of 0 degrees).
+     *
+     * @default: 80
+     * */
+    maxWidth?: number;
 };
 
 export type ChartKitWidgetAxis = {

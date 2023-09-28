@@ -36,7 +36,18 @@ function prepareData(): ChartKitWidgetData {
                 rotation: 30,
             },
         },
-        yAxis: [{title: {text: 'Number of games released'}}],
+        yAxis: [
+            {
+                title: {text: 'Number of games released'},
+                labels: {
+                    enabled: true,
+                    rotation: -90,
+                },
+                ticks: {
+                    pixelInterval: 120,
+                },
+            },
+        ],
     };
 }
 

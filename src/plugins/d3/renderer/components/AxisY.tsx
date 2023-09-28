@@ -13,10 +13,11 @@ import {
     setEllipsisForOverflowTexts,
     getTicksCount,
     getScaleTicks,
+    calculateSin,
+    calculateCos,
 } from '../utils';
 
 const b = block('d3-axis');
-const MAX_WIDTH = 80;
 
 type Props = {
     axises: PreparedAxis[];
@@ -24,6 +25,31 @@ type Props = {
     height: number;
     scale: ChartScale;
 };
+
+function transformLabel(node: Element, axis: PreparedAxis) {
+    let topOffset = axis.labels.lineHeight / 2;
+    let leftOffset = -axis.labels.margin;
+    if (axis.labels.rotation) {
+        if (axis.labels.rotation > 0) {
+            leftOffset -= axis.labels.lineHeight * calculateSin(axis.labels.rotation);
+            topOffset = axis.labels.lineHeight * calculateCos(axis.labels.rotation);
+
+            if (axis.labels.rotation % 360 === 90) {
+                topOffset = (node?.getBoundingClientRect().width || 0) / 2;
+            }
+        } else {
+            topOffset = 0;
+
+            if (axis.labels.rotation % 360 === -90) {
+                topOffset = -(node?.getBoundingClientRect().width || 0) / 2;
+            }
+        }
+
+        return `translate(${leftOffset}px, ${topOffset}px) rotate(${axis.labels.rotation}deg)`;
+    }
+
+    return `translate(${leftOffset}px, ${topOffset}px)`;
+}
 
 export const AxisY = ({axises, width, height, scale}: Props) => {
     const ref = React.useRef<SVGGElement>(null);
@@ -68,10 +94,17 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
         if (axis.labels.enabled) {
             const tickTexts = svgElement
                 .selectAll<SVGTextElement, string>('.tick text')
+                .attr('x', null)
+                .attr('dy', null)
                 .style('font-size', axis.labels.style.fontSize)
-                .style('transform', 'translateY(-1px)');
-
-            tickTexts.call(setEllipsisForOverflowTexts, MAX_WIDTH);
+                .style('transform', function () {
+                    return transformLabel(this, axis);
+                });
+            const textMaxWidth =
+                !axis.labels.rotation || Math.abs(axis.labels.rotation) % 360 !== 90
+                    ? axis.labels.maxWidth
+                    : (height - axis.labels.padding * (tickTexts.size() - 1)) / tickTexts.size();
+            tickTexts.call(setEllipsisForOverflowTexts, textMaxWidth);
         }
 
         const transformStyle = svgElement.select('.tick').attr('transform');
@@ -84,20 +117,22 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
 
         // remove overlapping ticks
         // Note: this method do not prepared for rotated labels
-        let elementY = 0;
-        svgElement
-            .selectAll('.tick')
-            .filter(function (_d, index) {
-                const node = this as unknown as Element;
-                const r = node.getBoundingClientRect();
+        if (!axis.labels.rotation) {
+            let elementY = 0;
+            svgElement
+                .selectAll('.tick')
+                .filter(function (_d, index) {
+                    const node = this as unknown as Element;
+                    const r = node.getBoundingClientRect();
 
-                if (r.bottom > elementY && index !== 0) {
-                    return true;
-                }
-                elementY = r.top - axis.labels.padding;
-                return false;
-            })
-            .remove();
+                    if (r.bottom > elementY && index !== 0) {
+                        return true;
+                    }
+                    elementY = r.top - axis.labels.padding;
+                    return false;
+                })
+                .remove();
+        }
 
         if (axis.title.text) {
             const textY = axis.title.margin + axis.labels.margin + axis.labels.width;
