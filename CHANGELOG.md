@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.7.0](https://github.com/gravity-ui/chartkit/compare/v4.6.1...v4.7.0) (2023-09-29)
+
+
+### Features
+
+* **D3 plugin:** axis labels rotation(X axis) ([#309](https://github.com/gravity-ui/chartkit/issues/309)) ([04eb226](https://github.com/gravity-ui/chartkit/commit/04eb226203af21f86d38819203cabaf95ee57354))
+* **D3 plugin:** move tooltip management to d3 events ([#300](https://github.com/gravity-ui/chartkit/issues/300)) ([a1a76f8](https://github.com/gravity-ui/chartkit/commit/a1a76f8dd5014e13e61a13821c01ce8a852b89b7))
+* **D3 plugin:** rotation and maxWidth options for Y axis labels ([#318](https://github.com/gravity-ui/chartkit/issues/318)) ([141505c](https://github.com/gravity-ui/chartkit/commit/141505c69e93c52f3da1af7fadd9ef00e72e1eca))
+* update yagr to 3.10.0 ([#319](https://github.com/gravity-ui/chartkit/issues/319)) ([f3b0249](https://github.com/gravity-ui/chartkit/commit/f3b02499d75c5c23f24db59b43415d8666319e0f))
+
 ## [4.6.1](https://github.com/gravity-ui/chartkit/compare/v4.6.0...v4.6.1) (2023-09-20)
 
 
