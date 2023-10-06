@@ -617,8 +617,8 @@ function getTooltip(tooltip, options, comments, holidays) {
 
         json.tooltipHeader = chart.time.dateFormat(xDateFormat, this.x);
     } else if (
-        extendedPoint.point?.options?.xFormatted ??
-        (extendedPoint.x || extendedPoint.x === 0)
+        extendedPoint?.point?.options?.xFormatted ??
+        (extendedPoint?.x || extendedPoint?.x === 0)
     ) {
         const customTooltipHeaderFormatter = options?.highcharts?.tooltipHeaderFormatter;
         const tooltipHeaderStringValue = String(
@@ -661,7 +661,7 @@ function getTooltip(tooltip, options, comments, holidays) {
         const tooltipOptions = point.series.tooltipOptions || {};
         const userOptions = point.series.userOptions || {};
 
-        const customTooltipSeriesName = point.point.custom?.tooltipPointName;
+        const customTooltipSeriesName = point?.point?.custom?.tooltipPointName;
 
         const obj = {
             selectedSeries: point.series.index === chart.userOptions._activeSeries,
