@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.7.3](https://github.com/gravity-ui/chartkit/compare/v4.7.2...v4.7.3) (2023-10-13)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix pointFormat in packedbubble tooltip ([#324](https://github.com/gravity-ui/chartkit/issues/324)) ([c24147a](https://github.com/gravity-ui/chartkit/commit/c24147a9907ce963e433330f52cbb998c960d308))
+
 ## [4.7.2](https://github.com/gravity-ui/chartkit/compare/v4.7.1...v4.7.2) (2023-10-06)
 
 
