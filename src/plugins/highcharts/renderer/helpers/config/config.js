@@ -491,7 +491,7 @@ function getTooltip(tooltip, options, comments, holidays) {
     const isDatetimeXAxis = xAxis.options.type === 'datetime';
     let json;
 
-    if (['pie', 'funnel', 'solidgauge'].includes(serieType)) {
+    if (['pie', 'funnel', 'solidgauge', 'packedbubble'].includes(serieType)) {
         const dataSource = this.point || this.points[0].point;
 
         const precision = isNumber(options.tooltipPercentPrecision)
