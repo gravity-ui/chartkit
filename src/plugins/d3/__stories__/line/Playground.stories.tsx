@@ -35,6 +35,9 @@ function prepareData(): ChartKitWidgetData {
                     name: '3D',
                     type: 'line',
                     data: byGenre('3D'),
+                    dataLabels: {
+                        enabled: true,
+                    },
                 },
                 {
                     name: '2D',

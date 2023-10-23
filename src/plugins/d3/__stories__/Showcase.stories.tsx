@@ -10,6 +10,7 @@ import {StackedColumns} from '../examples/bar-x/StackedColumns';
 import {Container, Row, Col, Text} from '@gravity-ui/uikit';
 import {BasicPie} from '../examples/pie/Basic';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
+import {Basic as BasicLine} from '../examples/line/Basic';
 import {Donut} from '../examples/pie/Donut';
 
 const ShowcaseStory = () => {
@@ -25,6 +26,15 @@ const ShowcaseStory = () => {
                 <Loader />
             ) : (
                 <Container spaceRow={5}>
+                    <Row space={1}>
+                        <Text variant="header-2">Line charts</Text>
+                    </Row>
+                    <Row space={3} style={{minHeight: 280}}>
+                        <Col>
+                            <Text variant="subheader-1">Basic line chart</Text>
+                            <BasicLine />
+                        </Col>
+                    </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>
                     </Row>

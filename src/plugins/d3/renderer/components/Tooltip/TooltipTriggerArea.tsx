@@ -3,10 +3,11 @@ import throttle from 'lodash/throttle';
 import {bisector, pointer, sort} from 'd3';
 import type {Dispatch} from 'd3';
 
-import type {ShapeData, PreparedBarXData, PointerPosition} from '../../hooks';
+import type {ShapeData, PreparedBarXData, PointerPosition, PreparedSeries} from '../../hooks';
 import {extractD3DataFromNode, isNodeContainsD3Data} from '../../utils';
 import type {NodeWithD3Data} from '../../utils';
 import {PreparedLineData} from '../../hooks/useShapes/line/types';
+import {LineSeriesData} from '../../../../../types';
 
 const THROTTLE_DELAY = 50;
 
@@ -77,6 +78,29 @@ function getBarXShapeData(args: {
     return [];
 }
 
+function getLineShapesData(args: {
+    xData: {x: number; data: LineSeriesData; series: PreparedSeries}[];
+    point: number[];
+}) {
+    const {
+        xData,
+        point: [pointerX],
+    } = args;
+    const xDataIndex = bisector((d: {x: number}) => d.x).center(xData, pointerX);
+    const selectedLineShape = xData[xDataIndex];
+
+    if (selectedLineShape) {
+        return [
+            {
+                series: selectedLineShape.series,
+                data: selectedLineShape.data,
+            },
+        ];
+    }
+
+    return [];
+}
+
 export const TooltipTriggerArea = (args: Args) => {
     const {boundsWidth, boundsHeight, dispatcher, offsetTop, offsetLeft, shapesData, svgContainer} =
         args;
@@ -96,7 +120,11 @@ export const TooltipTriggerArea = (args: Args) => {
         const result = shapesData
             .filter((sd) => sd.series.type === 'line')
             .map((sd) =>
-                (sd as PreparedLineData).points.map((d) => ({x: d.x, data: d.data, shape: sd})),
+                (sd as PreparedLineData).points.map((d) => ({
+                    x: d.x,
+                    data: d.data,
+                    series: sd.series,
+                })),
             )
             .flat(2);
 
@@ -117,25 +145,8 @@ export const TooltipTriggerArea = (args: Args) => {
                 xData: xBarData,
                 container: rectRef.current?.parentElement,
             }),
+            ...getLineShapesData({xData: xLineData, point: [pointerX, pointerY]}),
         );
-
-        // fixme: line shapeData
-        const xDataIndex = bisector((d: {x: number}) => d.x).center(xLineData, pointerX);
-
-        // FIXME: types
-        const selectedLineShape = xLineData[xDataIndex];
-        hoverShapeData.push({
-            id: (selectedLineShape.shape as PreparedLineData).id,
-            series: selectedLineShape.shape.series,
-            data: selectedLineShape.data,
-        });
-
-        console.log({
-            selectedLineShape,
-            // data: selectedLineShape.data.series.data,
-            xLineData,
-            xDataIndex,
-        });
 
         if (hoverShapeData.length) {
             const position: PointerPosition = [pointerX - offsetLeft, pointerY - offsetTop];

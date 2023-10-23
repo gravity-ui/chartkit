@@ -4,9 +4,9 @@ import type {Dispatch, BaseType, Selection} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
-import type {PreparedSeriesOptions} from '../../useSeries/types';
+import type {PreparedLineSeries, PreparedSeriesOptions} from '../../useSeries/types';
 import {PointData, PreparedLineData} from './types';
-import {TooltipDataChunkLine} from '../../../../../../types';
+import {LineSeriesData, TooltipDataChunkLine} from '../../../../../../types';
 
 const b = block('d3-line');
 
@@ -43,6 +43,8 @@ export const LineSeriesShapes = (args: Args) => {
             .x((d) => d.x)
             .y((d) => d.y);
 
+        svgElement.selectAll('*').remove();
+
         const selection = svgElement
             .selectAll('path')
             .data(preparedData)
@@ -54,22 +56,52 @@ export const LineSeriesShapes = (args: Args) => {
             .attr('stroke-linejoin', 'round')
             .attr('stroke-linecap', 'round');
 
+        const dataLabels = preparedData.reduce((acc, d) => {
+            if (d.series.dataLabels.enabled) {
+                acc.push(
+                    ...d.points.map((p) => ({
+                        x: p.x,
+                        y: p.y,
+                        data: p.data,
+                        series: d.series,
+                    })),
+                );
+            }
+
+            return acc;
+        }, [] as {x: number; y: number; data: LineSeriesData; series: PreparedLineSeries}[]);
+
+        svgElement
+            .selectAll('allLabels')
+            .data(dataLabels)
+            .join('text')
+            .text((d) => String(d.data.label || d.data.y))
+            .attr('class', b('label'))
+            .attr('x', (d) => d.x)
+            .attr('y', (d) => {
+                return d.y - d.series.dataLabels.padding;
+            })
+            .attr('text-anchor', 'middle')
+            .style('font-size', (d) => d.series.dataLabels.style.fontSize)
+            .style('font-weight', (d) => d.series.dataLabels.style.fontWeight || null)
+            .style('fill', (d) => d.series.dataLabels.style.fontColor || null);
+
         const hoverEnabled = hoverOptions?.enabled;
         const inactiveEnabled = inactiveOptions?.enabled;
 
         dispatcher.on('hover-shape.line', (data?: TooltipDataChunkLine[]) => {
-            const selectedShapeId = data?.[0]?.id;
+            const selectedSeriesId = data?.[0]?.series?.id;
 
             const updates: PreparedLineData[] = [];
             preparedData.forEach((p) => {
-                const hovered = Boolean(hoverEnabled && p.id === selectedShapeId);
+                const hovered = Boolean(hoverEnabled && p.id === selectedSeriesId);
                 if (p.hovered !== hovered) {
                     p.hovered = hovered;
                     updates.push(p);
                 }
 
                 const active = Boolean(
-                    !inactiveEnabled || !selectedShapeId || selectedShapeId === p.id,
+                    !inactiveEnabled || !selectedSeriesId || selectedSeriesId === p.id,
                 );
                 if (p.active !== active) {
                     p.active = active;

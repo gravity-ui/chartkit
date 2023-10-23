@@ -12,8 +12,11 @@ export type BaseSeries = {
          * @default true
          */
         enabled?: boolean;
-
         style?: Partial<BaseTextStyle>;
+        /**
+         * @default 5
+         * */
+        padding?: number;
     };
 };
 

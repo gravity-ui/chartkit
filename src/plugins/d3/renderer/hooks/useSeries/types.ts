@@ -87,6 +87,7 @@ export type PreparedLineSeries = {
     dataLabels: {
         enabled: boolean;
         style: BaseTextStyle;
+        padding: number;
     };
 } & BasePreparedSeries;
 

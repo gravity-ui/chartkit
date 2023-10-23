@@ -4,8 +4,9 @@ import get from 'lodash/get';
 import {ChartKitWidgetSeriesOptions, LineSeries} from '../../../../../types';
 import {PreparedLineSeries, PreparedLegend, PreparedSeries} from './types';
 
-import {DEFAULT_DATALABELS_STYLE} from './constants';
+import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
 import {prepareLegendSymbol} from './utils';
+import {getRandomCKId} from '../../../../../utils';
 
 type PrepareLineSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -19,6 +20,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
     const defaultLineWidth = get(seriesOptions, 'line.lineWidth', 1);
 
     return seriesList.map<PreparedLineSeries>((series) => {
+        const id = getRandomCKId();
         const name = series.name || '';
         const color = series.color || colorScale(name);
 
@@ -27,7 +29,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
             color: color,
             lineWidth: get(series, 'lineWidth', defaultLineWidth),
             name: name,
-            id: '',
+            id,
             visible: get(series, 'visible', true),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),
@@ -37,6 +39,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
             dataLabels: {
                 enabled: series.dataLabels?.enabled || false,
                 style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),
+                padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
             },
         };
     }, []);

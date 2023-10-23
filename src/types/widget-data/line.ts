@@ -16,12 +16,8 @@ export type LineSeriesData<T = any> = BaseSeriesData<T> & {
      * - y axis category value (for `category` y axis). If the type is a string, then it is a category value itself. If the type is a number, then it is the index of an element in the array of categories described in `yAxis[0].categories`
      */
     y?: string | number;
-    /**
-     * Corresponding value of axis category.
-     *
-     * @deprecated use `x` or `y` instead
-     */
-    category?: string;
+    /** Data label value of the point. If not specified, the y value is used. */
+    label?: string | number;
 };
 
 export type LineSeries<T = any> = BaseSeries & {

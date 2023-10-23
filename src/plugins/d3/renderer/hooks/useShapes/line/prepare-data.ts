@@ -26,7 +26,7 @@ export const prepareLineData = (args: {
             series: s,
             hovered: false,
             active: true,
-            id: acc.length - 1,
+            id: s.id,
         });
 
         return acc;

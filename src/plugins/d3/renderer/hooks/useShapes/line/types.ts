@@ -8,7 +8,7 @@ export type PointData = {
 };
 
 export type PreparedLineData = {
-    id: number;
+    id: string;
     points: PointData[];
     color: string;
     width: number;
