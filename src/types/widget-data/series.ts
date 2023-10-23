@@ -2,13 +2,19 @@ import type {PieSeries, PieSeriesData} from './pie';
 import type {ScatterSeries, ScatterSeriesData} from './scatter';
 import type {BarXSeries, BarXSeriesData} from './bar-x';
 import React from 'react';
+import {LineSeries, LineSeriesData} from './line';
 
-export type ChartKitWidgetSeries<T = any> = ScatterSeries<T> | PieSeries<T> | BarXSeries<T>;
+export type ChartKitWidgetSeries<T = any> =
+    | ScatterSeries<T>
+    | PieSeries<T>
+    | BarXSeries<T>
+    | LineSeries<T>;
 
 export type ChartKitWidgetSeriesData<T = any> =
     | ScatterSeriesData<T>
     | PieSeriesData<T>
-    | BarXSeriesData<T>;
+    | BarXSeriesData<T>
+    | LineSeriesData<T>;
 
 export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;
@@ -100,6 +106,18 @@ export type ChartKitWidgetSeriesOptions = {
         };
     };
     scatter?: {
+        /** Options for the series states that provide additional styling information to the series. */
+        states?: {
+            hover?: BasicHoverState;
+            inactive?: BasicInactiveState;
+        };
+    };
+    line?: {
+        /** Pixel width of the graph line.
+         *
+         * @default 1
+         * */
+        lineWidth?: number;
         /** Options for the series states that provide additional styling information to the series. */
         states?: {
             hover?: BasicHoverState;

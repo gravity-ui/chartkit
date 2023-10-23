@@ -7,42 +7,16 @@ import type {
     BarXSeries,
     ChartKitWidgetSeries,
     PieSeries,
-    RectLegendSymbolOptions,
-} from '../../../../../types/widget-data';
+    LineSeries,
+    ChartKitWidgetSeriesOptions,
+} from '../../../../../types';
 import {getRandomCKId} from '../../../../../utils';
-import {BaseTextStyle} from '../../../../../types/widget-data';
 
 import {DEFAULT_PALETTE} from '../../constants';
-import {DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
-import type {
-    PreparedBarXSeries,
-    PreparedLegend,
-    PreparedLegendSymbol,
-    PreparedPieSeries,
-    PreparedSeries,
-} from './types';
-
-const DEFAULT_DATALABELS_STYLE: BaseTextStyle = {
-    fontSize: '11px',
-    fontWeight: 'bold',
-};
-
-function prepareLegendSymbol(series: ChartKitWidgetSeries): PreparedLegendSymbol {
-    switch (series.type) {
-        default: {
-            const symbolOptions: RectLegendSymbolOptions = series.legend?.symbol || {};
-            const symbolHeight = symbolOptions?.height || DEFAULT_LEGEND_SYMBOL_SIZE;
-
-            return {
-                shape: 'rect',
-                width: symbolOptions?.width || DEFAULT_LEGEND_SYMBOL_SIZE,
-                height: symbolHeight,
-                radius: symbolOptions?.radius || symbolHeight / 2,
-                padding: symbolOptions?.padding || 5,
-            };
-        }
-    }
-}
+import {DEFAULT_DATALABELS_STYLE} from './constants';
+import type {PreparedBarXSeries, PreparedLegend, PreparedPieSeries, PreparedSeries} from './types';
+import {prepareLineSeries} from './prepare-line-series';
+import {prepareLegendSymbol} from './utils';
 
 type PrepareAxisRelatedSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -156,10 +130,11 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
 export function prepareSeries(args: {
     type: ChartKitWidgetSeries['type'];
     series: ChartKitWidgetSeries[];
+    seriesOptions?: ChartKitWidgetSeriesOptions;
     legend: PreparedLegend;
     colorScale: ScaleOrdinal<string, string>;
 }): PreparedSeries[] {
-    const {type, series, legend, colorScale} = args;
+    const {type, series, seriesOptions, legend, colorScale} = args;
 
     switch (type) {
         case 'pie': {
@@ -176,6 +151,14 @@ export function prepareSeries(args: {
                 acc.push(...prepareAxisRelatedSeries({series: singleSeries, legend, colorScale}));
                 return acc;
             }, []);
+        }
+        case 'line': {
+            return prepareLineSeries({
+                series: series as LineSeries[],
+                seriesOptions,
+                legend,
+                colorScale,
+            });
         }
         default: {
             const seriesType = get(series, 'type');

@@ -8,9 +8,10 @@ import {
     RectLegendSymbolOptions,
     ScatterSeries,
     ScatterSeriesData,
-} from '../../../../../types/widget-data';
+} from '../../../../../types';
 
 import type {SeriesOptionsDefaults} from '../../constants';
+import {LineSeries, LineSeriesData} from '../../../../../types/widget-data/line';
 
 export type RectLegendSymbol = {
     shape: 'rect';
@@ -79,6 +80,20 @@ export type PreparedPieSeries = BasePreparedSeries &
         label?: PieSeriesData['label'];
     };
 
-export type PreparedSeries = PreparedScatterSeries | PreparedBarXSeries | PreparedPieSeries;
+export type PreparedLineSeries = {
+    type: LineSeries['type'];
+    data: LineSeriesData[];
+    lineWidth: number;
+    dataLabels: {
+        enabled: boolean;
+        style: BaseTextStyle;
+    };
+} & BasePreparedSeries;
+
+export type PreparedSeries =
+    | PreparedScatterSeries
+    | PreparedBarXSeries
+    | PreparedPieSeries
+    | PreparedLineSeries;
 
 export type PreparedSeriesOptions = SeriesOptionsDefaults;

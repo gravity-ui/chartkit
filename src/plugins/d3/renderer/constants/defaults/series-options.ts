@@ -1,10 +1,10 @@
 import type {ChartKitWidgetSeriesOptions} from '../../../../../types';
 
-type DefauleBarXSeriesOptions = Partial<ChartKitWidgetSeriesOptions['bar-x']> & {
+type DefaultBarXSeriesOptions = Partial<ChartKitWidgetSeriesOptions['bar-x']> & {
     'bar-x': {barMaxWidth: number; barPadding: number; groupPadding: number};
 };
 
-export type SeriesOptionsDefaults = Partial<ChartKitWidgetSeriesOptions> & DefauleBarXSeriesOptions;
+export type SeriesOptionsDefaults = Partial<ChartKitWidgetSeriesOptions> & DefaultBarXSeriesOptions;
 
 export const seriesOptionsDefaults: SeriesOptionsDefaults = {
     'bar-x': {
@@ -35,6 +35,18 @@ export const seriesOptionsDefaults: SeriesOptionsDefaults = {
         },
     },
     scatter: {
+        states: {
+            hover: {
+                enabled: true,
+                brightness: 0.3,
+            },
+            inactive: {
+                enabled: true,
+                opacity: 0.5,
+            },
+        },
+    },
+    line: {
         states: {
             hover: {
                 enabled: true,

@@ -45,6 +45,7 @@ export const useSeries = (args: Args) => {
                     ...prepareSeries({
                         type: seriesType,
                         series: seriesList,
+                        seriesOptions,
                         legend: preparedLegend,
                         colorScale,
                     }),

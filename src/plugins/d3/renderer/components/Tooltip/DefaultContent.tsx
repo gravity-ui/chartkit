@@ -15,14 +15,16 @@ type Props = {
 const DEFAULT_DATE_FORMAT = 'DD.MM.YY';
 
 const getRowData = (fieldName: 'x' | 'y', axis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
-    const categories = get(axis, 'categories', [] as string[]);
-
     switch (axis.type) {
         case 'category': {
+            const categories = get(axis, 'categories', [] as string[]);
             return getDataCategoryValue({axisDirection: fieldName, categories, data});
         }
         case 'datetime': {
             const value = get(data, fieldName);
+            if (!value) {
+                return undefined;
+            }
             return dateTime({input: value}).format(DEFAULT_DATE_FORMAT);
         }
         case 'linear':
@@ -82,6 +84,21 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                 <div>
                     <span>{pieSeries.name || pieSeries.id}&nbsp;</span>
                     <span>{pieSeries.value}</span>
+                </div>
+            );
+        }
+        case 'line': {
+            const xRow = getXRowData(xAxis, data);
+            const yRow = getYRowData(yAxis, data);
+
+            return (
+                <div>
+                    <div>{xRow}</div>
+                    <div>
+                        <span>
+                            <b>{series.name}</b>: {yRow}
+                        </span>
+                    </div>
                 </div>
             );
         }

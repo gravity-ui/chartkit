@@ -6,6 +6,7 @@ import type {Dispatch} from 'd3';
 import type {ShapeData, PreparedBarXData, PointerPosition} from '../../hooks';
 import {extractD3DataFromNode, isNodeContainsD3Data} from '../../utils';
 import type {NodeWithD3Data} from '../../utils';
+import {PreparedLineData} from '../../hooks/useShapes/line/types';
 
 const THROTTLE_DELAY = 50;
 
@@ -26,12 +27,55 @@ const isNodeContainsData = (node?: Element): node is NodeWithD3Data<ShapeData> =
 };
 
 const getCalculationType = (shapesData: ShapeData[]): CalculationType => {
-    if (shapesData.every((d) => d.series.type === 'bar-x')) {
+    if (shapesData.every((d) => ['bar-x', 'line'].includes(d.series.type))) {
         return 'x-primary';
     }
 
     return 'none';
 };
+
+function getBarXShapeData(args: {
+    shapesData: ShapeData[];
+    point: number[];
+    top: number;
+    left: number;
+    xData: {x: number; data: ShapeData}[];
+    container?: HTMLElement | null;
+}) {
+    const {
+        shapesData,
+        point: [pointerX, pointerY],
+        top,
+        left,
+        xData,
+        container,
+    } = args;
+    const barWidthOffset = (shapesData[0] as PreparedBarXData).width / 2;
+    const xPosition = pointerX - left - barWidthOffset - window.pageXOffset;
+    const xDataIndex = bisector((d: {x: number; data: ShapeData}) => d.x).center(xData, xPosition);
+    const xNodes = Array.from(container?.querySelectorAll(`[x="${xData[xDataIndex]?.x}"]`) || []);
+
+    if (xNodes.length === 1 && isNodeContainsData(xNodes[0])) {
+        return [extractD3DataFromNode(xNodes[0])];
+    }
+
+    if (xNodes.length > 1 && xNodes.every(isNodeContainsData)) {
+        const yPosition = pointerY - top - window.pageYOffset;
+        const xyNode = xNodes.find((node, i) => {
+            const {y, height} = extractD3DataFromNode(node) as PreparedBarXData;
+            if (i === xNodes.length - 1) {
+                return yPosition <= y + height;
+            }
+            return yPosition >= y && yPosition <= y + height;
+        });
+
+        if (xyNode) {
+            return [extractD3DataFromNode(xyNode)];
+        }
+    }
+
+    return [];
+}
 
 export const TooltipTriggerArea = (args: Args) => {
     const {boundsWidth, boundsHeight, dispatcher, offsetTop, offsetLeft, shapesData, svgContainer} =
@@ -40,42 +84,60 @@ export const TooltipTriggerArea = (args: Args) => {
     const calculationType = React.useMemo(() => {
         return getCalculationType(shapesData);
     }, [shapesData]);
-    const xData = React.useMemo(() => {
-        return calculationType === 'x-primary'
-            ? sort(new Set((shapesData as PreparedBarXData[]).map((d) => d.x)))
-            : [];
+    const xBarData = React.useMemo(() => {
+        const result = shapesData
+            .filter((sd) => sd.series.type === 'bar-x')
+            .map((sd) => ({x: (sd as PreparedBarXData).x, data: sd}));
+
+        return sort(result, (item) => item.x);
+    }, [shapesData, calculationType]);
+
+    const xLineData = React.useMemo(() => {
+        const result = shapesData
+            .filter((sd) => sd.series.type === 'line')
+            .map((sd) =>
+                (sd as PreparedLineData).points.map((d) => ({x: d.x, data: d.data, shape: sd})),
+            )
+            .flat(2);
+
+        return sort(result, (item) => item.x);
     }, [shapesData, calculationType]);
 
     const handleXprimaryMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
         const {left, top} = rectRef.current?.getBoundingClientRect() || {left: 0, top: 0};
         const [pointerX, pointerY] = pointer(e, svgContainer);
-        const barWidthOffset = (shapesData[0] as PreparedBarXData).width / 2;
-        const xPosition = pointerX - left - barWidthOffset - window.pageXOffset;
-        const xDataIndex = bisector((d) => d).center(xData, xPosition);
-        const xNodes = Array.from(
-            rectRef.current?.parentElement?.querySelectorAll(`[x="${xData[xDataIndex]}"]`) || [],
+        const hoverShapeData = [];
+
+        hoverShapeData?.push(
+            ...getBarXShapeData({
+                shapesData,
+                point: [pointerX, pointerY],
+                left,
+                top,
+                xData: xBarData,
+                container: rectRef.current?.parentElement,
+            }),
         );
 
-        let hoverShapeData: ShapeData[] | undefined;
+        // fixme: line shapeData
+        const xDataIndex = bisector((d: {x: number}) => d.x).center(xLineData, pointerX);
 
-        if (xNodes.length === 1 && isNodeContainsData(xNodes[0])) {
-            hoverShapeData = [extractD3DataFromNode(xNodes[0])];
-        } else if (xNodes.length > 1 && xNodes.every(isNodeContainsData)) {
-            const yPosition = pointerY - top - window.pageYOffset;
-            const xyNode = xNodes.find((node, i) => {
-                const {y, height} = extractD3DataFromNode(node) as PreparedBarXData;
-                if (i === xNodes.length - 1) {
-                    return yPosition <= y + height;
-                }
-                return yPosition >= y && yPosition <= y + height;
-            });
+        // FIXME: types
+        const selectedLineShape = xLineData[xDataIndex];
+        hoverShapeData.push({
+            id: (selectedLineShape.shape as PreparedLineData).id,
+            series: selectedLineShape.shape.series,
+            data: selectedLineShape.data,
+        });
 
-            if (xyNode) {
-                hoverShapeData = [extractD3DataFromNode(xyNode)];
-            }
-        }
+        console.log({
+            selectedLineShape,
+            // data: selectedLineShape.data.series.data,
+            xLineData,
+            xDataIndex,
+        });
 
-        if (hoverShapeData) {
+        if (hoverShapeData.length) {
             const position: PointerPosition = [pointerX - offsetLeft, pointerY - offsetTop];
             dispatcher.call('hover-shape', e.target, hoverShapeData, position);
         }
