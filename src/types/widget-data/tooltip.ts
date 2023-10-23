@@ -1,7 +1,7 @@
 import type {BarXSeries, BarXSeriesData} from './bar-x';
 import type {PieSeries, PieSeriesData} from './pie';
 import type {ScatterSeries, ScatterSeriesData} from './scatter';
-import type {LineSeriesData} from './line';
+import type {LineSeries, LineSeriesData} from './line';
 
 export type TooltipDataChunkBarX<T = any> = {
     data: BarXSeriesData<T>;
@@ -21,7 +21,9 @@ export type TooltipDataChunkScatter<T = any> = {
 export type TooltipDataChunkLine<T = any> = {
     data: LineSeriesData<T>;
     series: {
+        type: LineSeries['type'];
         id: string;
+        name: string;
     };
 };
 
