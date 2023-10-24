@@ -12,6 +12,7 @@ import {BasicPie} from '../examples/pie/Basic';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
 import {Basic as BasicLine} from '../examples/line/Basic';
 import {Donut} from '../examples/pie/Donut';
+import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
 
 const ShowcaseStory = () => {
     const [loading, setLoading] = React.useState(true);
@@ -73,6 +74,17 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Basic scatter</Text>
                             <BasicScatter />
                         </Col>
+                    </Row>
+                    <Row space={1}>
+                        <Text variant="header-2">Combined chart</Text>
+                    </Row>
+                    <Row space={3} style={{minHeight: 280}}>
+                        <Col>
+                            <Text variant="subheader-1">Line + Bar-X</Text>
+                            <LineAndBarXCombinedChart />
+                        </Col>
+                        <Col></Col>
+                        <Col></Col>
                     </Row>
                 </Container>
             )}

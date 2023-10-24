@@ -78,10 +78,9 @@ function getBarXShapeData(args: {
     return [];
 }
 
-function getLineShapesData(args: {
-    xData: {x: number; data: LineSeriesData; series: PreparedSeries}[];
-    point: number[];
-}) {
+type XLineData = {x: number; data: LineSeriesData; series: PreparedSeries};
+
+function getLineShapesData(args: {xData: XLineData[]; point: number[]}) {
     const {
         xData,
         point: [pointerX],
@@ -114,22 +113,23 @@ export const TooltipTriggerArea = (args: Args) => {
             .map((sd) => ({x: (sd as PreparedBarXData).x, data: sd}));
 
         return sort(result, (item) => item.x);
-    }, [shapesData, calculationType]);
+    }, [shapesData]);
 
     const xLineData = React.useMemo(() => {
         const result = shapesData
             .filter((sd) => sd.series.type === 'line')
-            .map((sd) =>
-                (sd as PreparedLineData).points.map((d) => ({
-                    x: d.x,
-                    data: d.data,
-                    series: sd.series,
-                })),
-            )
-            .flat(2);
+            .reduce((acc, sd) => {
+                return acc.concat(
+                    (sd as PreparedLineData).points.map<XLineData>((d) => ({
+                        x: d.x,
+                        data: d.data,
+                        series: sd.series,
+                    })),
+                );
+            }, [] as XLineData[]);
 
         return sort(result, (item) => item.x);
-    }, [shapesData, calculationType]);
+    }, [shapesData]);
 
     const handleXprimaryMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
         const {left, top} = rectRef.current?.getBoundingClientRect() || {left: 0, top: 0};

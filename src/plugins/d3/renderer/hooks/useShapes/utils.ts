@@ -4,6 +4,8 @@ import get from 'lodash/get';
 import {PreparedAxis} from '../useChartOptions/types';
 import {ChartScale} from '../useAxisScales';
 import {getDataCategoryValue} from '../../utils';
+import {PreparedLineData} from './line/types';
+import {PreparedScatterData} from './scatter';
 
 export function getXValue(args: {
     point: {x?: number | string};
@@ -12,19 +14,15 @@ export function getXValue(args: {
 }) {
     const {point, xAxis, xScale} = args;
 
-    let cx: number;
-
     if (xAxis.type === 'category') {
         const xBandScale = xScale as ScaleBand<string>;
         const categories = get(xAxis, 'categories', [] as string[]);
         const dataCategory = getDataCategoryValue({axisDirection: 'x', categories, data: point});
-        cx = (xBandScale(dataCategory) || 0) + xBandScale.step() / 2;
-    } else {
-        const xLinearScale = xScale as ScaleLinear<number, number> | ScaleTime<number, number>;
-        cx = xLinearScale(point.x as number);
+        return (xBandScale(dataCategory) || 0) + xBandScale.step() / 2;
     }
 
-    return cx;
+    const xLinearScale = xScale as ScaleLinear<number, number> | ScaleTime<number, number>;
+    return xLinearScale(point.x as number);
 }
 
 export function getYValue(args: {
@@ -34,17 +32,15 @@ export function getYValue(args: {
 }) {
     const {point, yAxis, yScale} = args;
 
-    let cy: number;
-
     if (yAxis.type === 'category') {
         const yBandScale = yScale as ScaleBand<string>;
         const categories = get(yAxis, 'categories', [] as string[]);
         const dataCategory = getDataCategoryValue({axisDirection: 'y', categories, data: point});
-        cy = (yBandScale(dataCategory) || 0) + yBandScale.step() / 2;
-    } else {
-        const yLinearScale = yScale as ScaleLinear<number, number> | ScaleTime<number, number>;
-        cy = yLinearScale(point.y as number);
+        return (yBandScale(dataCategory) || 0) + yBandScale.step() / 2;
     }
 
-    return cy;
+    const yLinearScale = yScale as ScaleLinear<number, number> | ScaleTime<number, number>;
+    return yLinearScale(point.y as number);
 }
+
+export const shapeKey = (d: unknown) => (d as PreparedLineData | PreparedScatterData).id || -1;

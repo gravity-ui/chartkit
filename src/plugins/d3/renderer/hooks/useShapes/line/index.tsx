@@ -1,23 +1,15 @@
 import React from 'react';
 import {select, line as lineGenerator, color} from 'd3';
-import type {Dispatch, BaseType, Selection} from 'd3';
+import type {Dispatch} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
 import type {PreparedLineSeries, PreparedSeriesOptions} from '../../useSeries/types';
 import {PointData, PreparedLineData} from './types';
 import {LineSeriesData, TooltipDataChunkLine} from '../../../../../../types';
+import {shapeKey} from '../utils';
 
 const b = block('d3-line');
-
-const EMPTY_SELECTION = null as unknown as Selection<
-    BaseType,
-    PreparedLineData,
-    SVGGElement,
-    unknown
->;
-
-const key = (d: unknown) => (d as PreparedLineData).id || -1;
 
 type Args = {
     dispatcher: Dispatch<object>;
@@ -47,7 +39,7 @@ export const LineSeriesShapes = (args: Args) => {
 
         const selection = svgElement
             .selectAll('path')
-            .data(preparedData)
+            .data(preparedData, shapeKey)
             .join('path')
             .attr('d', (d) => line(d.points))
             .attr('fill', 'none')
@@ -90,7 +82,7 @@ export const LineSeriesShapes = (args: Args) => {
         const inactiveEnabled = inactiveOptions?.enabled;
 
         dispatcher.on('hover-shape.line', (data?: TooltipDataChunkLine[]) => {
-            const selectedSeriesId = data?.[0]?.series?.id;
+            const selectedSeriesId = data?.find((d) => d.series.type === 'line')?.series?.id;
 
             const updates: PreparedLineData[] = [];
             preparedData.forEach((p) => {
@@ -109,8 +101,8 @@ export const LineSeriesShapes = (args: Args) => {
                 }
             });
 
-            selection.data(updates, key).join(
-                () => EMPTY_SELECTION,
+            selection.data(updates, shapeKey).join(
+                'shape',
                 (update) => {
                     update
                         .attr('stroke', (d) => {

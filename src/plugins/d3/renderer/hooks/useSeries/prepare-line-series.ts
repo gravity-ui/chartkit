@@ -26,9 +26,9 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
 
         return {
             type: series.type,
-            color: color,
+            color,
             lineWidth: get(series, 'lineWidth', defaultLineWidth),
-            name: name,
+            name,
             id,
             visible: get(series, 'visible', true),
             legend: {
