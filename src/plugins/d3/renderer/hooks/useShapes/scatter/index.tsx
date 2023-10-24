@@ -9,6 +9,7 @@ import {extractD3DataFromNode, isNodeContainsD3Data} from '../../../utils';
 import type {NodeWithD3Data} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
 import type {PreparedScatterData} from './prepare-data';
+import {shapeKey} from '../utils';
 
 export {prepareScatterData} from './prepare-data';
 export type {PreparedScatterData} from './prepare-data';
@@ -31,8 +32,6 @@ const EMPTY_SELECTION = null as unknown as Selection<
     unknown
 >;
 
-const key = (d: unknown) => (d as PreparedScatterData).id || -1;
-
 const isNodeContainsScatterData = (node?: Element): node is NodeWithD3Data<PreparedScatterData> => {
     return isNodeContainsD3Data(node);
 };
@@ -52,7 +51,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
 
         const selection = svgElement
             .selectAll(`circle`)
-            .data(preparedData, key)
+            .data(preparedData, shapeKey)
             .join(
                 (enter) => enter.append('circle').attr('class', b('point')),
                 (update) => update,
@@ -112,7 +111,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 }
             });
 
-            selection.data(updates, key).join(
+            selection.data(updates, shapeKey).join(
                 () => EMPTY_SELECTION,
                 (update) => {
                     update

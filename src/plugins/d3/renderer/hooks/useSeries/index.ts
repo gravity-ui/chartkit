@@ -1,7 +1,7 @@
 import React from 'react';
 import {group, scaleOrdinal} from 'd3';
 
-import type {ChartKitWidgetData} from '../../../../../types/widget-data';
+import type {ChartKitWidgetData} from '../../../../../types';
 
 import {DEFAULT_PALETTE} from '../../constants';
 import {getSeriesNames} from '../../utils';
@@ -45,6 +45,7 @@ export const useSeries = (args: Args) => {
                     ...prepareSeries({
                         type: seriesType,
                         series: seriesList,
+                        seriesOptions,
                         legend: preparedLegend,
                         colorScale,
                     }),
@@ -53,7 +54,7 @@ export const useSeries = (args: Args) => {
             },
             [],
         );
-    }, [series, preparedLegend]);
+    }, [series, seriesOptions, preparedLegend]);
     const preparedSeriesOptions = React.useMemo(() => {
         return getPreparedOptions(seriesOptions);
     }, [seriesOptions]);

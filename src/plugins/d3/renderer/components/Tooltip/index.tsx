@@ -59,7 +59,7 @@ export const Tooltip = (props: TooltipProps) => {
         const customTooltip = tooltip.renderer?.({hovered});
 
         return isNil(customTooltip) ? (
-            <DefaultContent hovered={hovered[0]} xAxis={xAxis} yAxis={yAxis} />
+            <DefaultContent hovered={hovered} xAxis={xAxis} yAxis={yAxis} />
         ) : (
             customTooltip
         );

@@ -6,6 +6,7 @@ import type {PreparedAxis} from '../useChartOptions/types';
 import type {ChartScale} from '../useAxisScales';
 import type {
     PreparedBarXSeries,
+    PreparedLineSeries,
     PreparedPieSeries,
     PreparedScatterSeries,
     PreparedSeries,
@@ -16,12 +17,15 @@ import type {PreparedBarXData} from './bar-x';
 import {ScatterSeriesShape, prepareScatterData} from './scatter';
 import type {PreparedScatterData} from './scatter';
 import {PieSeriesComponent} from './pie';
+import {prepareLineData} from './line/prepare-data';
+import {LineSeriesShapes} from './line';
+import type {PreparedLineData} from './line/types';
 
 import './styles.scss';
 
 export type {PreparedBarXData} from './bar-x';
 export type {PreparedScatterData} from './scatter';
-export type ShapeData = PreparedBarXData | PreparedScatterData;
+export type ShapeData = PreparedBarXData | PreparedScatterData | PreparedLineData;
 
 type Args = {
     top: number;
@@ -74,6 +78,27 @@ export const useShapes = (args: Args) => {
                         acc.push(
                             <BarXSeriesShapes
                                 key="bar-x"
+                                dispatcher={dispatcher}
+                                seriesOptions={seriesOptions}
+                                preparedData={preparedData}
+                            />,
+                        );
+                        shapesData.push(...preparedData);
+                    }
+                    break;
+                }
+                case 'line': {
+                    if (xScale && yScale) {
+                        const preparedData = prepareLineData({
+                            series: chartSeries as PreparedLineSeries[],
+                            xAxis,
+                            xScale,
+                            yAxis,
+                            yScale,
+                        });
+                        acc.push(
+                            <LineSeriesShapes
+                                key="line"
                                 dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
                                 preparedData={preparedData}

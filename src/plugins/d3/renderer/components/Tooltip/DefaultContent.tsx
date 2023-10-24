@@ -7,7 +7,7 @@ import type {PreparedAxis, PreparedPieSeries} from '../../hooks';
 import {getDataCategoryValue} from '../../utils';
 
 type Props = {
-    hovered: TooltipDataChunk;
+    hovered: TooltipDataChunk[];
     xAxis: PreparedAxis;
     yAxis: PreparedAxis;
 };
@@ -15,14 +15,16 @@ type Props = {
 const DEFAULT_DATE_FORMAT = 'DD.MM.YY';
 
 const getRowData = (fieldName: 'x' | 'y', axis: PreparedAxis, data: ChartKitWidgetSeriesData) => {
-    const categories = get(axis, 'categories', [] as string[]);
-
     switch (axis.type) {
         case 'category': {
+            const categories = get(axis, 'categories', [] as string[]);
             return getDataCategoryValue({axisDirection: fieldName, categories, data});
         }
         case 'datetime': {
             const value = get(data, fieldName);
+            if (!value) {
+                return undefined;
+            }
             return dateTime({input: value}).format(DEFAULT_DATE_FORMAT);
         }
         case 'linear':
@@ -40,53 +42,44 @@ const getYRowData = (yAxis: PreparedAxis, data: ChartKitWidgetSeriesData) =>
     getRowData('y', yAxis, data);
 
 export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
-    const {data, series} = hovered;
+    return (
+        <>
+            {hovered.map(({data, series}, i) => {
+                const id = get(series, 'id', i);
 
-    switch (series.type) {
-        case 'scatter': {
-            const xRow = getXRowData(xAxis, data);
-            const yRow = getYRowData(yAxis, data);
+                switch (series.type) {
+                    case 'scatter':
+                    case 'line':
+                    case 'bar-x': {
+                        const xRow = getXRowData(xAxis, data);
+                        const yRow = getYRowData(yAxis, data);
 
-            return (
-                <div>
-                    <div>
-                        <span>X:&nbsp;</span>
-                        <b>{xRow}</b>
-                    </div>
-                    <div>
-                        <span>Y:&nbsp;</span>
-                        <b>{yRow}</b>
-                    </div>
-                </div>
-            );
-        }
-        case 'bar-x': {
-            const xRow = getXRowData(xAxis, data);
-            const yRow = getYRowData(yAxis, data);
+                        return (
+                            <div key={id}>
+                                <div>{xRow}</div>
+                                <div>
+                                    <span>
+                                        <b>{series.name}</b>: {yRow}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    }
+                    case 'pie': {
+                        const pieSeries = series as PreparedPieSeries;
 
-            return (
-                <div>
-                    <div>{xRow}</div>
-                    <div>
-                        <span>
-                            <b>{series.name}</b>: {yRow}
-                        </span>
-                    </div>
-                </div>
-            );
-        }
-        case 'pie': {
-            const pieSeries = series as PreparedPieSeries;
-
-            return (
-                <div>
-                    <span>{pieSeries.name || pieSeries.id}&nbsp;</span>
-                    <span>{pieSeries.value}</span>
-                </div>
-            );
-        }
-        default: {
-            return null;
-        }
-    }
+                        return (
+                            <div key={id}>
+                                <span>{pieSeries.name || pieSeries.id}&nbsp;</span>
+                                <span>{pieSeries.value}</span>
+                            </div>
+                        );
+                    }
+                    default: {
+                        return null;
+                    }
+                }
+            })}
+        </>
+    );
 };
