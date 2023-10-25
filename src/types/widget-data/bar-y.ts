@@ -2,7 +2,7 @@ import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetSeriesOptions} from './series';
 import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
-export type BarXSeriesData<T = any> = BaseSeriesData<T> & {
+export type BarYSeriesData<T = any> = BaseSeriesData<T> & {
     /**
      * The `x` value of the bar. Depending on the context , it may represents:
      * - numeric value (for `linear` x axis)
@@ -17,24 +17,18 @@ export type BarXSeriesData<T = any> = BaseSeriesData<T> & {
      * - y axis category value (for `category` y axis). If the type is a string, then it is a category value itself. If the type is a number, then it is the index of an element in the array of categories described in `yAxis[0].categories`
      */
     y?: string | number;
-    /**
-     * Corresponding value of axis category.
-     *
-     * @deprecated use `x` or `y` instead
-     */
-    category?: string;
-    /** Data label value of the bar-x column. If not specified, the y value is used. */
+    /** Data label value of the bar. If not specified, the x value is used. */
     label?: string | number;
 };
 
-export type BarXSeries<T = any> = BaseSeries & {
-    type: 'bar-x';
-    data: BarXSeriesData<T>[];
+export type BarYSeries<T = any> = BaseSeries & {
+    type: 'bar-y';
+    data: BarYSeriesData<T>[];
     /** The name of the series (used in legend, tooltip etc) */
     name: string;
     /** The main color of the series (hex, rgba) */
     color?: string;
-    // FIXME 'percent' (https://github.com/gravity-ui/chartkit/issues/329)
+    // fixme 'percent'
     /** Whether to stack the values of each series on top of each other.
      * Possible values are undefined to disable, "normal" to stack by value or "percent"
      *

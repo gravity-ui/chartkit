@@ -1,19 +1,22 @@
+import React from 'react';
 import type {PieSeries, PieSeriesData} from './pie';
 import type {ScatterSeries, ScatterSeriesData} from './scatter';
 import type {BarXSeries, BarXSeriesData} from './bar-x';
-import React from 'react';
-import {LineSeries, LineSeriesData} from './line';
+import type {LineSeries, LineSeriesData} from './line';
+import type {BarYSeries, BarYSeriesData} from './bar-y';
 
 export type ChartKitWidgetSeries<T = any> =
     | ScatterSeries<T>
     | PieSeries<T>
     | BarXSeries<T>
+    | BarYSeries<T>
     | LineSeries<T>;
 
 export type ChartKitWidgetSeriesData<T = any> =
     | ScatterSeriesData<T>
     | PieSeriesData<T>
     | BarXSeriesData<T>
+    | BarYSeriesData<T>
     | LineSeriesData<T>;
 
 export type DataLabelRendererData<T = any> = {
@@ -86,6 +89,42 @@ export type ChartKitWidgetSeriesOptions = {
              * @default undefined
              * */
             key?: 'name' | 'y' | undefined;
+            /** Sorting direction.
+             *
+             * @default 'asc'
+             * */
+            direction?: 'asc' | 'desc';
+        };
+        /** Options for the series states that provide additional styling information to the series. */
+        states?: {
+            hover?: BasicHoverState;
+            inactive?: BasicInactiveState;
+        };
+    };
+    'bar-y'?: {
+        /** The maximum allowed pixel width for a column.
+         * This prevents the columns from becoming too wide when there is a small number of points in the chart.
+         *
+         * @default 50
+         */
+        barMaxWidth?: number;
+        /** Padding between each column or bar, in x axis units.
+         *
+         * @default 0.1
+         * */
+        barPadding?: number;
+        /** Padding between each value groups, in x axis units
+         *
+         * @default 0.2
+         */
+        groupPadding?: number;
+        dataSorting?: {
+            /** Determines what data value should be used to sort by.
+             * Possible values are undefined to disable, "name" to sort by series name or "x"
+             *
+             * @default undefined
+             * */
+            key?: 'name' | 'x' | undefined;
             /** Sorting direction.
              *
              * @default 'asc'

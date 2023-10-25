@@ -1,12 +1,15 @@
 import React from 'react';
 import {StoryObj} from '@storybook/react';
 import {withKnobs} from '@storybook/addon-knobs';
-import {BasicBarXChart} from '../examples/bar-x/Basic';
 import {settings} from '../../../libs';
 import {D3Plugin} from '../index';
 import {Loader} from '../../../components/Loader/Loader';
+import {BasicBarXChart} from '../examples/bar-x/Basic';
 import {GroupedColumns} from '../examples/bar-x/GroupedColumns';
 import {StackedColumns} from '../examples/bar-x/StackedColumns';
+import {Basic as BasicBarY} from '../examples/bar-y/Basic';
+import {GroupedColumns as GroupedColumnsBarY} from '../examples/bar-y/GroupedColumns';
+import {StackedColumns as StackedColumnsBarY} from '../examples/bar-y/StackedColumns';
 import {Container, Row, Col, Text} from '@gravity-ui/uikit';
 import {BasicPie} from '../examples/pie/Basic';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
@@ -51,6 +54,23 @@ const ShowcaseStory = () => {
                         <Col>
                             <Text variant="subheader-1">Stacked columns</Text>
                             <StackedColumns />
+                        </Col>
+                    </Row>
+                    <Row space={1}>
+                        <Text variant="header-2">Bar-y charts</Text>
+                    </Row>
+                    <Row space={3} style={{minHeight: 280}}>
+                        <Col>
+                            <Text variant="subheader-1">Basic bar chart</Text>
+                            <BasicBarY />
+                        </Col>
+                        <Col>
+                            <Text variant="subheader-1">Grouped bars</Text>
+                            <GroupedColumnsBarY />
+                        </Col>
+                        <Col>
+                            <Text variant="subheader-1">Stacked bars</Text>
+                            <StackedColumnsBarY />
                         </Col>
                     </Row>
                     <Row space={1}>

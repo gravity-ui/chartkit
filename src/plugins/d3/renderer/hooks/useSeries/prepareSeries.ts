@@ -5,18 +5,21 @@ import {scaleOrdinal} from 'd3';
 
 import type {
     BarXSeries,
+    BarYSeries,
     ChartKitWidgetSeries,
-    PieSeries,
-    LineSeries,
     ChartKitWidgetSeriesOptions,
+    LineSeries,
+    PieSeries,
 } from '../../../../../types';
 import {getRandomCKId} from '../../../../../utils';
 
 import {DEFAULT_PALETTE} from '../../constants';
-import {DEFAULT_DATALABELS_STYLE} from './constants';
-import type {PreparedBarXSeries, PreparedLegend, PreparedPieSeries, PreparedSeries} from './types';
+import type {PreparedLegend, PreparedPieSeries, PreparedSeries} from './types';
 import {prepareLineSeries} from './prepare-line-series';
+import {prepareBarXSeries} from './prepare-bar-x';
+import {prepareBarYSeries} from './prepare-bar-y';
 import {prepareLegendSymbol} from './utils';
+import {ChartKitError} from '../../../../../libs';
 
 type PrepareAxisRelatedSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -28,8 +31,7 @@ function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedS
     const {colorScale, series, legend} = args;
     const preparedSeries = cloneDeep(series) as PreparedSeries;
     const name = 'name' in series && series.name ? series.name : '';
-    const color = 'color' in series && series.color ? series.color : colorScale(name);
-    preparedSeries.color = color;
+    preparedSeries.color = 'color' in series && series.color ? series.color : colorScale(name);
     preparedSeries.name = name;
     preparedSeries.visible = get(preparedSeries, 'visible', true);
     preparedSeries.legend = {
@@ -38,50 +40,6 @@ function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedS
     };
 
     return [preparedSeries];
-}
-
-type PrepareBarXSeriesArgs = {
-    colorScale: ScaleOrdinal<string, string>;
-    series: BarXSeries[];
-    legend: PreparedLegend;
-};
-
-function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[] {
-    const {colorScale, series: seriesList, legend} = args;
-    const commonStackId = getRandomCKId();
-
-    return seriesList.map<PreparedBarXSeries>((series) => {
-        const name = series.name || '';
-        const color = series.color || colorScale(name);
-
-        let stackId = series.stackId;
-        if (!stackId) {
-            stackId = series.stacking === 'normal' ? commonStackId : getRandomCKId();
-        }
-
-        return {
-            type: series.type,
-            color: color,
-            name: name,
-            id: '',
-            visible: get(series, 'visible', true),
-            legend: {
-                enabled: get(series, 'legend.enabled', legend.enabled),
-                symbol: prepareLegendSymbol(series),
-            },
-            data: series.data,
-            stacking: series.stacking,
-            stackId,
-            dataLabels: {
-                enabled: series.dataLabels?.enabled || false,
-                inside:
-                    typeof series.dataLabels?.inside === 'boolean'
-                        ? series.dataLabels?.inside
-                        : false,
-                style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),
-            },
-        };
-    }, []);
 }
 
 type PreparePieSeriesArgs = {
@@ -146,6 +104,9 @@ export function prepareSeries(args: {
         case 'bar-x': {
             return prepareBarXSeries({series: series as BarXSeries[], legend, colorScale});
         }
+        case 'bar-y': {
+            return prepareBarYSeries({series: series as BarYSeries[], legend, colorScale});
+        }
         case 'scatter': {
             return series.reduce<PreparedSeries[]>((acc, singleSeries) => {
                 acc.push(...prepareAxisRelatedSeries({series: singleSeries, legend, colorScale}));
@@ -161,10 +122,9 @@ export function prepareSeries(args: {
             });
         }
         default: {
-            const seriesType = get(series, 'type');
-            throw new Error(
-                `Series type ${seriesType} does not support data preparation for series that do not support the presence of axes`,
-            );
+            throw new ChartKitError({
+                message: `Series type "${type}" does not support data preparation for series that do not support the presence of axes`,
+            });
         }
     }
 }

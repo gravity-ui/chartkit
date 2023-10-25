@@ -6,6 +6,7 @@ import type {PreparedAxis} from '../useChartOptions/types';
 import type {ChartScale} from '../useAxisScales';
 import type {
     PreparedBarXSeries,
+    PreparedBarYSeries,
     PreparedLineSeries,
     PreparedPieSeries,
     PreparedScatterSeries,
@@ -20,12 +21,18 @@ import {PieSeriesComponent} from './pie';
 import {prepareLineData} from './line/prepare-data';
 import {LineSeriesShapes} from './line';
 import type {PreparedLineData} from './line/types';
+import {BarYSeriesShapes, prepareBarYData} from './bar-y';
+import type {PreparedBarYData} from './bar-y/types';
+export type {PreparedBarXData} from './bar-x';
+export type {PreparedScatterData} from './scatter';
 
 import './styles.scss';
 
-export type {PreparedBarXData} from './bar-x';
-export type {PreparedScatterData} from './scatter';
-export type ShapeData = PreparedBarXData | PreparedScatterData | PreparedLineData;
+export type ShapeData =
+    | PreparedBarXData
+    | PreparedBarYData
+    | PreparedScatterData
+    | PreparedLineData;
 
 type Args = {
     boundsWidth: number;
@@ -74,6 +81,28 @@ export const useShapes = (args: Args) => {
                         acc.push(
                             <BarXSeriesShapes
                                 key="bar-x"
+                                dispatcher={dispatcher}
+                                seriesOptions={seriesOptions}
+                                preparedData={preparedData}
+                            />,
+                        );
+                        shapesData.push(...preparedData);
+                    }
+                    break;
+                }
+                case 'bar-y': {
+                    if (xScale && yScale) {
+                        const preparedData = prepareBarYData({
+                            series: chartSeries as PreparedBarYSeries[],
+                            seriesOptions,
+                            xAxis,
+                            xScale,
+                            yAxis,
+                            yScale,
+                        });
+                        acc.push(
+                            <BarYSeriesShapes
+                                key="bar-y"
                                 dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
                                 preparedData={preparedData}
