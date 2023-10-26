@@ -28,8 +28,6 @@ export const BarYSeriesShapes = (args: Args) => {
         }
 
         const svgElement = select(ref.current);
-        const hoverOptions = get(seriesOptions, 'bar-y.states.hover');
-        const inactiveOptions = get(seriesOptions, 'bar-y.states.inactive');
         svgElement.selectAll('*').remove();
         const rectSelection = svgElement
             .selectAll('rect')
@@ -40,10 +38,9 @@ export const BarYSeriesShapes = (args: Args) => {
             .attr('y', (d) => d.y)
             .attr('height', (d) => d.height)
             .attr('width', (d) => d.width)
-            .attr('fill', (d) => d.data.color || d.series.color);
+            .attr('fill', (d) => d.color);
 
         const dataLabels = preparedData.filter((d) => d.series.dataLabels.enabled);
-
         const labelSelection = svgElement
             .selectAll('text')
             .data(dataLabels)
@@ -71,31 +68,22 @@ export const BarYSeriesShapes = (args: Args) => {
             .style('font-weight', (d) => d.series.dataLabels.style.fontWeight || null)
             .style('fill', (d) => d.series.dataLabels.style.fontColor || null);
 
+        const hoverOptions = get(seriesOptions, 'bar-y.states.hover');
+        const inactiveOptions = get(seriesOptions, 'bar-y.states.inactive');
+
         dispatcher.on('hover-shape.bar-y', (data?: PreparedBarYData[]) => {
-            const hoverEnabled = hoverOptions?.enabled;
-            const inactiveEnabled = inactiveOptions?.enabled;
+            if (hoverOptions?.enabled) {
+                const hovered = data?.reduce((acc, d) => {
+                    acc.add(d.data.y);
+                    return acc;
+                }, new Set());
 
-            if (!data) {
-                if (hoverEnabled) {
-                    rectSelection.attr('fill', (d) => d.data.color || d.series.color);
-                }
-
-                if (inactiveEnabled) {
-                    rectSelection.attr('opacity', null);
-                    labelSelection.attr('opacity', null);
-                }
-
-                return;
-            }
-
-            if (hoverEnabled) {
-                const hoveredValues = data.map((d) => d.data.x);
                 rectSelection.attr('fill', (d) => {
-                    const fillColor = d.data.color || d.series.color;
+                    const fillColor = d.color;
 
-                    if (hoveredValues.includes(d.data.x)) {
+                    if (hovered?.has(d.data.y)) {
                         return (
-                            color(fillColor)?.brighter(hoverOptions?.brightness).toString() ||
+                            color(fillColor)?.brighter(hoverOptions.brightness).toString() ||
                             fillColor
                         );
                     }
@@ -104,18 +92,17 @@ export const BarYSeriesShapes = (args: Args) => {
                 });
             }
 
-            if (inactiveEnabled) {
-                const hoveredSeries = data.map((d) => d.series.id);
-                rectSelection.attr('opacity', (d) => {
-                    return hoveredSeries.includes(d.series.id)
-                        ? null
-                        : inactiveOptions?.opacity || null;
-                });
-                labelSelection.attr('opacity', (d) => {
-                    return hoveredSeries.includes(d.series.id)
-                        ? null
-                        : inactiveOptions?.opacity || null;
-                });
+            if (inactiveOptions?.enabled) {
+                const hoveredSeries = data?.map((d) => d.series.id);
+                const newOpacity = (d: PreparedBarYData) => {
+                    if (hoveredSeries?.length && !hoveredSeries.includes(d.series.id)) {
+                        return inactiveOptions.opacity || null;
+                    }
+
+                    return null;
+                };
+                rectSelection.attr('opacity', newOpacity);
+                labelSelection.attr('opacity', newOpacity);
             }
         });
 

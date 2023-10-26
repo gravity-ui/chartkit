@@ -6,5 +6,6 @@ export type PreparedBarYData = Omit<TooltipDataChunkBarX, 'series'> & {
     y: number;
     width: number;
     height: number;
+    color: string;
     series: PreparedBarYSeries;
 };

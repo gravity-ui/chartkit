@@ -99,10 +99,10 @@ export const prepareBarYData = (args: {
         }
     })();
 
-    const data = groupByYValue(series, yAxis);
+    const groupedData = groupByYValue(series, yAxis);
     const bandWidth = getBandWidth(series, yAxis, yScale);
 
-    const maxGroupSize = max(Object.values(data), (d) => Object.values(d).length) || 1;
+    const maxGroupSize = max(Object.values(groupedData), (d) => Object.values(d).length) || 1;
     const groupGap = Math.max(bandWidth * groupPadding, MIN_GROUP_GAP);
     const groupWidth = bandWidth - groupGap;
     const rectGap = Math.max(bandWidth * barPadding, MIN_RECT_GAP);
@@ -113,7 +113,7 @@ export const prepareBarYData = (args: {
 
     const result: PreparedBarYData[] = [];
 
-    Object.entries(data).forEach(([yValue, val]) => {
+    Object.entries(groupedData).forEach(([yValue, val]) => {
         const stacks = Object.values(val);
         const currentBarHeight = barHeight * stacks.length + rectGap * (stacks.length - 1);
         stacks.forEach((measureValues, groupItemIndex) => {
@@ -122,7 +122,7 @@ export const prepareBarYData = (args: {
             const sortedData = sortKey
                 ? sort(measureValues, (a, b) => comparator(get(a, sortKey), get(b, sortKey)))
                 : measureValues;
-            sortedData.forEach((measureValue) => {
+            sortedData.forEach(({data, series: s}) => {
                 let center;
 
                 if (yAxis[0].type === 'category') {
@@ -135,7 +135,7 @@ export const prepareBarYData = (args: {
 
                 const y = center - currentBarHeight / 2 + (barHeight + rectGap) * groupItemIndex;
                 const xLinearScale = xScale as ScaleLinear<number, number>;
-                const x = xLinearScale(measureValue.data.x as number);
+                const x = xLinearScale(data.x as number);
                 const width = x - xLinearScale(xLinearScale.domain()[0]);
 
                 result.push({
@@ -143,8 +143,9 @@ export const prepareBarYData = (args: {
                     y,
                     width,
                     height: barHeight,
-                    data: measureValue.data,
-                    series: measureValue.series,
+                    color: data.color || s.color,
+                    data,
+                    series: s,
                 });
 
                 stackSum += width + 1;

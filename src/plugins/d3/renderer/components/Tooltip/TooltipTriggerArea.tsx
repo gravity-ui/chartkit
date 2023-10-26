@@ -1,13 +1,14 @@
 import React from 'react';
 import throttle from 'lodash/throttle';
-import {bisector, pointer, sort} from 'd3';
+import {bisector, pointer, sort, group} from 'd3';
 import type {Dispatch} from 'd3';
 
 import type {ShapeData, PreparedBarXData, PointerPosition, PreparedSeries} from '../../hooks';
 import {extractD3DataFromNode, isNodeContainsD3Data} from '../../utils';
 import type {NodeWithD3Data} from '../../utils';
 import {PreparedLineData} from '../../hooks/useShapes/line/types';
-import {LineSeriesData} from '../../../../../types';
+import {BarYSeriesData, LineSeriesData} from '../../../../../types';
+import {PreparedBarYData} from '../../hooks/useShapes/bar-y/types';
 
 const THROTTLE_DELAY = 50;
 
@@ -19,18 +20,8 @@ type Args = {
     svgContainer: SVGSVGElement | null;
 };
 
-type CalculationType = 'x-primary' | 'none';
-
 const isNodeContainsData = (node?: Element): node is NodeWithD3Data<ShapeData> => {
     return isNodeContainsD3Data(node);
-};
-
-const getCalculationType = (shapesData: ShapeData[]): CalculationType => {
-    if (shapesData.every((d) => ['bar-x', 'line'].includes(d.series.type))) {
-        return 'x-primary';
-    }
-
-    return 'none';
 };
 
 function getBarXShapeData(args: {
@@ -98,12 +89,34 @@ function getLineShapesData(args: {xData: XLineData[]; point: number[]}) {
     return [];
 }
 
+type BarYData = {
+    y: number;
+    items: {x: number; data: BarYSeriesData; series: PreparedSeries}[];
+};
+
+function getBarYData(args: {data: BarYData[]; point: number[]}) {
+    const {
+        data,
+        point: [pointerX, pointerY],
+    } = args;
+    const yDataIndex = bisector((d: {y: number}) => d.y).center(data, pointerY);
+    const selectedShapes = data[yDataIndex]?.items || [];
+    const xDataIndex = bisector((d: {x: number}) => d.x).left(selectedShapes, pointerX);
+    const selected = selectedShapes[Math.min(xDataIndex, selectedShapes.length - 1)];
+
+    return selected
+        ? [
+              {
+                  series: selected.series,
+                  data: selected.data,
+              },
+          ]
+        : [];
+}
+
 export const TooltipTriggerArea = (args: Args) => {
     const {boundsWidth, boundsHeight, dispatcher, shapesData, svgContainer} = args;
     const rectRef = React.useRef<SVGRectElement>(null);
-    const calculationType = React.useMemo(() => {
-        return getCalculationType(shapesData);
-    }, [shapesData]);
     const xBarData = React.useMemo(() => {
         const result = shapesData
             .filter((sd) => sd.series.type === 'bar-x')
@@ -128,7 +141,34 @@ export const TooltipTriggerArea = (args: Args) => {
         return sort(result, (item) => item.x);
     }, [shapesData]);
 
-    const handleXprimaryMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
+    const barYData = React.useMemo(() => {
+        const barYShapeData = shapesData.filter((sd) => sd.series.type === 'bar-y');
+        const result = Array.from(group(barYShapeData, (sd) => (sd as PreparedBarYData).y)).map(
+            ([y, shapes]) => {
+                const yValue = y + (shapes[0] as PreparedBarYData).height / 2;
+
+                return {
+                    y: yValue,
+                    items: sort(
+                        shapes.map((shape) => {
+                            const preparedData = shape as PreparedBarYData;
+
+                            return {
+                                x: preparedData.x + preparedData.width,
+                                data: preparedData.data,
+                                series: shape.series,
+                            };
+                        }),
+                        (item) => item.x,
+                    ),
+                };
+            },
+        );
+
+        return sort(result, (item) => item.y);
+    }, [shapesData]);
+
+    const handleMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
         const {left: ownLeft, top: ownTop} = rectRef.current?.getBoundingClientRect() || {
             left: 0,
             top: 0,
@@ -149,21 +189,19 @@ export const TooltipTriggerArea = (args: Args) => {
                 xData: xBarData,
                 container: rectRef.current?.parentElement,
             }),
-            ...getLineShapesData({xData: xLineData, point: [pointerX, pointerY]}),
+            ...getLineShapesData({
+                xData: xLineData,
+                point: [pointerX - (ownLeft - containerLeft), pointerY - (ownTop - containerTop)],
+            }),
+            ...getBarYData({
+                data: barYData,
+                point: [pointerX - (ownLeft - containerLeft), pointerY - (ownTop - containerTop)],
+            }),
         );
 
         if (hoverShapeData.length) {
             const position: PointerPosition = [pointerX, pointerY];
             dispatcher.call('hover-shape', e.target, hoverShapeData, position);
-        }
-    };
-
-    const handleMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
-        switch (calculationType) {
-            case 'x-primary': {
-                handleXprimaryMouseMove(e);
-                return;
-            }
         }
     };
 
