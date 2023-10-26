@@ -8,11 +8,12 @@ import {
     RectLegendSymbolOptions,
     ScatterSeries,
     ScatterSeriesData,
+    BarYSeries,
+    BarYSeriesData,
+    LineSeries,
+    LineSeriesData,
 } from '../../../../../types';
-
 import type {SeriesOptionsDefaults} from '../../constants';
-import {LineSeries, LineSeriesData} from '../../../../../types/widget-data/line';
-import {BarYSeries, BarYSeriesData} from '../../../../../types/widget-data/bar-y';
 
 export type RectLegendSymbol = {
     shape: 'rect';
@@ -81,7 +82,8 @@ export type PreparedBarYSeries = {
         enabled: boolean;
         inside: boolean;
         style: BaseTextStyle;
-        height: number;
+        maxHeight: number;
+        maxWidth: number;
     };
 } & BasePreparedSeries;
 

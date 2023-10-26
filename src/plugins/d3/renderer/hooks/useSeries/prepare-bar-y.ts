@@ -5,13 +5,32 @@ import type {PreparedBarYSeries, PreparedLegend, PreparedSeries} from './types';
 import {getRandomCKId} from '../../../../../utils';
 import {prepareLegendSymbol} from './utils';
 import {DEFAULT_DATALABELS_STYLE} from './constants';
-import {getHorisontalSvgTextHeight} from '../../utils';
+import {getLabelsSize} from '../../utils';
 
 type PrepareBarYSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
     series: BarYSeries[];
     legend: PreparedLegend;
 };
+
+function prepareDataLabels(series: BarYSeries) {
+    const enabled = get(series, 'dataLabels.enabled', false);
+    const style = Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style);
+    const {maxHeight = 0, maxWidth = 0} = enabled
+        ? getLabelsSize({
+              labels: series.data.map((d) => String(d.label || d.x)),
+              style,
+          })
+        : {};
+
+    return {
+        enabled,
+        inside: get(series, 'dataLabels.inside', false),
+        style,
+        maxHeight,
+        maxWidth,
+    };
+}
 
 export function prepareBarYSeries(args: PrepareBarYSeriesArgs): PreparedSeries[] {
     const {colorScale, series: seriesList, legend} = args;
@@ -26,12 +45,6 @@ export function prepareBarYSeries(args: PrepareBarYSeriesArgs): PreparedSeries[]
             stackId = series.stacking === 'normal' ? commonStackId : getRandomCKId();
         }
 
-        const dataLabelStyle = Object.assign(
-            {},
-            DEFAULT_DATALABELS_STYLE,
-            series.dataLabels?.style,
-        );
-
         return {
             type: series.type,
             color: color,
@@ -45,15 +58,7 @@ export function prepareBarYSeries(args: PrepareBarYSeriesArgs): PreparedSeries[]
             data: series.data,
             stacking: series.stacking,
             stackId,
-            dataLabels: {
-                enabled: series.dataLabels?.enabled || false,
-                inside:
-                    typeof series.dataLabels?.inside === 'boolean'
-                        ? series.dataLabels?.inside
-                        : false,
-                style: dataLabelStyle,
-                height: getHorisontalSvgTextHeight({text: 'Tmp', style: dataLabelStyle}),
-            },
+            dataLabels: prepareDataLabels(series),
         };
     }, []);
 }

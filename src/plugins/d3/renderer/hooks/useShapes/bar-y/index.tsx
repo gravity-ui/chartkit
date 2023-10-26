@@ -45,7 +45,7 @@ export const BarYSeriesShapes = (args: Args) => {
             .selectAll('text')
             .data(dataLabels)
             .join('text')
-            .text((d) => String(d.data.label || d.data.y))
+            .text((d) => String(d.data.label || d.data.x))
             .attr('class', b('label'))
             .attr('x', (d) => {
                 if (d.series.dataLabels.inside) {
@@ -55,7 +55,7 @@ export const BarYSeriesShapes = (args: Args) => {
                 return d.x + d.width + DEFAULT_LABEL_PADDING;
             })
             .attr('y', (d) => {
-                return d.y + d.height / 2 + d.series.dataLabels.height / 2;
+                return d.y + d.height / 2 + d.series.dataLabels.maxHeight / 2;
             })
             .attr('text-anchor', (d) => {
                 if (d.series.dataLabels.inside) {
