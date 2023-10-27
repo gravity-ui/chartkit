@@ -47,8 +47,8 @@ export function prepareBarYSeries(args: PrepareBarYSeriesArgs): PreparedSeries[]
 
         return {
             type: series.type,
-            color: color,
-            name: name,
+            color,
+            name,
             id: getRandomCKId(),
             visible: get(series, 'visible', true),
             legend: {

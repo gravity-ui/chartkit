@@ -27,9 +27,9 @@ export function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[]
 
         return {
             type: series.type,
-            color: color,
-            name: name,
-            id: '',
+            color,
+            name,
+            id: getRandomCKId(),
             visible: get(series, 'visible', true),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),

@@ -9,10 +9,7 @@ import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedBarYSeries, PreparedSeriesOptions} from '../../useSeries/types';
 import type {PreparedBarYData} from './types';
-
-const MIN_RECT_WIDTH = 1;
-const MIN_RECT_GAP = 1;
-const MIN_GROUP_GAP = 1;
+import {MIN_BAR_GAP, MIN_BAR_GROUP_GAP, MIN_BAR_WIDTH} from '../constants';
 
 function groupByYValue(series: PreparedBarYSeries[], yAxis: PreparedAxis[]) {
     const data: Record<
@@ -103,11 +100,11 @@ export const prepareBarYData = (args: {
     const bandWidth = getBandWidth(series, yAxis, yScale);
 
     const maxGroupSize = max(Object.values(groupedData), (d) => Object.values(d).length) || 1;
-    const groupGap = Math.max(bandWidth * groupPadding, MIN_GROUP_GAP);
+    const groupGap = Math.max(bandWidth * groupPadding, MIN_BAR_GROUP_GAP);
     const groupWidth = bandWidth - groupGap;
-    const rectGap = Math.max(bandWidth * barPadding, MIN_RECT_GAP);
+    const rectGap = Math.max(bandWidth * barPadding, MIN_BAR_GAP);
     const barHeight = Math.max(
-        MIN_RECT_WIDTH,
+        MIN_BAR_WIDTH,
         Math.min(groupWidth / maxGroupSize - rectGap, barMaxWidth),
     );
 

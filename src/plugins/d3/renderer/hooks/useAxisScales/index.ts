@@ -116,6 +116,7 @@ function calculateXAxisPadding(series: (PreparedSeries | ChartKitWidgetSeries)[]
     series.forEach((s) => {
         switch (s.type) {
             case 'bar-y': {
+                // Since labels can be located to the right of the bar, need to add an additional space
                 const labelsMaxWidth = get(s, 'dataLabels.maxWidth', 0);
                 result = Math.max(result, labelsMaxWidth);
                 break;

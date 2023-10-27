@@ -2,7 +2,7 @@ import type {AxisDomain, AxisScale, Selection} from 'd3';
 import {select} from 'd3';
 import {BaseTextStyle} from '../../../../../types';
 import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
-import {getLabelsMaxHeight, setEllipsisForOverflowText} from '../text';
+import {getLabelsSize, setEllipsisForOverflowText} from '../text';
 import {calculateCos, calculateSin} from '../math';
 
 type AxisBottomArgs = {
@@ -64,10 +64,10 @@ export function axisBottom(args: AxisBottomArgs) {
     const offset = getXAxisOffset();
     const position = getXTickPosition({scale, offset});
     const values = getXAxisItems({scale, count: ticksCount, maxCount: maxTickCount});
-    const labelHeight = getLabelsMaxHeight({
+    const labelHeight = getLabelsSize({
         labels: values,
         style: {'font-size': labelsStyle?.fontSize || ''},
-    });
+    }).maxHeight;
 
     return function (selection: Selection<SVGGElement, unknown, null, undefined>) {
         const x = selection.node()?.getBoundingClientRect()?.x || 0;

@@ -12,7 +12,7 @@ import {
     formatAxisTickLabel,
     getClosestPointsRange,
     getHorisontalSvgTextHeight,
-    getLabelsMaxHeight,
+    getLabelsSize,
     getMaxTickCount,
     getTicksCount,
     getXAxisItems,
@@ -56,14 +56,14 @@ function getLabelSettings({
     const defaultRotation = overlapping && autoRotation ? -45 : 0;
     const rotation = axis.labels.rotation || defaultRotation;
     const labelsHeight = rotation
-        ? getLabelsMaxHeight({
+        ? getLabelsSize({
               labels,
               style: {
                   'font-size': axis.labels.style.fontSize,
                   'font-weight': axis.labels.style.fontWeight || 'normal',
               },
               rotation,
-          })
+          }).maxHeight
         : axis.labels.lineHeight;
     const maxHeight = rotation ? calculateCos(rotation) * axis.labels.maxWidth : labelsHeight;
 

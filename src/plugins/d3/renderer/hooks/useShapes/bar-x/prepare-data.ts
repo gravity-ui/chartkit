@@ -8,10 +8,7 @@ import {getDataCategoryValue} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedBarXSeries, PreparedSeriesOptions} from '../../useSeries/types';
-
-const MIN_RECT_WIDTH = 1;
-const MIN_RECT_GAP = 1;
-const MIN_GROUP_GAP = 1;
+import {MIN_BAR_GAP, MIN_BAR_GROUP_GAP, MIN_BAR_WIDTH} from '../constants';
 
 export type PreparedBarXData = Omit<TooltipDataChunkBarX, 'series'> & {
     x: number;
@@ -100,11 +97,11 @@ export const prepareBarXData = (args: {
     }
 
     const maxGroupSize = max(Object.values(data), (d) => Object.values(d).length) || 1;
-    const groupGap = Math.max(bandWidth * groupPadding, MIN_GROUP_GAP);
+    const groupGap = Math.max(bandWidth * groupPadding, MIN_BAR_GROUP_GAP);
     const groupWidth = bandWidth - groupGap;
-    const rectGap = Math.max(bandWidth * barPadding, MIN_RECT_GAP);
+    const rectGap = Math.max(bandWidth * barPadding, MIN_BAR_GAP);
     const rectWidth = Math.max(
-        MIN_RECT_WIDTH,
+        MIN_BAR_WIDTH,
         Math.min(groupWidth / maxGroupSize - rectGap, barMaxWidth),
     );
 

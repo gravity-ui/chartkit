@@ -111,19 +111,3 @@ export function getLabelsSize({
 
     return {maxHeight: height, maxWidth: width};
 }
-
-export function getLabelsMaxWidth(args: {
-    labels: string[];
-    style?: Record<string, string>;
-    rotation?: number;
-}) {
-    return getLabelsSize(args).maxWidth;
-}
-
-export function getLabelsMaxHeight(args: {
-    labels: string[];
-    style?: Record<string, string>;
-    rotation?: number;
-}) {
-    return getLabelsSize(args).maxHeight;
-}
