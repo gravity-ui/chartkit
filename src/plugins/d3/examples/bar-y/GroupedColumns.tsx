@@ -45,7 +45,7 @@ export const GroupedColumns = () => {
         yAxis: [
             {
                 type: 'category',
-                categories: categories.sort(),
+                categories: categories.slice(0, 5).sort(),
                 title: {
                     text: 'Release year',
                 },

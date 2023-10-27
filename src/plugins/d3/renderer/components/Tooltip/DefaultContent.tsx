@@ -50,8 +50,7 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                 switch (series.type) {
                     case 'scatter':
                     case 'line':
-                    case 'bar-x':
-                    case 'bar-y': {
+                    case 'bar-x': {
                         const xRow = getXRowData(xAxis, data);
                         const yRow = getYRowData(yAxis, data);
 
@@ -61,6 +60,21 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                                 <div>
                                     <span>
                                         <b>{series.name}</b>: {yRow}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    }
+                    case 'bar-y': {
+                        const xRow = getXRowData(xAxis, data);
+                        const yRow = getYRowData(yAxis, data);
+
+                        return (
+                            <div key={id}>
+                                <div>{yRow}</div>
+                                <div>
+                                    <span>
+                                        <b>{series.name}</b>: {xRow}
                                     </span>
                                 </div>
                             </div>
