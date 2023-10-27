@@ -26,8 +26,6 @@ import './styles.scss';
 const b = block('d3');
 
 type Props = {
-    top: number;
-    left: number;
     width: number;
     height: number;
     data: ChartKitWidgetData;
@@ -35,8 +33,8 @@ type Props = {
 
 export const Chart = (props: Props) => {
     // FIXME: add data validation
-    const {top, left, width, height, data} = props;
-    const svgRef = React.createRef<SVGSVGElement>();
+    const {width, height, data} = props;
+    const svgRef = React.useRef<SVGSVGElement>(null);
     const dispatcher = React.useMemo(() => {
         return getD3Dispatcher();
     }, []);
@@ -86,8 +84,6 @@ export const Chart = (props: Props) => {
     });
     const {hovered, pointerPosition} = useTooltip({dispatcher, tooltip});
     const {shapes, shapesData} = useShapes({
-        top,
-        left,
         boundsWidth,
         boundsHeight,
         dispatcher,
@@ -136,8 +132,6 @@ export const Chart = (props: Props) => {
                             boundsWidth={boundsWidth}
                             boundsHeight={boundsHeight}
                             dispatcher={dispatcher}
-                            offsetLeft={left}
-                            offsetTop={top}
                             shapesData={shapesData}
                             svgContainer={svgRef.current}
                         />
@@ -157,6 +151,7 @@ export const Chart = (props: Props) => {
             <Tooltip
                 dispatcher={dispatcher}
                 tooltip={tooltip}
+                svgContainer={svgRef.current}
                 xAxis={xAxis}
                 yAxis={yAxis[0]}
                 hovered={hovered}

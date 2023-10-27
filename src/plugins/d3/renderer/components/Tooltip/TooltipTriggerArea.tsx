@@ -15,8 +15,6 @@ type Args = {
     boundsWidth: number;
     boundsHeight: number;
     dispatcher: Dispatch<object>;
-    offsetTop: number;
-    offsetLeft: number;
     shapesData: ShapeData[];
     svgContainer: SVGSVGElement | null;
 };
@@ -52,7 +50,7 @@ function getBarXShapeData(args: {
         container,
     } = args;
     const barWidthOffset = (shapesData[0] as PreparedBarXData).width / 2;
-    const xPosition = pointerX - left - barWidthOffset - window.pageXOffset;
+    const xPosition = pointerX - left - barWidthOffset;
     const xDataIndex = bisector((d: {x: number; data: ShapeData}) => d.x).center(xData, xPosition);
     const xNodes = Array.from(container?.querySelectorAll(`[x="${xData[xDataIndex]?.x}"]`) || []);
 
@@ -61,7 +59,7 @@ function getBarXShapeData(args: {
     }
 
     if (xNodes.length > 1 && xNodes.every(isNodeContainsData)) {
-        const yPosition = pointerY - top - window.pageYOffset;
+        const yPosition = pointerY - top;
         const xyNode = xNodes.find((node, i) => {
             const {y, height} = extractD3DataFromNode(node) as PreparedBarXData;
             if (i === xNodes.length - 1) {
@@ -101,8 +99,7 @@ function getLineShapesData(args: {xData: XLineData[]; point: number[]}) {
 }
 
 export const TooltipTriggerArea = (args: Args) => {
-    const {boundsWidth, boundsHeight, dispatcher, offsetTop, offsetLeft, shapesData, svgContainer} =
-        args;
+    const {boundsWidth, boundsHeight, dispatcher, shapesData, svgContainer} = args;
     const rectRef = React.useRef<SVGRectElement>(null);
     const calculationType = React.useMemo(() => {
         return getCalculationType(shapesData);
@@ -132,7 +129,14 @@ export const TooltipTriggerArea = (args: Args) => {
     }, [shapesData]);
 
     const handleXprimaryMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
-        const {left, top} = rectRef.current?.getBoundingClientRect() || {left: 0, top: 0};
+        const {left: ownLeft, top: ownTop} = rectRef.current?.getBoundingClientRect() || {
+            left: 0,
+            top: 0,
+        };
+        const {left: containerLeft, top: containerTop} = svgContainer?.getBoundingClientRect() || {
+            left: 0,
+            top: 0,
+        };
         const [pointerX, pointerY] = pointer(e, svgContainer);
         const hoverShapeData = [];
 
@@ -140,8 +144,8 @@ export const TooltipTriggerArea = (args: Args) => {
             ...getBarXShapeData({
                 shapesData,
                 point: [pointerX, pointerY],
-                left,
-                top,
+                left: ownLeft - containerLeft,
+                top: ownTop - containerTop,
                 xData: xBarData,
                 container: rectRef.current?.parentElement,
             }),
@@ -149,7 +153,7 @@ export const TooltipTriggerArea = (args: Args) => {
         );
 
         if (hoverShapeData.length) {
-            const position: PointerPosition = [pointerX - offsetLeft, pointerY - offsetTop];
+            const position: PointerPosition = [pointerX, pointerY];
             dispatcher.call('hover-shape', e.target, hoverShapeData, position);
         }
     };

@@ -22,8 +22,6 @@ type PreparePieSeriesArgs = {
     boundsWidth: number;
     boundsHeight: number;
     dispatcher: Dispatch<object>;
-    top: number;
-    left: number;
     series: PreparedPieSeries[];
     seriesOptions: PreparedSeriesOptions;
     svgContainer: SVGSVGElement | null;
@@ -91,8 +89,7 @@ const isNodeContainsPieData = (
 };
 
 export function PieSeriesComponent(args: PreparePieSeriesArgs) {
-    const {boundsWidth, boundsHeight, dispatcher, top, left, series, seriesOptions, svgContainer} =
-        args;
+    const {boundsWidth, boundsHeight, dispatcher, series, seriesOptions, svgContainer} = args;
     const ref = React.useRef<SVGGElement>(null);
     const [x, y] = getCenter(boundsWidth, boundsHeight, series[0]?.center);
 
@@ -230,12 +227,7 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
 
                 const [pointerX, pointerY] = pointer(e, svgContainer);
                 const segmentData = extractD3DataFromNode(segment).data;
-                dispatcher.call(
-                    'hover-shape',
-                    {},
-                    [segmentData],
-                    [pointerX - left, pointerY - top],
-                );
+                dispatcher.call('hover-shape', {}, [segmentData], [pointerX, pointerY]);
             })
             .on('mouseleave', () => {
                 dispatcher.call('hover-shape', {}, undefined);
@@ -285,7 +277,7 @@ export function PieSeriesComponent(args: PreparePieSeriesArgs) {
         return () => {
             dispatcher.on(eventName, null);
         };
-    }, [boundsWidth, boundsHeight, dispatcher, top, left, series, seriesOptions, svgContainer]);
+    }, [boundsWidth, boundsHeight, dispatcher, series, seriesOptions, svgContainer]);
 
     return <g ref={ref} className={b()} transform={`translate(${x}, ${y})`} />;
 }
