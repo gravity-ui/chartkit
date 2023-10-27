@@ -8,10 +8,12 @@ import {
     RectLegendSymbolOptions,
     ScatterSeries,
     ScatterSeriesData,
+    BarYSeries,
+    BarYSeriesData,
+    LineSeries,
+    LineSeriesData,
 } from '../../../../../types';
-
 import type {SeriesOptionsDefaults} from '../../constants';
-import {LineSeries, LineSeriesData} from '../../../../../types/widget-data/line';
 
 export type RectLegendSymbol = {
     shape: 'rect';
@@ -72,6 +74,19 @@ export type PreparedBarXSeries = {
     };
 } & BasePreparedSeries;
 
+export type PreparedBarYSeries = {
+    type: BarYSeries['type'];
+    data: BarYSeriesData[];
+    stackId: string;
+    dataLabels: {
+        enabled: boolean;
+        inside: boolean;
+        style: BaseTextStyle;
+        maxHeight: number;
+        maxWidth: number;
+    };
+} & BasePreparedSeries;
+
 export type PreparedPieSeries = BasePreparedSeries &
     Required<Omit<PieSeries, 'data'>> & {
         data: PieSeriesData;
@@ -94,6 +109,7 @@ export type PreparedLineSeries = {
 export type PreparedSeries =
     | PreparedScatterSeries
     | PreparedBarXSeries
+    | PreparedBarYSeries
     | PreparedPieSeries
     | PreparedLineSeries;
 

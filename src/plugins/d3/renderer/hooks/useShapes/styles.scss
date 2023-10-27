@@ -22,3 +22,11 @@
         user-select: none;
     }
 }
+
+.chartkit-d3-bar-y {
+    &__label {
+        fill: var(--g-color-text-complementary);
+        user-select: none;
+        alignment-baseline: after-edge;
+    }
+}

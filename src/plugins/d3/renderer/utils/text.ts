@@ -88,28 +88,7 @@ function renderLabels(
     return text;
 }
 
-export function getLabelsMaxWidth({
-    labels,
-    style,
-    rotation,
-}: {
-    labels: string[];
-    style?: Record<string, string>;
-    rotation?: number;
-}) {
-    const svg = select(document.body).append('svg');
-    const textSelection = renderLabels(svg, {labels, style});
-    if (rotation) {
-        textSelection.attr('text-anchor', 'end').style('transform', `rotate(${rotation}deg)`);
-    }
-
-    const maxWidth = (svg.select('g').node() as Element)?.getBoundingClientRect()?.width || 0;
-    svg.remove();
-
-    return maxWidth;
-}
-
-export function getLabelsMaxHeight({
+export function getLabelsSize({
     labels,
     style,
     rotation,
@@ -126,8 +105,9 @@ export function getLabelsMaxHeight({
             .style('transform', `rotate(${rotation}deg)`);
     }
 
-    const maxHeight = (svg.select('g').node() as Element)?.getBoundingClientRect()?.height || 0;
+    const {height = 0, width = 0} =
+        (svg.select('g').node() as Element)?.getBoundingClientRect() || {};
     svg.remove();
 
-    return maxHeight;
+    return {maxHeight: height, maxWidth: width};
 }

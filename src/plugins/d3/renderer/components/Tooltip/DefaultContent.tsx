@@ -65,6 +65,21 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                             </div>
                         );
                     }
+                    case 'bar-y': {
+                        const xRow = getXRowData(xAxis, data);
+                        const yRow = getYRowData(yAxis, data);
+
+                        return (
+                            <div key={id}>
+                                <div>{yRow}</div>
+                                <div>
+                                    <span>
+                                        <b>{series.name}</b>: {xRow}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    }
                     case 'pie': {
                         const pieSeries = series as PreparedPieSeries;
 

@@ -110,6 +110,23 @@ export function createYScale(axis: PreparedAxis, series: PreparedSeries[], bound
     throw new Error('Failed to create yScale');
 }
 
+function calculateXAxisPadding(series: (PreparedSeries | ChartKitWidgetSeries)[]) {
+    let result = 0;
+
+    series.forEach((s) => {
+        switch (s.type) {
+            case 'bar-y': {
+                // Since labels can be located to the right of the bar, need to add an additional space
+                const labelsMaxWidth = get(s, 'dataLabels.maxWidth', 0);
+                result = Math.max(result, labelsMaxWidth);
+                break;
+            }
+        }
+    });
+
+    return result;
+}
+
 export function createXScale(
     axis: PreparedAxis | ChartKitWidgetAxis,
     series: (PreparedSeries | ChartKitWidgetSeries)[],
@@ -121,7 +138,7 @@ export function createXScale(
     const xTimestamps = get(axis, 'timestamps');
     const maxPadding = get(axis, 'maxPadding', 0);
 
-    const xAxisMinPadding = boundsWidth * maxPadding;
+    const xAxisMinPadding = boundsWidth * maxPadding + calculateXAxisPadding(series);
     const xRange = [0, boundsWidth - xAxisMinPadding];
 
     switch (xType) {

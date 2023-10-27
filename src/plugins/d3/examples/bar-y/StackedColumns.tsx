@@ -1,16 +1,12 @@
 import React from 'react';
 import {ChartKit} from '../../../../components/ChartKit';
-import type {BarXSeries, ChartKitWidgetData} from '../../../../types';
+import type {BarYSeries, ChartKitWidgetData} from '../../../../types';
 import nintendoGames from '../nintendoGames';
 import {groups} from 'd3';
 
 function prepareData() {
-    const displayedYears = [2015, 2016, 2017, 2018, 2019];
-    const games = nintendoGames.filter((ng) =>
-        displayedYears.includes(new Date(ng.date as number).getFullYear()),
-    );
     const grouped = groups(
-        games,
+        nintendoGames,
         (d) => d.platform,
         (d) => (d.date ? new Date(d.date as number).getFullYear() : 'unknown'),
     );
@@ -22,8 +18,8 @@ function prepareData() {
                 categories.push(String(year));
 
                 return {
-                    x: String(year),
-                    y: list.length,
+                    y: String(year),
+                    x: list.length,
                 };
             }),
         };
@@ -32,27 +28,30 @@ function prepareData() {
     return {categories, series};
 }
 
-export const GroupedColumns = () => {
+export const StackedColumns = () => {
     const {series, categories} = prepareData();
     const data = series.map((s) => {
         return {
-            type: 'bar-x',
+            type: 'bar-y',
+            stacking: 'normal',
             name: s.name,
             data: s.data,
-        } as BarXSeries;
+        } as BarYSeries;
     });
 
     const widgetData: ChartKitWidgetData = {
         series: {
-            data,
+            data: data,
         },
-        xAxis: {
-            type: 'category',
-            categories: categories.sort(),
-            title: {
-                text: 'Release year',
+        yAxis: [
+            {
+                type: 'category',
+                categories: categories.sort(),
+                title: {
+                    text: 'Release year',
+                },
             },
-        },
+        ],
     };
 
     return <ChartKit type="d3" data={widgetData} />;

@@ -12,7 +12,7 @@ import {
     formatAxisTickLabel,
     getClosestPointsRange,
     getScaleTicks,
-    getLabelsMaxWidth,
+    getLabelsSize,
 } from '../../utils';
 import type {PreparedAxis} from './types';
 import {createYScale} from '../useAxisScales';
@@ -39,14 +39,14 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
         }),
     );
 
-    return getLabelsMaxWidth({
+    return getLabelsSize({
         labels,
         style: {
             'font-size': axis.labels.style.fontSize,
             'font-weight': axis.labels.style.fontWeight || '',
         },
         rotation: axis.labels.rotation,
-    });
+    }).maxWidth;
 };
 
 export const getPreparedYAxis = ({
