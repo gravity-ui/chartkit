@@ -28,8 +28,6 @@ export type {PreparedScatterData} from './scatter';
 export type ShapeData = PreparedBarXData | PreparedScatterData | PreparedLineData;
 
 type Args = {
-    top: number;
-    left: number;
     boundsWidth: number;
     boundsHeight: number;
     dispatcher: Dispatch<object>;
@@ -44,8 +42,6 @@ type Args = {
 
 export const useShapes = (args: Args) => {
     const {
-        top,
-        left,
         boundsWidth,
         boundsHeight,
         dispatcher,
@@ -121,8 +117,6 @@ export const useShapes = (args: Args) => {
                             <ScatterSeriesShape
                                 key="scatter"
                                 dispatcher={dispatcher}
-                                top={top}
-                                left={left}
                                 preparedData={preparedData}
                                 seriesOptions={seriesOptions}
                                 svgContainer={svgContainer}
@@ -144,8 +138,6 @@ export const useShapes = (args: Args) => {
                                     boundsWidth={boundsWidth}
                                     boundsHeight={boundsHeight}
                                     dispatcher={dispatcher}
-                                    top={top}
-                                    left={left}
                                     series={pieSeries}
                                     seriesOptions={seriesOptions}
                                     svgContainer={svgContainer}
@@ -170,8 +162,6 @@ export const useShapes = (args: Args) => {
         yAxis,
         yScale,
         svgContainer,
-        left,
-        top,
     ]);
 
     return {shapes: shapesComponents.shapes, shapesData: shapesComponents.shapesData};

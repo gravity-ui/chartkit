@@ -16,8 +16,6 @@ export type {PreparedScatterData} from './prepare-data';
 
 type ScatterSeriesShapeProps = {
     dispatcher: Dispatch<object>;
-    top: number;
-    left: number;
     preparedData: PreparedScatterData[];
     seriesOptions: PreparedSeriesOptions;
     svgContainer: SVGSVGElement | null;
@@ -37,7 +35,7 @@ const isNodeContainsScatterData = (node?: Element): node is NodeWithD3Data<Prepa
 };
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
-    const {dispatcher, top, left, preparedData, seriesOptions, svgContainer} = props;
+    const {dispatcher, preparedData, seriesOptions, svgContainer} = props;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -72,12 +70,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
 
                 const [pointerX, pointerY] = pointer(e, svgContainer);
                 const segmentData = extractD3DataFromNode(point);
-                dispatcher.call(
-                    'hover-shape',
-                    {},
-                    [segmentData],
-                    [pointerX - left, pointerY - top],
-                );
+                dispatcher.call('hover-shape', {}, [segmentData], [pointerX, pointerY]);
             })
             .on('mouseleave', () => {
                 dispatcher.call('hover-shape', {}, undefined);
@@ -143,7 +136,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         return () => {
             dispatcher.on('hover-shape.scatter', null);
         };
-    }, [dispatcher, top, left, preparedData, seriesOptions, svgContainer]);
+    }, [dispatcher, preparedData, seriesOptions, svgContainer]);
 
     return <g ref={ref} className={b()} />;
 }

@@ -16,6 +16,7 @@ const POINTER_OFFSET_X = 20;
 type TooltipProps = {
     dispatcher: Dispatch<object>;
     tooltip: PreparedTooltip;
+    svgContainer: SVGSVGElement | null;
     xAxis: PreparedAxis;
     yAxis: PreparedAxis;
     hovered?: TooltipDataChunk[];
@@ -23,7 +24,7 @@ type TooltipProps = {
 };
 
 export const Tooltip = (props: TooltipProps) => {
-    const {tooltip, xAxis, yAxis, hovered, pointerPosition} = props;
+    const {tooltip, svgContainer, xAxis, yAxis, hovered, pointerPosition} = props;
     const ref = React.useRef<HTMLDivElement>(null);
     const size = React.useMemo(() => {
         if (ref.current && hovered) {
@@ -37,8 +38,10 @@ export const Tooltip = (props: TooltipProps) => {
         if (hovered && pointerPosition && size) {
             const {clientWidth} = document.documentElement;
             const {width, height} = size;
+            const rect = svgContainer?.getBoundingClientRect() || {left: 0, top: 0};
             const [pointerLeft, pointetTop] = pointerPosition;
-            const outOfRightBoudary = pointerLeft + width + POINTER_OFFSET_X >= clientWidth;
+            const outOfRightBoudary =
+                pointerLeft + width + rect.left + POINTER_OFFSET_X >= clientWidth;
             const outOfTopBoundary = pointetTop - height / 2 <= 0;
             const left = outOfRightBoudary
                 ? pointerLeft - width - POINTER_OFFSET_X
@@ -50,7 +53,7 @@ export const Tooltip = (props: TooltipProps) => {
         }
 
         return undefined;
-    }, [hovered, pointerPosition, size]);
+    }, [hovered, pointerPosition, size, svgContainer]);
     const content = React.useMemo(() => {
         if (!hovered) {
             return null;

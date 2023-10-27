@@ -9,8 +9,6 @@ import {getRandomCKId} from '../../../utils';
 import {Chart} from './components';
 
 type ChartDimensions = {
-    top: number;
-    left: number;
     width: number;
     height: number;
 };
@@ -37,8 +35,8 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
             const parentElement = ref.current?.parentElement;
 
             if (parentElement) {
-                const {top, left, width, height} = parentElement.getBoundingClientRect();
-                setDimensions({top, left, width, height});
+                const {width, height} = parentElement.getBoundingClientRect();
+                setDimensions({width, height});
             }
         }, []);
 
@@ -85,13 +83,7 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
                 }}
             >
                 {dimensions?.width && dimensions?.height && (
-                    <Chart
-                        top={dimensions?.top || 0}
-                        left={dimensions.left || 0}
-                        width={dimensions.width}
-                        height={dimensions.height}
-                        data={data}
-                    />
+                    <Chart width={dimensions.width} height={dimensions.height} data={data} />
                 )}
             </div>
         );
