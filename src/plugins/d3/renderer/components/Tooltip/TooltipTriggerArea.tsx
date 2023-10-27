@@ -100,15 +100,15 @@ function getBarYData(args: {data: BarYData[]; point: number[]}) {
         point: [pointerX, pointerY],
     } = args;
     const yDataIndex = bisector((d: {y: number}) => d.y).center(data, pointerY);
-    const selectedShapes = data[yDataIndex]?.items || [];
-    const xDataIndex = bisector((d: {x: number}) => d.x).left(selectedShapes, pointerX);
-    const selected = selectedShapes[Math.min(xDataIndex, selectedShapes.length - 1)];
+    const shapesByY = data[yDataIndex]?.items || [];
+    const xDataIndex = bisector((d: {x: number}) => d.x).left(shapesByY, pointerX);
+    const result = shapesByY[Math.min(xDataIndex, shapesByY.length - 1)];
 
-    return selected
+    return result
         ? [
               {
-                  series: selected.series,
-                  data: selected.data,
+                  series: result.series,
+                  data: result.data,
               },
           ]
         : [];
