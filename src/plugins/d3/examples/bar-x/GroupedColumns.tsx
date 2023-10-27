@@ -5,8 +5,12 @@ import nintendoGames from '../nintendoGames';
 import {groups} from 'd3';
 
 function prepareData() {
+    const displayedYears = [2015, 2016, 2017, 2018, 2019];
+    const games = nintendoGames.filter((ng) =>
+        displayedYears.includes(new Date(ng.date as number).getFullYear()),
+    );
     const grouped = groups(
-        nintendoGames,
+        games,
         (d) => d.platform,
         (d) => (d.date ? new Date(d.date as number).getFullYear() : 'unknown'),
     );
@@ -40,11 +44,11 @@ export const GroupedColumns = () => {
 
     const widgetData: ChartKitWidgetData = {
         series: {
-            data: data,
+            data,
         },
         xAxis: {
             type: 'category',
-            categories: categories.slice(0, 5).sort(),
+            categories: categories.sort(),
             title: {
                 text: 'Release year',
             },
