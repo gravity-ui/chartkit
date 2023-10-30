@@ -2,10 +2,10 @@ import React from 'react';
 import {select} from 'd3';
 import debounce from 'lodash/debounce';
 import type {DebouncedFunc} from 'lodash';
+import afterFrame from 'afterframe';
 
 import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
-import {getRandomCKId} from '../../../utils';
-
+import {getRandomCKId, measurePerformance} from '../../../utils';
 import {Chart} from './components';
 
 type ChartDimensions = {
@@ -15,21 +15,38 @@ type ChartDimensions = {
 
 const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'d3'>>(
     function D3Widget(props, forwardedRef) {
-        const {data, onLoad, onRender} = props;
+        const {data, onLoad, onRender, onChartLoad} = props;
         const ref = React.useRef<HTMLDivElement>(null);
         const debounced = React.useRef<DebouncedFunc<() => void> | undefined>();
         const [dimensions, setDimensions] = React.useState<Partial<ChartDimensions>>();
+        const performanceMeasure = React.useRef<ReturnType<typeof measurePerformance> | null>(
+            measurePerformance(),
+        );
 
-        //FIXME: add chartPerfomance data to callbacks;
         React.useLayoutEffect(() => {
-            if (onLoad) {
-                onLoad({});
+            if (onChartLoad) {
+                onChartLoad({});
             }
+        }, [onChartLoad]);
 
-            if (onRender) {
-                onRender({});
+        React.useLayoutEffect(() => {
+            if (dimensions?.width) {
+                if (!performanceMeasure.current) {
+                    performanceMeasure.current = measurePerformance();
+                }
+
+                afterFrame(() => {
+                    const renderTime = performanceMeasure.current?.end();
+                    onRender?.({
+                        renderTime,
+                    });
+                    onLoad?.({
+                        widgetRendering: renderTime,
+                    });
+                    performanceMeasure.current = null;
+                });
             }
-        }, []);
+        }, [data, onRender, onLoad, dimensions]);
 
         const handleResize = React.useCallback(() => {
             const parentElement = ref.current?.parentElement;
