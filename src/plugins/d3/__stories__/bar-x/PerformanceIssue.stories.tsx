@@ -12,26 +12,25 @@ import {randomString} from '../../../../utils';
 const randomFn = randomNormal(0, 10);
 const randomStr = () => randomString(Math.random() * 10, 'absdEFGHIJklmnopqrsTUvWxyz');
 
-const ChartStory = (args: {categoriesCount: number; seriesCount: number}) => {
+const ChartStory = (args: {pointsCount: number; seriesCount: number}) => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
 
     const widgetData: ChartKitWidgetData = React.useMemo(() => {
-        const categories = Array.from({length: args.categoriesCount}).map(randomStr);
+        const points = Array.from({length: args.pointsCount}).map(() =>
+            Math.ceil(Math.abs(randomFn())),
+        );
         const series = Array.from({length: args.seriesCount}).map(randomStr);
 
         return {
-            xAxis: {
-                type: 'category',
-                categories: categories,
-            },
             series: {
                 data: series.map((s) => ({
-                    type: 'scatter',
+                    type: 'bar-x',
+                    stacking: 'normal',
                     name: s,
-                    data: categories.map((_, i) => ({
+                    data: points.map((p, i) => ({
                         x: i,
-                        y: randomFn(),
+                        y: p,
                     })),
                 })),
             },
@@ -60,17 +59,17 @@ const ChartStory = (args: {categoriesCount: number; seriesCount: number}) => {
 export const PerformanceIssueScatter: StoryObj<typeof ChartStory> = {
     name: 'Performance issue',
     args: {
-        categoriesCount: 5000,
-        seriesCount: 2,
+        pointsCount: 1000,
+        seriesCount: 10,
     },
     argTypes: {
-        categoriesCount: {
+        pointsCount: {
             control: 'number',
         },
     },
 };
 
 export default {
-    title: 'Plugins/D3/Scatter',
+    title: 'Plugins/D3/Bar-X',
     component: ChartStory,
 };

@@ -15,3 +15,13 @@ export const getChartPerformanceDuration = (name: string) => {
 
     return undefined;
 };
+
+export function measurePerformance() {
+    const timestamp = performance.now();
+
+    return {
+        end() {
+            return performance.now() - timestamp;
+        },
+    };
+}
