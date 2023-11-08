@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.9.0](https://github.com/gravity-ui/chartkit/compare/v4.8.0...v4.9.0) (2023-11-08)
+
+
+### Features
+
+* bump yagr to 3.11.1 ([#339](https://github.com/gravity-ui/chartkit/issues/339)) ([72a7c6c](https://github.com/gravity-ui/chartkit/commit/72a7c6c9b5f35fe3f7ec9c941d0c934dd66fa0fa))
+* **D3 plugin:** add base bar-y chart ([#336](https://github.com/gravity-ui/chartkit/issues/336)) ([4d4264a](https://github.com/gravity-ui/chartkit/commit/4d4264a3437e4bb7fcda4865e63aac521d609043))
+* **D3 plugin:** add chartPerfomance data to onRender callback ([#338](https://github.com/gravity-ui/chartkit/issues/338)) ([d7464df](https://github.com/gravity-ui/chartkit/commit/d7464df55aa329afadc3690fc027df961a07287c))
+* **d3 plugin:** basic line chart ([#327](https://github.com/gravity-ui/chartkit/issues/327)) ([8ad2f09](https://github.com/gravity-ui/chartkit/commit/8ad2f09d9212abcf496efca17190cf11bb84e932))
+
+
+### Bug Fixes
+
+* bump yagr to 3.11.1 ([72a7c6c](https://github.com/gravity-ui/chartkit/commit/72a7c6c9b5f35fe3f7ec9c941d0c934dd66fa0fa))
+
 ## [4.8.0](https://github.com/gravity-ui/chartkit/compare/v4.7.3...v4.8.0) (2023-10-24)
 
 
