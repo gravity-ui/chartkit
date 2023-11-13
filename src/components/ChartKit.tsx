@@ -48,7 +48,7 @@ const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps
     );
 
     return (
-        <React.Suspense fallback={renderPluginLoader?.() || <Loader />}>
+        <React.Suspense fallback={<Loader renderPluginLoader={renderPluginLoader} />}>
             <div className={b({mobile: isMobile}, 'chartkit-theme_common')}>
                 <ChartComponent ref={widgetRef} id={id} lang={lang} {...restProps} />
             </div>
