@@ -5,7 +5,6 @@
 
 ### Bug Fixes
 
-* allow hide plugin loader by passing null through renderPluginLoader ([f7ca281](https://github.com/gravity-ui/chartkit/commit/f7ca2818a4aaa500bd7237ef05f0e2889268549e))
 * allow to hide plugin loader by passing null by renderPluginLoader ([#340](https://github.com/gravity-ui/chartkit/issues/340)) ([f7ca281](https://github.com/gravity-ui/chartkit/commit/f7ca2818a4aaa500bd7237ef05f0e2889268549e))
 
 ## [4.9.0](https://github.com/gravity-ui/chartkit/compare/v4.8.0...v4.9.0) (2023-11-08)
