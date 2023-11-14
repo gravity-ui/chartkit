@@ -213,8 +213,6 @@ const options = {
         area: Object.assign(
             {
                 boostThreshold: 0, // https://jsfiddle.net/2ahd7c9b
-                trackByArea: true,
-                stickyTracking: false,
             },
             first,
             wizardGraphDataLabels,
