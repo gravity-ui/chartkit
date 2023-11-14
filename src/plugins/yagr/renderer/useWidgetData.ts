@@ -1,6 +1,6 @@
 import React from 'react';
 import {useThemeValue} from '@gravity-ui/uikit';
-import type {YagrChartProps} from '@gravity-ui/yagr/dist/react';
+import type {YagrChartProps} from '@gravity-ui/yagr/react';
 import type {YagrTheme, MinimalValidConfig, YagrWidgetProps} from '../types';
 import {shapeYagrConfig} from './utils';
 
