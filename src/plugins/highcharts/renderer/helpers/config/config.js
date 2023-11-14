@@ -1718,13 +1718,6 @@ export function prepareConfig(data, options, isMobile, holidays) {
                     },
                 },
             },
-            area:
-                series.length === 1
-                    ? {
-                          trackByArea: false,
-                          stickyTracking: true,
-                      }
-                    : {},
         },
         xAxis: {
             crosshair: options.splitTooltip
