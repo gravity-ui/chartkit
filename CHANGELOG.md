@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.9.2](https://github.com/gravity-ui/chartkit/compare/v4.9.1...v4.9.2) (2023-11-14)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix area trigger overlapping ([#342](https://github.com/gravity-ui/chartkit/issues/342)) ([cc35147](https://github.com/gravity-ui/chartkit/commit/cc35147078b00ae50eda3fdc7d34c696692108fc))
+
 ## [4.9.1](https://github.com/gravity-ui/chartkit/compare/v4.9.0...v4.9.1) (2023-11-13)
 
 
