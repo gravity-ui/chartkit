@@ -64,7 +64,7 @@ export const line10: YagrWidgetData = {
     },
 };
 
-export const getNewConfig = (): any => {
+export const getNewConfig = () => {
     const startPoint = (Math.random() * 10 ** 5) >> 0; // eslint-disable-line no-bitwise
     return {
         ...line10,

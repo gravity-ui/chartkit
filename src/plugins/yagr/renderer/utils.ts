@@ -162,6 +162,13 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
         if (args.customTooltip) {
             config.tooltip.virtual = true;
         }
+
+        /**
+         * @todo remove this on next chartkit major release
+         * This added to prevent breaking changes in chartkit, while updating yagr@4 which
+         * has fixed tooltip sorting (@see https://github.com/gravity-ui/yagr/issues/149)
+         */
+        config.tooltip.sort = config.tooltip.sort || ((a, b) => b.rowIdx - a.rowIdx);
     }
 
     config.axes = config.axes || {};
