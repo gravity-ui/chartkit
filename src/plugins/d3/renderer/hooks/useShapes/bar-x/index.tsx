@@ -6,12 +6,12 @@ import type {Dispatch} from 'd3';
 import {block} from '../../../../../../utils/cn';
 
 import type {PreparedSeriesOptions} from '../../useSeries/types';
-import type {PreparedBarXData} from './prepare-data';
+import type {PreparedBarXData} from './types';
+import {LabelData} from '../../../types';
+import {filterOverlappingLabels} from '../../../utils';
 
 export {prepareBarXData} from './prepare-data';
-export type {PreparedBarXData} from './prepare-data';
-
-const DEFAULT_LABEL_PADDING = 7;
+export * from './types';
 
 const b = block('d3-bar-x');
 
@@ -46,26 +46,23 @@ export const BarXSeriesShapes = (args: Args) => {
             .attr('width', (d) => d.width)
             .attr('fill', (d) => d.data.color || d.series.color);
 
-        const dataLabels = preparedData.filter((d) => d.series.dataLabels.enabled);
+        let dataLabels = preparedData.map((d) => d.label).filter(Boolean) as LabelData[];
+        if (!preparedData[0]?.series.dataLabels.allowOverlap) {
+            dataLabels = filterOverlappingLabels(dataLabels);
+        }
 
         const labelSelection = svgElement
-            .selectAll('allLabels')
+            .selectAll('text')
             .data(dataLabels)
             .join('text')
-            .text((d) => String(d.data.label || d.data.y))
+            .text((d) => d.text)
             .attr('class', b('label'))
-            .attr('x', (d) => d.x + d.width / 2)
-            .attr('y', (d) => {
-                if (d.series.dataLabels.inside) {
-                    return d.y + d.height / 2;
-                }
-
-                return d.y - DEFAULT_LABEL_PADDING;
-            })
-            .attr('text-anchor', 'middle')
-            .style('font-size', (d) => d.series.dataLabels.style.fontSize)
-            .style('font-weight', (d) => d.series.dataLabels.style.fontWeight || null)
-            .style('fill', (d) => d.series.dataLabels.style.fontColor || null);
+            .attr('x', (d) => d.x)
+            .attr('y', (d) => d.y)
+            .attr('text-anchor', (d) => d.textAnchor)
+            .style('font-size', (d) => d.style.fontSize)
+            .style('font-weight', (d) => d.style.fontWeight || null)
+            .style('fill', (d) => d.style.fontColor || null);
 
         dispatcher.on('hover-shape.bar-x', (data?: PreparedBarXData[]) => {
             const hoverEnabled = hoverOptions?.enabled;

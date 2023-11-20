@@ -2,21 +2,40 @@ import {ascending, descending, max, sort} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import type {BarXSeriesData, TooltipDataChunkBarX} from '../../../../../../types';
+import type {BarXSeriesData} from '../../../../../../types';
 
-import {getDataCategoryValue} from '../../../utils';
+import {getDataCategoryValue, getLabelsSize} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedBarXSeries, PreparedSeriesOptions} from '../../useSeries/types';
 import {MIN_BAR_GAP, MIN_BAR_GROUP_GAP, MIN_BAR_WIDTH} from '../constants';
+import {PreparedBarXData} from './types';
+import {LabelData} from '../../../types';
 
-export type PreparedBarXData = Omit<TooltipDataChunkBarX, 'series'> & {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    series: PreparedBarXSeries;
-};
+function getLabelData(d: PreparedBarXData): LabelData | undefined {
+    if (!d.series.dataLabels.enabled) {
+        return undefined;
+    }
+
+    const text = String(d.data.label || d.data.y);
+    const style = d.series.dataLabels.style;
+    const {maxHeight: height, maxWidth: width} = getLabelsSize({labels: [text], style});
+
+    let y = Math.max(height, d.y - d.series.dataLabels.padding);
+    if (d.series.dataLabels.inside) {
+        y = d.y + d.height / 2;
+    }
+
+    return {
+        text,
+        x: d.x + d.width / 2,
+        y,
+        style,
+        size: {width, height},
+        textAnchor: 'middle',
+        series: d.series,
+    };
+}
 
 export const prepareBarXData = (args: {
     series: PreparedBarXSeries[];
@@ -134,14 +153,18 @@ export const prepareBarXData = (args: {
                 const y = yLinearScale(yValue.data.y as number);
                 const height = yLinearScale(yLinearScale.domain()[0]) - y;
 
-                result.push({
+                const barData: PreparedBarXData = {
                     x,
                     y: y - stackHeight,
                     width: rectWidth,
                     height,
                     data: yValue.data,
                     series: yValue.series,
-                });
+                };
+
+                barData.label = getLabelData(barData);
+
+                result.push(barData);
 
                 stackHeight += height + 1;
             });

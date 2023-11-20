@@ -6,6 +6,7 @@ import {D3Plugin} from '../..';
 import {ChartKitWidgetData, LineSeriesData} from '../../../../types';
 import {ChartKit} from '../../../../components/ChartKit';
 import nintendoGames from '../../examples/nintendoGames';
+import {HighchartsPlugin} from '../../../highcharts';
 
 function prepareData(): ChartKitWidgetData {
     const games = nintendoGames.filter((d) => {
@@ -19,6 +20,7 @@ function prepareData(): ChartKitWidgetData {
                 return {
                     x: d.date,
                     y: d.user_score,
+                    label: d.title,
                 };
             }) as LineSeriesData[];
     };
@@ -43,16 +45,25 @@ function prepareData(): ChartKitWidgetData {
                     name: '2D',
                     type: 'line',
                     data: byGenre('2D'),
+                    dataLabels: {
+                        enabled: true,
+                    },
                 },
                 {
                     name: 'Strategy',
                     type: 'line',
                     data: byGenre('Strategy'),
+                    dataLabels: {
+                        enabled: true,
+                    },
                 },
                 {
                     name: 'Shooter',
                     type: 'line',
                     data: byGenre('Shooter'),
+                    dataLabels: {
+                        enabled: true,
+                    },
                 },
             ],
         },
@@ -80,19 +91,44 @@ const ChartStory = ({data}: {data: ChartKitWidgetData}) => {
     const [shown, setShown] = React.useState(false);
 
     if (!shown) {
-        settings.set({plugins: [D3Plugin]});
+        settings.set({plugins: [D3Plugin, HighchartsPlugin]});
         return <Button onClick={() => setShown(true)}>Show chart</Button>;
     }
 
     return (
-        <div
-            style={{
-                height: '80vh',
-                width: '100%',
-            }}
-        >
-            <ChartKit type="d3" data={data} />
-        </div>
+        <>
+            <div
+                style={{
+                    height: '80vh',
+                    width: '100%',
+                }}
+            >
+                <ChartKit type="d3" data={{...data, title: {text: 'D3'}}} />
+            </div>
+            <div
+                style={{
+                    height: '80vh',
+                    width: '100%',
+                    marginTop: 20,
+                }}
+            >
+                <ChartKit
+                    type="highcharts"
+                    data={{
+                        data: {
+                            graphs: data.series.data,
+                        },
+                        config: {},
+                        libraryConfig: {
+                            title: {text: 'Highcharts'},
+                            xAxis: {
+                                type: 'datetime',
+                            },
+                        },
+                    }}
+                />
+            </div>
+        </>
     );
 };
 

@@ -1,4 +1,4 @@
-import {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
+import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
 import {PreparedAxis} from '../useChartOptions/types';
