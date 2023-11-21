@@ -17,6 +17,7 @@ import {
 import type {PreparedAxis} from './types';
 import {createYScale} from '../useAxisScales';
 import {PreparedSeries} from '../useSeries/types';
+import {ChartKitWidgetAxis} from '../../../../../types';
 
 const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetSeries[]}) => {
     const {axis, series} = args;
@@ -49,6 +50,16 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
     }).maxWidth;
 };
 
+function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) {
+    const min = axis?.min;
+
+    if (typeof min === 'undefined' && series?.some((s) => s.type === 'bar-x')) {
+        return 0;
+    }
+
+    return min;
+}
+
 export const getPreparedYAxis = ({
     series,
     yAxis,
@@ -67,8 +78,9 @@ export const getPreparedYAxis = ({
     const y1TitleStyle: BaseTextStyle = {
         fontSize: get(yAxis1, 'title.style.fontSize', yAxisTitleDefaults.fontSize),
     };
+    const axisType = get(yAxis1, 'type', 'linear');
     const preparedY1Axis: PreparedAxis = {
-        type: get(yAxis1, 'type', 'linear'),
+        type: axisType,
         labels: {
             enabled: labelsEnabled,
             margin: labelsEnabled ? get(yAxis1, 'labels.margin', axisLabelsDefaults.margin) : 0,
@@ -93,7 +105,7 @@ export const getPreparedYAxis = ({
                 ? getHorisontalSvgTextHeight({text: y1TitleText, style: y1TitleStyle})
                 : 0,
         },
-        min: get(yAxis1, 'min'),
+        min: getAxisMin(yAxis1, series),
         maxPadding: get(yAxis1, 'maxPadding', 0.05),
         grid: {
             enabled: get(yAxis1, 'grid.enabled', true),

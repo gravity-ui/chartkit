@@ -71,6 +71,8 @@ export type PreparedBarXSeries = {
         enabled: boolean;
         inside: boolean;
         style: BaseTextStyle;
+        allowOverlap: boolean;
+        padding: number;
     };
 } & BasePreparedSeries;
 
@@ -103,6 +105,7 @@ export type PreparedLineSeries = {
         enabled: boolean;
         style: BaseTextStyle;
         padding: number;
+        allowOverlap: boolean;
     };
 } & BasePreparedSeries;
 

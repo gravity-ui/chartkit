@@ -40,6 +40,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
                 enabled: series.dataLabels?.enabled || false,
                 style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),
                 padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
+                allowOverlap: get(series, 'dataLabels.allowOverlap', false),
             },
         };
     }, []);

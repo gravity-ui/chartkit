@@ -1,13 +1,15 @@
 import React from 'react';
-import {select, line as lineGenerator, color} from 'd3';
+import {select, line as lineGenerator, color, BaseType} from 'd3';
 import type {Dispatch} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
-import type {PreparedLineSeries, PreparedSeriesOptions} from '../../useSeries/types';
-import {PointData, PreparedLineData} from './types';
-import {LineSeriesData, TooltipDataChunkLine} from '../../../../../../types';
-import {shapeKey} from '../utils';
+import type {PreparedSeriesOptions} from '../../useSeries/types';
+import type {PointData, PreparedLineData} from './types';
+import type {TooltipDataChunkLine} from '../../../../../../types';
+import type {LabelData} from '../../../types';
+import {filterOverlappingLabels} from '../../../utils';
+import {setActiveState} from '../utils';
 
 const b = block('d3-line');
 
@@ -37,9 +39,9 @@ export const LineSeriesShapes = (args: Args) => {
 
         svgElement.selectAll('*').remove();
 
-        const selection = svgElement
+        const lineSelection = svgElement
             .selectAll('path')
-            .data(preparedData, shapeKey)
+            .data(preparedData)
             .join('path')
             .attr('d', (d) => line(d.points))
             .attr('fill', 'none')
@@ -48,35 +50,26 @@ export const LineSeriesShapes = (args: Args) => {
             .attr('stroke-linejoin', 'round')
             .attr('stroke-linecap', 'round');
 
-        const dataLabels = preparedData.reduce((acc, d) => {
-            if (d.series.dataLabels.enabled) {
-                acc.push(
-                    ...d.points.map((p) => ({
-                        x: p.x,
-                        y: p.y,
-                        data: p.data,
-                        series: d.series,
-                    })),
-                );
-            }
+        let dataLabels = preparedData.reduce((acc, d) => {
+            return acc.concat(d.labels);
+        }, [] as LabelData[]);
 
-            return acc;
-        }, [] as {x: number; y: number; data: LineSeriesData; series: PreparedLineSeries}[]);
+        if (!preparedData[0]?.series.dataLabels.allowOverlap) {
+            dataLabels = filterOverlappingLabels(dataLabels);
+        }
 
-        svgElement
-            .selectAll('allLabels')
+        const labelsSelection = svgElement
+            .selectAll('text')
             .data(dataLabels)
             .join('text')
-            .text((d) => String(d.data.label || d.data.y))
+            .text((d) => d.text)
             .attr('class', b('label'))
             .attr('x', (d) => d.x)
-            .attr('y', (d) => {
-                return d.y - d.series.dataLabels.padding;
-            })
-            .attr('text-anchor', 'middle')
-            .style('font-size', (d) => d.series.dataLabels.style.fontSize)
-            .style('font-weight', (d) => d.series.dataLabels.style.fontWeight || null)
-            .style('fill', (d) => d.series.dataLabels.style.fontColor || null);
+            .attr('y', (d) => d.y)
+            .attr('text-anchor', (d) => d.textAnchor)
+            .style('font-size', (d) => d.style.fontSize)
+            .style('font-weight', (d) => d.style.fontWeight || null)
+            .style('fill', (d) => d.style.fontColor || null);
 
         const hoverEnabled = hoverOptions?.enabled;
         const inactiveEnabled = inactiveOptions?.enabled;
@@ -84,50 +77,45 @@ export const LineSeriesShapes = (args: Args) => {
         dispatcher.on('hover-shape.line', (data?: TooltipDataChunkLine[]) => {
             const selectedSeriesId = data?.find((d) => d.series.type === 'line')?.series?.id;
 
-            const updates: PreparedLineData[] = [];
-            preparedData.forEach((p) => {
-                const hovered = Boolean(hoverEnabled && p.id === selectedSeriesId);
-                if (p.hovered !== hovered) {
-                    p.hovered = hovered;
-                    updates.push(p);
+            lineSelection.datum((d, index, list) => {
+                const elementSelection = select<BaseType, PreparedLineData>(list[index]);
+
+                const hovered = Boolean(hoverEnabled && d.id === selectedSeriesId);
+                if (d.hovered !== hovered) {
+                    d.hovered = hovered;
+                    elementSelection.attr('stroke', (d) => {
+                        const initialColor = d.color || '';
+                        if (d.hovered) {
+                            return (
+                                color(initialColor)
+                                    ?.brighter(hoverOptions?.brightness)
+                                    .toString() || initialColor
+                            );
+                        }
+                        return initialColor;
+                    });
                 }
 
-                const active = Boolean(
-                    !inactiveEnabled || !selectedSeriesId || selectedSeriesId === p.id,
-                );
-                if (p.active !== active) {
-                    p.active = active;
-                    updates.push(p);
-                }
+                return setActiveState<PreparedLineData>({
+                    element: list[index],
+                    state: inactiveOptions,
+                    active: Boolean(
+                        !inactiveEnabled || !selectedSeriesId || selectedSeriesId === d.id,
+                    ),
+                    datum: d,
+                });
             });
 
-            selection.data(updates, shapeKey).join(
-                'shape',
-                (update) => {
-                    update
-                        .attr('stroke', (d) => {
-                            const initialColor = d.color || '';
-                            if (d.hovered) {
-                                return (
-                                    color(initialColor)
-                                        ?.brighter(hoverOptions?.brightness)
-                                        .toString() || initialColor
-                                );
-                            }
-                            return initialColor;
-                        })
-                        .attr('opacity', function (d) {
-                            if (!d.active) {
-                                return inactiveOptions?.opacity || null;
-                            }
-
-                            return null;
-                        });
-
-                    return update;
-                },
-                (exit) => exit,
-            );
+            labelsSelection.datum((d, index, list) => {
+                return setActiveState<LabelData>({
+                    element: list[index],
+                    state: inactiveOptions,
+                    active: Boolean(
+                        !inactiveEnabled || !selectedSeriesId || selectedSeriesId === d.series.id,
+                    ),
+                    datum: d,
+                });
+            });
         });
 
         return () => {

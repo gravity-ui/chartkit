@@ -7,6 +7,7 @@ import {Loader} from '../../../components/Loader/Loader';
 import {BasicBarXChart} from '../examples/bar-x/Basic';
 import {GroupedColumns} from '../examples/bar-x/GroupedColumns';
 import {StackedColumns} from '../examples/bar-x/StackedColumns';
+import {DataLabels as BarXDataLabels} from '../examples/bar-x/DataLabels';
 import {Basic as BasicBarY} from '../examples/bar-y/Basic';
 import {GroupedColumns as GroupedColumnsBarY} from '../examples/bar-y/GroupedColumns';
 import {StackedColumns as StackedColumnsBarY} from '../examples/bar-y/StackedColumns';
@@ -14,6 +15,7 @@ import {Container, Row, Col, Text} from '@gravity-ui/uikit';
 import {BasicPie} from '../examples/pie/Basic';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
 import {Basic as BasicLine} from '../examples/line/Basic';
+import {DataLabels as LineWithDataLabels} from '../examples/line/DataLabels';
 import {Donut} from '../examples/pie/Donut';
 import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
 
@@ -38,6 +40,10 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Basic line chart</Text>
                             <BasicLine />
                         </Col>
+                        <Col>
+                            <Text variant="subheader-1">Line chart with data labels</Text>
+                            <LineWithDataLabels />
+                        </Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>
@@ -55,6 +61,14 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Stacked columns</Text>
                             <StackedColumns />
                         </Col>
+                    </Row>
+                    <Row space={3} style={{minHeight: 280}}>
+                        <Col>
+                            <Text variant="subheader-1">Bar-x chart with data labels</Text>
+                            <BarXDataLabels />
+                        </Col>
+                        <Col></Col>
+                        <Col></Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-y charts</Text>

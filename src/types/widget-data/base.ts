@@ -17,6 +17,10 @@ export type BaseSeries = {
          * @default 5
          * */
         padding?: number;
+        /**
+         * @default false
+         * */
+        allowOverlap?: boolean;
     };
 };
 

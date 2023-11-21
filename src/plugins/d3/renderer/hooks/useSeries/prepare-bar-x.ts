@@ -4,7 +4,7 @@ import type {BarXSeries} from '../../../../../types';
 import type {PreparedBarXSeries, PreparedLegend, PreparedSeries} from './types';
 import {getRandomCKId} from '../../../../../utils';
 import {prepareLegendSymbol} from './utils';
-import {DEFAULT_DATALABELS_STYLE} from './constants';
+import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
 
 type PrepareBarXSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -45,6 +45,8 @@ export function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[]
                         ? series.dataLabels?.inside
                         : false,
                 style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),
+                allowOverlap: series.dataLabels?.allowOverlap || false,
+                padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
             },
         };
     }, []);
