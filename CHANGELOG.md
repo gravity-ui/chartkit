@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.10.0](https://github.com/gravity-ui/chartkit/compare/v4.9.3...v4.10.0) (2023-11-21)
+
+
+### Features
+
+* **D3 plugin:** add allowOverlap dataLabels option ([#347](https://github.com/gravity-ui/chartkit/issues/347)) ([760e5d0](https://github.com/gravity-ui/chartkit/commit/760e5d09fc4f29a15549cb5ddcdae80a68ea96bc))
+
+
+### Bug Fixes
+
+* bumped yagr to 3.11.3 ([#348](https://github.com/gravity-ui/chartkit/issues/348)) ([1687bc8](https://github.com/gravity-ui/chartkit/commit/1687bc8ab56ef2712c7440967ed5a9093f526052))
+
 ## [4.9.3](https://github.com/gravity-ui/chartkit/compare/v4.9.2...v4.9.3) (2023-11-17)
 
 
