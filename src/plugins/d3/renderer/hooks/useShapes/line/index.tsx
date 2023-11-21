@@ -9,6 +9,7 @@ import type {PointData, PreparedLineData} from './types';
 import type {TooltipDataChunkLine} from '../../../../../../types';
 import type {LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
+import {setActiveState} from '../utils';
 
 const b = block('d3-line');
 
@@ -57,7 +58,7 @@ export const LineSeriesShapes = (args: Args) => {
             dataLabels = filterOverlappingLabels(dataLabels);
         }
 
-        svgElement
+        const labelsSelection = svgElement
             .selectAll('text')
             .data(dataLabels)
             .join('text')
@@ -73,7 +74,6 @@ export const LineSeriesShapes = (args: Args) => {
         const hoverEnabled = hoverOptions?.enabled;
         const inactiveEnabled = inactiveOptions?.enabled;
 
-        dispatcher.on('hover-shape.line', null);
         dispatcher.on('hover-shape.line', (data?: TooltipDataChunkLine[]) => {
             const selectedSeriesId = data?.find((d) => d.series.type === 'line')?.series?.id;
 
@@ -96,21 +96,25 @@ export const LineSeriesShapes = (args: Args) => {
                     });
                 }
 
-                const active = Boolean(
-                    !inactiveEnabled || !selectedSeriesId || selectedSeriesId === d.id,
-                );
-                if (d.active !== active) {
-                    d.active = active;
-                    elementSelection.attr('opacity', function (d) {
-                        if (!d.active) {
-                            return inactiveOptions?.opacity || null;
-                        }
+                return setActiveState<PreparedLineData>({
+                    element: list[index],
+                    state: inactiveOptions,
+                    active: Boolean(
+                        !inactiveEnabled || !selectedSeriesId || selectedSeriesId === d.id,
+                    ),
+                    datum: d,
+                });
+            });
 
-                        return null;
-                    });
-                }
-
-                return d;
+            labelsSelection.datum((d, index, list) => {
+                return setActiveState<LabelData>({
+                    element: list[index],
+                    state: inactiveOptions,
+                    active: Boolean(
+                        !inactiveEnabled || !selectedSeriesId || selectedSeriesId === d.series.id,
+                    ),
+                    datum: d,
+                });
             });
         });
 

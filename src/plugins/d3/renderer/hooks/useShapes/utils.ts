@@ -1,11 +1,14 @@
-import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
+import type {BaseType, ScaleBand, ScaleLinear, ScaleTime} from 'd3';
+import {select} from 'd3';
 import get from 'lodash/get';
 
-import {PreparedAxis} from '../useChartOptions/types';
-import {ChartScale} from '../useAxisScales';
+import type {BasicInactiveState} from '../../../../../types';
 import {getDataCategoryValue} from '../../utils';
-import {PreparedLineData} from './line/types';
-import {PreparedScatterData} from './scatter';
+import type {ChartScale} from '../useAxisScales';
+import type {PreparedAxis} from '../useChartOptions/types';
+
+import type {PreparedLineData} from './line/types';
+import type {PreparedScatterData} from './scatter';
 
 export function getXValue(args: {
     point: {x?: number | string};
@@ -44,3 +47,26 @@ export function getYValue(args: {
 }
 
 export const shapeKey = (d: unknown) => (d as PreparedLineData | PreparedScatterData).id || -1;
+
+export function setActiveState<T extends {active?: boolean}>(args: {
+    element: BaseType;
+    datum: T;
+    state: BasicInactiveState | undefined;
+    active: boolean;
+}) {
+    const {element, datum, state, active} = args;
+    const elementSelection = select<BaseType, T>(element);
+
+    if (datum.active !== active) {
+        datum.active = active;
+        elementSelection.attr('opacity', function (d) {
+            if (!d.active) {
+                return state?.opacity || null;
+            }
+
+            return null;
+        });
+    }
+
+    return datum;
+}

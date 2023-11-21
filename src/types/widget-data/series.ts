@@ -41,7 +41,7 @@ type BasicHoverState = {
     brightness?: number;
 };
 
-type BasicInactiveState = {
+export type BasicInactiveState = {
     /**
      * Enable separate styles for the inactive series.
      *

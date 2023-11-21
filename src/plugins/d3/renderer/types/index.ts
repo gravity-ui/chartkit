@@ -8,4 +8,5 @@ export type LabelData = {
     size: {width: number; height: number};
     textAnchor: 'middle';
     series: {id: string};
+    active?: boolean;
 };

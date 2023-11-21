@@ -19,11 +19,12 @@ function getLabelData(point: PointData, series: PreparedLineSeries, xMax: number
         size: {width: size.maxWidth, height: size.maxHeight},
         textAnchor: 'middle',
         series: series,
+        active: true,
     };
 
     const left = getLeftPosition(labelData);
     if (left < 0) {
-        labelData.x = labelData.x - left;
+        labelData.x = labelData.x + Math.abs(left);
     } else {
         const right = left + labelData.size.width;
         if (right > xMax) {
