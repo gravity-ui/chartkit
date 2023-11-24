@@ -43,4 +43,9 @@ export type PieSeries<T = any> = BaseSeries & {
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;
     };
+
+    dataLabels?: BaseSeries['dataLabels'] & {
+        distance?: number;
+        connectorPadding?: number;
+    };
 };

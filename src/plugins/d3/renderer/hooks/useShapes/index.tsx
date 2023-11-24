@@ -17,7 +17,9 @@ import {BarXSeriesShapes, prepareBarXData} from './bar-x';
 import type {PreparedBarXData} from './bar-x';
 import {ScatterSeriesShape, prepareScatterData} from './scatter';
 import type {PreparedScatterData} from './scatter';
-import {PieSeriesComponent} from './pie';
+import {PieSeriesShapes} from './pie';
+import {preparePieData} from './pie/prepare-data';
+import type {PreparedPieData} from './pie/types';
 import {prepareLineData} from './line/prepare-data';
 import {LineSeriesShapes} from './line';
 import type {PreparedLineData} from './line/types';
@@ -32,7 +34,8 @@ export type ShapeData =
     | PreparedBarXData
     | PreparedBarYData
     | PreparedScatterData
-    | PreparedLineData;
+    | PreparedLineData
+    | PreparedPieData;
 
 type Args = {
     boundsWidth: number;
@@ -155,24 +158,20 @@ export const useShapes = (args: Args) => {
                     break;
                 }
                 case 'pie': {
-                    const groupedPieSeries = group(
-                        chartSeries as PreparedPieSeries[],
-                        (pieSeries) => pieSeries.stackId,
-                    );
+                    const preparedData = preparePieData({
+                        series: chartSeries as PreparedPieSeries[],
+                        boundsWidth,
+                        boundsHeight,
+                    });
+
                     acc.push(
-                        ...Array.from(groupedPieSeries).map(([key, pieSeries]) => {
-                            return (
-                                <PieSeriesComponent
-                                    key={`pie-${key}`}
-                                    boundsWidth={boundsWidth}
-                                    boundsHeight={boundsHeight}
-                                    dispatcher={dispatcher}
-                                    series={pieSeries}
-                                    seriesOptions={seriesOptions}
-                                    svgContainer={svgContainer}
-                                />
-                            );
-                        }),
+                        <PieSeriesShapes
+                            key="pie"
+                            dispatcher={dispatcher}
+                            preparedData={preparedData}
+                            seriesOptions={seriesOptions}
+                            svgContainer={svgContainer}
+                        />,
                     );
                 }
             }

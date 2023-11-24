@@ -63,15 +63,14 @@ function renderLabels(
         attrs = {},
     }: {
         labels: string[];
-        style?: Record<string, string>;
+        style?: Partial<BaseTextStyle>;
         attrs?: Record<string, string>;
     },
 ) {
     const text = selection.append('g').append('text');
 
-    Object.entries(style).forEach(([name, value]) => {
-        text.style(name, value);
-    });
+    text.style('font-size', style.fontSize || '');
+    text.style('font-weight', style.fontWeight || '');
 
     Object.entries(attrs).forEach(([name, value]) => {
         text.attr(name, value);
@@ -94,10 +93,13 @@ export function getLabelsSize({
     rotation,
 }: {
     labels: string[];
-    style?: Record<string, string>;
+    style?: BaseTextStyle;
     rotation?: number;
 }) {
-    const svg = select(document.body).append('svg');
+    const container = select(document.body)
+        .append('div')
+        .attr('class', 'chartkit chartkit-theme_common');
+    const svg = container.append('svg');
     const textSelection = renderLabels(svg, {labels, style});
     if (rotation) {
         textSelection
@@ -107,7 +109,7 @@ export function getLabelsSize({
 
     const {height = 0, width = 0} =
         (svg.select('g').node() as Element)?.getBoundingClientRect() || {};
-    svg.remove();
+    container.remove();
 
     return {maxHeight: height, maxWidth: width};
 }

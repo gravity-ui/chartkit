@@ -2,10 +2,10 @@ import React from 'react';
 import {StoryObj} from '@storybook/react';
 import {withKnobs} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../libs';
-import {D3Plugin} from '..';
-import {BasicPie} from '../examples/pie/Basic';
-import {Donut} from '../examples/pie/Donut';
+import {settings} from '../../../../libs';
+import {D3Plugin} from '../..';
+import {BasicPie} from '../../examples/pie/Basic';
+import {Donut} from '../../examples/pie/Donut';
 
 const ChartStory = ({Chart}: {Chart: React.FC}) => {
     const [shown, setShown] = React.useState(false);

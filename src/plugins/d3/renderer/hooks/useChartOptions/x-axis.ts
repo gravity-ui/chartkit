@@ -58,10 +58,7 @@ function getLabelSettings({
     const labelsHeight = rotation
         ? getLabelsSize({
               labels,
-              style: {
-                  'font-size': axis.labels.style.fontSize,
-                  'font-weight': axis.labels.style.fontWeight || 'normal',
-              },
+              style: axis.labels.style,
               rotation,
           }).maxHeight
         : axis.labels.lineHeight;

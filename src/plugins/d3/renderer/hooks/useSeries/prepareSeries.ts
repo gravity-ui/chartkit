@@ -20,6 +20,7 @@ import {prepareBarXSeries} from './prepare-bar-x';
 import {prepareBarYSeries} from './prepare-bar-y';
 import {prepareLegendSymbol} from './utils';
 import {ChartKitError} from '../../../../../libs';
+import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
 
 type PrepareAxisRelatedSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -59,6 +60,12 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
             data: dataItem,
             dataLabels: {
                 enabled: get(series, 'dataLabels.enabled', true),
+                style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),
+                padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
+                allowOverlap: get(series, 'dataLabels.allowOverlap', false),
+                connectorPadding: get(series, 'dataLabels.connectorPadding', 5),
+                distance: get(series, 'dataLabels.distance', 30),
+                softConnector: get(series, 'dataLabels.softConnector', true),
             },
             label: dataItem.label,
             value: dataItem.value,

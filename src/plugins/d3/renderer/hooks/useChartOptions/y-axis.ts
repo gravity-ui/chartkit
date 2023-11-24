@@ -42,10 +42,7 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
 
     return getLabelsSize({
         labels,
-        style: {
-            'font-size': axis.labels.style.fontSize,
-            'font-weight': axis.labels.style.fontWeight || '',
-        },
+        style: axis.labels.style,
         rotation: axis.labels.rotation,
     }).maxWidth;
 };
