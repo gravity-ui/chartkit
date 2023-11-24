@@ -12,6 +12,8 @@ export type PieSeriesData<T = any> = BaseSeriesData<T> & {
     label?: string;
 };
 
+export type ConnectorShape = 'straight-line' | 'polyline';
+
 export type PieSeries<T = any> = BaseSeries & {
     type: 'pie';
     data: PieSeriesData<T>[];
@@ -47,5 +49,6 @@ export type PieSeries<T = any> = BaseSeries & {
     dataLabels?: BaseSeries['dataLabels'] & {
         distance?: number;
         connectorPadding?: number;
+        connectorShape?: ConnectorShape;
     };
 };

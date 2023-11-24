@@ -1,6 +1,6 @@
 import React from 'react';
 import get from 'lodash/get';
-import {arc, color, curveBasis, select} from 'd3';
+import {arc, color, curveBasis, pointer, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum} from 'd3';
 
 import {block} from '../../../../../../utils/cn';
@@ -10,6 +10,8 @@ import {PieLabelData, PreparedPieData, SegmentData} from './types';
 import {PreparedLineData} from '../line/types';
 import {setActiveState} from '../utils';
 import {line as lineGenerator} from 'd3-shape';
+import {setEllipsisForOverflowTexts} from '../../../utils';
+import {TooltipDataChunkPie} from '../../../../../../types';
 
 const b = block('d3-pie');
 
@@ -66,7 +68,6 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
                     .selectAll('text')
                     .data(labels)
                     .join('text')
-                    .append('tspan')
                     .text((d) => d.text)
                     .attr('class', b('label'))
                     .attr('x', (d) => d.x)
@@ -74,7 +75,10 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
                     .attr('text-anchor', (d) => d.textAnchor)
                     .style('font-size', (d) => d.style.fontSize)
                     .style('font-weight', (d) => d.style.fontWeight || null)
-                    .style('fill', (d) => d.style.fontColor || null);
+                    .style('fill', (d) => d.style.fontColor || null)
+                    .call(setEllipsisForOverflowTexts, (d) =>
+                        d.size.width > d.maxWidth ? d.maxWidth : Infinity,
+                    );
 
                 // Add the polylines between chart and labels
                 let line = lineGenerator();
@@ -108,15 +112,34 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
                     e.target,
                 ).datum();
                 const seriesId = get(datum, 'data.series.id', get(datum, 'series.id'));
+                const currentSegment = preparedData.reduce<SegmentData | undefined>(
+                    (result, pie) => {
+                        return (
+                            result || pie.segments.find((s) => s.data.series.id === seriesId)?.data
+                        );
+                    },
+                    undefined,
+                );
 
-                dispatcher.call('hover-shape', {}, {id: seriesId});
+                if (currentSegment) {
+                    const data: TooltipDataChunkPie = {
+                        series: {
+                            id: currentSegment.series.id,
+                            type: 'pie',
+                            name: currentSegment.series.name,
+                        },
+                        data: currentSegment.series,
+                    };
+
+                    dispatcher.call('hover-shape', {}, [data], pointer(e, svgContainer));
+                }
             })
             .on('mouseleave', () => {
                 dispatcher.call('hover-shape', {}, undefined);
             });
 
-        dispatcher.on(eventName, (data?: {id: string}) => {
-            const selectedSeriesId = data?.id;
+        dispatcher.on(eventName, (data?: TooltipDataChunkPie[]) => {
+            const selectedSeriesId = data?.[0].series.id;
             const hoverEnabled = hoverOptions?.enabled;
             const inactiveEnabled = inactiveOptions?.enabled;
 

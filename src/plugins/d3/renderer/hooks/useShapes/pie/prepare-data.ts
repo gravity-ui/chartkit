@@ -2,7 +2,12 @@ import {PreparedPieSeries} from '../../useSeries/types';
 import {arc, group, PieArcDatum} from 'd3';
 import {PieLabelData, PreparedPieData, SegmentData} from './types';
 import {PieSeries} from '../../../../../../types';
-import {calculateNumericProperty, getLabelsSize, isLabelsOverlapping} from '../../../utils';
+import {
+    calculateNumericProperty,
+    getLabelsSize,
+    getLeftPosition,
+    isLabelsOverlapping,
+} from '../../../utils';
 import {pieGenerator} from './utils';
 
 const FULL_CIRCLE = Math.PI * 2;
@@ -120,19 +125,25 @@ export function preparePieData(args: Args): PreparedPieData[] {
                 const getConnectorPoints = (angle: number) => {
                     const connectorStartPoint =
                         connectorStartPointGenerator.centroid(relatedSegment);
-                    const connectorMidPoint = connectorMidPointGenerator.centroid(relatedSegment);
                     const connectorEndPoint = connectorEndPointGenerator.centroid({
                         ...relatedSegment,
                         startAngle: angle,
                         endAngle: angle,
                     });
 
+                    if (dataLabels.connectorShape === 'straight-line') {
+                        return [connectorStartPoint, connectorEndPoint];
+                    }
+
+                    const connectorMidPoint = connectorMidPointGenerator.centroid(relatedSegment);
                     return [connectorStartPoint, connectorMidPoint, connectorEndPoint];
                 };
 
-                const midAngle =
+                const midAngle = Math.max(
+                    prevLabel?.angle || 0,
                     relatedSegment.startAngle +
-                    (relatedSegment.endAngle - relatedSegment.startAngle) / 2;
+                        (relatedSegment.endAngle - relatedSegment.startAngle) / 2,
+                );
                 const [x, y] = getLabelPosition(midAngle);
                 const label: PieLabelData = {
                     text,
@@ -140,6 +151,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
                     y,
                     style,
                     size: {width: labelWidth, height: labelHeight},
+                    maxWidth: labelWidth,
                     textAnchor: midAngle < Math.PI ? 'start' : 'end',
                     series: {id: d.id},
                     active: true,
@@ -169,10 +181,9 @@ export function preparePieData(args: Args): PreparedPieData[] {
                             } else {
                                 label.angle = newAngle;
                                 const [newX, newY] = getLabelPosition(newAngle);
+
                                 label.x = newX;
                                 label.y = newY;
-                                label.textAnchor =
-                                    newAngle % FULL_CIRCLE < Math.PI ? 'start' : 'end';
                                 label.connector.points = getConnectorPoints(newAngle);
 
                                 if (!isLabelsOverlapping(prevLabel, label, dataLabels.padding)) {
@@ -185,6 +196,17 @@ export function preparePieData(args: Args): PreparedPieData[] {
                 }
 
                 if (dataLabels.allowOverlap || !overlap) {
+                    const left = getLeftPosition(label);
+
+                    if (Math.abs(left) > boundsWidth / 2) {
+                        label.maxWidth = label.size.width - (Math.abs(left) - boundsWidth / 2);
+                    } else {
+                        const right = left + label.size.width;
+                        if (right > boundsWidth / 2) {
+                            label.maxWidth = label.size.width - (right - boundsWidth / 2);
+                        }
+                    }
+
                     labels.push(label);
                 }
             });

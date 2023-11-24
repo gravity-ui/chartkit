@@ -19,6 +19,7 @@ export type PieLabelData = LabelData & {
     };
     segment: SegmentData;
     angle: number;
+    maxWidth: number;
 };
 
 export type PreparedPieData = {

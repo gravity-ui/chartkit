@@ -64,6 +64,7 @@ function preparePieSeries(args: PreparePieSeriesArgs) {
                 padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
                 connectorPadding: get(series, 'dataLabels.connectorPadding', 5),
+                connectorShape: get(series, 'dataLabels.connectorShape', 'polyline'),
                 distance: get(series, 'dataLabels.distance', 30),
                 softConnector: get(series, 'dataLabels.softConnector', true),
             },

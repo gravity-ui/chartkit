@@ -12,6 +12,7 @@ import {
     BarYSeriesData,
     LineSeries,
     LineSeriesData,
+    ConnectorShape,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
 
@@ -107,6 +108,7 @@ export type PreparedPieSeries = {
         style: BaseTextStyle;
         allowOverlap: boolean;
         connectorPadding: number;
+        connectorShape: ConnectorShape;
         distance: number;
         softConnector: boolean;
     };

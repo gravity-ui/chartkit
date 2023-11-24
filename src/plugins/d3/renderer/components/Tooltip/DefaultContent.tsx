@@ -81,12 +81,23 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                         );
                     }
                     case 'pie': {
-                        const pieSeries = series as PreparedPieSeries;
+                        const pieSeriesData = data as PreparedPieSeries;
 
                         return (
-                            <div key={id}>
-                                <span>{pieSeries.name || pieSeries.id}&nbsp;</span>
-                                <span>{pieSeries.value}</span>
+                            <div key={id} style={{display: 'flex', alignItems: 'center'}}>
+                                <div
+                                    style={{
+                                        height: 6,
+                                        width: 12,
+                                        backgroundColor: pieSeriesData.color,
+                                        borderRadius: 2,
+                                        marginRight: 8,
+                                    }}
+                                />
+                                <div style={{marginRight: 8}}>
+                                    {pieSeriesData.name || pieSeriesData.id}
+                                </div>
+                                <div>{pieSeriesData.value}</div>
                             </div>
                         );
                     }
