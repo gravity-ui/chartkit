@@ -1,4 +1,4 @@
-import type {BaseType, Selection} from 'd3';
+import type {Selection} from 'd3';
 import {select} from 'd3';
 import {BaseTextStyle} from '../../../../types';
 
@@ -20,12 +20,12 @@ export function setEllipsisForOverflowText<T>(
 }
 
 export function setEllipsisForOverflowTexts<T>(
-    selection: Selection<BaseType, T, any, unknown>,
+    selection: Selection<SVGTextElement, T, any, unknown>,
     maxWidth: ((datum: T) => number) | number,
 ) {
     selection.each(function (datum) {
         const textMaxWidth = typeof maxWidth === 'function' ? maxWidth(datum) : maxWidth;
-        setEllipsisForOverflowText(select(this as SVGTextElement), textMaxWidth);
+        setEllipsisForOverflowText(select(this), textMaxWidth);
     });
 }
 

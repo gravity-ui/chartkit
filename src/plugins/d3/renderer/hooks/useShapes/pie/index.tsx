@@ -39,69 +39,65 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
         const shapesSelection = svgElement
             .selectAll('pie')
             .data(preparedData)
-            .join((enter) => {
-                const pieData = enter.datum();
+            .join('g')
+            .attr('id', (pieData) => pieData.id)
+            .attr('class', b('item'))
+            .attr('transform', (pieData) => {
                 const [x, y] = pieData.center;
+                return `translate(${x}, ${y})`;
+            })
+            .style('stroke', (pieData) => pieData.borderColor)
+            .style('stroke-width', (pieData) => pieData.borderWidth);
+
+        shapesSelection
+            .selectAll(segmentSelector)
+            .data((pieData) => pieData.segments)
+            .join('path')
+            .attr('d', (d) => {
                 const arcGenerator = arc<PieArcDatum<SegmentData>>()
-                    .innerRadius(pieData.innerRadius)
-                    .outerRadius(pieData.radius)
-                    .cornerRadius(pieData.borderRadius);
+                    .innerRadius(d.data.pie.innerRadius)
+                    .outerRadius(d.data.pie.radius)
+                    .cornerRadius(d.data.pie.borderRadius);
+                return arcGenerator(d);
+            })
+            .attr('class', b('segment'))
+            .attr('fill', (d) => d.data.color);
 
-                const pieSelection = enter
-                    .append('g')
-                    .attr('class', b('item'))
-                    .attr('transform', `translate(${x}, ${y})`);
+        shapesSelection
+            .selectAll<SVGTextElement, PieLabelData>('text')
+            .data((pieData) => pieData.labels)
+            .join('text')
+            .text((d) => d.text)
+            .attr('class', b('label'))
+            .attr('x', (d) => d.x)
+            .attr('y', (d) => d.y)
+            .attr('text-anchor', (d) => d.textAnchor)
+            .style('font-size', (d) => d.style.fontSize)
+            .style('font-weight', (d) => d.style.fontWeight || null)
+            .style('fill', (d) => d.style.fontColor || null)
+            .call(setEllipsisForOverflowTexts, (d) =>
+                d.size.width > d.maxWidth ? d.maxWidth : Infinity,
+            );
 
-                pieSelection
-                    .selectAll(segmentSelector)
-                    .data(pieData.segments)
-                    .join('path')
-                    .attr('d', arcGenerator)
-                    .attr('class', b('segment'))
-                    .attr('fill', (d) => d.data.color)
-                    .style('stroke', pieData.borderColor)
-                    .style('stroke-width', pieData.borderWidth);
-
-                const labels: PieLabelData[] = pieData.labels;
-
-                pieSelection
-                    .selectAll('text')
-                    .data(labels)
-                    .join('text')
-                    .text((d) => d.text)
-                    .attr('class', b('label'))
-                    .attr('x', (d) => d.x)
-                    .attr('y', (d) => d.y)
-                    .attr('text-anchor', (d) => d.textAnchor)
-                    .style('font-size', (d) => d.style.fontSize)
-                    .style('font-weight', (d) => d.style.fontWeight || null)
-                    .style('fill', (d) => d.style.fontColor || null)
-                    .call(setEllipsisForOverflowTexts, (d) =>
-                        d.size.width > d.maxWidth ? d.maxWidth : Infinity,
-                    );
-
-                // Add the polylines between chart and labels
+        // Add the polyline between chart and labels
+        shapesSelection
+            .selectAll(connectorSelector)
+            .data((pieData) => pieData.labels)
+            .enter()
+            .append('path')
+            .attr('class', b('connector'))
+            .attr('d', (d) => {
                 let line = lineGenerator();
-                if (pieData.softConnector) {
+                if (d.segment.pie.softConnector) {
                     line = line.curve(curveBasis);
                 }
-
-                pieSelection
-                    .selectAll(connectorSelector)
-                    .data(labels)
-                    .enter()
-                    .append('path')
-                    .attr('class', b('connector'))
-                    .attr('d', (d) => line(d.connector.points))
-                    .attr('stroke', (d) => d.connector.color)
-                    .attr('stroke-width', 1)
-                    // .attr('points', (d) => d.connector.points.join(' '))
-                    .attr('stroke-linejoin', 'round')
-                    .attr('stroke-linecap', 'round')
-                    .style('fill', 'none');
-
-                return pieSelection;
-            });
+                return line(d.connector.points);
+            })
+            .attr('stroke', (d) => d.connector.color)
+            .attr('stroke-width', 1)
+            .attr('stroke-linejoin', 'round')
+            .attr('stroke-linecap', 'round')
+            .style('fill', 'none');
 
         const eventName = `hover-shape.pie`;
         const hoverOptions = get(seriesOptions, 'pie.states.hover');

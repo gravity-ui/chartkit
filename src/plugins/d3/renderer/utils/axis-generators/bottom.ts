@@ -66,7 +66,7 @@ export function axisBottom(args: AxisBottomArgs) {
     const values = getXAxisItems({scale, count: ticksCount, maxCount: maxTickCount});
     const labelHeight = getLabelsSize({
         labels: values,
-        style: {'font-size': labelsStyle?.fontSize || ''},
+        style: labelsStyle,
     }).maxHeight;
 
     return function (selection: Selection<SVGGElement, unknown, null, undefined>) {

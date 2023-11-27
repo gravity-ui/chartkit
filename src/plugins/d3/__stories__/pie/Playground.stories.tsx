@@ -25,8 +25,6 @@ function prepareData(): ChartKitWidgetData {
                     data: sort(seriesData, (d1, d2) => descending(d1.value, d2.value)),
                     dataLabels: {
                         enabled: true,
-                        // allowOverlap: true,
-                        connectorPadding: 0,
                     },
                 },
             ],

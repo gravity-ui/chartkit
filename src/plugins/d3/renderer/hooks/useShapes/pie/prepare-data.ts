@@ -49,6 +49,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
             borderColor,
             borderRadius,
             radius: seriesRadius,
+            innerRadius: seriesInnerRadius,
             dataLabels,
         } = items[0];
         const radius =
@@ -57,7 +58,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
         const data: PreparedPieData = {
             id: stackId,
             center: getCenter(boundsWidth, boundsHeight, center),
-            innerRadius: 0,
+            innerRadius: calculateNumericProperty({value: seriesInnerRadius, base: radius}) ?? 0,
             radius,
             segments: [],
             labels: [],
@@ -83,15 +84,20 @@ export function preparePieData(args: Args): PreparedPieData[] {
         if (dataLabels.enabled) {
             const {style, connectorPadding, distance} = dataLabels;
             const {maxHeight: labelHeight} = getLabelsSize({labels: ['Some Label'], style});
-            const newSegmentRadius = data.radius - connectorPadding - distance - labelHeight;
+            const minSegmentRadius = maxRadius - connectorPadding - distance - labelHeight;
+            if (data.radius > minSegmentRadius) {
+                data.radius = minSegmentRadius;
+                data.innerRadius =
+                    calculateNumericProperty({value: seriesInnerRadius, base: data.radius}) ?? 0;
+            }
             const connectorStartPointGenerator = arc<PieArcDatum<SegmentData>>()
-                .innerRadius(newSegmentRadius)
-                .outerRadius(newSegmentRadius);
-            const connectorMidPointRadius = newSegmentRadius + distance / 2;
+                .innerRadius(data.radius)
+                .outerRadius(data.radius);
+            const connectorMidPointRadius = data.radius + distance / 2;
             const connectorMidPointGenerator = arc<PieArcDatum<SegmentData>>()
                 .innerRadius(connectorMidPointRadius)
                 .outerRadius(connectorMidPointRadius);
-            const connectorArcRadius = newSegmentRadius + distance;
+            const connectorArcRadius = data.radius + distance;
             const connectorEndPointGenerator = arc<PieArcDatum<SegmentData>>()
                 .innerRadius(connectorArcRadius)
                 .outerRadius(connectorArcRadius);
@@ -212,7 +218,6 @@ export function preparePieData(args: Args): PreparedPieData[] {
             });
 
             data.labels = labels;
-            data.radius = newSegmentRadius;
         }
 
         return data;

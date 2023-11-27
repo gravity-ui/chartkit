@@ -91,7 +91,7 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                                         width: 12,
                                         backgroundColor: pieSeriesData.color,
                                         borderRadius: 2,
-                                        marginRight: 8,
+                                        marginRight: 12,
                                     }}
                                 />
                                 <div style={{marginRight: 8}}>
