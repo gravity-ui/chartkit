@@ -1,7 +1,7 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 
-import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/dist/react';
+import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/react';
 
 import {i18n} from '../../../i18n';
 import type {ChartKitWidgetRef} from '../../../types';
