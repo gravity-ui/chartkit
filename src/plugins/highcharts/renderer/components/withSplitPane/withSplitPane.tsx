@@ -63,7 +63,7 @@ function forceHoverState(
     if (chartType === 'pie') {
         chart.tooltip.refresh(activePoints);
         chart.pointsForInitialRefresh = activePoints;
-    } else if (chart.series.length === 1) {
+    } else if (chart.series?.length === 1) {
         const series = chart.series[0];
         const seriesType =
             (series && series.type) || (chart.options.chart && chart.options.chart.type);
@@ -80,8 +80,8 @@ function forceHoverState(
     if (chartTypesWithoutCrosshair.indexOf(chartType) === -1) {
         const point = Array.isArray(activePoints) ? activePoints[0] : activePoints;
 
-        chart.xAxis[0].drawCrosshair(undefined, point);
-        chart.yAxis[0].drawCrosshair(undefined, point);
+        chart.xAxis?.[0].drawCrosshair(undefined, point);
+        chart.yAxis?.[0].drawCrosshair(undefined, point);
     }
 }
 
