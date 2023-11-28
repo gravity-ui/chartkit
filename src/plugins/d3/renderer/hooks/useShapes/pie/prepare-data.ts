@@ -66,7 +66,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
             borderWidth,
             borderRadius,
             series: items[0],
-            softConnector: dataLabels.softConnector,
+            connectorCurve: dataLabels.connectorCurve,
         };
 
         const segments = items.map<SegmentData>((item) => {

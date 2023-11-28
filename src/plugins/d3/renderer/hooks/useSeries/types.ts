@@ -13,6 +13,7 @@ import {
     LineSeries,
     LineSeriesData,
     ConnectorShape,
+    ConnectorCurve,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
 
@@ -110,7 +111,7 @@ export type PreparedPieSeries = {
         connectorPadding: number;
         connectorShape: ConnectorShape;
         distance: number;
-        softConnector: boolean;
+        connectorCurve: ConnectorCurve;
     };
 } & BasePreparedSeries;
 

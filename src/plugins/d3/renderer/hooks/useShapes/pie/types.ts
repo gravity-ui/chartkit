@@ -2,6 +2,7 @@ import type {PieArcDatum} from 'd3';
 
 import {PreparedPieSeries} from '../../useSeries/types';
 import {LabelData} from '../../../types';
+import {ConnectorCurve} from '../../../../../../types';
 
 export type SegmentData = {
     value: number;
@@ -33,5 +34,5 @@ export type PreparedPieData = {
     borderWidth: number;
     borderColor: string;
     series: PreparedPieSeries;
-    softConnector: boolean;
+    connectorCurve: ConnectorCurve;
 };

@@ -84,20 +84,9 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                         const pieSeriesData = data as PreparedPieSeries;
 
                         return (
-                            <div key={id} style={{display: 'flex', alignItems: 'center'}}>
-                                <div
-                                    style={{
-                                        height: 6,
-                                        width: 12,
-                                        backgroundColor: pieSeriesData.color,
-                                        borderRadius: 2,
-                                        marginRight: 12,
-                                    }}
-                                />
-                                <div style={{marginRight: 8}}>
-                                    {pieSeriesData.name || pieSeriesData.id}
-                                </div>
-                                <div>{pieSeriesData.value}</div>
+                            <div key={id}>
+                                <span>{pieSeriesData.name || pieSeriesData.id}&nbsp;</span>
+                                <span>{pieSeriesData.value}</span>
                             </div>
                         );
                     }

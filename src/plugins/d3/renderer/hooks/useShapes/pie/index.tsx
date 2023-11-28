@@ -1,6 +1,6 @@
 import React from 'react';
 import get from 'lodash/get';
-import {arc, color, curveBasis, pointer, select} from 'd3';
+import {arc, color, pointer, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum} from 'd3';
 
 import {block} from '../../../../../../utils/cn';
@@ -12,6 +12,7 @@ import {setActiveState} from '../utils';
 import {line as lineGenerator} from 'd3-shape';
 import {setEllipsisForOverflowTexts} from '../../../utils';
 import {TooltipDataChunkPie} from '../../../../../../types';
+import {getCurveFactory} from './utils';
 
 const b = block('d3-pie');
 
@@ -88,8 +89,9 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .attr('class', b('connector'))
             .attr('d', (d) => {
                 let line = lineGenerator();
-                if (d.segment.pie.softConnector) {
-                    line = line.curve(curveBasis);
+                const curveFactory = getCurveFactory(d.segment.pie);
+                if (curveFactory) {
+                    line = line.curve(curveFactory);
                 }
                 return line(d.connector.points);
             })

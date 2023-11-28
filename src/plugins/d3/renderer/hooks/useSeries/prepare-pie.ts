@@ -30,7 +30,7 @@ export function preparePieSeries(args: PreparePieSeriesArgs) {
                 connectorPadding: get(series, 'dataLabels.connectorPadding', 5),
                 connectorShape: get(series, 'dataLabels.connectorShape', 'polyline'),
                 distance: get(series, 'dataLabels.distance', 25),
-                softConnector: get(series, 'dataLabels.softConnector', true),
+                connectorCurve: get(series, 'dataLabels.connectorCurve', 'basic'),
             },
             label: dataItem.label,
             value: dataItem.value,

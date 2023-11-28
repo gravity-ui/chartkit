@@ -25,6 +25,7 @@ function prepareData(): ChartKitWidgetData {
                     data: sort(seriesData, (d1, d2) => descending(d1.value, d2.value)),
                     dataLabels: {
                         enabled: true,
+                        connectorCurve: 'basic',
                     },
                 },
             ],
@@ -69,11 +70,6 @@ const ChartStory = ({data}: {data: ChartKitWidgetData}) => {
                                         ...d,
                                         y: d.value,
                                     })),
-                                    dataLabels: {
-                                        // softConnector: false,
-                                        // connectorShape: 'straight',
-                                        padding: 0,
-                                    },
                                 },
                             ],
                         },
