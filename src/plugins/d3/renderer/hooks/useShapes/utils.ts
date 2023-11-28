@@ -9,7 +9,6 @@ import type {PreparedAxis} from '../useChartOptions/types';
 
 import type {PreparedLineData} from './line/types';
 import type {PreparedScatterData} from './scatter';
-
 export function getXValue(args: {
     point: {x?: number | string};
     xAxis: PreparedAxis;
@@ -59,13 +58,8 @@ export function setActiveState<T extends {active?: boolean}>(args: {
 
     if (datum.active !== active) {
         datum.active = active;
-        elementSelection.attr('opacity', function (d) {
-            if (!d.active) {
-                return state?.opacity || null;
-            }
-
-            return null;
-        });
+        const opacity = datum.active ? null : state?.opacity;
+        elementSelection.attr('opacity', opacity || null);
     }
 
     return datum;

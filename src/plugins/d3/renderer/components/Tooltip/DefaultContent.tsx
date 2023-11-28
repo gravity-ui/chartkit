@@ -81,12 +81,12 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                         );
                     }
                     case 'pie': {
-                        const pieSeries = series as PreparedPieSeries;
+                        const pieSeriesData = data as PreparedPieSeries;
 
                         return (
                             <div key={id}>
-                                <span>{pieSeries.name || pieSeries.id}&nbsp;</span>
-                                <span>{pieSeries.value}</span>
+                                <span>{pieSeriesData.name || pieSeriesData.id}&nbsp;</span>
+                                <span>{pieSeriesData.value}</span>
                             </div>
                         );
                     }

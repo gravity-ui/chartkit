@@ -16,7 +16,11 @@ export type TooltipDataChunkBarY<T = any> = {
 
 export type TooltipDataChunkPie<T = any> = {
     data: PieSeriesData<T>;
-    series: Omit<PieSeries<T>, 'data'>;
+    series: {
+        type: PieSeries['type'];
+        id: string;
+        name: string;
+    };
 };
 
 export type TooltipDataChunkScatter<T = any> = {

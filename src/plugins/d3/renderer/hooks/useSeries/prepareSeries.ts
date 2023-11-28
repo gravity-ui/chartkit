@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import type {ScaleOrdinal} from 'd3';
-import {scaleOrdinal} from 'd3';
 
 import type {
     BarXSeries,
@@ -11,15 +10,14 @@ import type {
     LineSeries,
     PieSeries,
 } from '../../../../../types';
-import {getRandomCKId} from '../../../../../utils';
 
-import {DEFAULT_PALETTE} from '../../constants';
-import type {PreparedLegend, PreparedPieSeries, PreparedSeries} from './types';
+import type {PreparedLegend, PreparedSeries} from './types';
 import {prepareLineSeries} from './prepare-line-series';
 import {prepareBarXSeries} from './prepare-bar-x';
 import {prepareBarYSeries} from './prepare-bar-y';
 import {prepareLegendSymbol} from './utils';
 import {ChartKitError} from '../../../../../libs';
+import {preparePieSeries} from './prepare-pie';
 
 type PrepareAxisRelatedSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -40,49 +38,6 @@ function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedS
     };
 
     return [preparedSeries];
-}
-
-type PreparePieSeriesArgs = {
-    series: PieSeries;
-    legend: PreparedLegend;
-};
-
-function preparePieSeries(args: PreparePieSeriesArgs) {
-    const {series, legend} = args;
-    const dataNames = series.data.map((d) => d.name);
-    const colorScale = scaleOrdinal(dataNames, DEFAULT_PALETTE);
-    const stackId = getRandomCKId();
-
-    const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem) => {
-        const result: PreparedPieSeries = {
-            type: 'pie',
-            data: dataItem,
-            dataLabels: {
-                enabled: get(series, 'dataLabels.enabled', true),
-            },
-            label: dataItem.label,
-            value: dataItem.value,
-            visible: typeof dataItem.visible === 'boolean' ? dataItem.visible : true,
-            name: dataItem.name,
-            id: '',
-            color: dataItem.color || colorScale(dataItem.name),
-            legend: {
-                enabled: get(series, 'legend.enabled', legend.enabled),
-                symbol: prepareLegendSymbol(series),
-            },
-            center: series.center || ['50%', '50%'],
-            borderColor: series.borderColor || '',
-            borderRadius: series.borderRadius ?? 0,
-            borderWidth: series.borderWidth ?? 1,
-            radius: series.radius || '100%',
-            innerRadius: series.innerRadius || 0,
-            stackId,
-        };
-
-        return result;
-    });
-
-    return preparedSeries;
 }
 
 export function prepareSeries(args: {

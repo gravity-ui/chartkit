@@ -4,8 +4,7 @@ import {withKnobs, object} from '@storybook/addon-knobs';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitRef} from '../../../../types';
-import type {ChartKitWidgetData} from '../../../../types/widget-data';
+import type {ChartKitWidgetData, ChartKitRef} from '../../../../types';
 import {D3Plugin} from '../..';
 
 const Template: Story = () => {

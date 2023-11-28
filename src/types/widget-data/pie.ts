@@ -12,6 +12,9 @@ export type PieSeriesData<T = any> = BaseSeriesData<T> & {
     label?: string;
 };
 
+export type ConnectorShape = 'straight-line' | 'polyline';
+export type ConnectorCurve = 'linear' | 'basic';
+
 export type PieSeries<T = any> = BaseSeries & {
     type: 'pie';
     data: PieSeriesData<T>[];
@@ -42,5 +45,33 @@ export type PieSeries<T = any> = BaseSeries & {
     /** Individual series legend options. Has higher priority than legend options in widget data */
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;
+    };
+
+    dataLabels?: BaseSeries['dataLabels'] & {
+        /**
+         * The distance of the data label from the pie's edge.
+         *
+         * @default 30
+         * */
+        distance?: number;
+        /**
+         * The distance from the data label to the connector.
+         *
+         * @default 5
+         * */
+        connectorPadding?: number;
+        /**
+         * The method that is used to generate the connector path.
+         *
+         * @default 'polyline'
+         * */
+        connectorShape?: ConnectorShape;
+        /**
+         * How to interpolate between two-dimensional [x, y] points for a connector.
+         * Works only if connectorShape equals to 'polyline'
+         *
+         * @default 'basic'
+         * */
+        connectorCurve?: ConnectorCurve;
     };
 };

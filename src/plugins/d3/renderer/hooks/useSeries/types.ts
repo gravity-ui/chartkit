@@ -12,6 +12,8 @@ import {
     BarYSeriesData,
     LineSeries,
     LineSeriesData,
+    ConnectorShape,
+    ConnectorCurve,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
 
@@ -89,13 +91,29 @@ export type PreparedBarYSeries = {
     };
 } & BasePreparedSeries;
 
-export type PreparedPieSeries = BasePreparedSeries &
-    Required<Omit<PieSeries, 'data'>> & {
-        data: PieSeriesData;
-        value: PieSeriesData['value'];
-        stackId: string;
-        label?: PieSeriesData['label'];
+export type PreparedPieSeries = {
+    type: PieSeries['type'];
+    data: PieSeriesData;
+    value: PieSeriesData['value'];
+    borderColor: string;
+    borderWidth: number;
+    borderRadius: number;
+    center?: [string | number | null, string | number | null];
+    radius?: string | number;
+    innerRadius?: string | number;
+    stackId: string;
+    label?: PieSeriesData['label'];
+    dataLabels: {
+        enabled: boolean;
+        padding: number;
+        style: BaseTextStyle;
+        allowOverlap: boolean;
+        connectorPadding: number;
+        connectorShape: ConnectorShape;
+        distance: number;
+        connectorCurve: ConnectorCurve;
     };
+} & BasePreparedSeries;
 
 export type PreparedLineSeries = {
     type: LineSeries['type'];

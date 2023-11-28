@@ -2,8 +2,8 @@ import type {Selection} from 'd3';
 import {select} from 'd3';
 import {BaseTextStyle} from '../../../../types';
 
-export function setEllipsisForOverflowText(
-    selection: Selection<SVGTextElement, unknown, null, unknown>,
+export function setEllipsisForOverflowText<T>(
+    selection: Selection<SVGTextElement, T, null, unknown>,
     maxWidth: number,
 ) {
     let text = selection.text();
@@ -19,12 +19,13 @@ export function setEllipsisForOverflowText(
     }
 }
 
-export function setEllipsisForOverflowTexts(
-    selection: Selection<SVGTextElement, string, any, unknown>,
-    maxWidth: number,
+export function setEllipsisForOverflowTexts<T>(
+    selection: Selection<SVGTextElement, T, any, unknown>,
+    maxWidth: ((datum: T) => number) | number,
 ) {
-    selection.each(function () {
-        setEllipsisForOverflowText(select(this), maxWidth);
+    selection.each(function (datum) {
+        const textMaxWidth = typeof maxWidth === 'function' ? maxWidth(datum) : maxWidth;
+        setEllipsisForOverflowText(select(this), textMaxWidth);
     });
 }
 
@@ -63,15 +64,14 @@ function renderLabels(
         attrs = {},
     }: {
         labels: string[];
-        style?: Record<string, string>;
+        style?: Partial<BaseTextStyle>;
         attrs?: Record<string, string>;
     },
 ) {
     const text = selection.append('g').append('text');
 
-    Object.entries(style).forEach(([name, value]) => {
-        text.style(name, value);
-    });
+    text.style('font-size', style.fontSize || '');
+    text.style('font-weight', style.fontWeight || '');
 
     Object.entries(attrs).forEach(([name, value]) => {
         text.attr(name, value);
@@ -94,10 +94,13 @@ export function getLabelsSize({
     rotation,
 }: {
     labels: string[];
-    style?: Record<string, string>;
+    style?: BaseTextStyle;
     rotation?: number;
 }) {
-    const svg = select(document.body).append('svg');
+    const container = select(document.body)
+        .append('div')
+        .attr('class', 'chartkit chartkit-theme_common');
+    const svg = container.append('svg');
     const textSelection = renderLabels(svg, {labels, style});
     if (rotation) {
         textSelection
@@ -107,7 +110,7 @@ export function getLabelsSize({
 
     const {height = 0, width = 0} =
         (svg.select('g').node() as Element)?.getBoundingClientRect() || {};
-    svg.remove();
+    container.remove();
 
     return {maxHeight: height, maxWidth: width};
 }
