@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.11.0](https://github.com/gravity-ui/chartkit/compare/v4.10.1...v4.11.0) (2023-11-28)
+
+
+### Features
+
+* bump major yagr ([#353](https://github.com/gravity-ui/chartkit/issues/353)) ([0e80011](https://github.com/gravity-ui/chartkit/commit/0e800117c3b80453e7c12ac8b5293000bd4a8d64))
+
+
+### Bug Fixes
+
+* **D3:** pie diagram labels are overlapped ([#352](https://github.com/gravity-ui/chartkit/issues/352)) ([87460eb](https://github.com/gravity-ui/chartkit/commit/87460eb7a8d37954abd44479f60e4d450fab0711))
+* **Highcharts plugin:** fix console error on first render with split-pane ([#355](https://github.com/gravity-ui/chartkit/issues/355)) ([bc2c1f1](https://github.com/gravity-ui/chartkit/commit/bc2c1f17b89a14fc26a44a3b2d5e874ba7dc356a))
+
 ## [4.10.1](https://github.com/gravity-ui/chartkit/compare/v4.10.0...v4.10.1) (2023-11-22)
 
 
