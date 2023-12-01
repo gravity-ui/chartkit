@@ -3,7 +3,7 @@ import get from 'lodash/get';
 import merge from 'lodash/merge';
 import {select} from 'd3';
 
-import type {ChartKitWidgetData} from '../../../../../types/widget-data';
+import type {ChartKitWidgetData} from '../../../../../types';
 
 import {legendDefaults} from '../../constants';
 import {getHorisontalSvgTextHeight} from '../../utils';
@@ -24,6 +24,7 @@ export const getPreparedLegend = (args: {
     const itemStyle = get(legend, 'itemStyle');
     const computedItemStyle = merge(defaultItemStyle, itemStyle);
     const lineHeight = getHorisontalSvgTextHeight({text: 'Tmp', style: computedItemStyle});
+
     const height = enabled ? lineHeight : 0;
 
     return {

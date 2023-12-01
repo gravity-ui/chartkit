@@ -14,6 +14,7 @@ import {
     LineSeriesData,
     ConnectorShape,
     ConnectorCurve,
+    PathLegendSymbolOptions,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
 
@@ -21,7 +22,12 @@ export type RectLegendSymbol = {
     shape: 'rect';
 } & Required<RectLegendSymbolOptions>;
 
-export type PreparedLegendSymbol = RectLegendSymbol;
+export type PathLegendSymbol = {
+    shape: 'path';
+    strokeWidth: number;
+} & Required<PathLegendSymbolOptions>;
+
+export type PreparedLegendSymbol = RectLegendSymbol | PathLegendSymbol;
 
 export type PreparedLegend = Required<ChartKitWidgetLegend> & {
     height: number;

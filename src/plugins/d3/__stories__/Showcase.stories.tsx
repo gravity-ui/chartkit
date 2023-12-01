@@ -41,9 +41,10 @@ const ShowcaseStory = () => {
                             <BasicLine />
                         </Col>
                         <Col>
-                            <Text variant="subheader-1">Line chart with data labels</Text>
+                            <Text variant="subheader-1">With data labels</Text>
                             <LineWithDataLabels />
                         </Col>
+                        <Col></Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>
@@ -99,6 +100,7 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Donut chart</Text>
                             <Donut />
                         </Col>
+                        <Col></Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Scatter charts</Text>
@@ -108,6 +110,8 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Basic scatter</Text>
                             <BasicScatter />
                         </Col>
+                        <Col></Col>
+                        <Col></Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Combined chart</Text>

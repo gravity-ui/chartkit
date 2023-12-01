@@ -57,3 +57,12 @@ export type RectLegendSymbolOptions = BaseLegendSymbol & {
      */
     radius?: number;
 };
+
+export type PathLegendSymbolOptions = BaseLegendSymbol & {
+    /**
+     * The pixel width of the symbol for series types that use a rectangle in the legend
+     *
+     * @default 16
+     * */
+    width?: number;
+};

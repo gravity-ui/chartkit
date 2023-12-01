@@ -1,12 +1,23 @@
 import {ScaleOrdinal} from 'd3';
 import get from 'lodash/get';
 
-import {ChartKitWidgetSeriesOptions, LineSeries} from '../../../../../types';
-import {PreparedLineSeries, PreparedLegend, PreparedSeries} from './types';
+import {
+    ChartKitWidgetSeries,
+    ChartKitWidgetSeriesOptions,
+    LineSeries,
+    RectLegendSymbolOptions,
+} from '../../../../../types';
+import {PreparedLineSeries, PreparedLegend, PreparedSeries, PreparedLegendSymbol} from './types';
 
-import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
-import {prepareLegendSymbol} from './utils';
+import {
+    DEFAULT_DATALABELS_PADDING,
+    DEFAULT_DATALABELS_STYLE,
+    DEFAULT_LEGEND_SYMBOL_PADDING,
+} from './constants';
 import {getRandomCKId} from '../../../../../utils';
+
+export const DEFAULT_LEGEND_SYMBOL_SIZE = 16;
+export const DEFAULT_LINE_WIDTH = 1;
 
 type PrepareLineSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -15,9 +26,24 @@ type PrepareLineSeriesArgs = {
     legend: PreparedLegend;
 };
 
+function prepareLineLegendSymbol(
+    series: ChartKitWidgetSeries,
+    seriesOptions?: ChartKitWidgetSeriesOptions,
+): PreparedLegendSymbol {
+    const symbolOptions: RectLegendSymbolOptions = series.legend?.symbol || {};
+    const defaultLineWidth = get(seriesOptions, 'line.lineWidth', DEFAULT_LINE_WIDTH);
+
+    return {
+        shape: 'path',
+        width: symbolOptions?.width || DEFAULT_LEGEND_SYMBOL_SIZE,
+        padding: symbolOptions?.padding || DEFAULT_LEGEND_SYMBOL_PADDING,
+        strokeWidth: get(series, 'lineWidth', defaultLineWidth),
+    };
+}
+
 export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[] {
     const {colorScale, series: seriesList, seriesOptions, legend} = args;
-    const defaultLineWidth = get(seriesOptions, 'line.lineWidth', 1);
+    const defaultLineWidth = get(seriesOptions, 'line.lineWidth', DEFAULT_LINE_WIDTH);
 
     return seriesList.map<PreparedLineSeries>((series) => {
         const id = getRandomCKId();
@@ -33,7 +59,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
             visible: get(series, 'visible', true),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),
-                symbol: prepareLegendSymbol(series),
+                symbol: prepareLineLegendSymbol(series, seriesOptions),
             },
             data: series.data,
             dataLabels: {
