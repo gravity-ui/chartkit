@@ -24,11 +24,23 @@
         user-select: none;
     }
 
-    &__item-shape {
-        fill: var(--g-color-base-misc-medium);
+    &__item-symbol {
+        &_shape {
+            &_rect {
+                fill: var(--g-color-base-misc-medium);
 
-        &_unselected {
-            fill: var(--g-color-text-hint);
+                &_unselected {
+                    fill: var(--g-color-text-hint);
+                }
+            }
+
+            &_path {
+                stroke: var(--g-color-base-misc-medium);
+
+                &_unselected {
+                    stroke: var(--g-color-text-hint);
+                }
+            }
         }
     }
 

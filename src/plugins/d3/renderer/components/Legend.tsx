@@ -120,6 +120,8 @@ function renderLegendSymbol(args: {
     selection.each(function (d, i) {
         const element = select(this);
         const x = getXPosition(i);
+        const className = b('item-symbol', {shape: d.symbol.shape, unselected: !d.visible});
+        const color = d.visible ? d.color : '';
 
         switch (d.symbol.shape) {
             case 'path': {
@@ -133,9 +135,9 @@ function renderLegendSymbol(args: {
                     .append('path')
                     .attr('d', legendSymbolGenerator(points))
                     .attr('fill', 'none')
-                    .attr('stroke', d.color)
                     .attr('stroke-width', d.symbol.strokeWidth)
-                    .attr('class', b('item-shape', {unselected: !d.visible}));
+                    .attr('class', className)
+                    .style('stroke', color);
 
                 break;
             }
@@ -148,8 +150,8 @@ function renderLegendSymbol(args: {
                     .attr('width', d.symbol.width)
                     .attr('height', d.symbol.height)
                     .attr('rx', d.symbol.radius)
-                    .attr('class', b('item-shape', {unselected: !d.visible}))
-                    .style('fill', d.color);
+                    .attr('class', className)
+                    .style('fill', color);
 
                 break;
             }
