@@ -60,7 +60,7 @@ export type RectLegendSymbolOptions = BaseLegendSymbol & {
 
 export type PathLegendSymbolOptions = BaseLegendSymbol & {
     /**
-     * The pixel width of the symbol for series types that use a rectangle in the legend
+     * The pixel width of the symbol for series types that use a path in the legend
      *
      * @default 16
      * */
