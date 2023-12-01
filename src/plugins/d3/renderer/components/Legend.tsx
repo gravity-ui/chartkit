@@ -1,5 +1,5 @@
 import React from 'react';
-import {select} from 'd3';
+import {BaseType, select, line as lineGenerator} from 'd3';
 import type {Selection} from 'd3';
 
 import {block} from '../../../../utils/cn';
@@ -94,6 +94,71 @@ const appendPaginator = (args: {
     paginationLine.attr('transform', transform);
 };
 
+const legendSymbolGenerator = lineGenerator<{x: number; y: number}>()
+    .x((d) => d.x)
+    .y((d) => d.y);
+
+function renderLegendSymbol(args: {
+    selection: Selection<SVGGElement, LegendItem, BaseType, unknown>;
+    legend: PreparedLegend;
+}) {
+    const {selection, legend} = args;
+    const line = selection.data();
+
+    const getXPosition = (i: number) => {
+        return line.slice(0, i).reduce((acc, legendItem) => {
+            return (
+                acc +
+                legendItem.symbol.width +
+                legendItem.symbol.padding +
+                legendItem.textWidth +
+                legend.itemDistance
+            );
+        }, 0);
+    };
+
+    selection.each(function (d, i) {
+        const element = select(this);
+        const x = getXPosition(i);
+        const className = b('item-symbol', {shape: d.symbol.shape, unselected: !d.visible});
+        const color = d.visible ? d.color : '';
+
+        switch (d.symbol.shape) {
+            case 'path': {
+                const y = legend.lineHeight / 2;
+                const points = [
+                    {x: x, y},
+                    {x: x + d.symbol.width, y},
+                ];
+
+                element
+                    .append('path')
+                    .attr('d', legendSymbolGenerator(points))
+                    .attr('fill', 'none')
+                    .attr('stroke-width', d.symbol.strokeWidth)
+                    .attr('class', className)
+                    .style('stroke', color);
+
+                break;
+            }
+            case 'rect': {
+                const y = (legend.lineHeight - d.symbol.height) / 2;
+                element
+                    .append('rect')
+                    .attr('x', x)
+                    .attr('y', y)
+                    .attr('width', d.symbol.width)
+                    .attr('height', d.symbol.height)
+                    .attr('rx', d.symbol.radius)
+                    .attr('class', className)
+                    .style('fill', color);
+
+                break;
+            }
+        }
+    });
+}
+
 export const Legend = (props: Props) => {
     const {boundsWidth, chartSeries, legend, items, config, onItemClick} = props;
     const ref = React.useRef<SVGGElement>(null);
@@ -139,25 +204,7 @@ export const Legend = (props: Props) => {
                 }, 0);
             };
 
-            legendItemTemplate
-                .append('rect')
-                .attr('x', function (_d, i) {
-                    return getXPosition(i);
-                })
-                .attr('y', (legendItem) => {
-                    return (legend.lineHeight - legendItem.symbol.height) / 2;
-                })
-                .attr('width', (legendItem) => {
-                    return legendItem.symbol.width;
-                })
-                .attr('height', (legendItem) => legendItem.symbol.height)
-                .attr('rx', (legendItem) => legendItem.symbol.radius)
-                .attr('class', function (d) {
-                    return b('item-shape', {unselected: !d.visible});
-                })
-                .style('fill', function (d) {
-                    return d.visible ? d.color : '';
-                });
+            renderLegendSymbol({selection: legendItemTemplate, legend});
 
             legendItemTemplate
                 .append('text')

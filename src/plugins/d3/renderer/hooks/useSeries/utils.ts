@@ -1,6 +1,6 @@
 import {PreparedLegendSymbol, PreparedSeries} from './types';
 import {ChartKitWidgetSeries, RectLegendSymbolOptions} from '../../../../../types';
-import {DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
+import {DEFAULT_LEGEND_SYMBOL_PADDING, DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
 
 export const getActiveLegendItems = (series: PreparedSeries[]) => {
     return series.reduce<string[]>((acc, s) => {
@@ -25,6 +25,6 @@ export function prepareLegendSymbol(series: ChartKitWidgetSeries): PreparedLegen
         width: symbolOptions?.width || DEFAULT_LEGEND_SYMBOL_SIZE,
         height: symbolHeight,
         radius: symbolOptions?.radius || symbolHeight / 2,
-        padding: symbolOptions?.padding || 5,
+        padding: symbolOptions?.padding || DEFAULT_LEGEND_SYMBOL_PADDING,
     };
 }

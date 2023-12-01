@@ -24,11 +24,13 @@
         user-select: none;
     }
 
-    &__item-shape {
-        fill: var(--g-color-base-misc-medium);
-
-        &_unselected {
+    &__item-symbol {
+        &_shape_rect#{&}_unselected {
             fill: var(--g-color-text-hint);
+        }
+
+        &_shape_path#{&}_unselected {
+            stroke: var(--g-color-text-hint);
         }
     }
 
