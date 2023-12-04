@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.12.0](https://github.com/gravity-ui/chartkit/compare/v4.11.0...v4.12.0) (2023-12-04)
+
+
+### Features
+
+* **D3 plugin:** line chart legend symbol ([#358](https://github.com/gravity-ui/chartkit/issues/358)) ([334f5a2](https://github.com/gravity-ui/chartkit/commit/334f5a295b050aabb8733aebfee404d671dc3987))
+
+
+### Bug Fixes
+
+* updated yagr to 4.0.1 to fix plotlines update ([#360](https://github.com/gravity-ui/chartkit/issues/360)) ([25123ae](https://github.com/gravity-ui/chartkit/commit/25123aea9c9038f42e9bc824e321b8f9555f7d39))
+
 ## [4.11.0](https://github.com/gravity-ui/chartkit/compare/v4.10.1...v4.11.0) (2023-11-28)
 
 
