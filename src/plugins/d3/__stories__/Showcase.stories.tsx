@@ -18,6 +18,7 @@ import {Basic as BasicLine} from '../examples/line/Basic';
 import {DataLabels as LineWithDataLabels} from '../examples/line/DataLabels';
 import {Donut} from '../examples/pie/Donut';
 import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
+import {LineWithMarkers} from '../examples/line/LineWithMarkers';
 
 const ShowcaseStory = () => {
     const [loading, setLoading] = React.useState(true);
@@ -44,7 +45,10 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">With data labels</Text>
                             <LineWithDataLabels />
                         </Col>
-                        <Col></Col>
+                        <Col>
+                            <Text variant="subheader-1">With markers</Text>
+                            <LineWithMarkers />
+                        </Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>

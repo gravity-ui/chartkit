@@ -20,6 +20,8 @@ export type LineSeriesData<T = any> = BaseSeriesData<T> & {
     label?: string | number;
 };
 
+export type LineMarkerSymbol = 'circle' | 'square';
+
 export type LineSeries<T = any> = BaseSeries & {
     type: 'line';
     data: LineSeriesData<T>[];
@@ -32,9 +34,23 @@ export type LineSeries<T = any> = BaseSeries & {
      * @default 1
      * */
     lineWidth?: number;
-
     /** Individual series legend options. Has higher priority than legend options in widget data */
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;
+    };
+    /** Options for the point markers of line series */
+    marker?: {
+        /** Enable or disable the point marker.
+         *
+         * @default false
+         * */
+        enabled?: boolean;
+        /**
+         * The radius of the point marker.
+         *
+         * @default 4
+         * */
+        radius?: number;
+        symbol?: LineMarkerSymbol;
     };
 };

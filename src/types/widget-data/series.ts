@@ -159,7 +159,16 @@ export type ChartKitWidgetSeriesOptions = {
         lineWidth?: number;
         /** Options for the series states that provide additional styling information to the series. */
         states?: {
-            hover?: BasicHoverState;
+            hover?: BasicHoverState & {
+                marker?: {
+                    /** Options for the halo appearing around the hovered point */
+                    halo?: {
+                        enabled?: boolean;
+                        opacity?: number;
+                        radius?: number;
+                    };
+                };
+            };
             inactive?: BasicInactiveState;
         };
     };
