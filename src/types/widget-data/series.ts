@@ -2,8 +2,9 @@ import React from 'react';
 import type {PieSeries, PieSeriesData} from './pie';
 import type {ScatterSeries, ScatterSeriesData} from './scatter';
 import type {BarXSeries, BarXSeriesData} from './bar-x';
-import type {LineSeries, LineSeriesData} from './line';
+import type {LineSeries, LineSeriesData, LineMarkerOptions} from './line';
 import type {BarYSeries, BarYSeriesData} from './bar-y';
+import {PointMarkerOptions} from './marker';
 
 export type ChartKitWidgetSeries<T = any> =
     | ScatterSeries<T>
@@ -160,7 +161,7 @@ export type ChartKitWidgetSeriesOptions = {
         /** Options for the series states that provide additional styling information to the series. */
         states?: {
             hover?: BasicHoverState & {
-                marker?: {
+                marker?: PointMarkerOptions & {
                     /** Options for the halo appearing around the hovered point */
                     halo?: {
                         enabled?: boolean;
@@ -171,5 +172,7 @@ export type ChartKitWidgetSeriesOptions = {
             };
             inactive?: BasicInactiveState;
         };
+        /** Options for the point markers of line series */
+        marker?: LineMarkerOptions;
     };
 };

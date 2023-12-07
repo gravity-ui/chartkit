@@ -1,5 +1,6 @@
 import {ScaleOrdinal} from 'd3';
 import get from 'lodash/get';
+import merge from 'lodash/merge';
 
 import {
     ChartKitWidgetSeries,
@@ -7,7 +8,7 @@ import {
     LineSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types';
-import {PreparedLineSeries, PreparedLegend, PreparedSeries, PreparedLegendSymbol} from './types';
+import {PreparedLineSeries, PreparedLegend, PreparedLegendSymbol} from './types';
 
 import {
     DEFAULT_DATALABELS_PADDING,
@@ -18,6 +19,14 @@ import {getRandomCKId} from '../../../../../utils';
 
 export const DEFAULT_LEGEND_SYMBOL_SIZE = 16;
 export const DEFAULT_LINE_WIDTH = 1;
+
+export const DEFAULT_MARKER = {
+    enabled: false,
+    symbol: 'circle',
+    radius: 4,
+    borderWidth: 0,
+    borderColor: '',
+};
 
 type PrepareLineSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -41,39 +50,42 @@ function prepareLineLegendSymbol(
     };
 }
 
-export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[] {
+function prepareMarker(series: LineSeries, seriesOptions?: ChartKitWidgetSeriesOptions) {
+    const seriesHoverState = get(seriesOptions, 'line.states.hover');
+    const markerNormalState = Object.assign(
+        {},
+        DEFAULT_MARKER,
+        seriesOptions?.line?.marker,
+        series.marker,
+    );
+    const hoveredMarkerDefaultOptions = {
+        enabled: true,
+        radius: markerNormalState.radius,
+        borderWidth: 1,
+        borderColor: '#ffffff',
+        halo: {
+            enabled: true,
+            opacity: 0.25,
+            radius: 10,
+        },
+    };
+
+    return {
+        states: {
+            normal: markerNormalState,
+            hover: merge(hoveredMarkerDefaultOptions, seriesHoverState?.marker),
+        },
+    };
+}
+
+export function prepareLineSeries(args: PrepareLineSeriesArgs) {
     const {colorScale, series: seriesList, seriesOptions, legend} = args;
     const defaultLineWidth = get(seriesOptions, 'line.lineWidth', DEFAULT_LINE_WIDTH);
-    const seriesHoverState = get(seriesOptions, 'line.states.hover');
 
     return seriesList.map<PreparedLineSeries>((series) => {
         const id = getRandomCKId();
         const name = series.name || '';
         const color = series.color || colorScale(name);
-
-        const markerNormalState = {
-            enabled: get(
-                series,
-                'marker.enabled',
-                get(seriesOptions, 'line.marker.enabled', false),
-            ),
-            symbol: get(
-                series,
-                'marker.symbol',
-                get(seriesOptions, 'line.marker.symbol', 'circle'),
-            ),
-            radius: get(series, 'marker.radius', get(seriesOptions, 'line.marker.radius', 4)),
-            borderWidth: get(
-                series,
-                'marker.borderWidth',
-                get(seriesOptions, 'line.marker.borderWidth', 0),
-            ),
-            borderColor: get(
-                series,
-                'marker.borderColor',
-                get(seriesOptions, 'line.marker.borderColor', ''),
-            ),
-        };
 
         const prepared: PreparedLineSeries = {
             type: series.type,
@@ -93,22 +105,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
                 padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
             },
-            marker: {
-                states: {
-                    normal: markerNormalState,
-                    hover: {
-                        enabled: get(seriesHoverState, 'marker.enabled', true),
-                        radius: get(seriesHoverState, 'marker.radius', markerNormalState.radius),
-                        borderWidth: get(seriesHoverState, 'marker.borderWidth', 1),
-                        borderColor: get(seriesHoverState, 'marker.borderColor', '#ffffff'),
-                        halo: {
-                            enabled: get(seriesHoverState, 'marker.halo.enabled', true),
-                            opacity: get(seriesHoverState, 'marker.halo.opacity', 0.25),
-                            radius: get(seriesHoverState, 'marker.halo.radius', 10),
-                        },
-                    },
-                },
-            },
+            marker: prepareMarker(series, seriesOptions),
         };
 
         return prepared;
