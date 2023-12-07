@@ -1,5 +1,6 @@
 import {ScaleOrdinal} from 'd3';
 import get from 'lodash/get';
+import merge from 'lodash/merge';
 
 import {
     ChartKitWidgetSeries,
@@ -7,7 +8,7 @@ import {
     LineSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types';
-import {PreparedLineSeries, PreparedLegend, PreparedSeries, PreparedLegendSymbol} from './types';
+import {PreparedLineSeries, PreparedLegend, PreparedLegendSymbol} from './types';
 
 import {
     DEFAULT_DATALABELS_PADDING,
@@ -18,6 +19,14 @@ import {getRandomCKId} from '../../../../../utils';
 
 export const DEFAULT_LEGEND_SYMBOL_SIZE = 16;
 export const DEFAULT_LINE_WIDTH = 1;
+
+export const DEFAULT_MARKER = {
+    enabled: false,
+    symbol: 'circle',
+    radius: 4,
+    borderWidth: 0,
+    borderColor: '',
+};
 
 type PrepareLineSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -41,7 +50,35 @@ function prepareLineLegendSymbol(
     };
 }
 
-export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[] {
+function prepareMarker(series: LineSeries, seriesOptions?: ChartKitWidgetSeriesOptions) {
+    const seriesHoverState = get(seriesOptions, 'line.states.hover');
+    const markerNormalState = Object.assign(
+        {},
+        DEFAULT_MARKER,
+        seriesOptions?.line?.marker,
+        series.marker,
+    );
+    const hoveredMarkerDefaultOptions = {
+        enabled: true,
+        radius: markerNormalState.radius,
+        borderWidth: 1,
+        borderColor: '#ffffff',
+        halo: {
+            enabled: true,
+            opacity: 0.25,
+            radius: 10,
+        },
+    };
+
+    return {
+        states: {
+            normal: markerNormalState,
+            hover: merge(hoveredMarkerDefaultOptions, seriesHoverState?.marker),
+        },
+    };
+}
+
+export function prepareLineSeries(args: PrepareLineSeriesArgs) {
     const {colorScale, series: seriesList, seriesOptions, legend} = args;
     const defaultLineWidth = get(seriesOptions, 'line.lineWidth', DEFAULT_LINE_WIDTH);
 
@@ -50,7 +87,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
         const name = series.name || '';
         const color = series.color || colorScale(name);
 
-        return {
+        const prepared: PreparedLineSeries = {
             type: series.type,
             color,
             lineWidth: get(series, 'lineWidth', defaultLineWidth),
@@ -68,6 +105,9 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs): PreparedSeries[]
                 padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
             },
+            marker: prepareMarker(series, seriesOptions),
         };
+
+        return prepared;
     }, []);
 }

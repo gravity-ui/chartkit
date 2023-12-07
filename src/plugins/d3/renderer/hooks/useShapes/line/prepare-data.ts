@@ -1,7 +1,7 @@
 import {PreparedLineSeries} from '../../useSeries/types';
 import {PreparedAxis} from '../../useChartOptions/types';
 import {ChartScale} from '../../useAxisScales';
-import {PointData, PreparedLineData} from './types';
+import {MarkerData, PointData, PreparedLineData} from './types';
 import {getXValue, getYValue} from '../utils';
 import {getLabelsSize, getLeftPosition} from '../../../utils';
 import type {LabelData} from '../../../types';
@@ -51,7 +51,9 @@ export const prepareLineData = (args: {
         const points = s.data.map((d) => ({
             x: getXValue({point: d, xAxis, xScale}),
             y: getYValue({point: d, yAxis, yScale}),
+            active: true,
             data: d,
+            series: s,
         }));
 
         let labels: LabelData[] = [];
@@ -59,8 +61,18 @@ export const prepareLineData = (args: {
             labels = points.map<LabelData>((p) => getLabelData(p, s, xMax));
         }
 
+        let markers: MarkerData[] = [];
+        if (s.marker.states.normal.enabled || s.marker.states.hover.enabled) {
+            markers = points.map<MarkerData>((p) => ({
+                point: p,
+                active: true,
+                hovered: false,
+            }));
+        }
+
         acc.push({
             points,
+            markers,
             labels,
             color: s.color,
             width: s.lineWidth,
