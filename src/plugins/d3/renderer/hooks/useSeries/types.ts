@@ -131,6 +131,28 @@ export type PreparedLineSeries = {
         padding: number;
         allowOverlap: boolean;
     };
+    marker: {
+        states: {
+            normal: {
+                symbol: string;
+                enabled: boolean;
+                radius: number;
+                borderWidth: number;
+                borderColor: string;
+            };
+            hover: {
+                enabled: boolean;
+                radius: number;
+                borderWidth: number;
+                borderColor: string;
+                halo: {
+                    enabled: boolean;
+                    opacity: number;
+                    radius: number;
+                };
+            };
+        };
+    };
 } & BasePreparedSeries;
 
 export type PreparedSeries =

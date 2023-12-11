@@ -1,6 +1,14 @@
 import type {Config} from '@jest/types';
 
-const esModules = ['@gravity-ui/yagr', 'uplot'].join('|');
+const esModules = [
+    '@gravity-ui/yagr',
+    'uplot',
+    'd3',
+    'd3-array',
+    'internmap',
+    'delaunator',
+    'robust-predicates',
+].join('|');
 
 const cfg: Config.InitialOptions = {
     verbose: true,
