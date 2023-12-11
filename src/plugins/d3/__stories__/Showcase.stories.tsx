@@ -15,6 +15,7 @@ import {Container, Row, Col, Text} from '@gravity-ui/uikit';
 import {BasicPie} from '../examples/pie/Basic';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
 import {Basic as BasicLine} from '../examples/line/Basic';
+import {Basic as BasicArea} from '../examples/area/Basic';
 import {DataLabels as LineWithDataLabels} from '../examples/line/DataLabels';
 import {Donut} from '../examples/pie/Donut';
 import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
@@ -49,6 +50,17 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">With markers</Text>
                             <LineWithMarkers />
                         </Col>
+                    </Row>
+                    <Row space={1}>
+                        <Text variant="header-2">Area charts</Text>
+                    </Row>
+                    <Row space={3} style={{minHeight: 280}}>
+                        <Col>
+                            <Text variant="subheader-1">Basic area chart</Text>
+                            <BasicArea />
+                        </Col>
+                        <Col></Col>
+                        <Col></Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>

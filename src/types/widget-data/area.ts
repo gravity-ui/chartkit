@@ -2,7 +2,7 @@ import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 import type {PointMarkerOptions} from './marker';
 
-export type LineSeriesData<T = any> = BaseSeriesData<T> & {
+export type AreaSeriesData<T = any> = BaseSeriesData<T> & {
     /**
      * The `x` value of the point. Depending on the context , it may represents:
      * - numeric value (for `linear` x axis)
@@ -21,15 +21,15 @@ export type LineSeriesData<T = any> = BaseSeriesData<T> & {
     label?: string | number;
 };
 
-export type LineMarkerSymbol = 'circle' | 'square';
+export type AreaMarkerSymbol = 'circle' | 'square';
 
-export type LineMarkerOptions = PointMarkerOptions & {
-    symbol?: LineMarkerSymbol;
+export type AreaMarkerOptions = PointMarkerOptions & {
+    symbol?: AreaMarkerSymbol;
 };
 
-export type LineSeries<T = any> = BaseSeries & {
-    type: 'line';
-    data: LineSeriesData<T>[];
+export type AreaSeries<T = any> = BaseSeries & {
+    type: 'area';
+    data: AreaSeriesData<T>[];
     /** The name of the series (used in legend, tooltip etc) */
     name: string;
     /** The main color of the series (hex, rgba) */
@@ -43,6 +43,6 @@ export type LineSeries<T = any> = BaseSeries & {
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;
     };
-    /** Options for the point markers of line series */
-    marker?: LineMarkerOptions;
+    /** Options for the point markers of line in area series */
+    marker?: AreaMarkerOptions;
 };

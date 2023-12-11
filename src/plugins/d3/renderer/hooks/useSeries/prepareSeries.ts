@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import type {ScaleOrdinal} from 'd3';
 
 import type {
+    AreaSeries,
     BarXSeries,
     BarYSeries,
     ChartKitWidgetSeries,
@@ -18,6 +19,7 @@ import {prepareBarYSeries} from './prepare-bar-y';
 import {prepareLegendSymbol} from './utils';
 import {ChartKitError} from '../../../../../libs';
 import {preparePieSeries} from './prepare-pie';
+import {prepareAreaSeries} from './prepare-area-series';
 
 type PrepareAxisRelatedSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -71,6 +73,14 @@ export function prepareSeries(args: {
         case 'line': {
             return prepareLineSeries({
                 series: series as LineSeries[],
+                seriesOptions,
+                legend,
+                colorScale,
+            });
+        }
+        case 'area': {
+            return prepareAreaSeries({
+                series: series as AreaSeries[],
                 seriesOptions,
                 legend,
                 colorScale,
