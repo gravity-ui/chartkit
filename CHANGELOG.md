@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.13.0](https://github.com/gravity-ui/chartkit/compare/v4.12.0...v4.13.0) (2023-12-11)
+
+
+### Features
+
+* **D3 plugin:** marker for line charts ([#361](https://github.com/gravity-ui/chartkit/issues/361)) ([721a12b](https://github.com/gravity-ui/chartkit/commit/721a12b339d9d98c18804bb826dc3884a87aad53))
+
+
+### Bug Fixes
+
+* bump yagr 4.0.3 ([#364](https://github.com/gravity-ui/chartkit/issues/364)) ([50cc7f8](https://github.com/gravity-ui/chartkit/commit/50cc7f8186addf73709aaf8306adc6cbcdae3754))
+* bump yagr to 4.0.3 ([50cc7f8](https://github.com/gravity-ui/chartkit/commit/50cc7f8186addf73709aaf8306adc6cbcdae3754))
+
 ## [4.12.0](https://github.com/gravity-ui/chartkit/compare/v4.11.0...v4.12.0) (2023-12-04)
 
 
