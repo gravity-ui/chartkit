@@ -32,6 +32,14 @@ export type AreaSeries<T = any> = BaseSeries & {
     data: AreaSeriesData<T>[];
     /** The name of the series (used in legend, tooltip etc) */
     name: string;
+    /** Whether to stack the values of each series on top of each other.
+     * Possible values are undefined to disable, "normal" to stack by value or "percent"
+     *
+     * @default undefined
+     * */
+    stacking?: 'normal';
+    /** This option allows grouping series in a stacked chart */
+    stackId?: string;
     /** The main color of the series (hex, rgba) */
     color?: string;
     /** Pixel width of the graph line.

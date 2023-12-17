@@ -7,7 +7,7 @@ import {PreparedAreaSeries, PreparedLegend} from './types';
 
 import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
 import {getRandomCKId} from '../../../../../utils';
-import {prepareLegendSymbol} from './utils';
+import {getSeriesStackId, prepareLegendSymbol} from './utils';
 
 export const DEFAULT_LINE_WIDTH = 1;
 
@@ -54,7 +54,7 @@ function prepareMarker(series: AreaSeries, seriesOptions?: ChartKitWidgetSeriesO
     };
 }
 
-export function prepareAreaSeries(args: PrepareAreaSeriesArgs) {
+export function prepareArea(args: PrepareAreaSeriesArgs) {
     const {colorScale, series: seriesList, seriesOptions, legend} = args;
     const defaultAreaWidth = get(seriesOptions, 'area.lineWidth', DEFAULT_LINE_WIDTH);
 
@@ -75,6 +75,8 @@ export function prepareAreaSeries(args: PrepareAreaSeriesArgs) {
                 symbol: prepareLegendSymbol(series),
             },
             data: series.data,
+            stacking: series.stacking,
+            stackId: getSeriesStackId(series),
             dataLabels: {
                 enabled: series.dataLabels?.enabled || false,
                 style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),

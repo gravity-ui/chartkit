@@ -19,7 +19,7 @@ import {prepareBarYSeries} from './prepare-bar-y';
 import {prepareLegendSymbol} from './utils';
 import {ChartKitError} from '../../../../../libs';
 import {preparePieSeries} from './prepare-pie';
-import {prepareAreaSeries} from './prepare-area-series';
+import {prepareArea} from './prepare-area';
 
 type PrepareAxisRelatedSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
@@ -79,7 +79,7 @@ export function prepareSeries(args: {
             });
         }
         case 'area': {
-            return prepareAreaSeries({
+            return prepareArea({
                 series: series as AreaSeries[],
                 seriesOptions,
                 legend,

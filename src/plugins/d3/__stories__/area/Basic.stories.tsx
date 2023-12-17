@@ -5,6 +5,7 @@ import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {D3Plugin} from '../..';
 import {Basic} from '../../examples/area/Basic';
+import {StackedArea} from '../../examples/area/StackedArea';
 
 const ChartStory = ({Chart}: {Chart: React.FC}) => {
     const [shown, setShown] = React.useState(false);
@@ -30,6 +31,13 @@ export const BasicAreaChartStory: StoryObj<typeof ChartStory> = {
     name: 'Basic',
     args: {
         Chart: Basic,
+    },
+};
+
+export const StackedAreaChartStory: StoryObj<typeof ChartStory> = {
+    name: 'Stacked',
+    args: {
+        Chart: StackedArea,
     },
 };
 

@@ -160,6 +160,8 @@ export type PreparedLineSeries = {
 export type PreparedAreaSeries = {
     type: AreaSeries['type'];
     data: AreaSeriesData[];
+    stacking: AreaSeries['stacking'];
+    stackId: string;
     lineWidth: number;
     dataLabels: {
         enabled: boolean;
@@ -200,3 +202,5 @@ export type PreparedSeries =
     | PreparedAreaSeries;
 
 export type PreparedSeriesOptions = SeriesOptionsDefaults;
+
+export type StackedSeries = BarXSeries | AreaSeries | BarYSeries;

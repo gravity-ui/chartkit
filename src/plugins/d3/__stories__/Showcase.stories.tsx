@@ -20,6 +20,7 @@ import {DataLabels as LineWithDataLabels} from '../examples/line/DataLabels';
 import {Donut} from '../examples/pie/Donut';
 import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
 import {LineWithMarkers} from '../examples/line/LineWithMarkers';
+import {StackedArea} from '../examples/area/StackedArea';
 
 const ShowcaseStory = () => {
     const [loading, setLoading] = React.useState(true);
@@ -59,7 +60,10 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Basic area chart</Text>
                             <BasicArea />
                         </Col>
-                        <Col></Col>
+                        <Col>
+                            <Text variant="subheader-1">Stacked area</Text>
+                            <StackedArea />
+                        </Col>
                         <Col></Col>
                     </Row>
                     <Row space={1}>

@@ -3,7 +3,7 @@ import get from 'lodash/get';
 import type {BarXSeries} from '../../../../../types';
 import type {PreparedBarXSeries, PreparedLegend, PreparedSeries} from './types';
 import {getRandomCKId} from '../../../../../utils';
-import {prepareLegendSymbol} from './utils';
+import {getSeriesStackId, prepareLegendSymbol} from './utils';
 import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
 
 type PrepareBarXSeriesArgs = {
@@ -14,16 +14,10 @@ type PrepareBarXSeriesArgs = {
 
 export function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[] {
     const {colorScale, series: seriesList, legend} = args;
-    const commonStackId = getRandomCKId();
 
     return seriesList.map<PreparedBarXSeries>((series) => {
         const name = series.name || '';
         const color = series.color || colorScale(name);
-
-        let stackId = series.stackId;
-        if (!stackId) {
-            stackId = series.stacking === 'normal' ? commonStackId : getRandomCKId();
-        }
 
         return {
             type: series.type,
@@ -37,7 +31,7 @@ export function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[]
             },
             data: series.data,
             stacking: series.stacking,
-            stackId,
+            stackId: getSeriesStackId(series),
             dataLabels: {
                 enabled: series.dataLabels?.enabled || false,
                 inside:
