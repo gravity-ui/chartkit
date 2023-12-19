@@ -4,15 +4,25 @@ import type {ChartKitWidgetData, BarXSeries, BarXSeriesData} from '../../../../t
 import nintendoGames from '../nintendoGames';
 import {groups} from 'd3';
 
-function prepareData(field: 'platform' | 'meta_score' | 'date' = 'platform') {
+function prepareData(
+    {field, filterNulls}: {field: 'platform' | 'meta_score' | 'date'; filterNulls?: boolean} = {
+        field: 'platform',
+    },
+) {
     const gamesByPlatform = groups(nintendoGames, (item) => item[field]);
-    const data = gamesByPlatform.map(([value, games]) => ({
+    let resultData = gamesByPlatform;
+
+    if (filterNulls) {
+        resultData = gamesByPlatform.filter(([value]) => typeof value === 'number');
+    }
+
+    const data = resultData.map(([value, games]) => ({
         x: value,
         y: games.length,
     }));
 
     return {
-        categories: gamesByPlatform.map(([key]) => key),
+        categories: resultData.map(([key]) => key),
         series: [
             {
                 data,
@@ -24,7 +34,6 @@ function prepareData(field: 'platform' | 'meta_score' | 'date' = 'platform') {
 
 export const BasicBarXChart = () => {
     const {categories, series} = prepareData();
-
     const widgetData: ChartKitWidgetData = {
         series: {
             data: series.map<BarXSeries>((s) => ({
@@ -47,7 +56,7 @@ export const BasicBarXChart = () => {
 };
 
 export const BasicLinearBarXChart = () => {
-    const {series} = prepareData('meta_score');
+    const {series} = prepareData({field: 'meta_score'});
 
     const widgetData: ChartKitWidgetData = {
         series: {
@@ -68,7 +77,7 @@ export const BasicLinearBarXChart = () => {
 };
 
 export const BasicDateTimeBarXChart = () => {
-    const {series} = prepareData('date');
+    const {series} = prepareData({field: 'date', filterNulls: true});
 
     const widgetData: ChartKitWidgetData = {
         series: {
