@@ -13,6 +13,7 @@ import {PreparedLineSeries, PreparedLegend, PreparedLegendSymbol} from './types'
 import {
     DEFAULT_DATALABELS_PADDING,
     DEFAULT_DATALABELS_STYLE,
+    DEFAULT_HALO_OPTIONS,
     DEFAULT_LEGEND_SYMBOL_PADDING,
 } from './constants';
 import {getRandomCKId} from '../../../../../utils';
@@ -63,11 +64,7 @@ function prepareMarker(series: LineSeries, seriesOptions?: ChartKitWidgetSeriesO
         radius: markerNormalState.radius,
         borderWidth: 1,
         borderColor: '#ffffff',
-        halo: {
-            enabled: true,
-            opacity: 0.25,
-            radius: 10,
-        },
+        halo: DEFAULT_HALO_OPTIONS,
     };
 
     return {

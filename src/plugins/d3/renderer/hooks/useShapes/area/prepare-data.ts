@@ -129,7 +129,7 @@ export const prepareAreaData = (args: {
                     markers,
                     labels,
                     color: s.color,
-                    opacity: 0.5,
+                    opacity: s.opacity,
                     width: s.lineWidth,
                     series: s,
                     hovered: false,

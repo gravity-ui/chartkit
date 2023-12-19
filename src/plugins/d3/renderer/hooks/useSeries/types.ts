@@ -163,6 +163,7 @@ export type PreparedAreaSeries = {
     stacking: AreaSeries['stacking'];
     stackId: string;
     lineWidth: number;
+    opacity: number;
     dataLabels: {
         enabled: boolean;
         style: BaseTextStyle;

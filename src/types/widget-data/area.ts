@@ -33,7 +33,7 @@ export type AreaSeries<T = any> = BaseSeries & {
     /** The name of the series (used in legend, tooltip etc) */
     name: string;
     /** Whether to stack the values of each series on top of each other.
-     * Possible values are undefined to disable, "normal" to stack by value or "percent"
+     * Possible values are undefined to disable, "normal" to stack by value
      *
      * @default undefined
      * */
@@ -42,6 +42,11 @@ export type AreaSeries<T = any> = BaseSeries & {
     stackId?: string;
     /** The main color of the series (hex, rgba) */
     color?: string;
+    /** Fill opacity for the area
+     *
+     * @default 0.75
+     * */
+    opacity?: number;
     /** Pixel width of the graph line.
      *
      * @default 1

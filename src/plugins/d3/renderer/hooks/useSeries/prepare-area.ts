@@ -5,7 +5,11 @@ import merge from 'lodash/merge';
 import {ChartKitWidgetSeriesOptions, AreaSeries} from '../../../../../types';
 import {PreparedAreaSeries, PreparedLegend} from './types';
 
-import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
+import {
+    DEFAULT_DATALABELS_PADDING,
+    DEFAULT_DATALABELS_STYLE,
+    DEFAULT_HALO_OPTIONS,
+} from './constants';
 import {getRandomCKId} from '../../../../../utils';
 import {getSeriesStackId, prepareLegendSymbol} from './utils';
 
@@ -39,11 +43,7 @@ function prepareMarker(series: AreaSeries, seriesOptions?: ChartKitWidgetSeriesO
         radius: markerNormalState.radius,
         borderWidth: 1,
         borderColor: '#ffffff',
-        halo: {
-            enabled: true,
-            opacity: 0.25,
-            radius: 10,
-        },
+        halo: DEFAULT_HALO_OPTIONS,
     };
 
     return {
@@ -57,6 +57,7 @@ function prepareMarker(series: AreaSeries, seriesOptions?: ChartKitWidgetSeriesO
 export function prepareArea(args: PrepareAreaSeriesArgs) {
     const {colorScale, series: seriesList, seriesOptions, legend} = args;
     const defaultAreaWidth = get(seriesOptions, 'area.lineWidth', DEFAULT_LINE_WIDTH);
+    const defaultOpacity = get(seriesOptions, 'area.opacity', 0.75);
 
     return seriesList.map<PreparedAreaSeries>((series) => {
         const id = getRandomCKId();
@@ -66,6 +67,7 @@ export function prepareArea(args: PrepareAreaSeriesArgs) {
         const prepared: PreparedAreaSeries = {
             type: series.type,
             color,
+            opacity: get(series, 'opacity', defaultOpacity),
             lineWidth: get(series, 'lineWidth', defaultAreaWidth),
             name,
             id,

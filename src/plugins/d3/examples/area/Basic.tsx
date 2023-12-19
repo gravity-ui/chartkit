@@ -2,36 +2,22 @@ import React from 'react';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, AreaSeries, AreaSeriesData} from '../../../../types';
 import nintendoGames from '../nintendoGames';
-import {dateTime} from '@gravity-ui/date-utils';
 
 function prepareData(): AreaSeries[] {
     const games = nintendoGames.filter((d) => {
-        return d.date && d.user_score;
+        return d.date && d.user_score && d.genres.includes('Puzzle');
     });
-
-    const byGenre = (genre: string) => {
-        return games
-            .filter((d) => d.genres.includes(genre))
-            .map((d) => {
-                return {
-                    x: d.date,
-                    y: d.user_score,
-                    label: `${d.title} (${d.user_score})`,
-                    custom: d,
-                };
-            }) as AreaSeriesData[];
-    };
 
     return [
         {
-            name: 'Strategy',
+            name: 'User score',
             type: 'area',
-            data: byGenre('Strategy'),
-        },
-        {
-            name: 'Shooter',
-            type: 'area',
-            data: byGenre('Shooter'),
+            data: games.map<AreaSeriesData>((d) => {
+                return {
+                    x: Number(d.date),
+                    y: Number(d.user_score),
+                };
+            }),
         },
     ];
 }
@@ -40,44 +26,14 @@ export const Basic = () => {
     const series = prepareData();
 
     const widgetData: ChartKitWidgetData = {
+        title: {
+            text: 'User score (puzzle genre)',
+        },
         series: {
             data: series,
         },
-        yAxis: [
-            {
-                title: {
-                    text: 'User score',
-                },
-            },
-        ],
         xAxis: {
             type: 'datetime',
-            title: {
-                text: 'Release dates',
-            },
-        },
-        tooltip: {
-            renderer: (d) => {
-                const point = d.hovered[0]?.data as AreaSeriesData;
-
-                if (!point) {
-                    return null;
-                }
-
-                const title = point.custom.title;
-                const score = point.custom.user_score;
-                const date = dateTime({input: point.custom.date}).format('DD MMM YYYY');
-
-                return (
-                    <React.Fragment>
-                        <b>{title}</b>
-                        <br />
-                        Release date: {date}
-                        <br />
-                        User score: {score}
-                    </React.Fragment>
-                );
-            },
         },
     };
 
