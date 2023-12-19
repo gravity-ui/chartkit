@@ -2,23 +2,17 @@ import {ScaleOrdinal} from 'd3';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 
-import {
-    ChartKitWidgetSeries,
-    ChartKitWidgetSeriesOptions,
-    LineSeries,
-    RectLegendSymbolOptions,
-} from '../../../../../types';
-import {PreparedLineSeries, PreparedLegend, PreparedLegendSymbol} from './types';
+import {ChartKitWidgetSeriesOptions, AreaSeries} from '../../../../../types';
+import {PreparedAreaSeries, PreparedLegend} from './types';
 
 import {
     DEFAULT_DATALABELS_PADDING,
     DEFAULT_DATALABELS_STYLE,
     DEFAULT_HALO_OPTIONS,
-    DEFAULT_LEGEND_SYMBOL_PADDING,
 } from './constants';
 import {getRandomCKId} from '../../../../../utils';
+import {getSeriesStackId, prepareLegendSymbol} from './utils';
 
-export const DEFAULT_LEGEND_SYMBOL_SIZE = 16;
 export const DEFAULT_LINE_WIDTH = 1;
 
 export const DEFAULT_MARKER = {
@@ -29,34 +23,19 @@ export const DEFAULT_MARKER = {
     borderColor: '',
 };
 
-type PrepareLineSeriesArgs = {
+type PrepareAreaSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
-    series: LineSeries[];
+    series: AreaSeries[];
     seriesOptions?: ChartKitWidgetSeriesOptions;
     legend: PreparedLegend;
 };
 
-function prepareLineLegendSymbol(
-    series: ChartKitWidgetSeries,
-    seriesOptions?: ChartKitWidgetSeriesOptions,
-): PreparedLegendSymbol {
-    const symbolOptions: RectLegendSymbolOptions = series.legend?.symbol || {};
-    const defaultLineWidth = get(seriesOptions, 'line.lineWidth', DEFAULT_LINE_WIDTH);
-
-    return {
-        shape: 'path',
-        width: symbolOptions?.width || DEFAULT_LEGEND_SYMBOL_SIZE,
-        padding: symbolOptions?.padding || DEFAULT_LEGEND_SYMBOL_PADDING,
-        strokeWidth: get(series, 'lineWidth', defaultLineWidth),
-    };
-}
-
-function prepareMarker(series: LineSeries, seriesOptions?: ChartKitWidgetSeriesOptions) {
-    const seriesHoverState = get(seriesOptions, 'line.states.hover');
+function prepareMarker(series: AreaSeries, seriesOptions?: ChartKitWidgetSeriesOptions) {
+    const seriesHoverState = get(seriesOptions, 'area.states.hover');
     const markerNormalState = Object.assign(
         {},
         DEFAULT_MARKER,
-        seriesOptions?.line?.marker,
+        seriesOptions?.area?.marker,
         series.marker,
     );
     const hoveredMarkerDefaultOptions = {
@@ -75,27 +54,31 @@ function prepareMarker(series: LineSeries, seriesOptions?: ChartKitWidgetSeriesO
     };
 }
 
-export function prepareLineSeries(args: PrepareLineSeriesArgs) {
+export function prepareArea(args: PrepareAreaSeriesArgs) {
     const {colorScale, series: seriesList, seriesOptions, legend} = args;
-    const defaultLineWidth = get(seriesOptions, 'line.lineWidth', DEFAULT_LINE_WIDTH);
+    const defaultAreaWidth = get(seriesOptions, 'area.lineWidth', DEFAULT_LINE_WIDTH);
+    const defaultOpacity = get(seriesOptions, 'area.opacity', 0.75);
 
-    return seriesList.map<PreparedLineSeries>((series) => {
+    return seriesList.map<PreparedAreaSeries>((series) => {
         const id = getRandomCKId();
         const name = series.name || '';
         const color = series.color || colorScale(name);
 
-        const prepared: PreparedLineSeries = {
+        const prepared: PreparedAreaSeries = {
             type: series.type,
             color,
-            lineWidth: get(series, 'lineWidth', defaultLineWidth),
+            opacity: get(series, 'opacity', defaultOpacity),
+            lineWidth: get(series, 'lineWidth', defaultAreaWidth),
             name,
             id,
             visible: get(series, 'visible', true),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),
-                symbol: prepareLineLegendSymbol(series, seriesOptions),
+                symbol: prepareLegendSymbol(series),
             },
             data: series.data,
+            stacking: series.stacking,
+            stackId: getSeriesStackId(series),
             dataLabels: {
                 enabled: series.dataLabels?.enabled || false,
                 style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),

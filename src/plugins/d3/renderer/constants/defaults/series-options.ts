@@ -79,4 +79,16 @@ export const seriesOptionsDefaults: SeriesOptionsDefaults = {
             },
         },
     },
+    area: {
+        states: {
+            hover: {
+                enabled: true,
+                brightness: 0.3,
+            },
+            inactive: {
+                enabled: true,
+                opacity: 0.5,
+            },
+        },
+    },
 };

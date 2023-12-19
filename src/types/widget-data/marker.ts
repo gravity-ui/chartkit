@@ -8,3 +8,12 @@ export type PointMarkerOptions = {
     /** The width of the point marker's border */
     borderWidth?: number;
 };
+
+export type PointMarkerHalo = {
+    /** Enable or disable the halo appearing around the point */
+    enabled?: boolean;
+    /** The Opacity of the point halo */
+    opacity?: number;
+    /** The radius of the point halo */
+    radius?: number;
+};

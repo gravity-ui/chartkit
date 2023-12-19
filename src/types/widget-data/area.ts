@@ -2,7 +2,7 @@ import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 import type {PointMarkerOptions} from './marker';
 
-export type LineSeriesData<T = any> = BaseSeriesData<T> & {
+export type AreaSeriesData<T = any> = BaseSeriesData<T> & {
     /**
      * The `x` value of the point. Depending on the context , it may represents:
      * - numeric value (for `linear` x axis)
@@ -21,19 +21,32 @@ export type LineSeriesData<T = any> = BaseSeriesData<T> & {
     label?: string | number;
 };
 
-export type LineMarkerSymbol = 'circle' | 'square';
+export type AreaMarkerSymbol = 'circle' | 'square';
 
-export type LineMarkerOptions = PointMarkerOptions & {
-    symbol?: LineMarkerSymbol;
+export type AreaMarkerOptions = PointMarkerOptions & {
+    symbol?: AreaMarkerSymbol;
 };
 
-export type LineSeries<T = any> = BaseSeries & {
-    type: 'line';
-    data: LineSeriesData<T>[];
+export type AreaSeries<T = any> = BaseSeries & {
+    type: 'area';
+    data: AreaSeriesData<T>[];
     /** The name of the series (used in legend, tooltip etc) */
     name: string;
+    /** Whether to stack the values of each series on top of each other.
+     * Possible values are undefined to disable, "normal" to stack by value
+     *
+     * @default undefined
+     * */
+    stacking?: 'normal';
+    /** This option allows grouping series in a stacked chart */
+    stackId?: string;
     /** The main color of the series (hex, rgba) */
     color?: string;
+    /** Fill opacity for the area
+     *
+     * @default 0.75
+     * */
+    opacity?: number;
     /** Pixel width of the graph line.
      *
      * @default 1
@@ -43,6 +56,6 @@ export type LineSeries<T = any> = BaseSeries & {
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;
     };
-    /** Options for the point markers of line series */
-    marker?: LineMarkerOptions;
+    /** Options for the point markers of line in area series */
+    marker?: AreaMarkerOptions;
 };

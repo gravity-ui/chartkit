@@ -1,6 +1,8 @@
-import {PreparedLegendSymbol, PreparedSeries} from './types';
+import memoize from 'lodash/memoize';
+import {PreparedLegendSymbol, PreparedSeries, StackedSeries} from './types';
 import {ChartKitWidgetSeries, RectLegendSymbolOptions} from '../../../../../types';
 import {DEFAULT_LEGEND_SYMBOL_PADDING, DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
+import {getRandomCKId} from '../../../../../utils';
 
 export const getActiveLegendItems = (series: PreparedSeries[]) => {
     return series.reduce<string[]>((acc, s) => {
@@ -27,4 +29,16 @@ export function prepareLegendSymbol(series: ChartKitWidgetSeries): PreparedLegen
         radius: symbolOptions?.radius || symbolHeight / 2,
         padding: symbolOptions?.padding || DEFAULT_LEGEND_SYMBOL_PADDING,
     };
+}
+
+const getCommonStackId = memoize(getRandomCKId);
+
+export function getSeriesStackId(series: StackedSeries) {
+    let stackId = series.stackId;
+
+    if (!stackId) {
+        stackId = series.stacking === 'normal' ? getCommonStackId() : getRandomCKId();
+    }
+
+    return stackId;
 }
