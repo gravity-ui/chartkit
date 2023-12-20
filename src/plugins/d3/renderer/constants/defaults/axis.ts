@@ -1,3 +1,5 @@
+import {ChartKitWidgetAxisType} from '../../../../../types';
+
 export const axisLabelsDefaults = {
     margin: 10,
     padding: 10,
@@ -18,3 +20,5 @@ export const yAxisTitleDefaults = {
     ...axisTitleDefaults,
     margin: 8,
 };
+
+export const DEFAULT_AXIS_TYPE: ChartKitWidgetAxisType = 'linear';

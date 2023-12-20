@@ -7,6 +7,7 @@ import afterFrame from 'afterframe';
 import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {getRandomCKId, measurePerformance} from '../../../utils';
 import {Chart} from './components';
+import {validateData} from './validation';
 
 type ChartDimensions = {
     width: number;
@@ -22,31 +23,6 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
         const performanceMeasure = React.useRef<ReturnType<typeof measurePerformance> | null>(
             measurePerformance(),
         );
-
-        React.useLayoutEffect(() => {
-            if (onChartLoad) {
-                onChartLoad({});
-            }
-        }, [onChartLoad]);
-
-        React.useLayoutEffect(() => {
-            if (dimensions?.width) {
-                if (!performanceMeasure.current) {
-                    performanceMeasure.current = measurePerformance();
-                }
-
-                afterFrame(() => {
-                    const renderTime = performanceMeasure.current?.end();
-                    onRender?.({
-                        renderTime,
-                    });
-                    onLoad?.({
-                        widgetRendering: renderTime,
-                    });
-                    performanceMeasure.current = null;
-                });
-            }
-        }, [data, onRender, onLoad, dimensions]);
 
         const handleResize = React.useCallback(() => {
             const parentElement = ref.current?.parentElement;
@@ -89,6 +65,35 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
             // dimensions initialize
             handleResize();
         }, [handleResize]);
+
+        React.useEffect(() => {
+            validateData(data);
+        }, [data]);
+
+        React.useLayoutEffect(() => {
+            if (onChartLoad) {
+                onChartLoad({});
+            }
+        }, [onChartLoad]);
+
+        React.useLayoutEffect(() => {
+            if (dimensions?.width) {
+                if (!performanceMeasure.current) {
+                    performanceMeasure.current = measurePerformance();
+                }
+
+                afterFrame(() => {
+                    const renderTime = performanceMeasure.current?.end();
+                    onRender?.({
+                        renderTime,
+                    });
+                    onLoad?.({
+                        widgetRendering: renderTime,
+                    });
+                    performanceMeasure.current = null;
+                });
+            }
+        }, [data, onRender, onLoad, dimensions]);
 
         return (
             <div

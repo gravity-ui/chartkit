@@ -16,6 +16,8 @@ import {
     ConnectorCurve,
     PathLegendSymbolOptions,
     DashStyle,
+    AreaSeries,
+    AreaSeriesData,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
 
@@ -157,11 +159,51 @@ export type PreparedLineSeries = {
     dashStyle?: DashStyle;
 } & BasePreparedSeries;
 
+export type PreparedAreaSeries = {
+    type: AreaSeries['type'];
+    data: AreaSeriesData[];
+    stacking: AreaSeries['stacking'];
+    stackId: string;
+    lineWidth: number;
+    opacity: number;
+    dataLabels: {
+        enabled: boolean;
+        style: BaseTextStyle;
+        padding: number;
+        allowOverlap: boolean;
+    };
+    marker: {
+        states: {
+            normal: {
+                symbol: string;
+                enabled: boolean;
+                radius: number;
+                borderWidth: number;
+                borderColor: string;
+            };
+            hover: {
+                enabled: boolean;
+                radius: number;
+                borderWidth: number;
+                borderColor: string;
+                halo: {
+                    enabled: boolean;
+                    opacity: number;
+                    radius: number;
+                };
+            };
+        };
+    };
+} & BasePreparedSeries;
+
 export type PreparedSeries =
     | PreparedScatterSeries
     | PreparedBarXSeries
     | PreparedBarYSeries
     | PreparedPieSeries
-    | PreparedLineSeries;
+    | PreparedLineSeries
+    | PreparedAreaSeries;
 
 export type PreparedSeriesOptions = SeriesOptionsDefaults;
+
+export type StackedSeries = BarXSeries | AreaSeries | BarYSeries;

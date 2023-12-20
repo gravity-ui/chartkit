@@ -7,13 +7,13 @@ import type {
     BaseTextStyle,
     ChartKitWidgetSeries,
     ChartKitWidgetSeriesData,
-    BarXSeries,
-} from '../../../../types/widget-data';
+} from '../../../../types';
 import {formatNumber} from '../../../shared';
 import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
 import {getNumberUnitRate} from '../../../shared/format-number/format-number';
-import {PreparedAxis} from '../hooks';
+import {PreparedAxis, StackedSeries} from '../hooks';
 import {getDefaultDateFormat} from './time';
+import {getSeriesStackId} from '../hooks/useSeries/utils';
 
 export * from './math';
 export * from './text';
@@ -75,24 +75,31 @@ export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
 
     return Array.from(groupedSeries).reduce<unknown[]>((acc, [type, seriesList]) => {
         switch (type) {
+            case 'area':
             case 'bar-x': {
-                const barXSeries = seriesList as BarXSeries[];
-                const stackedSeries = group(barXSeries, (item) => item.stackId);
-
-                Array.from(stackedSeries).forEach(([, stack]) => {
+                const stackedSeries = group(seriesList as StackedSeries[], getSeriesStackId);
+                Array.from(stackedSeries).forEach(([_stackId, seriesStack]) => {
                     const values: Record<string, number> = {};
 
-                    stack.forEach((singleSeries) => {
+                    seriesStack.forEach((singleSeries) => {
+                        const data = new Map();
                         singleSeries.data.forEach((point) => {
-                            const key = String(point.x || point.category);
-
-                            if (typeof values[key] === 'undefined') {
-                                values[key] = 0;
-                            }
+                            const key = String(point.x);
+                            let value = 0;
 
                             if (point.y && typeof point.y === 'number') {
-                                values[key] += point.y;
+                                value = point.y;
                             }
+
+                            if (data.has(key)) {
+                                value = Math.max(value, data.get(key));
+                            }
+
+                            data.set(key, value);
+                        });
+
+                        Array.from(data).forEach(([key, value]) => {
+                            values[key] = (values[key] || 0) + value;
                         });
                     });
 

@@ -23,7 +23,7 @@ export const seriesOptionsDefaults: SeriesOptionsDefaults = {
                 brightness: 0.3,
             },
             inactive: {
-                enabled: true,
+                enabled: false,
                 opacity: 0.5,
             },
         },
@@ -38,7 +38,7 @@ export const seriesOptionsDefaults: SeriesOptionsDefaults = {
                 brightness: 0.3,
             },
             inactive: {
-                enabled: true,
+                enabled: false,
                 opacity: 0.5,
             },
         },
@@ -50,7 +50,7 @@ export const seriesOptionsDefaults: SeriesOptionsDefaults = {
                 brightness: 0.3,
             },
             inactive: {
-                enabled: true,
+                enabled: false,
                 opacity: 0.5,
             },
         },
@@ -62,7 +62,7 @@ export const seriesOptionsDefaults: SeriesOptionsDefaults = {
                 brightness: 0.3,
             },
             inactive: {
-                enabled: true,
+                enabled: false,
                 opacity: 0.5,
             },
         },
@@ -74,7 +74,19 @@ export const seriesOptionsDefaults: SeriesOptionsDefaults = {
                 brightness: 0.3,
             },
             inactive: {
+                enabled: false,
+                opacity: 0.5,
+            },
+        },
+    },
+    area: {
+        states: {
+            hover: {
                 enabled: true,
+                brightness: 0.3,
+            },
+            inactive: {
+                enabled: false,
                 opacity: 0.5,
             },
         },

@@ -13,6 +13,7 @@ export * from './pie';
 export * from './scatter';
 export * from './bar-x';
 export * from './bar-y';
+export * from './area';
 export * from './line';
 export * from './series';
 export * from './title';

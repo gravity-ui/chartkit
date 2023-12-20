@@ -4,21 +4,24 @@ import type {ScatterSeries, ScatterSeriesData} from './scatter';
 import type {BarXSeries, BarXSeriesData} from './bar-x';
 import type {LineSeries, LineSeriesData, LineMarkerOptions} from './line';
 import type {BarYSeries, BarYSeriesData} from './bar-y';
-import {PointMarkerOptions} from './marker';
+import type {PointMarkerOptions, PointMarkerHalo} from './marker';
+import type {AreaSeries, AreaSeriesData} from './area';
 
 export type ChartKitWidgetSeries<T = any> =
     | ScatterSeries<T>
     | PieSeries<T>
     | BarXSeries<T>
     | BarYSeries<T>
-    | LineSeries<T>;
+    | LineSeries<T>
+    | AreaSeries<T>;
 
 export type ChartKitWidgetSeriesData<T = any> =
     | ScatterSeriesData<T>
     | PieSeriesData<T>
     | BarXSeriesData<T>
     | BarYSeriesData<T>
-    | LineSeriesData<T>;
+    | LineSeriesData<T>
+    | AreaSeriesData<T>;
 
 export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;
@@ -176,11 +179,26 @@ export type ChartKitWidgetSeriesOptions = {
             hover?: BasicHoverState & {
                 marker?: PointMarkerOptions & {
                     /** Options for the halo appearing around the hovered point */
-                    halo?: {
-                        enabled?: boolean;
-                        opacity?: number;
-                        radius?: number;
-                    };
+                    halo?: PointMarkerHalo;
+                };
+            };
+            inactive?: BasicInactiveState;
+        };
+        /** Options for the point markers of line series */
+        marker?: LineMarkerOptions;
+    };
+    area?: {
+        /** Pixel width of the graph line.
+         *
+         * @default 1
+         * */
+        lineWidth?: number;
+        /** Options for the series states that provide additional styling information to the series. */
+        states?: {
+            hover?: BasicHoverState & {
+                marker?: PointMarkerOptions & {
+                    /** Options for the halo appearing around the hovered point */
+                    halo?: PointMarkerHalo;
                 };
             };
             inactive?: BasicInactiveState;

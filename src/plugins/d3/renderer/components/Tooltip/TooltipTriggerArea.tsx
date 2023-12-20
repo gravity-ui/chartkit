@@ -127,7 +127,7 @@ export const TooltipTriggerArea = (args: Args) => {
 
     const xLineData = React.useMemo(() => {
         const result = shapesData
-            .filter((sd) => sd.series.type === 'line')
+            .filter((sd) => ['line', 'area'].includes(sd.series.type))
             .reduce((acc, sd) => {
                 return acc.concat(
                     (sd as PreparedLineData).points.map<XLineData>((d) => ({

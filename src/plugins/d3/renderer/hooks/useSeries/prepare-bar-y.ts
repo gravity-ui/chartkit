@@ -3,7 +3,7 @@ import get from 'lodash/get';
 import type {BarYSeries} from '../../../../../types';
 import type {PreparedBarYSeries, PreparedLegend, PreparedSeries} from './types';
 import {getRandomCKId} from '../../../../../utils';
-import {prepareLegendSymbol} from './utils';
+import {getSeriesStackId, prepareLegendSymbol} from './utils';
 import {DEFAULT_DATALABELS_STYLE} from './constants';
 import {getLabelsSize} from '../../utils';
 
@@ -34,16 +34,10 @@ function prepareDataLabels(series: BarYSeries) {
 
 export function prepareBarYSeries(args: PrepareBarYSeriesArgs): PreparedSeries[] {
     const {colorScale, series: seriesList, legend} = args;
-    const commonStackId = getRandomCKId();
 
     return seriesList.map<PreparedBarYSeries>((series) => {
         const name = series.name || '';
         const color = series.color || colorScale(name);
-
-        let stackId = series.stackId;
-        if (!stackId) {
-            stackId = series.stacking === 'normal' ? commonStackId : getRandomCKId();
-        }
 
         return {
             type: series.type,
@@ -57,7 +51,7 @@ export function prepareBarYSeries(args: PrepareBarYSeriesArgs): PreparedSeries[]
             },
             data: series.data,
             stacking: series.stacking,
-            stackId,
+            stackId: getSeriesStackId(series),
             dataLabels: prepareDataLabels(series),
         };
     }, []);

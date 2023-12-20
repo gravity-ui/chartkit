@@ -50,6 +50,7 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                 switch (series.type) {
                     case 'scatter':
                     case 'line':
+                    case 'area':
                     case 'bar-x': {
                         const xRow = getXRowData(xAxis, data);
                         const yRow = getYRowData(yAxis, data);
