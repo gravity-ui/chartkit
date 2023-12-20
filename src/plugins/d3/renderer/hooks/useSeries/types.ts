@@ -15,6 +15,7 @@ import {
     ConnectorShape,
     ConnectorCurve,
     PathLegendSymbolOptions,
+    DashStyle,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
 
@@ -153,6 +154,7 @@ export type PreparedLineSeries = {
             };
         };
     };
+    dashStyle?: DashStyle;
 } & BasePreparedSeries;
 
 export type PreparedSeries =

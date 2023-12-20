@@ -1,5 +1,5 @@
 import {PreparedLineSeries} from '../../useSeries/types';
-import {LineSeriesData} from '../../../../../../types';
+import {DashStyle, LineSeriesData} from '../../../../../../types';
 import {LabelData} from '../../../types';
 
 export type PointData = {
@@ -25,4 +25,5 @@ export type PreparedLineData = {
     hovered: boolean;
     active: boolean;
     labels: LabelData[];
+    dashStyle?: DashStyle;
 };

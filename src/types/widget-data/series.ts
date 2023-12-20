@@ -24,6 +24,19 @@ export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;
 };
 
+export type DashStyle =
+    | 'Dash'
+    | 'DashDot'
+    | 'Dot'
+    | 'LongDash'
+    | 'LongDashDot'
+    | 'LongDashDotDot'
+    | 'ShortDash'
+    | 'ShortDashDot'
+    | 'ShortDashDotDot'
+    | 'ShortDot'
+    | 'Solid';
+
 type BasicHoverState = {
     /**
      * Enable separate styles for the hovered series.
@@ -174,5 +187,8 @@ export type ChartKitWidgetSeriesOptions = {
         };
         /** Options for the point markers of line series */
         marker?: LineMarkerOptions;
+
+        /** Options for line style */
+        dashStyle?: DashStyle;
     };
 };

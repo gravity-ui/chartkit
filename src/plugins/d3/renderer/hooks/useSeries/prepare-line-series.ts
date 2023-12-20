@@ -108,6 +108,10 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
             marker: prepareMarker(series, seriesOptions),
         };
 
+        if (series.dashStyle) {
+            prepared.dashStyle = series.dashStyle;
+        }
+
         return prepared;
     }, []);
 }
