@@ -15,6 +15,7 @@ import {
 import type {AxisDirection} from '../../utils';
 import {PreparedSeries} from '../useSeries/types';
 import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
+import {DEFAULT_AXIS_TYPE} from '../../constants';
 
 export type ChartScale =
     | ScaleLinear<number, number>
@@ -58,7 +59,7 @@ const filterCategoriesByVisibleSeries = (args: {
 };
 
 export function createYScale(axis: PreparedAxis, series: PreparedSeries[], boundsHeight: number) {
-    const yType = get(axis, 'type', 'linear');
+    const yType = get(axis, 'type', DEFAULT_AXIS_TYPE);
     const yMin = get(axis, 'min');
     const yCategories = get(axis, 'categories');
     const yTimestamps = get(axis, 'timestamps');
@@ -133,7 +134,7 @@ export function createXScale(
     boundsWidth: number,
 ) {
     const xMin = get(axis, 'min');
-    const xType = get(axis, 'type', 'linear');
+    const xType = get(axis, 'type', DEFAULT_AXIS_TYPE);
     const xCategories = get(axis, 'categories');
     const xTimestamps = get(axis, 'timestamps');
     const maxPadding = get(axis, 'maxPadding', 0);
