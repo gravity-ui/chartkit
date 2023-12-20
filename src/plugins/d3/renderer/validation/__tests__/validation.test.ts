@@ -35,7 +35,6 @@ describe('plugins/d3/validation', () => {
     });
 
     test.each<ChartKitWidgetData>([
-        PIE_SERIES.INVALID_VALUE,
         XY_SERIES.INVALID_CATEGORY_X,
         XY_SERIES.INVALID_CATEGORY_Y,
         XY_SERIES.INVALID_DATETIME_X,
@@ -52,7 +51,22 @@ describe('plugins/d3/validation', () => {
             } catch (e) {
                 error = e as ChartKitError;
             }
-            // console.log(error?.message);
+
+            expect(error?.code).toEqual(CHARTKIT_ERROR_CODE.INVALID_DATA);
+        },
+    );
+
+    test.each<ChartKitWidgetData>([PIE_SERIES.INVALID_VALUE])(
+        '[Pie Series] validateData should throw an error in case of invalid data (data: %j)',
+        (data) => {
+            let error: ChartKitError | null = null;
+
+            try {
+                validateData(data);
+            } catch (e) {
+                error = e as ChartKitError;
+            }
+
             expect(error?.code).toEqual(CHARTKIT_ERROR_CODE.INVALID_DATA);
         },
     );

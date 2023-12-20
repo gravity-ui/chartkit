@@ -17,6 +17,7 @@ import {DEFAULT_AXIS_TYPE} from '../constants';
 type XYSeries = ScatterSeries | BarXSeries | BarYSeries | LineSeries;
 
 const AVAILABLE_SERIES_TYPES: ChartKitWidgetSeries['type'][] = [
+    'area',
     'bar-x',
     'bar-y',
     'line',
