@@ -11,6 +11,8 @@ import type {
     LegendConfig,
 } from '../hooks';
 
+import {getLineDashArray} from '../hooks/useShapes/utils';
+
 const b = block('d3-legend');
 
 type Props = {
@@ -136,6 +138,7 @@ function renderLegendSymbol(args: {
                     .attr('d', legendSymbolGenerator(points))
                     .attr('fill', 'none')
                     .attr('stroke-width', d.symbol.strokeWidth)
+                    .attr('stroke-dasharray', getLineDashArray(d.dashStyle, d.symbol.strokeWidth))
                     .attr('class', className)
                     .style('stroke', color);
 

@@ -6,10 +6,10 @@ import get from 'lodash/get';
 import {block} from '../../../../../../utils/cn';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
 import type {MarkerData, PointData, PreparedLineData} from './types';
-import type {DashStyle, TooltipDataChunkLine} from '../../../../../../types';
+import type {TooltipDataChunkLine} from '../../../../../../types';
 import type {LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
-import {setActiveState} from '../utils';
+import {getLineDashArray, setActiveState} from '../utils';
 
 const b = block('d3-line');
 
@@ -47,26 +47,6 @@ function getMarkerSymbol(type: string, radius: number) {
         }
     }
 }
-
-const getLineDashArray = (dashStyle: DashStyle, strokeWidth = 2) => {
-    const value = dashStyle.toLowerCase();
-
-    const arrayValue = value
-        .replace('shortdashdotdot', '3,1,1,1,1,1,')
-        .replace('shortdashdot', '3,1,1,1')
-        .replace('shortdot', '1,1,')
-        .replace('shortdash', '3,1,')
-        .replace('longdash', '8,3,')
-        .replace(/dot/g, '1,3,')
-        .replace('dash', '4,3,')
-        .replace(/,$/, '')
-        .split(',')
-        .map((part) => {
-            return `${parseInt(part, 10) * strokeWidth}`;
-        });
-
-    return arrayValue.join(',').replace(/NaN/g, 'none');
-};
 
 const getMarkerVisibility = (d: MarkerData) => {
     const markerStates = d.point.series.marker.states;
