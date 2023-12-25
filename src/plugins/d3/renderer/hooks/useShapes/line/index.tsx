@@ -48,8 +48,8 @@ function getMarkerSymbol(type: string, radius: number) {
     }
 }
 
-const getLineDashArray = (dashStyle: DashStyle = 'Solid', strokeWidth = 2) => {
-    const value = dashStyle && dashStyle.toLowerCase();
+const getLineDashArray = (dashStyle: DashStyle, strokeWidth = 2) => {
+    const value = dashStyle.toLowerCase();
 
     const arrayValue = value
         .replace('shortdashdotdot', '3,1,1,1,1,1,')

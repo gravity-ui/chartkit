@@ -5,6 +5,7 @@ import merge from 'lodash/merge';
 import {
     ChartKitWidgetSeries,
     ChartKitWidgetSeriesOptions,
+    DashStyle,
     LineSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types';
@@ -35,6 +36,10 @@ type PrepareLineSeriesArgs = {
     seriesOptions?: ChartKitWidgetSeriesOptions;
     legend: PreparedLegend;
 };
+
+function prepareDashStyle(series: LineSeries) {
+    return series.dashStyle || DashStyle.Solid;
+}
 
 function prepareLineLegendSymbol(
     series: ChartKitWidgetSeries,
@@ -103,11 +108,8 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
             },
             marker: prepareMarker(series, seriesOptions),
+            dashStyle: prepareDashStyle(series),
         };
-
-        if (series.dashStyle) {
-            prepared.dashStyle = series.dashStyle;
-        }
 
         return prepared;
     }, []);

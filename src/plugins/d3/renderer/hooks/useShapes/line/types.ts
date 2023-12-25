@@ -25,5 +25,5 @@ export type PreparedLineData = {
     hovered: boolean;
     active: boolean;
     labels: LabelData[];
-    dashStyle?: DashStyle;
+    dashStyle: DashStyle;
 };

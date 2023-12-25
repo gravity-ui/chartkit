@@ -156,7 +156,7 @@ export type PreparedLineSeries = {
             };
         };
     };
-    dashStyle?: DashStyle;
+    dashStyle: DashStyle;
 } & BasePreparedSeries;
 
 export type PreparedAreaSeries = {

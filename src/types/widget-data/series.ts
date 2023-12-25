@@ -27,18 +27,21 @@ export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;
 };
 
-export type DashStyle =
-    | 'Dash'
-    | 'DashDot'
-    | 'Dot'
-    | 'LongDash'
-    | 'LongDashDot'
-    | 'LongDashDotDot'
-    | 'ShortDash'
-    | 'ShortDashDot'
-    | 'ShortDashDotDot'
-    | 'ShortDot'
-    | 'Solid';
+export enum DashStyle {
+    Dash = 'Dash',
+    DashDot = 'DashDot',
+    Dot = 'Dot',
+    LongDash = 'LongDash',
+    LongDashDot = 'LongDashDot',
+    LongDashDotDot = 'LongDashDotDot',
+    ShortDash = 'ShortDash',
+    ShortDashDot = 'ShortDashDot',
+    ShortDashDotDot = 'ShortDashDotDot',
+    ShortDot = 'ShortDot',
+    Solid = 'Solid',
+}
+
+export enum LineCap {}
 
 type BasicHoverState = {
     /**
@@ -186,6 +189,12 @@ export type ChartKitWidgetSeriesOptions = {
         };
         /** Options for the point markers of line series */
         marker?: LineMarkerOptions;
+
+        /** Options for line style
+         *
+         * @default 'Solid'
+         * */
+        dashStyle?: DashStyle;
     };
     area?: {
         /** Pixel width of the graph line.
@@ -205,8 +214,5 @@ export type ChartKitWidgetSeriesOptions = {
         };
         /** Options for the point markers of line series */
         marker?: LineMarkerOptions;
-
-        /** Options for line style */
-        dashStyle?: DashStyle;
     };
 };
