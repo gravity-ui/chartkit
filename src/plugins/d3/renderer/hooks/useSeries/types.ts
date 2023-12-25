@@ -16,6 +16,7 @@ import {
     ConnectorCurve,
     PathLegendSymbolOptions,
     DashStyle,
+    LineCap,
     AreaSeries,
     AreaSeriesData,
 } from '../../../../../types';
@@ -157,6 +158,7 @@ export type PreparedLineSeries = {
         };
     };
     dashStyle: DashStyle;
+    linecap: LineCap;
 } & BasePreparedSeries;
 
 export type PreparedAreaSeries = {

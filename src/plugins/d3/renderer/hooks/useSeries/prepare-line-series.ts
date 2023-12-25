@@ -6,6 +6,7 @@ import {
     ChartKitWidgetSeries,
     ChartKitWidgetSeriesOptions,
     DashStyle,
+    LineCap,
     LineSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types';
@@ -39,6 +40,10 @@ type PrepareLineSeriesArgs = {
 
 function prepareDashStyle(series: LineSeries) {
     return series.dashStyle || DashStyle.Solid;
+}
+
+function prepareLinecap(series: LineSeries) {
+    return series.linecap || LineCap.None;
 }
 
 function prepareLineLegendSymbol(
@@ -109,6 +114,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
             },
             marker: prepareMarker(series, seriesOptions),
             dashStyle: prepareDashStyle(series),
+            linecap: prepareLinecap(series),
         };
 
         return prepared;

@@ -3,42 +3,29 @@ import {StoryObj} from '@storybook/react';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {D3Plugin} from '../..';
-import {ChartKitWidgetData, LineSeriesData} from '../../../../types';
+import {ChartKitWidgetData, LineSeriesData, LineSeries, DashStyle} from '../../../../types';
 import {ChartKit} from '../../../../components/ChartKit';
 import nintendoGames from '../../examples/nintendoGames';
 import {HighchartsPlugin} from '../../../highcharts';
 
-enum LineShapeType {
-    Solid = 'Solid',
-    ShortDash = 'ShortDash',
-    ShortDot = 'ShortDot',
-    ShortDashDot = 'ShortDashDot',
-    ShortDashDotDot = 'ShortDashDotDot',
-    Dot = 'Dot',
-    Dash = 'Dash',
-    LongDash = 'LongDash',
-    DashDot = 'DashDot',
-    LongDashDot = 'LongDashDot',
-    LongDashDotDot = 'LongDashDotDot',
-}
-const SHAPES_ORDER = {
-    [LineShapeType.Solid]: 1,
-    [LineShapeType.Dash]: 2,
-    [LineShapeType.Dot]: 3,
-    [LineShapeType.ShortDashDot]: 4,
-    [LineShapeType.LongDash]: 5,
-    [LineShapeType.LongDashDot]: 6,
-    [LineShapeType.ShortDot]: 7,
-    [LineShapeType.LongDashDotDot]: 8,
-    [LineShapeType.ShortDash]: 9,
-    [LineShapeType.DashDot]: 10,
-    [LineShapeType.ShortDashDotDot]: 11,
+const SHAPES = {
+    [DashStyle.Solid]: 1,
+    [DashStyle.Dash]: 2,
+    [DashStyle.Dot]: 3,
+    [DashStyle.ShortDashDot]: 4,
+    [DashStyle.LongDash]: 5,
+    [DashStyle.LongDashDot]: 6,
+    [DashStyle.ShortDot]: 7,
+    [DashStyle.LongDashDotDot]: 8,
+    [DashStyle.ShortDash]: 9,
+    [DashStyle.DashDot]: 10,
+    [DashStyle.ShortDashDotDot]: 11,
 };
 
-const selectShapes = (): LineShapeType[] => Object.values(LineShapeType);
-const getServerShapesOrder = () => selectShapes().sort((a, b) => SHAPES_ORDER[a] - SHAPES_ORDER[b]);
+const selectShapes = (): DashStyle[] => Object.values(DashStyle);
+const getShapesOrder = () => selectShapes().sort((a, b) => SHAPES[a] - SHAPES[b]);
 
-const SHAPES_IN_ORDER = getServerShapesOrder();
+const SHAPES_IN_ORDER = getShapesOrder();
 
 function prepareData(): ChartKitWidgetData {
     const games = nintendoGames.filter((d) => {
@@ -127,8 +114,7 @@ const ChartStory = ({data}: {data: ChartKitWidgetData}) => {
         return <Button onClick={() => setShown(true)}>Show chart</Button>;
     }
 
-    data.series.data.forEach((graph, i) => {
-        // @ts-ignore
+    (data.series.data as LineSeries[]).forEach((graph, i) => {
         graph.dashStyle = SHAPES_IN_ORDER[i % SHAPES_IN_ORDER.length];
     });
 

@@ -41,7 +41,12 @@ export enum DashStyle {
     Solid = 'Solid',
 }
 
-export enum LineCap {}
+export enum LineCap {
+    Butt = 'butt',
+    Round = 'round',
+    Square = 'square',
+    None = 'none',
+}
 
 type BasicHoverState = {
     /**
@@ -195,6 +200,12 @@ export type ChartKitWidgetSeriesOptions = {
          * @default 'Solid'
          * */
         dashStyle?: DashStyle;
+
+        /** Options for line cap style
+         *
+         * @default 'round'
+         * */
+        linecap?: LineCap;
     };
     area?: {
         /** Pixel width of the graph line.

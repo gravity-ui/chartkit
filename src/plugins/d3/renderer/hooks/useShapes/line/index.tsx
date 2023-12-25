@@ -108,6 +108,8 @@ export const LineSeriesShapes = (args: Args) => {
             .attr('fill', 'none')
             .attr('stroke', (d) => d.color)
             .attr('stroke-width', (d) => d.width)
+            .attr('stroke-linejoin', (d) => d.linecap)
+            .attr('stroke-linecap', (d) => d.linecap)
             .attr('stroke-dasharray', (d) => getLineDashArray(d.dashStyle, d.width));
 
         let dataLabels = preparedData.reduce((acc, d) => {

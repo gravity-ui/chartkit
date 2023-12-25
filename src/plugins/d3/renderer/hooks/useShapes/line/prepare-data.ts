@@ -80,11 +80,9 @@ export const prepareLineData = (args: {
             hovered: false,
             active: true,
             id: s.id,
+            dashStyle: s.dashStyle,
+            linecap: s.linecap,
         };
-
-        if (s.dashStyle) {
-            result.dashStyle = s.dashStyle;
-        }
 
         acc.push(result);
 

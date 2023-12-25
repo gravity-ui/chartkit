@@ -1,7 +1,7 @@
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 import type {PointMarkerOptions} from './marker';
-import type {DashStyle} from './series';
+import type {DashStyle, LineCap} from './series';
 
 export type LineSeriesData<T = any> = BaseSeriesData<T> & {
     /**
@@ -47,4 +47,5 @@ export type LineSeries<T = any> = BaseSeries & {
     /** Options for the point markers of line series */
     marker?: LineMarkerOptions;
     dashStyle?: DashStyle;
+    linecap?: LineCap;
 };
