@@ -46,7 +46,7 @@ export type LegendItem = {
     symbol: PreparedLegendSymbol;
     textWidth: number;
     visible?: boolean;
-    dashStyle: DashStyle;
+    dashStyle?: DashStyle;
 };
 
 export type LegendConfig = {

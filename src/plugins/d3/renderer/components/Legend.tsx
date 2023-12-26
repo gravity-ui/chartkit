@@ -138,9 +138,15 @@ function renderLegendSymbol(args: {
                     .attr('d', legendSymbolGenerator(points))
                     .attr('fill', 'none')
                     .attr('stroke-width', d.symbol.strokeWidth)
-                    .attr('stroke-dasharray', getLineDashArray(d.dashStyle, d.symbol.strokeWidth))
                     .attr('class', className)
                     .style('stroke', color);
+
+                if (d.dashStyle) {
+                    element.attr(
+                        'stroke-dasharray',
+                        getLineDashArray(d.dashStyle, d.symbol.strokeWidth),
+                    );
+                }
 
                 break;
             }
