@@ -39,8 +39,15 @@ type PrepareLineSeriesArgs = {
     legend: PreparedLegend;
 };
 
-function prepareLinecap(series: LineSeries) {
-    return series.linecap || (series.dashStyle === DashStyle.Solid ? LineCap.Round : LineCap.None);
+function prepareLinecap(
+    dashStyle: DashStyle,
+    series: LineSeries,
+    seriesOptions?: ChartKitWidgetSeriesOptions,
+) {
+    const defaultLineCap = dashStyle === DashStyle.Solid ? LineCap.Round : LineCap.None;
+    const lineCapFromSeriesOptions = get(seriesOptions, 'line.linecap', defaultLineCap);
+
+    return get(series, 'linecap', lineCapFromSeriesOptions);
 }
 
 function prepareLineLegendSymbol(
@@ -92,6 +99,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
         const id = getRandomCKId();
         const name = series.name || '';
         const color = series.color || colorScale(name);
+        const dashStyle = get(series, 'dashStyle', defaultDashStyle);
 
         const prepared: PreparedLineSeries = {
             type: series.type,
@@ -112,8 +120,8 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
             },
             marker: prepareMarker(series, seriesOptions),
-            dashStyle: get(series, 'dashStyle', defaultDashStyle),
-            linecap: prepareLinecap(series),
+            dashStyle,
+            linecap: prepareLinecap(dashStyle, series, seriesOptions),
         };
 
         return prepared;
