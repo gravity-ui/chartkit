@@ -16,6 +16,7 @@ import {BasicPie} from '../examples/pie/Basic';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
 import {Basic as BasicLine} from '../examples/line/Basic';
 import {Basic as BasicArea} from '../examples/area/Basic';
+import {LinesWithShapes} from '../examples/line/Shapes';
 import {DataLabels as LineWithDataLabels} from '../examples/line/DataLabels';
 import {Donut} from '../examples/pie/Donut';
 import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
@@ -50,6 +51,12 @@ const ShowcaseStory = () => {
                         <Col>
                             <Text variant="subheader-1">With markers</Text>
                             <LineWithMarkers />
+                        </Col>
+                    </Row>
+                    <Row space={1} style={{minHeight: 280}}>
+                        <Col>
+                            <Text variant="subheader-1">Lines with different shapes</Text>
+                            <LinesWithShapes />
                         </Col>
                     </Row>
                     <Row space={1}>

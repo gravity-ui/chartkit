@@ -43,7 +43,7 @@ function prepareDashStyle(series: LineSeries) {
 }
 
 function prepareLinecap(series: LineSeries) {
-    return series.linecap || LineCap.None;
+    return series.linecap || (series.dashStyle === DashStyle.Solid ? LineCap.Round : LineCap.None);
 }
 
 function prepareLineLegendSymbol(

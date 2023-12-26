@@ -46,6 +46,8 @@ export type LineSeries<T = any> = BaseSeries & {
     };
     /** Options for the point markers of line series */
     marker?: LineMarkerOptions;
+    /** Option for line stroke style */
     dashStyle?: DashStyle;
+    /** Option for line cap style */
     linecap?: LineCap;
 };

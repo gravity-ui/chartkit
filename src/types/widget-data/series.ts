@@ -203,7 +203,8 @@ export type ChartKitWidgetSeriesOptions = {
 
         /** Options for line cap style
          *
-         * @default 'round'
+         * @default 'round' when dashStyle is 'solid'
+         * @default 'none' when dashStyle is not 'solid'
          * */
         linecap?: LineCap;
     };
