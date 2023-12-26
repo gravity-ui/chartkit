@@ -22,6 +22,7 @@ import {getRandomCKId} from '../../../../../utils';
 
 export const DEFAULT_LEGEND_SYMBOL_SIZE = 16;
 export const DEFAULT_LINE_WIDTH = 1;
+export const DEFAULT_DASH_STYLE = DashStyle.Solid;
 
 export const DEFAULT_MARKER = {
     enabled: false,
@@ -37,10 +38,6 @@ type PrepareLineSeriesArgs = {
     seriesOptions?: ChartKitWidgetSeriesOptions;
     legend: PreparedLegend;
 };
-
-function prepareDashStyle(series: LineSeries) {
-    return series.dashStyle || DashStyle.Solid;
-}
 
 function prepareLinecap(series: LineSeries) {
     return series.linecap || (series.dashStyle === DashStyle.Solid ? LineCap.Round : LineCap.None);
@@ -87,7 +84,9 @@ function prepareMarker(series: LineSeries, seriesOptions?: ChartKitWidgetSeriesO
 
 export function prepareLineSeries(args: PrepareLineSeriesArgs) {
     const {colorScale, series: seriesList, seriesOptions, legend} = args;
+
     const defaultLineWidth = get(seriesOptions, 'line.lineWidth', DEFAULT_LINE_WIDTH);
+    const defaultDashStyle = get(seriesOptions, 'line.dashStyle', DEFAULT_DASH_STYLE);
 
     return seriesList.map<PreparedLineSeries>((series) => {
         const id = getRandomCKId();
@@ -113,7 +112,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
             },
             marker: prepareMarker(series, seriesOptions),
-            dashStyle: prepareDashStyle(series),
+            dashStyle: get(series, 'dashStyle', defaultDashStyle),
             linecap: prepareLinecap(series),
         };
 
