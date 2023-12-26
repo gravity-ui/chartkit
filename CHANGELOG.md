@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.14.0](https://github.com/gravity-ui/chartkit/compare/v4.13.0...v4.14.0) (2023-12-26)
+
+
+### Features
+
+* bump yagr 4.1.0 ([#369](https://github.com/gravity-ui/chartkit/issues/369)) ([6def97b](https://github.com/gravity-ui/chartkit/commit/6def97b1f743c7378ca4ff754349c80c61c48e14))
+* **D3 plugin:** add basic data validation ([#366](https://github.com/gravity-ui/chartkit/issues/366)) ([75186b5](https://github.com/gravity-ui/chartkit/commit/75186b576da0f21054cf94d5f87f2ca5d4a3b4db))
+* **D3 plugin:** basic area chart ([#363](https://github.com/gravity-ui/chartkit/issues/363)) ([9762964](https://github.com/gravity-ui/chartkit/commit/9762964c6de442f8c531b8fc0340a6cfd933dcf9))
+* **D3 plugin:** disable inactive styles by default ([#367](https://github.com/gravity-ui/chartkit/issues/367)) ([ee0ada1](https://github.com/gravity-ui/chartkit/commit/ee0ada1a310f4761c4cde37a304c033f66011bb0))
+
 ## [4.13.0](https://github.com/gravity-ui/chartkit/compare/v4.12.0...v4.13.0) (2023-12-11)
 
 
