@@ -1,6 +1,6 @@
 import React from 'react';
-import type {Dispatch, Selection, BaseType} from 'd3';
-import {color, line as lineGenerator, select, symbol, symbolCircle, symbolSquare} from 'd3';
+import type {Dispatch, BaseType} from 'd3';
+import {color, line as lineGenerator, select} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
@@ -10,6 +10,14 @@ import type {TooltipDataChunkLine} from '../../../../../../types';
 import type {LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
 import {getLineDashArray, setActiveState} from '../utils';
+import {
+    getMarkerHaloVisibility,
+    getMarkerVisibility,
+    renderMarker,
+    selectMarkerHalo,
+    selectMarkerSymbol,
+    setMarker,
+} from '../marker';
 
 const b = block('d3-line');
 
@@ -17,47 +25,6 @@ type Args = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedLineData[];
     seriesOptions: PreparedSeriesOptions;
-};
-
-function setMarker<T extends BaseType>(
-    selection: Selection<T, MarkerData, BaseType | null, unknown>,
-    state: 'normal' | 'hover',
-) {
-    selection
-        .attr('d', (d) => {
-            const radius =
-                d.point.series.marker.states[state].radius +
-                d.point.series.marker.states[state].borderWidth;
-            return getMarkerSymbol(d.point.series.marker.states.normal.symbol, radius);
-        })
-        .attr('stroke-width', (d) => d.point.series.marker.states[state].borderWidth)
-        .attr('stroke', (d) => d.point.series.marker.states[state].borderColor);
-}
-
-function getMarkerSymbol(type: string, radius: number) {
-    switch (type) {
-        case 'square': {
-            const size = Math.pow(radius, 2) * Math.PI;
-            return symbol(symbolSquare, size)();
-        }
-        case 'circle':
-        default: {
-            const size = Math.pow(radius, 2) * Math.PI;
-            return symbol(symbolCircle, size)();
-        }
-    }
-}
-
-const getMarkerVisibility = (d: MarkerData) => {
-    const markerStates = d.point.series.marker.states;
-    const enabled = (markerStates.hover.enabled && d.hovered) || markerStates.normal.enabled;
-    return enabled ? '' : 'hidden';
-};
-
-const getMarkerHaloVisibility = (d: MarkerData) => {
-    const markerStates = d.point.series.marker.states;
-    const enabled = markerStates.hover.halo.enabled && d.hovered;
-    return enabled ? '' : 'hidden';
 };
 
 export const LineSeriesShapes = (args: Args) => {
@@ -118,28 +85,7 @@ export const LineSeriesShapes = (args: Args) => {
             .selectAll('marker')
             .data(markers)
             .join('g')
-            .attr('class', b('marker'))
-            .attr('visibility', getMarkerVisibility)
-            .attr('transform', (d) => {
-                return `translate(${d.point.x},${d.point.y})`;
-            });
-        markerSelection
-            .append('path')
-            .attr('class', b('marker-halo'))
-            .attr('d', (d) => {
-                const type = d.point.series.marker.states.normal.symbol;
-                const radius = d.point.series.marker.states.hover.halo.radius;
-                return getMarkerSymbol(type, radius);
-            })
-            .attr('fill', (d) => d.point.series.color)
-            .attr('opacity', (d) => d.point.series.marker.states.hover.halo.opacity)
-            .attr('z-index', -1)
-            .attr('visibility', getMarkerHaloVisibility);
-        markerSelection
-            .append('path')
-            .attr('class', b('marker-symbol'))
-            .call(setMarker, 'normal')
-            .attr('fill', (d) => d.point.series.color);
+            .call(renderMarker);
 
         const hoverEnabled = hoverOptions?.enabled;
         const inactiveEnabled = inactiveOptions?.enabled;
@@ -196,12 +142,11 @@ export const LineSeriesShapes = (args: Args) => {
                 if (d.hovered !== hovered) {
                     d.hovered = hovered;
                     elementSelection.attr('visibility', getMarkerVisibility(d));
-                    elementSelection
-                        .select(`.${b('marker-halo')}`)
-                        .attr('visibility', getMarkerHaloVisibility);
-                    elementSelection
-                        .select(`.${b('marker-symbol')}`)
-                        .call(setMarker, hovered ? 'hover' : 'normal');
+                    selectMarkerHalo(elementSelection).attr('visibility', getMarkerHaloVisibility);
+                    selectMarkerSymbol(elementSelection).call(
+                        setMarker,
+                        hovered ? 'hover' : 'normal',
+                    );
                 }
 
                 if (d.point.series.marker.states.normal.enabled) {
