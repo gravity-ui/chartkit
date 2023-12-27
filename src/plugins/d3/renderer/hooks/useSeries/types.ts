@@ -15,12 +15,11 @@ import {
     ConnectorShape,
     ConnectorCurve,
     PathLegendSymbolOptions,
-    DashStyle,
-    LineCap,
     AreaSeries,
     AreaSeriesData,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
+import {DashStyle, LineCap} from '../../../../../constants';
 
 export type RectLegendSymbol = {
     shape: 'rect';

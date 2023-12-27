@@ -2,13 +2,15 @@ import type {BaseType, ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import {select} from 'd3';
 import get from 'lodash/get';
 
-import type {BasicInactiveState, DashStyle} from '../../../../../types';
+import type {BasicInactiveState} from '../../../../../types';
 import {getDataCategoryValue} from '../../utils';
 import type {ChartScale} from '../useAxisScales';
 import type {PreparedAxis} from '../useChartOptions/types';
 
 import type {PreparedLineData} from './line/types';
 import type {PreparedScatterData} from './scatter';
+import {DashStyle} from '../../../../../constants';
+
 export function getXValue(args: {
     point: {x?: number | string};
     xAxis: PreparedAxis;

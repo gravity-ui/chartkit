@@ -1,6 +1,7 @@
 import {PreparedLineSeries} from '../../useSeries/types';
-import {DashStyle, LineCap, LineSeriesData} from '../../../../../../types';
+import {LineSeriesData} from '../../../../../../types';
 import {LabelData} from '../../../types';
+import {DashStyle, LineCap} from '../../../../../../constants';
 
 export type PointData = {
     x: number;

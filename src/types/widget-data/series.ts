@@ -7,6 +7,8 @@ import type {BarYSeries, BarYSeriesData} from './bar-y';
 import type {PointMarkerOptions, PointMarkerHalo} from './marker';
 import type {AreaSeries, AreaSeriesData} from './area';
 
+import {DashStyle, LineCap} from '../../constants';
+
 export type ChartKitWidgetSeries<T = any> =
     | ScatterSeries<T>
     | PieSeries<T>
@@ -26,27 +28,6 @@ export type ChartKitWidgetSeriesData<T = any> =
 export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;
 };
-
-export enum DashStyle {
-    Dash = 'Dash',
-    DashDot = 'DashDot',
-    Dot = 'Dot',
-    LongDash = 'LongDash',
-    LongDashDot = 'LongDashDot',
-    LongDashDotDot = 'LongDashDotDot',
-    ShortDash = 'ShortDash',
-    ShortDashDot = 'ShortDashDot',
-    ShortDashDotDot = 'ShortDashDotDot',
-    ShortDot = 'ShortDot',
-    Solid = 'Solid',
-}
-
-export enum LineCap {
-    Butt = 'butt',
-    Round = 'round',
-    Square = 'square',
-    None = 'none',
-}
 
 type BasicHoverState = {
     /**
@@ -199,14 +180,13 @@ export type ChartKitWidgetSeriesOptions = {
          *
          * @default 'Solid'
          * */
-        dashStyle?: DashStyle;
+        dashStyle?: `${DashStyle}`;
 
         /** Options for line cap style
          *
-         * @default 'round' when dashStyle is 'solid'
-         * @default 'none' when dashStyle is not 'solid'
+         * @default 'round' when dashStyle is not 'solid', 'none' when dashStyle is not 'solid'
          * */
-        linecap?: LineCap;
+        linecap?: `${LineCap}`;
     };
     area?: {
         /** Pixel width of the graph line.

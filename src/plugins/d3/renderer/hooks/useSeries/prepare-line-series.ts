@@ -2,11 +2,11 @@ import {ScaleOrdinal} from 'd3';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 
+import {DashStyle, LineCap} from '../../../../../constants';
+
 import {
     ChartKitWidgetSeries,
     ChartKitWidgetSeriesOptions,
-    DashStyle,
-    LineCap,
     LineSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types';
@@ -120,8 +120,8 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
             },
             marker: prepareMarker(series, seriesOptions),
-            dashStyle,
-            linecap: prepareLinecap(dashStyle, series, seriesOptions),
+            dashStyle: dashStyle as DashStyle,
+            linecap: prepareLinecap(dashStyle as DashStyle, series, seriesOptions) as LineCap,
         };
 
         return prepared;

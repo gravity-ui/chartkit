@@ -1,7 +1,8 @@
 import React from 'react';
-import {ChartKitWidgetData, LineSeriesData, LineSeries, DashStyle} from '../../../../types';
+import {ChartKitWidgetData, LineSeriesData, LineSeries} from '../../../../types';
 import {ChartKit} from '../../../../components/ChartKit';
 import nintendoGames from '../../examples/nintendoGames';
+import {DashStyle} from '../../../../constants';
 
 const SHAPES = {
     [DashStyle.Solid]: 1,

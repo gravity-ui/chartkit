@@ -48,17 +48,19 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         const inactiveOptions = get(seriesOptions, 'scatter.states.inactive');
 
         const selection = svgElement
-            .selectAll(`circle`)
+            .selectAll('point')
             .data(preparedData, shapeKey)
             .join(
-                (enter) => enter.append('circle').attr('class', b('point')),
+                (enter) => enter.append('rect').attr('class', b('point')),
                 (update) => update,
                 (exit) => exit.remove(),
             )
             .attr('fill', (d) => d.data.color || d.series.color || '')
-            .attr('r', (d) => d.data.radius || DEFAULT_SCATTER_POINT_RADIUS)
-            .attr('cx', (d) => d.cx)
-            .attr('cy', (d) => d.cy);
+            // .attr('r', (d) => d.data.radius || DEFAULT_SCATTER_POINT_RADIUS)
+            .attr('x', (d) => d.cx)
+            .attr('y', (d) => d.cy)
+            .attr('width', () => DEFAULT_SCATTER_POINT_RADIUS)
+            .attr('height', () => DEFAULT_SCATTER_POINT_RADIUS);
 
         svgElement
             .on('mousemove', (e) => {
