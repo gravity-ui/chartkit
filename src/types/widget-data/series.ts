@@ -7,6 +7,8 @@ import type {BarYSeries, BarYSeriesData} from './bar-y';
 import type {PointMarkerOptions, PointMarkerHalo} from './marker';
 import type {AreaSeries, AreaSeriesData} from './area';
 
+import {DashStyle, LineCap} from '../../constants';
+
 export type ChartKitWidgetSeries<T = any> =
     | ScatterSeries<T>
     | PieSeries<T>
@@ -173,6 +175,18 @@ export type ChartKitWidgetSeriesOptions = {
         };
         /** Options for the point markers of line series */
         marker?: LineMarkerOptions;
+
+        /** Options for line style
+         *
+         * @default 'Solid'
+         * */
+        dashStyle?: `${DashStyle}`;
+
+        /** Options for line cap style
+         *
+         * @default 'round' when dashStyle is not 'solid', 'none' when dashStyle is not 'solid'
+         * */
+        linecap?: `${LineCap}`;
     };
     area?: {
         /** Pixel width of the graph line.

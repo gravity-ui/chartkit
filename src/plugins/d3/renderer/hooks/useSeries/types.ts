@@ -19,6 +19,7 @@ import {
     AreaSeriesData,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
+import {DashStyle, LineCap} from '../../../../../constants';
 
 export type RectLegendSymbol = {
     shape: 'rect';
@@ -44,6 +45,7 @@ export type LegendItem = {
     symbol: PreparedLegendSymbol;
     textWidth: number;
     visible?: boolean;
+    dashStyle?: DashStyle;
 };
 
 export type LegendConfig = {
@@ -155,6 +157,8 @@ export type PreparedLineSeries = {
             };
         };
     };
+    dashStyle: DashStyle;
+    linecap: LineCap;
 } & BasePreparedSeries;
 
 export type PreparedAreaSeries = {

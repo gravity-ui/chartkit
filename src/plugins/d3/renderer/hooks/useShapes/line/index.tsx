@@ -9,7 +9,7 @@ import type {MarkerData, PointData, PreparedLineData} from './types';
 import type {TooltipDataChunkLine} from '../../../../../../types';
 import type {LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
-import {setActiveState} from '../utils';
+import {getLineDashArray, setActiveState} from '../utils';
 
 const b = block('d3-line');
 
@@ -88,8 +88,9 @@ export const LineSeriesShapes = (args: Args) => {
             .attr('fill', 'none')
             .attr('stroke', (d) => d.color)
             .attr('stroke-width', (d) => d.width)
-            .attr('stroke-linejoin', 'round')
-            .attr('stroke-linecap', 'round');
+            .attr('stroke-linejoin', (d) => d.linecap)
+            .attr('stroke-linecap', (d) => d.linecap)
+            .attr('stroke-dasharray', (d) => getLineDashArray(d.dashStyle, d.width));
 
         let dataLabels = preparedData.reduce((acc, d) => {
             return acc.concat(d.labels);

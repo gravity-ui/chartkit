@@ -70,7 +70,7 @@ export const prepareLineData = (args: {
             }));
         }
 
-        acc.push({
+        const result: PreparedLineData = {
             points,
             markers,
             labels,
@@ -80,7 +80,11 @@ export const prepareLineData = (args: {
             hovered: false,
             active: true,
             id: s.id,
-        });
+            dashStyle: s.dashStyle,
+            linecap: s.linecap,
+        };
+
+        acc.push(result);
 
         return acc;
     }, []);
