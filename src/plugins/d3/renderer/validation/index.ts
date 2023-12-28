@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import {WidgetType} from '../../../../constants';
+import {SeriesType} from '../../../../constants';
 import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
 import {
     BarXSeries,
@@ -19,7 +19,7 @@ import {DEFAULT_AXIS_TYPE} from '../constants';
 
 type XYSeries = ScatterSeries | BarXSeries | BarYSeries | LineSeries;
 
-const AVAILABLE_SERIES_TYPES = Object.values(WidgetType);
+const AVAILABLE_SERIES_TYPES = Object.values(SeriesType);
 
 const validateXYSeries = (args: {
     series: XYSeries;
