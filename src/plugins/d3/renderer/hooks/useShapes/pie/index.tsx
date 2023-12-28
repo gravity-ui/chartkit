@@ -30,8 +30,6 @@ export function getHaloVisibility(d: PieArcDatum<SegmentData>) {
 
 export function PieSeriesShapes(args: PreparePieSeriesArgs) {
     const {dispatcher, preparedData, seriesOptions, svgContainer} = args;
-    const hoverOptions = get(seriesOptions, 'pie.states.hover');
-    const inactiveOptions = get(seriesOptions, 'pie.states.inactive');
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -131,6 +129,8 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .style('fill', 'none');
 
         const eventName = `hover-shape.pie`;
+        const hoverOptions = get(seriesOptions, 'pie.states.hover');
+        const inactiveOptions = get(seriesOptions, 'pie.states.inactive');
         svgElement
             .on('mousemove', (e) => {
                 const datum = select<BaseType, PieArcDatum<SegmentData> | PieLabelData>(
