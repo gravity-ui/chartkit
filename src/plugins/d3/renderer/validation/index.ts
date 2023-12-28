@@ -1,5 +1,7 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+
+import {WidgetType} from '../../../../constants';
 import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
 import {
     BarXSeries,
@@ -12,18 +14,12 @@ import {
     ScatterSeries,
 } from '../../../../types';
 import {i18n} from '../../../../i18n';
+
 import {DEFAULT_AXIS_TYPE} from '../constants';
 
 type XYSeries = ScatterSeries | BarXSeries | BarYSeries | LineSeries;
 
-const AVAILABLE_SERIES_TYPES: ChartKitWidgetSeries['type'][] = [
-    'area',
-    'bar-x',
-    'bar-y',
-    'line',
-    'pie',
-    'scatter',
-];
+const AVAILABLE_SERIES_TYPES = Object.values(WidgetType);
 
 const validateXYSeries = (args: {
     series: XYSeries;

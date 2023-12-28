@@ -1,3 +1,12 @@
+export const WidgetType = {
+    Area: 'area',
+    BarX: 'bar-x',
+    BarY: 'bar-y',
+    Line: 'line',
+    Pie: 'pie',
+    Scatter: 'scatter',
+} as const;
+
 export enum DashStyle {
     Dash = 'Dash',
     DashDot = 'DashDot',

@@ -1,3 +1,4 @@
+import {WidgetType} from '../../constants';
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
@@ -26,7 +27,7 @@ export type ScatterSeriesData<T = any> = BaseSeriesData<T> & {
 };
 
 export type ScatterSeries<T = any> = BaseSeries & {
-    type: 'scatter';
+    type: typeof WidgetType.Scatter;
     data: ScatterSeriesData<T>[];
     /** The name of the series (used in legend, tooltip etc) */
     name: string;
