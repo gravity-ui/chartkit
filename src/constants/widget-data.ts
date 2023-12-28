@@ -1,4 +1,4 @@
-export const WidgetType = {
+export const SeriesType = {
     Area: 'area',
     BarX: 'bar-x',
     BarY: 'bar-y',
