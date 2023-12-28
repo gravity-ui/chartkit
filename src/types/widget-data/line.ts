@@ -1,7 +1,7 @@
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 import type {PointMarkerOptions} from './marker';
-import {DashStyle, LineCap} from '../../constants';
+import {DashStyle, LineCap, WidgetType} from '../../constants';
 
 export type LineSeriesData<T = any> = BaseSeriesData<T> & {
     /**
@@ -29,7 +29,7 @@ export type LineMarkerOptions = PointMarkerOptions & {
 };
 
 export type LineSeries<T = any> = BaseSeries & {
-    type: 'line';
+    type: typeof WidgetType.Line;
     data: LineSeriesData<T>[];
     /** The name of the series (used in legend, tooltip etc) */
     name: string;

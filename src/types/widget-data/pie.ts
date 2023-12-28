@@ -1,3 +1,4 @@
+import {WidgetType} from '../../constants';
 import type {BaseSeries, BaseSeriesData} from './base';
 import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
@@ -16,7 +17,7 @@ export type ConnectorShape = 'straight-line' | 'polyline';
 export type ConnectorCurve = 'linear' | 'basic';
 
 export type PieSeries<T = any> = BaseSeries & {
-    type: 'pie';
+    type: typeof WidgetType.Pie;
     data: PieSeriesData<T>[];
     /**
      * The color of the border surrounding each segment.

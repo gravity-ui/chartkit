@@ -1,3 +1,4 @@
+import {WidgetType} from '../../constants';
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 import type {PointMarkerOptions} from './marker';
@@ -28,7 +29,7 @@ export type AreaMarkerOptions = PointMarkerOptions & {
 };
 
 export type AreaSeries<T = any> = BaseSeries & {
-    type: 'area';
+    type: typeof WidgetType.Area;
     data: AreaSeriesData<T>[];
     /** The name of the series (used in legend, tooltip etc) */
     name: string;

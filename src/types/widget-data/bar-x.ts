@@ -1,3 +1,4 @@
+import {WidgetType} from '../../constants';
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetSeriesOptions} from './series';
 import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
@@ -28,7 +29,7 @@ export type BarXSeriesData<T = any> = BaseSeriesData<T> & {
 };
 
 export type BarXSeries<T = any> = BaseSeries & {
-    type: 'bar-x';
+    type: typeof WidgetType.BarX;
     data: BarXSeriesData<T>[];
     /** The name of the series (used in legend, tooltip etc) */
     name: string;
