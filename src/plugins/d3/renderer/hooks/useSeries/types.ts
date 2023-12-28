@@ -59,6 +59,12 @@ export type LegendConfig = {
     };
 };
 
+export type PreparedHaloOptions = {
+    enabled: boolean;
+    opacity: number;
+    size: number;
+};
+
 type BasePreparedSeries = {
     color: string;
     name: string;
@@ -123,6 +129,11 @@ export type PreparedPieSeries = {
         distance: number;
         connectorCurve: ConnectorCurve;
     };
+    states: {
+        hover: {
+            halo: PreparedHaloOptions;
+        };
+    };
 } & BasePreparedSeries;
 
 export type PreparedLineSeries = {
@@ -149,11 +160,7 @@ export type PreparedLineSeries = {
                 radius: number;
                 borderWidth: number;
                 borderColor: string;
-                halo: {
-                    enabled: boolean;
-                    opacity: number;
-                    radius: number;
-                };
+                halo: PreparedHaloOptions;
             };
         };
     };
@@ -188,11 +195,7 @@ export type PreparedAreaSeries = {
                 radius: number;
                 borderWidth: number;
                 borderColor: string;
-                halo: {
-                    enabled: boolean;
-                    opacity: number;
-                    radius: number;
-                };
+                halo: PreparedHaloOptions;
             };
         };
     };

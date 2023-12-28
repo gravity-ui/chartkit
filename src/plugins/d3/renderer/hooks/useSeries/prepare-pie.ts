@@ -1,4 +1,4 @@
-import {PieSeries} from '../../../../../types';
+import {ChartKitWidgetSeriesOptions, PieSeries} from '../../../../../types';
 import {PreparedLegend, PreparedPieSeries, PreparedSeries} from './types';
 import {scaleOrdinal} from 'd3';
 import {DEFAULT_PALETTE} from '../../constants';
@@ -9,14 +9,16 @@ import {prepareLegendSymbol} from './utils';
 
 type PreparePieSeriesArgs = {
     series: PieSeries;
+    seriesOptions?: ChartKitWidgetSeriesOptions;
     legend: PreparedLegend;
 };
 
 export function preparePieSeries(args: PreparePieSeriesArgs) {
-    const {series, legend} = args;
+    const {series, seriesOptions, legend} = args;
     const dataNames = series.data.map((d) => d.name);
     const colorScale = scaleOrdinal(dataNames, DEFAULT_PALETTE);
     const stackId = getRandomCKId();
+    const seriesHoverState = get(seriesOptions, 'pie.states.hover');
 
     const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem) => {
         const result: PreparedPieSeries = {
@@ -49,6 +51,15 @@ export function preparePieSeries(args: PreparePieSeriesArgs) {
             radius: series.radius || '100%',
             innerRadius: series.innerRadius || 0,
             stackId,
+            states: {
+                hover: {
+                    halo: {
+                        enabled: get(seriesHoverState, 'halo.enabled', true),
+                        opacity: get(seriesHoverState, 'halo.opacity', 0.25),
+                        size: get(seriesHoverState, 'halo.size', 10),
+                    },
+                },
+            },
         };
 
         return result;

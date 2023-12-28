@@ -4,8 +4,9 @@ import type {ScatterSeries, ScatterSeriesData} from './scatter';
 import type {BarXSeries, BarXSeriesData} from './bar-x';
 import type {LineSeries, LineSeriesData, LineMarkerOptions} from './line';
 import type {BarYSeries, BarYSeriesData} from './bar-y';
-import type {PointMarkerOptions, PointMarkerHalo} from './marker';
+import type {PointMarkerOptions} from './marker';
 import type {AreaSeries, AreaSeriesData} from './area';
+import type {Halo} from './halo';
 
 import {DashStyle, LineCap} from '../../constants';
 
@@ -146,7 +147,10 @@ export type ChartKitWidgetSeriesOptions = {
     pie?: {
         /** Options for the series states that provide additional styling information to the series. */
         states?: {
-            hover?: BasicHoverState;
+            hover?: BasicHoverState & {
+                /** Options for the halo appearing outside the hovered slice */
+                halo?: Halo;
+            };
             inactive?: BasicInactiveState;
         };
     };
@@ -168,7 +172,7 @@ export type ChartKitWidgetSeriesOptions = {
             hover?: BasicHoverState & {
                 marker?: PointMarkerOptions & {
                     /** Options for the halo appearing around the hovered point */
-                    halo?: PointMarkerHalo;
+                    halo?: Halo;
                 };
             };
             inactive?: BasicInactiveState;
@@ -199,7 +203,7 @@ export type ChartKitWidgetSeriesOptions = {
             hover?: BasicHoverState & {
                 marker?: PointMarkerOptions & {
                     /** Options for the halo appearing around the hovered point */
-                    halo?: PointMarkerHalo;
+                    halo?: Halo;
                 };
             };
             inactive?: BasicInactiveState;

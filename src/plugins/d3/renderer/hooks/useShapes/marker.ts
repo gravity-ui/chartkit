@@ -23,7 +23,7 @@ export function renderMarker<T extends MarkerData>(
         .attr('class', haloClassName)
         .attr('d', (d) => {
             const type = d.point.series.marker.states.normal.symbol;
-            const radius = d.point.series.marker.states.hover.halo.radius;
+            const radius = d.point.series.marker.states.hover.halo.size;
             return getMarkerSymbol(type, radius);
         })
         .attr('fill', (d) => d.point.series.color)

@@ -46,7 +46,6 @@ export type PieSeries<T = any> = BaseSeries & {
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;
     };
-
     dataLabels?: BaseSeries['dataLabels'] & {
         /**
          * The distance of the data label from the pie's edge.

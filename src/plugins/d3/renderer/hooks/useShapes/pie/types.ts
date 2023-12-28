@@ -35,4 +35,9 @@ export type PreparedPieData = {
     borderColor: string;
     series: PreparedPieSeries;
     connectorCurve: ConnectorCurve;
+    halo: {
+        enabled: boolean;
+        opacity: number;
+        size: number;
+    };
 };
