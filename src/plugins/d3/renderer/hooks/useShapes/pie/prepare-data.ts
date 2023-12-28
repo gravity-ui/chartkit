@@ -38,11 +38,12 @@ const getCenter = (
 };
 
 export function preparePieData(args: Args): PreparedPieData[] {
-    const {series: prepapredSeries, boundsWidth, boundsHeight} = args;
+    const {series: preparedSeries, boundsWidth, boundsHeight} = args;
     const maxRadius = Math.min(boundsWidth, boundsHeight) / 2;
 
-    const groupedPieSeries = group(prepapredSeries, (pieSeries) => pieSeries.stackId);
+    const groupedPieSeries = group(preparedSeries, (pieSeries) => pieSeries.stackId);
     return Array.from(groupedPieSeries).map<PreparedPieData>(([stackId, items]) => {
+        const series = items[0];
         const {
             center,
             borderWidth,
@@ -51,7 +52,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
             radius: seriesRadius,
             innerRadius: seriesInnerRadius,
             dataLabels,
-        } = items[0];
+        } = series;
         const radius =
             calculateNumericProperty({value: seriesRadius, base: maxRadius}) ?? maxRadius;
 
@@ -67,6 +68,11 @@ export function preparePieData(args: Args): PreparedPieData[] {
             borderRadius,
             series: items[0],
             connectorCurve: dataLabels.connectorCurve,
+            halo: {
+                enabled: series.states.hover.halo.enabled,
+                opacity: series.states.hover.halo.opacity,
+                size: series.states.hover.halo.size,
+            },
         };
 
         const segments = items.map<SegmentData>((item) => {

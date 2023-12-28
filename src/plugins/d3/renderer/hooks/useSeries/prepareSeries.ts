@@ -54,7 +54,9 @@ export function prepareSeries(args: {
     switch (type) {
         case 'pie': {
             return series.reduce<PreparedSeries[]>((acc, singleSeries) => {
-                acc.push(...preparePieSeries({series: singleSeries as PieSeries, legend}));
+                acc.push(
+                    ...preparePieSeries({series: singleSeries as PieSeries, seriesOptions, legend}),
+                );
                 return acc;
             }, []);
         }

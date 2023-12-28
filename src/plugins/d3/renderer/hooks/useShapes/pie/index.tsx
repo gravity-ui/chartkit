@@ -23,6 +23,11 @@ type PreparePieSeriesArgs = {
     svgContainer: SVGSVGElement | null;
 };
 
+export function getHaloVisibility(d: PieArcDatum<SegmentData>) {
+    const enabled = d.data.pie.halo.enabled && d.data.hovered;
+    return enabled ? '' : 'hidden';
+}
+
 export function PieSeriesShapes(args: PreparePieSeriesArgs) {
     const {dispatcher, preparedData, seriesOptions, svgContainer} = args;
     const ref = React.useRef<SVGGElement>(null);
@@ -49,6 +54,28 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             })
             .style('stroke', (pieData) => pieData.borderColor)
             .style('stroke-width', (pieData) => pieData.borderWidth);
+
+        shapesSelection
+            .selectAll('halo')
+            .data((pieData) => {
+                if (pieData.halo.enabled) {
+                    return pieData.segments;
+                }
+                return [];
+            })
+            .join('path')
+            .attr('d', (d) => {
+                const arcGenerator = arc<PieArcDatum<SegmentData>>()
+                    .innerRadius(d.data.pie.innerRadius)
+                    .outerRadius(d.data.pie.radius + d.data.pie.halo.size)
+                    .cornerRadius(d.data.pie.borderRadius);
+                return arcGenerator(d);
+            })
+            .attr('class', b('halo'))
+            .attr('fill', (d) => d.data.color)
+            .attr('opacity', (d) => d.data.pie.halo.opacity)
+            .attr('z-index', -1)
+            .attr('visibility', getHaloVisibility);
 
         shapesSelection
             .selectAll(segmentSelector)
@@ -143,6 +170,9 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
 
             shapesSelection.datum((_d, index, list) => {
                 const pieSelection = select<BaseType, PreparedLineData>(list[index]);
+                const haloSelection = pieSelection.selectAll<BaseType, PieArcDatum<SegmentData>>(
+                    `.${b('halo')}`,
+                );
 
                 pieSelection
                     .selectAll<BaseType, PieArcDatum<SegmentData>>(segmentSelector)
@@ -163,6 +193,12 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
                                 }
                                 return initialColor;
                             });
+
+                            const currentSegmentHalo = haloSelection.nodes()[i];
+                            select<BaseType, PieArcDatum<SegmentData>>(currentSegmentHalo).attr(
+                                'visibility',
+                                getHaloVisibility,
+                            );
                         }
 
                         setActiveState<SegmentData>({

@@ -1,5 +1,4 @@
-import type {BaseTextStyle} from '../../../../../types';
-import type {PointMarkerHalo} from '../../../../../types/widget-data/marker';
+import type {BaseTextStyle, Halo} from '../../../../../types';
 
 export const DEFAULT_LEGEND_SYMBOL_SIZE = 8;
 
@@ -13,8 +12,8 @@ export const DEFAULT_DATALABELS_STYLE: BaseTextStyle = {
     fontColor: 'var(--d3-data-labels)',
 };
 
-export const DEFAULT_HALO_OPTIONS: Required<PointMarkerHalo> = {
+export const DEFAULT_HALO_OPTIONS: Required<Halo> = {
     enabled: true,
     opacity: 0.25,
-    radius: 10,
+    size: 10,
 };
