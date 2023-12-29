@@ -114,7 +114,7 @@ export type PreparedPieSeries = {
     borderColor: string;
     borderWidth: number;
     borderRadius: number;
-    center?: [string | number | null, string | number | null];
+    position: [string | number | null, string | number | null];
     radius?: string | number;
     innerRadius?: string | number;
     stackId: string;
@@ -133,6 +133,10 @@ export type PreparedPieSeries = {
         hover: {
             halo: PreparedHaloOptions;
         };
+    };
+    center: {
+        text: string;
+        style: BaseTextStyle;
     };
 } & BasePreparedSeries;
 

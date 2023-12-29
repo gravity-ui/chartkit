@@ -15,6 +15,11 @@
         font-weight: bold;
         alignment-baseline: before-edge;
     }
+
+    &__center {
+        fill: var(--g-color-text-complementary);
+        alignment-baseline: middle;
+    }
 }
 
 .chartkit-d3-bar-x {

@@ -1,5 +1,5 @@
 import {SeriesType} from '../../constants';
-import type {BaseSeries, BaseSeriesData} from './base';
+import type {BaseTextStyle, BaseSeries, BaseSeriesData} from './base';
 import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
 export type PieSeriesData<T = any> = BaseSeriesData<T> & {
@@ -35,7 +35,7 @@ export type PieSeries<T = any> = BaseSeries & {
      */
     borderRadius?: number;
     /** The center of the pie chart relative to the chart area. */
-    center?: [string | number | null, string | number | null];
+    position?: [string | number | null, string | number | null];
     /**
      * The inner radius of the pie.
      * @default 0
@@ -73,5 +73,9 @@ export type PieSeries<T = any> = BaseSeries & {
          * @default 'basic'
          * */
         connectorCurve?: ConnectorCurve;
+    };
+    center?: {
+        text: string;
+        style?: Partial<BaseTextStyle>;
     };
 };

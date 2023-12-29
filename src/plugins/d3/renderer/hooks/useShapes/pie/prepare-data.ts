@@ -45,7 +45,6 @@ export function preparePieData(args: Args): PreparedPieData[] {
     return Array.from(groupedPieSeries).map<PreparedPieData>(([stackId, items]) => {
         const series = items[0];
         const {
-            center,
             borderWidth,
             borderColor,
             borderRadius,
@@ -58,7 +57,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
 
         const data: PreparedPieData = {
             id: stackId,
-            center: getCenter(boundsWidth, boundsHeight, center),
+            position: getCenter(boundsWidth, boundsHeight, series.position),
             innerRadius: calculateNumericProperty({value: seriesInnerRadius, base: radius}) ?? 0,
             radius,
             segments: [],
@@ -73,6 +72,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
                 opacity: series.states.hover.halo.opacity,
                 size: series.states.hover.halo.size,
             },
+            center: series.center,
         };
 
         const segments = items.map<SegmentData>((item) => {

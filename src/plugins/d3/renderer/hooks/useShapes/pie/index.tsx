@@ -49,12 +49,13 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .attr('id', (pieData) => pieData.id)
             .attr('class', b('item'))
             .attr('transform', (pieData) => {
-                const [x, y] = pieData.center;
+                const [x, y] = pieData.position;
                 return `translate(${x}, ${y})`;
             })
             .style('stroke', (pieData) => pieData.borderColor)
             .style('stroke-width', (pieData) => pieData.borderWidth);
 
+        // Render halo appearing outside the hovered slice
         shapesSelection
             .selectAll('halo')
             .data((pieData) => {
@@ -77,6 +78,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .attr('z-index', -1)
             .attr('visibility', getHaloVisibility);
 
+        // Render segments
         shapesSelection
             .selectAll(segmentSelector)
             .data((pieData) => pieData.segments)
@@ -91,8 +93,20 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .attr('class', b('segment'))
             .attr('fill', (d) => d.data.color);
 
+        // Render center for donut charts
         shapesSelection
-            .selectAll<SVGTextElement, PieLabelData>('text')
+            .append('text')
+            .text((d) => d.center.text)
+            .attr('class', b('center'))
+            // .attr('x', (d) => -d.innerRadius)
+            .attr('text-anchor', 'middle')
+            .style('font-size', (d) => d.center.style.fontSize)
+            .style('font-weight', (d) => d.center.style.fontWeight || null)
+            .style('fill', (d) => d.center.style.fontColor || null);
+
+        // Render labels
+        shapesSelection
+            .selectAll<SVGTextElement, PieLabelData>('label')
             .data((pieData) => pieData.labels)
             .join('text')
             .text((d) => d.text)

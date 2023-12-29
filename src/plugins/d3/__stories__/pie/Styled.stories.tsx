@@ -17,7 +17,7 @@ const Template: Story = () => {
                     type: 'pie',
                     borderRadius: 5,
                     borderWidth: 3,
-                    center: ['25%', null],
+                    position: ['25%', null],
                     radius: '75%',
                     dataLabels: {enabled: false},
                     data: [
@@ -39,7 +39,7 @@ const Template: Story = () => {
                     type: 'pie',
                     borderRadius: 5,
                     borderWidth: 3,
-                    center: ['75%', null],
+                    position: ['75%', null],
                     innerRadius: '50%',
                     radius: '75%',
                     dataLabels: {enabled: false},

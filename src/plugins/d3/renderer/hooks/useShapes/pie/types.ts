@@ -2,7 +2,7 @@ import type {PieArcDatum} from 'd3';
 
 import {PreparedPieSeries} from '../../useSeries/types';
 import {LabelData} from '../../../types';
-import {ConnectorCurve} from '../../../../../../types';
+import {BaseTextStyle, ConnectorCurve} from '../../../../../../types';
 
 export type SegmentData = {
     value: number;
@@ -27,7 +27,7 @@ export type PreparedPieData = {
     id: string;
     segments: PieArcDatum<SegmentData>[];
     labels: PieLabelData[];
-    center: [number, number];
+    position: [number, number];
     radius: number;
     innerRadius: number;
     borderRadius: number;
@@ -39,5 +39,9 @@ export type PreparedPieData = {
         enabled: boolean;
         opacity: number;
         size: number;
+    };
+    center: {
+        text: string;
+        style: BaseTextStyle;
     };
 };

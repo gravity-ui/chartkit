@@ -22,6 +22,9 @@ export const Donut = () => {
                     type: 'pie',
                     innerRadius: '50%',
                     data: data,
+                    center: {
+                        text: `All: ${data.reduce((sum, d) => sum + d.value, 0)}`,
+                    },
                 },
             ],
         },

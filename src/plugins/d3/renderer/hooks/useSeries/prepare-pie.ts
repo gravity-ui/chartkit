@@ -1,4 +1,4 @@
-import {ChartKitWidgetSeriesOptions, PieSeries} from '../../../../../types';
+import {BaseTextStyle, ChartKitWidgetSeriesOptions, PieSeries} from '../../../../../types';
 import {PreparedLegend, PreparedPieSeries, PreparedSeries} from './types';
 import {scaleOrdinal} from 'd3';
 import {DEFAULT_PALETTE} from '../../constants';
@@ -6,6 +6,11 @@ import {getRandomCKId} from '../../../../../utils';
 import get from 'lodash/get';
 import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
 import {prepareLegendSymbol} from './utils';
+
+export const DEFAULT_CENTER_STYLE: BaseTextStyle = {
+    fontSize: '14px',
+    fontWeight: 'bold',
+};
 
 type PreparePieSeriesArgs = {
     series: PieSeries;
@@ -44,13 +49,17 @@ export function preparePieSeries(args: PreparePieSeriesArgs) {
                 enabled: get(series, 'legend.enabled', legend.enabled),
                 symbol: prepareLegendSymbol(series),
             },
-            center: series.center || ['50%', '50%'],
+            position: series.position || ['50%', '50%'],
             borderColor: series.borderColor || '',
             borderRadius: series.borderRadius ?? 0,
             borderWidth: series.borderWidth ?? 1,
             radius: series.radius || '100%',
             innerRadius: series.innerRadius || 0,
             stackId,
+            center: {
+                text: series.center?.text || '',
+                style: Object.assign({}, DEFAULT_CENTER_STYLE, series.center?.style),
+            },
             states: {
                 hover: {
                     halo: {
