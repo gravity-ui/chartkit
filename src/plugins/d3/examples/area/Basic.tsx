@@ -1,6 +1,7 @@
 import React from 'react';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, AreaSeries, AreaSeriesData} from '../../../../types';
+import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
 
 function prepareData(): AreaSeries[] {
@@ -26,9 +27,6 @@ export const Basic = () => {
     const series = prepareData();
 
     const widgetData: ChartKitWidgetData = {
-        title: {
-            text: 'User score (puzzle genre)',
-        },
         series: {
             data: series,
         },
@@ -37,5 +35,9 @@ export const Basic = () => {
         },
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };

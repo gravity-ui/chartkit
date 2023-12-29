@@ -1,8 +1,9 @@
 import React from 'react';
+import {groups} from 'd3';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {BarYSeries, ChartKitWidgetData} from '../../../../types';
+import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
-import {groups} from 'd3';
 
 function prepareData() {
     const grouped = groups(
@@ -54,5 +55,9 @@ export const StackedColumns = () => {
         ],
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };

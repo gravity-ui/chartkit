@@ -2,6 +2,7 @@ import {groups} from 'd3';
 import React from 'react';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, AreaSeries, AreaSeriesData} from '../../../../types';
+import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
 
 const years = Array.from(
@@ -57,11 +58,12 @@ export const StackedArea = () => {
         xAxis: {
             type: 'category',
             categories: years,
-            title: {
-                text: 'Release year',
-            },
         },
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };

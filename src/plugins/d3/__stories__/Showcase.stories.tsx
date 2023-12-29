@@ -1,9 +1,11 @@
 import React from 'react';
+import {Container, Row, Col, Text} from '@gravity-ui/uikit';
 import {StoryObj} from '@storybook/react';
 import {withKnobs} from '@storybook/addon-knobs';
+
 import {settings} from '../../../libs';
-import {D3Plugin} from '../index';
 import {Loader} from '../../../components/Loader/Loader';
+import {D3Plugin} from '../index';
 import {BasicBarXChart} from '../examples/bar-x/Basic';
 import {GroupedColumns} from '../examples/bar-x/GroupedColumns';
 import {StackedColumns} from '../examples/bar-x/StackedColumns';
@@ -11,7 +13,6 @@ import {DataLabels as BarXDataLabels} from '../examples/bar-x/DataLabels';
 import {Basic as BasicBarY} from '../examples/bar-y/Basic';
 import {GroupedColumns as GroupedColumnsBarY} from '../examples/bar-y/GroupedColumns';
 import {StackedColumns as StackedColumnsBarY} from '../examples/bar-y/StackedColumns';
-import {Container, Row, Col, Text} from '@gravity-ui/uikit';
 import {BasicPie} from '../examples/pie/Basic';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
 import {Basic as BasicLine} from '../examples/line/Basic';
@@ -25,6 +26,7 @@ import {StackedArea} from '../examples/area/StackedArea';
 
 const ShowcaseStory = () => {
     const [loading, setLoading] = React.useState(true);
+
     React.useEffect(() => {
         settings.set({plugins: [D3Plugin]});
         setLoading(false);
@@ -39,22 +41,20 @@ const ShowcaseStory = () => {
                     <Row space={1}>
                         <Text variant="header-2">Line charts</Text>
                     </Row>
-                    <Row space={3} style={{minHeight: 280}}>
-                        <Col>
+                    <Row space={3}>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Basic line chart</Text>
                             <BasicLine />
                         </Col>
-                        <Col>
-                            <Text variant="subheader-1">With data labels</Text>
-                            <LineWithDataLabels />
-                        </Col>
-                        <Col>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">With markers</Text>
                             <LineWithMarkers />
                         </Col>
-                    </Row>
-                    <Row space={1} style={{minHeight: 280}}>
-                        <Col>
+                        <Col s={12} m={12} l={6}>
+                            <Text variant="subheader-1">With data labels</Text>
+                            <LineWithDataLabels />
+                        </Col>
+                        <Col s={12} m={12} l={6}>
                             <Text variant="subheader-1">Lines with different shapes</Text>
                             <LinesWithShapes />
                         </Col>
@@ -62,55 +62,50 @@ const ShowcaseStory = () => {
                     <Row space={1}>
                         <Text variant="header-2">Area charts</Text>
                     </Row>
-                    <Row space={3} style={{minHeight: 280}}>
-                        <Col>
+                    <Row space={3}>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Basic area chart</Text>
                             <BasicArea />
                         </Col>
-                        <Col>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Stacked area</Text>
                             <StackedArea />
                         </Col>
-                        <Col></Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>
                     </Row>
-                    <Row space={3} style={{minHeight: 280}}>
-                        <Col>
+                    <Row space={3}>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Basic column chart</Text>
                             <BasicBarXChart />
                         </Col>
-                        <Col>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Grouped columns</Text>
                             <GroupedColumns />
                         </Col>
-                        <Col>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Stacked columns</Text>
                             <StackedColumns />
                         </Col>
-                    </Row>
-                    <Row space={3} style={{minHeight: 280}}>
-                        <Col>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Bar-x chart with data labels</Text>
                             <BarXDataLabels />
                         </Col>
-                        <Col></Col>
-                        <Col></Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-y charts</Text>
                     </Row>
-                    <Row space={3} style={{minHeight: 280}}>
-                        <Col>
+                    <Row space={3}>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Basic bar chart</Text>
                             <BasicBarY />
                         </Col>
-                        <Col>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Grouped bars</Text>
                             <GroupedColumnsBarY />
                         </Col>
-                        <Col>
+                        <Col s={12} m={12}>
                             <Text variant="subheader-1">Stacked bars</Text>
                             <StackedColumnsBarY />
                         </Col>
@@ -118,38 +113,33 @@ const ShowcaseStory = () => {
                     <Row space={1}>
                         <Text variant="header-2">Pie charts</Text>
                     </Row>
-                    <Row space={3} style={{minHeight: 280}}>
-                        <Col>
+                    <Row space={3}>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Basic pie chart</Text>
                             <BasicPie />
                         </Col>
-                        <Col>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Donut chart</Text>
                             <Donut />
                         </Col>
-                        <Col></Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Scatter charts</Text>
                     </Row>
-                    <Row space={3} style={{minHeight: 280}}>
-                        <Col>
+                    <Row space={3}>
+                        <Col s={12}>
                             <Text variant="subheader-1">Basic scatter</Text>
                             <BasicScatter />
                         </Col>
-                        <Col></Col>
-                        <Col></Col>
                     </Row>
                     <Row space={1}>
-                        <Text variant="header-2">Combined chart</Text>
+                        <Text variant="header-2">Combined charts</Text>
                     </Row>
                     <Row space={3} style={{minHeight: 280}}>
-                        <Col>
+                        <Col s={12}>
                             <Text variant="subheader-1">Line + Bar-X</Text>
                             <LineAndBarXCombinedChart />
                         </Col>
-                        <Col></Col>
-                        <Col></Col>
                     </Row>
                 </Container>
             )}
