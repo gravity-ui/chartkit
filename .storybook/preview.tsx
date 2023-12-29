@@ -38,8 +38,8 @@ export const parameters = {
     },
     options: {
         storySort: {
-            order: ['Theme', 'Components', ['Basic']],
-            method: 'alphabetical',
+            order: ['Showcase'],
+            includeNames: true,
         },
     },
 };
