@@ -1,0 +1,29 @@
+{
+  "home-page.header-subtitle": {
+    "message": "Библиотека для создания визуализаций на базе React"
+  },
+  "home-page.header-get-started": {
+    "message": "Начать"
+  },
+  "home-page.feature-title-ecosystem": {
+    "message": "Экосистема"
+  },
+  "home-page.feature-description-ecosystem": {
+    "message": "ChartKit является частью экосистемы {gravityLink}, которая позволяет создавать приложения любой сложности"
+  },
+  "home-page.feature-title-opensource": {
+    "message": "Открытый код"
+  },
+  "home-page.feature-description-opensource": {
+    "message": "Код ChartKit полностью открыт и развивается командой профессионалов"
+  },
+  "home-page.feature-title-extendable": {
+    "message": "Расширяемость"
+  },
+  "home-page.feature-description-extendable": {
+    "message": "Пишите свои расширения для ChartKit без потери консистентности общего API"
+  },
+  "sidebar.docs.category.plugins": {
+    "message": "Premiers pas"
+  }
+}

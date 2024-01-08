@@ -1,0 +1,26 @@
+{
+  "home-page.header-subtitle": {
+    "message": "Charting library built with React"
+  },
+  "home-page.header-get-started": {
+    "message": "Get Started"
+  },
+  "home-page.feature-title-ecosystem": {
+    "message": "Ecosystem"
+  },
+  "home-page.feature-description-ecosystem": {
+    "message": "ChartKit was designed as a part of {gravityLink} ecosystem that allows you to build rich web applications"
+  },
+  "home-page.feature-title-opensource": {
+    "message": "Open Source"
+  },
+  "home-page.feature-description-opensource": {
+    "message": "ChartKit is fully open source solution powered by team of professionals"
+  },
+  "home-page.feature-title-extendable": {
+    "message": "Extendable"
+  },
+  "home-page.feature-description-extendable": {
+    "message": "Extend ChartKit with your own chart renderers without loss of api consistency"
+  }
+}

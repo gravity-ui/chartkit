@@ -1,3 +1,4 @@
 build
 node_modules
 src/i18n/keysets
+documentation/babel.config.js

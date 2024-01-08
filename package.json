@@ -120,6 +120,11 @@
     "lint:prettier": "prettier --check --loglevel=error '**/*.{js,jsx,ts,tsx,scss}'",
     "lint": "run-p lint:*",
     "typecheck": "tsc --noEmit",
+    "docs:deps": "cd ./documentation && npm ci",
+    "docs:start": "cd ./documentation && npm run start",
+    "docs:start:ru": "cd ./documentation && npm run start:ru",
+    "docs:build": "cd ./documentation && npm run build",
+    "docs:serve": "cd ./documentation && npm run serve",
     "prepublishOnly": "npm run build"
   },
   "husky": {
