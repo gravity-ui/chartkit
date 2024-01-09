@@ -1,0 +1,142 @@
+---
+sidebar_position: 2
+---
+
+# Get started
+
+## Installation
+
+```bash
+npm i @gravity-ui/chartkit @gravity-ui/uikit
+```
+
+:::info
+
+Installing the `@gravity-ui/uikit` package is necessary because `ChartKit` uses some common components and the `ThemeProvider` context to organize color scheme styles.
+
+:::
+
+## Usage
+
+Let's build a simple bar chart and look at the general basics when working with `ChartKit`. In order for `ChartKit` to know which [plugins](./plugins/concept) can be used, they must be registered:
+```js
+import {settings} from "@gravity-ui/chartkit";
+import {D3Plugin} from "@gravity-ui/chartkit/d3";
+
+settings.set({plugins: [D3Plugin]});
+```
+
+Next, you need to import common styles from the package `@gravity-ui/uikit` in order for the color schemes to work:
+```js
+import {settings} from "@gravity-ui/chartkit";
+import {D3Plugin} from "@gravity-ui/chartkit/d3";
+// highlight-next-line
+import "@gravity-ui/uikit/styles/styles.css";
+
+settings.set({plugins: [D3Plugin]});
+```
+
+Add a simple configuration and some data for rendering:
+
+```js
+import {settings} from "@gravity-ui/chartkit";
+import {D3Plugin} from "@gravity-ui/chartkit/d3";
+// highlight-next-line
+import type {D3WidgetData} from "@gravity-ui/chartkit/d3";
+import "@gravity-ui/uikit/styles/styles.css";
+
+settings.set({plugins: [D3Plugin]});
+
+// highlight-start
+const data: D3WidgetData["data"] = {
+  series: {
+    data: [
+      {
+        type: "bar-x",
+        name: "Line series",
+        data: [
+          {x: "Apples", y: 3},
+          {x: "Oranges", y: 1},
+          {x: "Grapes", y: 2},
+        ],
+      },
+    ],
+  },
+  xAxis: {
+    type: "category",
+    categories: ["Apples", "Oranges", "Grapes"],
+  },
+  yAxis: [
+    {
+      ticks: {
+        pixelInterval: 50,
+      },
+    },
+  ],
+};
+// highlight-end
+```
+
+Add a React component:
+
+```js
+// highlight-next-line
+import {ThemeProvider} from "@gravity-ui/uikit";
+// highlight-next-line
+import ChartKit, {settings} from "@gravity-ui/chartkit";
+import {D3Plugin} from "@gravity-ui/chartkit/d3";
+import type {D3WidgetData} from "@gravity-ui/chartkit/d3";
+import "@gravity-ui/uikit/styles/styles.css";
+
+settings.set({plugins: [D3Plugin]});
+
+const data: D3WidgetData["data"] = {
+  series: {
+    data: [
+      {
+        type: "bar-x",
+        name: "Line series",
+        data: [
+          {x: "Apples", y: 3},
+          {x: "Oranges", y: 1},
+          {x: "Grapes", y: 2},
+        ],
+      },
+    ],
+  },
+  xAxis: {
+    type: "category",
+    categories: ["Apples", "Oranges", "Grapes"],
+  },
+  yAxis: [
+    {
+      ticks: {
+        pixelInterval: 50,
+      },
+    },
+  ],
+};
+
+// highlight-start
+function App() {
+  return (
+    <ThemeProvider theme="system">
+      <div className="app" style={{height: 400}}>
+        <ChartKit type="d3" data={data} />
+      </div>
+    </ThemeProvider>
+  );
+}
+
+export default App;
+// highlight-end
+```
+
+Result:
+
+<iframe
+    src="https://codesandbox.io/embed/jcpckq?view=Editor+%2B+Preview&module=%2Fsrc%2FApp.tsx"
+    className="codesandbox"
+    title="Quick start example"
+    sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
