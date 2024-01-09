@@ -1,8 +1,9 @@
 import React from 'react';
 import {ChartKitWidgetData, LineSeriesData, LineSeries} from '../../../../types';
 import {ChartKit} from '../../../../components/ChartKit';
-import nintendoGames from '../../examples/nintendoGames';
 import {DashStyle} from '../../../../constants';
+import {ExampleWrapper} from '../ExampleWrapper';
+import nintendoGames from '../nintendoGames';
 
 const SHAPES = {
     [DashStyle.Solid]: 1,
@@ -52,33 +53,21 @@ function prepareData(): ChartKitWidgetData {
                     name: '3D',
                     type: 'line',
                     data: byGenre('3D'),
-                    dataLabels: {
-                        enabled: true,
-                    },
                 },
                 {
                     name: '2D',
                     type: 'line',
                     data: byGenre('2D'),
-                    dataLabels: {
-                        enabled: true,
-                    },
                 },
                 {
                     name: 'Strategy',
                     type: 'line',
                     data: byGenre('Strategy'),
-                    dataLabels: {
-                        enabled: true,
-                    },
                 },
                 {
                     name: 'Shooter',
                     type: 'line',
                     data: byGenre('Shooter'),
-                    dataLabels: {
-                        enabled: true,
-                    },
                 },
             ],
         },
@@ -110,13 +99,8 @@ export const LinesWithShapes = () => {
     });
 
     return (
-        <div
-            style={{
-                height: '80vh',
-                width: '100%',
-            }}
-        >
+        <ExampleWrapper>
             <ChartKit type="d3" data={data} />
-        </div>
+        </ExampleWrapper>
     );
 };

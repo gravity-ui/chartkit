@@ -1,8 +1,9 @@
 import React from 'react';
+import {groups, max, min, median} from 'd3';
 import {ChartKitWidgetData} from '../../../../types';
 import {ChartKit} from '../../../../components/ChartKit';
-import nintendoGames from '../../examples/nintendoGames';
-import {groups, max, min, median} from 'd3';
+import {ExampleWrapper} from '../ExampleWrapper';
+import nintendoGames from '../nintendoGames';
 
 export const LineAndBarXCombinedChart = () => {
     const gamesByPlatform = groups(nintendoGames, (item) => item.platform || 'unknown');
@@ -61,5 +62,9 @@ export const LineAndBarXCombinedChart = () => {
         ],
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };

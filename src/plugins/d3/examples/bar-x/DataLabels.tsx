@@ -1,8 +1,9 @@
 import React from 'react';
+import {groups, sort} from 'd3';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {BarXSeries, BarXSeriesData, ChartKitWidgetData} from '../../../../types';
+import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
-import {groups, sort} from 'd3';
 
 const years = Array.from(
     new Set(
@@ -63,5 +64,9 @@ export const DataLabels = () => {
         },
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };

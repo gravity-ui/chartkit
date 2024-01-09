@@ -1,8 +1,9 @@
 import React from 'react';
+import {dateTime} from '@gravity-ui/date-utils';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, LineSeries, LineSeriesData} from '../../../../types';
+import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
-import {dateTime} from '@gravity-ui/date-utils';
 
 function prepareData(): LineSeries[] {
     const games = nintendoGames.filter((d) => {
@@ -95,5 +96,9 @@ export const DataLabels = () => {
         },
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };

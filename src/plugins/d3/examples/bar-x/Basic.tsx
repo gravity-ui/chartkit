@@ -1,8 +1,9 @@
 import React from 'react';
+import {groups} from 'd3';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, BarXSeries, BarXSeriesData} from '../../../../types';
+import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
-import {groups} from 'd3';
 
 function prepareData(
     {field, filterNulls}: {field: 'platform' | 'meta_score' | 'date'; filterNulls?: boolean} = {
@@ -52,7 +53,11 @@ export const BasicBarXChart = () => {
         yAxis: [{title: {text: 'Number of games released'}}],
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };
 
 export const BasicLinearBarXChart = () => {
@@ -73,7 +78,11 @@ export const BasicLinearBarXChart = () => {
         },
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };
 
 export const BasicDateTimeBarXChart = () => {
@@ -95,5 +104,9 @@ export const BasicDateTimeBarXChart = () => {
         },
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };

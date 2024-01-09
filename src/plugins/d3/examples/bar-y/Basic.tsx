@@ -1,8 +1,9 @@
 import React from 'react';
+import {groups} from 'd3';
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, BarYSeries, BarYSeriesData} from '../../../../types';
+import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
-import {groups} from 'd3';
 
 function prepareData(field: 'platform' | 'meta_score' | 'date' = 'platform') {
     const gamesByPlatform = groups(nintendoGames, (item) => item[field]);
@@ -45,5 +46,9 @@ export const Basic = () => {
         ],
     };
 
-    return <ChartKit type="d3" data={widgetData} />;
+    return (
+        <ExampleWrapper>
+            <ChartKit type="d3" data={widgetData} />
+        </ExampleWrapper>
+    );
 };
