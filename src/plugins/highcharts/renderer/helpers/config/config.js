@@ -1524,10 +1524,6 @@ export function prepareConfig(data, options, isMobile, holidays) {
                 load: function () {
                     if (chartType === 'column' || chartType === 'bar') {
                         this.series.forEach((seriesItem) => {
-                            if (!seriesItem.legendItem) {
-                                return;
-                            }
-
                             const color = seriesItem.color;
 
                             // The update method updates all series, and therefore,
