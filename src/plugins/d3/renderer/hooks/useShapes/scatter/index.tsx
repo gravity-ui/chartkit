@@ -1,6 +1,15 @@
 import React from 'react';
 import get from 'lodash/get';
-import {color, pointer, select} from 'd3';
+import {
+    symbol,
+    symbolDiamond2,
+    symbolCircle,
+    symbolSquare,
+    symbolTriangle,
+    color,
+    pointer,
+    select,
+} from 'd3';
 import type {BaseType, Dispatch, Selection} from 'd3';
 
 import {block} from '../../../../../../utils/cn';
@@ -10,6 +19,8 @@ import type {NodeWithD3Data} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
 import type {PreparedScatterData} from './prepare-data';
 import {shapeKey} from '../utils';
+import {DotStyle} from '../../../../../../constants';
+import {ScatterSeries} from '../../../../../../types/widget-data';
 
 export {prepareScatterData} from './prepare-data';
 export type {PreparedScatterData} from './prepare-data';
@@ -22,7 +33,9 @@ type ScatterSeriesShapeProps = {
 };
 
 const b = block('d3-scatter');
-const DEFAULT_SCATTER_POINT_RADIUS = 4;
+
+// const DEFAULT_SCATTER_POINT_CIRCLE_RADIUS = 4;
+
 const EMPTY_SELECTION = null as unknown as Selection<
     BaseType,
     PreparedScatterData,
@@ -32,6 +45,29 @@ const EMPTY_SELECTION = null as unknown as Selection<
 
 const isNodeContainsScatterData = (node?: Element): node is NodeWithD3Data<PreparedScatterData> => {
     return isNodeContainsD3Data(node);
+};
+
+const getScatterStyle = (index: number) => {
+    const scatterStyles = Object.values(DotStyle);
+
+    return scatterStyles[index % scatterStyles.length];
+};
+
+const getScatterSymbol = (style: string) => {
+    switch (style) {
+        case DotStyle.Diamond:
+            return symbolDiamond2;
+        case DotStyle.Circle:
+            return symbolCircle;
+        case DotStyle.Square:
+            return symbolSquare;
+        case DotStyle.Triangle:
+            return symbolTriangle;
+        case DotStyle.TriangleDown:
+            return symbolTriangle;
+        default:
+            return symbolCircle;
+    }
 };
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
@@ -47,18 +83,32 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         const hoverOptions = get(seriesOptions, 'scatter.states.hover');
         const inactiveOptions = get(seriesOptions, 'scatter.states.inactive');
 
+        const seriesIds: string[] = [];
+
         const selection = svgElement
-            .selectAll('circle')
+            .selectAll('point')
             .data(preparedData, shapeKey)
-            .join(
-                (enter) => enter.append('circle').attr('class', b('point')),
-                (update) => update,
-                (exit) => exit.remove(),
-            )
-            .attr('fill', (d) => d.data.color || d.series.color || '')
-            .attr('r', (d) => d.data.radius || DEFAULT_SCATTER_POINT_RADIUS)
-            .attr('cx', (d) => d.cx)
-            .attr('cy', (d) => d.cy);
+            .join('svg:path')
+            .attr('class', b('point'))
+            .attr('transform', (d: {cx: number; cy: number}) => {
+                return 'translate(' + (d.cx - 3) + ',' + (d.cy - 3) + ')';
+            })
+            .attr('d', (d) => {
+                const seriesId = d.series.id;
+
+                let seriesIdIndex = seriesIds.indexOf(seriesId);
+                if (seriesIdIndex === -1) {
+                    seriesIds.push(seriesId);
+                    seriesIdIndex = seriesIds.length - 1;
+                }
+
+                const scatterStyle =
+                    (d.series as ScatterSeries).symbol || getScatterStyle(seriesIdIndex);
+                const scatterSymbol = getScatterSymbol(scatterStyle);
+
+                return symbol(scatterSymbol, 48)();
+            })
+            .attr('fill', (d) => d.data.color || d.series.color || '');
 
         svgElement
             .on('mousemove', (e) => {
