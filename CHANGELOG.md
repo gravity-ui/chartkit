@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.15.0](https://github.com/gravity-ui/chartkit/compare/v4.14.0...v4.15.0) (2024-01-09)
+
+
+### Features
+
+* **D3 plugin:** add halo to pie series ([#371](https://github.com/gravity-ui/chartkit/issues/371)) ([5a8dab7](https://github.com/gravity-ui/chartkit/commit/5a8dab749abc0414ade857ce9dfcaa76a4d208ed))
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** the bars are displayed outside the chart ([#379](https://github.com/gravity-ui/chartkit/issues/379)) ([21e2aff](https://github.com/gravity-ui/chartkit/commit/21e2aff47f81f4b4b5ac1a32c68c85b6efdeac23))
+
 ## [4.14.0](https://github.com/gravity-ui/chartkit/compare/v4.13.0...v4.14.0) (2023-12-26)
 
 
