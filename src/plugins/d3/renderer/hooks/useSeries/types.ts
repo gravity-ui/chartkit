@@ -75,6 +75,7 @@ type BasePreparedSeries = {
     color: string;
     name: string;
     id: string;
+    index: number;
     visible: boolean;
     legend: {
         enabled: boolean;

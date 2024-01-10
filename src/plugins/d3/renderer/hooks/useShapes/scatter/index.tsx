@@ -55,8 +55,6 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         const hoverOptions = get(seriesOptions, 'scatter.states.hover');
         const inactiveOptions = get(seriesOptions, 'scatter.states.inactive');
 
-        const seriesIds: string[] = [];
-
         const selection = svgElement
             .selectAll('path')
             .data(preparedData, shapeKey)
@@ -66,13 +64,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 (exit) => exit.remove(),
             )
             .attr('d', (d) => {
-                const seriesId = d.series.id;
-
-                let seriesIdIndex = seriesIds.indexOf(seriesId);
-                if (seriesIdIndex === -1) {
-                    seriesIds.push(seriesId);
-                    seriesIdIndex = seriesIds.length - 1;
-                }
+                const seriesIdIndex = d.series.index;
 
                 const scatterStyle =
                     (d.series as ScatterSeries).symbol || getScatterStyle(seriesIdIndex);
