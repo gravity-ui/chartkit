@@ -61,38 +61,34 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
             .selectAll('path')
             .data(preparedData, shapeKey)
             .join(
-                (enter) =>
-                    enter
-                        .append('path')
-                        .attr('class', b('point'))
-                        .attr('transform', (d) => {
-                            const size = d.data.radius || DEFAULT_SCATTER_POINT_SIZE;
-
-                            // Offset from top left point to center point of symbol shape
-                            return 'translate(' + (d.cx - size / 2) + ',' + (d.cy - size / 2) + ')';
-                        })
-                        .attr('d', (d) => {
-                            const seriesId = d.series.id;
-
-                            let seriesIdIndex = seriesIds.indexOf(seriesId);
-                            if (seriesIdIndex === -1) {
-                                seriesIds.push(seriesId);
-                                seriesIdIndex = seriesIds.length - 1;
-                            }
-
-                            const scatterStyle =
-                                (d.series as ScatterSeries).symbol ||
-                                getScatterStyle(seriesIdIndex);
-                            const scatterSymbol = getScatterSymbol(scatterStyle);
-
-                            const size = d.data.radius || DEFAULT_SCATTER_POINT_SIZE;
-
-                            // To cast pixel size to d3 size we need to multiply this value by 6
-                            return symbol(scatterSymbol, size * 6)();
-                        }),
+                (enter) => enter.append('path').attr('class', b('point')),
                 (update) => update,
                 (exit) => exit.remove(),
             )
+            .attr('d', (d) => {
+                const seriesId = d.series.id;
+
+                let seriesIdIndex = seriesIds.indexOf(seriesId);
+                if (seriesIdIndex === -1) {
+                    seriesIds.push(seriesId);
+                    seriesIdIndex = seriesIds.length - 1;
+                }
+
+                const scatterStyle =
+                    (d.series as ScatterSeries).symbol || getScatterStyle(seriesIdIndex);
+                const scatterSymbol = getScatterSymbol(scatterStyle);
+
+                const size = d.data.radius ? d.data.radius * 2 : DEFAULT_SCATTER_POINT_SIZE;
+
+                // To cast pixel size to d3 size we need to multiply this value by 6
+                return symbol(scatterSymbol, size * 6)();
+            })
+            .attr('transform', (d) => {
+                const size = d.data.radius ? d.data.radius * 2 : DEFAULT_SCATTER_POINT_SIZE;
+
+                // Offset from top left point to center point of symbol shape
+                return 'translate(' + (d.cx - size / 2) + ',' + (d.cy - size / 2) + ')';
+            })
             .attr('fill', (d) => d.data.color || d.series.color || '');
 
         svgElement
