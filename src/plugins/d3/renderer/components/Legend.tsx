@@ -182,6 +182,7 @@ function renderLegendSymbol(args: {
                     .attr('transform', () => {
                         return 'translate(' + x + ',' + y + ')';
                     })
+                    .attr('class', className)
                     .style('fill', color);
 
                 break;
