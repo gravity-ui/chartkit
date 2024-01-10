@@ -25,10 +25,11 @@ type PrepareAxisRelatedSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;
     series: ChartKitWidgetSeries;
     legend: PreparedLegend;
+    index: number;
 };
 
 function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedSeries[] {
-    const {colorScale, series, legend} = args;
+    const {colorScale, series, legend, index} = args;
     const preparedSeries = cloneDeep(series) as PreparedSeries;
     const name = 'name' in series && series.name ? series.name : '';
     preparedSeries.color = 'color' in series && series.color ? series.color : colorScale(name);
@@ -36,7 +37,7 @@ function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedS
     preparedSeries.visible = get(preparedSeries, 'visible', true);
     preparedSeries.legend = {
         enabled: get(preparedSeries, 'legend.enabled', legend.enabled),
-        symbol: prepareLegendSymbol(series),
+        symbol: prepareLegendSymbol(series, index),
     };
 
     return [preparedSeries];
@@ -67,8 +68,10 @@ export function prepareSeries(args: {
             return prepareBarYSeries({series: series as BarYSeries[], legend, colorScale});
         }
         case 'scatter': {
-            return series.reduce<PreparedSeries[]>((acc, singleSeries) => {
-                acc.push(...prepareAxisRelatedSeries({series: singleSeries, legend, colorScale}));
+            return series.reduce<PreparedSeries[]>((acc, singleSeries, index) => {
+                acc.push(
+                    ...prepareAxisRelatedSeries({series: singleSeries, legend, colorScale, index}),
+                );
                 return acc;
             }, []);
         }

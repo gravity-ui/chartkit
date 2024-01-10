@@ -1,8 +1,9 @@
 import memoize from 'lodash/memoize';
 import {PreparedLegendSymbol, PreparedSeries, StackedSeries} from './types';
-import {ChartKitWidgetSeries, RectLegendSymbolOptions} from '../../../../../types';
-import {DEFAULT_LEGEND_SYMBOL_PADDING, DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
+import {ChartKitWidgetSeries} from '../../../../../types';
 import {getRandomCKId} from '../../../../../utils';
+import {getScatterStyle} from '../../utils';
+import {ScatterSeries} from '../../../../../types/widget-data';
 
 export const getActiveLegendItems = (series: PreparedSeries[]) => {
     return series.reduce<string[]>((acc, s) => {
@@ -18,16 +19,17 @@ export const getAllLegendItems = (series: PreparedSeries[]) => {
     return series.map((s) => s.name);
 };
 
-export function prepareLegendSymbol(series: ChartKitWidgetSeries): PreparedLegendSymbol {
-    const symbolOptions: RectLegendSymbolOptions = series.legend?.symbol || {};
-    const symbolHeight = symbolOptions?.height || DEFAULT_LEGEND_SYMBOL_SIZE;
+export function prepareLegendSymbol(
+    series: ChartKitWidgetSeries,
+    index: number,
+): PreparedLegendSymbol {
+    const scatterStyle = (series as ScatterSeries).symbol || getScatterStyle(index);
 
     return {
-        shape: 'rect',
-        width: symbolOptions?.width || DEFAULT_LEGEND_SYMBOL_SIZE,
-        height: symbolHeight,
-        radius: symbolOptions?.radius || symbolHeight / 2,
-        padding: symbolOptions?.padding || DEFAULT_LEGEND_SYMBOL_PADDING,
+        shape: 'symbol',
+        style: scatterStyle,
+        padding: 0,
+        width: 8,
     };
 }
 

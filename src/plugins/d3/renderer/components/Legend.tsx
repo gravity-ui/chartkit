@@ -1,7 +1,8 @@
 import React from 'react';
-import {BaseType, select, line as lineGenerator} from 'd3';
+import {symbol, BaseType, select, line as lineGenerator} from 'd3';
 import type {Selection} from 'd3';
 
+import {getScatterSymbol} from '../utils';
 import {block} from '../../../../utils/cn';
 import type {
     OnLegendItemClick,
@@ -9,6 +10,7 @@ import type {
     PreparedSeries,
     LegendItem,
     LegendConfig,
+    SymbolLegendSymbol,
 } from '../hooks';
 
 import {getLineDashArray} from '../hooks/useShapes/utils';
@@ -160,6 +162,25 @@ function renderLegendSymbol(args: {
                     .attr('height', d.symbol.height)
                     .attr('rx', d.symbol.radius)
                     .attr('class', className)
+                    .style('fill', color);
+
+                break;
+            }
+            case 'symbol': {
+                const y = legend.lineHeight / 2;
+
+                element
+                    .append('svg:path')
+                    .attr('d', () => {
+                        const scatterSymbol = getScatterSymbol(
+                            (d.symbol as SymbolLegendSymbol).style,
+                        );
+
+                        return symbol(scatterSymbol, 48)();
+                    })
+                    .attr('transform', () => {
+                        return 'translate(' + x + ',' + y + ')';
+                    })
                     .style('fill', color);
 
                 break;

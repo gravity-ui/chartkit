@@ -66,3 +66,12 @@ export type PathLegendSymbolOptions = BaseLegendSymbol & {
      * */
     width?: number;
 };
+
+export type SymbolLegendSymbolOptions = BaseLegendSymbol & {
+    /**
+     * Size of the d3 symbol that will be used as series symbol in legend
+     *
+     * @default 48
+     * */
+    width?: number;
+};
