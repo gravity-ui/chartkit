@@ -176,7 +176,8 @@ function renderLegendSymbol(args: {
                             (d.symbol as SymbolLegendSymbol).style,
                         );
 
-                        return symbol(scatterSymbol, 48)();
+                        // To cast pixel size to d3 size we need to multiply this value by 6
+                        return symbol(scatterSymbol, d.symbol.width * 6)();
                     })
                     .attr('transform', () => {
                         return 'translate(' + x + ',' + y + ')';

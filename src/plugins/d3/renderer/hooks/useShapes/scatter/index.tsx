@@ -29,7 +29,7 @@ type ScatterSeriesShapeProps = {
 
 const b = block('d3-scatter');
 
-// const DEFAULT_SCATTER_POINT_CIRCLE_RADIUS = 4;
+const DEFAULT_SCATTER_POINT_SIZE = 8;
 
 const EMPTY_SELECTION = null as unknown as Selection<
     BaseType,
@@ -65,8 +65,11 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                     enter
                         .append('svg:path')
                         .attr('class', b('point'))
-                        .attr('transform', (d: {cx: number; cy: number}) => {
-                            return 'translate(' + (d.cx - 3) + ',' + (d.cy - 3) + ')';
+                        .attr('transform', (d) => {
+                            const size = d.data.radius || DEFAULT_SCATTER_POINT_SIZE;
+
+                            // Offset from top left point to center point of symbol shape
+                            return 'translate(' + (d.cx - size / 2) + ',' + (d.cy - size / 2) + ')';
                         })
                         .attr('d', (d) => {
                             const seriesId = d.series.id;
@@ -82,7 +85,10 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                                 getScatterStyle(seriesIdIndex);
                             const scatterSymbol = getScatterSymbol(scatterStyle);
 
-                            return symbol(scatterSymbol, 48)();
+                            const size = d.data.radius || DEFAULT_SCATTER_POINT_SIZE;
+
+                            // To cast pixel size to d3 size we need to multiply this value by 6
+                            return symbol(scatterSymbol, size * 6)();
                         }),
                 (update) => update,
                 (exit) => exit.remove(),
