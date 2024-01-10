@@ -58,12 +58,12 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         const seriesIds: string[] = [];
 
         const selection = svgElement
-            .selectAll('point')
+            .selectAll('path')
             .data(preparedData, shapeKey)
             .join(
                 (enter) =>
                     enter
-                        .append('svg:path')
+                        .append('path')
                         .attr('class', b('point'))
                         .attr('transform', (d) => {
                             const size = d.data.radius || DEFAULT_SCATTER_POINT_SIZE;
