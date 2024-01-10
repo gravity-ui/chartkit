@@ -19,10 +19,7 @@ export const getAllLegendItems = (series: PreparedSeries[]) => {
     return series.map((s) => s.name);
 };
 
-export function prepareLegendSymbol(
-    series: ChartKitWidgetSeries,
-    index: number,
-): PreparedLegendSymbol {
+export function prepareLegendSymbol(series: ChartKitWidgetSeries, index = 0): PreparedLegendSymbol {
     const scatterStyle = (series as ScatterSeries).symbol || getScatterStyle(index);
 
     return {
