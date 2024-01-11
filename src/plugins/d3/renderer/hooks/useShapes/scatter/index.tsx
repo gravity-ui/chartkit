@@ -5,12 +5,7 @@ import type {BaseType, Dispatch, Selection} from 'd3';
 
 import {block} from '../../../../../../utils/cn';
 
-import {
-    extractD3DataFromNode,
-    isNodeContainsD3Data,
-    getScatterStyle,
-    getScatterSymbol,
-} from '../../../utils';
+import {extractD3DataFromNode, isNodeContainsD3Data, getSymbol} from '../../../utils';
 import type {NodeWithD3Data} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
 import type {PreparedScatterData} from './prepare-data';
@@ -28,8 +23,6 @@ type ScatterSeriesShapeProps = {
 };
 
 const b = block('d3-scatter');
-
-const DEFAULT_SCATTER_POINT_SIZE = 8;
 
 const EMPTY_SELECTION = null as unknown as Selection<
     BaseType,
@@ -64,22 +57,16 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 (exit) => exit.remove(),
             )
             .attr('d', (d) => {
-                const seriesIdIndex = d.series.index;
+                const symbolType = (d.series as ScatterSeries).symbolType || 'circle';
+                const scatterSymbol = getSymbol(symbolType);
 
-                const scatterStyle =
-                    (d.series as ScatterSeries).symbol || getScatterStyle(seriesIdIndex || 0);
-                const scatterSymbol = getScatterSymbol(scatterStyle);
-
-                const size = d.data.radius ? d.data.radius * 2 : DEFAULT_SCATTER_POINT_SIZE;
-
-                // To cast pixel size to d3 size we need to multiply this value by 6
-                return symbol(scatterSymbol, size * 6)();
+                // D3 takes size as square pixels, so we need to make square pixels size by multiplying
+                // https://d3js.org/d3-shape/symbol#symbol
+                return symbol(scatterSymbol, d.size * d.size)();
             })
             .attr('transform', (d) => {
-                const size = d.data.radius ? d.data.radius * 2 : DEFAULT_SCATTER_POINT_SIZE;
-
                 // Offset from top left point to center point of symbol shape
-                return 'translate(' + (d.cx - size / 2) + ',' + (d.cy - size / 2) + ')';
+                return 'translate(' + (d.cx - d.size / 2) + ',' + (d.cy - d.size / 2) + ')';
             })
             .attr('fill', (d) => d.data.color || d.series.color || '');
 

@@ -2,12 +2,14 @@ import {symbolDiamond2, symbolCircle, symbolSquare, symbolTriangle2} from 'd3';
 
 import {DotStyle} from '../../../../constants';
 
-export const getScatterStyle = (index: number) => {
+export const getSymbolType = (index: number) => {
     const scatterStyles = Object.values(DotStyle);
 
     return scatterStyles[index % scatterStyles.length];
 };
 
+// This is an inverted triangle
+// Based on https://github.com/d3/d3-shape/blob/main/src/symbol/triangle2.js
 const sqrt3 = Math.sqrt(3);
 const triangleDown = {
     draw: (context: CanvasPath, size: number) => {
@@ -20,8 +22,8 @@ const triangleDown = {
     },
 };
 
-export const getScatterSymbol = (style: string) => {
-    switch (style) {
+export const getSymbol = (symbolType: string) => {
+    switch (symbolType) {
         case DotStyle.Diamond:
             return symbolDiamond2;
         case DotStyle.Circle:

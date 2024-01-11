@@ -2,7 +2,7 @@ import React from 'react';
 import {symbol, BaseType, select, line as lineGenerator} from 'd3';
 import type {Selection} from 'd3';
 
-import {getScatterSymbol} from '../utils';
+import {getSymbol} from '../utils';
 import {block} from '../../../../utils/cn';
 import type {
     OnLegendItemClick,
@@ -172,12 +172,13 @@ function renderLegendSymbol(args: {
                 element
                     .append('svg:path')
                     .attr('d', () => {
-                        const scatterSymbol = getScatterSymbol(
-                            (d.symbol as SymbolLegendSymbol).style,
+                        const scatterSymbol = getSymbol(
+                            (d.symbol as SymbolLegendSymbol).symbolType,
                         );
 
-                        // To cast pixel size to d3 size we need to multiply this value by 6
-                        return symbol(scatterSymbol, d.symbol.width * 6)();
+                        // D3 takes size as square pixels, so we need to make square pixels size by multiplying
+                        // https://d3js.org/d3-shape/symbol#symbol
+                        return symbol(scatterSymbol, d.symbol.width * d.symbol.width)();
                     })
                     .attr('transform', () => {
                         return 'translate(' + x + ',' + y + ')';

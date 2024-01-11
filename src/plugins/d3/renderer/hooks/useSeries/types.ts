@@ -33,7 +33,7 @@ export type PathLegendSymbol = {
 
 export type SymbolLegendSymbol = {
     shape: 'symbol';
-    style: string;
+    symbolType: string;
 } & Required<SymbolLegendSymbolOptions>;
 
 export type PreparedLegendSymbol = RectLegendSymbol | PathLegendSymbol | SymbolLegendSymbol;
@@ -86,6 +86,7 @@ type BasePreparedSeries = {
 export type PreparedScatterSeries = {
     type: ScatterSeries['type'];
     data: ScatterSeriesData[];
+    symbolType: string;
 } & BasePreparedSeries;
 
 export type PreparedBarXSeries = {

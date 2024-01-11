@@ -34,7 +34,7 @@ export type ScatterSeries<T = any> = BaseSeries & {
     /** The main color of the series (hex, rgba) */
     color?: string;
     /** A predefined shape or symbol for the dot */
-    symbol?: string;
+    symbolType?: string;
     // yAxisIndex?: number;
 
     /** Individual series legend options. Has higher priority than legend options in widget data */

@@ -69,8 +69,7 @@ export type PathLegendSymbolOptions = BaseLegendSymbol & {
 
 export type SymbolLegendSymbolOptions = BaseLegendSymbol & {
     /**
-     * The pixel size of the symbol for series types that use a path in the legend
-     * It needs to be casted to d3 size before using in d3.symbol
+     * The pixel width of the symbol for series types that use a symbol in the legend
      *
      * @default 8
      * */

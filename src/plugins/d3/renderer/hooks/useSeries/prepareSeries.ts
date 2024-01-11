@@ -12,7 +12,10 @@ import type {
     PieSeries,
 } from '../../../../../types';
 
-import type {PreparedLegend, PreparedSeries} from './types';
+import {getSymbolType} from '../../utils';
+import {ScatterSeries} from '../../../../../types/widget-data';
+
+import type {PreparedLegend, PreparedSeries, PreparedScatterSeries} from './types';
 import {prepareLineSeries} from './prepare-line-series';
 import {prepareBarXSeries} from './prepare-bar-x';
 import {prepareBarYSeries} from './prepare-bar-y';
@@ -28,16 +31,20 @@ type PrepareAxisRelatedSeriesArgs = {
     index: number;
 };
 
-function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedSeries[] {
+function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedScatterSeries[] {
     const {colorScale, series, legend, index} = args;
-    const preparedSeries = cloneDeep(series) as PreparedSeries;
+    const preparedSeries = cloneDeep(series) as PreparedScatterSeries;
     const name = 'name' in series && series.name ? series.name : '';
+
+    const symbolType = (series as ScatterSeries).symbolType || getSymbolType(index);
+
+    preparedSeries.symbolType = symbolType;
     preparedSeries.color = 'color' in series && series.color ? series.color : colorScale(name);
     preparedSeries.name = name;
     preparedSeries.visible = get(preparedSeries, 'visible', true);
     preparedSeries.legend = {
         enabled: get(preparedSeries, 'legend.enabled', legend.enabled),
-        symbol: prepareLegendSymbol(series, index),
+        symbol: prepareLegendSymbol(series, symbolType),
     };
 
     return [preparedSeries];
