@@ -11,6 +11,7 @@ import type {
     LineSeries,
     PieSeries,
 } from '../../../../../types';
+import {SymbolType} from '../../../../../constants';
 
 import {getSymbolType} from '../../utils';
 import {ScatterSeries} from '../../../../../types/widget-data';
@@ -36,7 +37,7 @@ function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedS
     const preparedSeries = cloneDeep(series) as PreparedScatterSeries;
     const name = 'name' in series && series.name ? series.name : '';
 
-    const symbolType = (series as ScatterSeries).symbolType || getSymbolType(index);
+    const symbolType = ((series as ScatterSeries).symbolType || getSymbolType(index)) as SymbolType;
 
     preparedSeries.symbolType = symbolType;
     preparedSeries.color = 'color' in series && series.color ? series.color : colorScale(name);
