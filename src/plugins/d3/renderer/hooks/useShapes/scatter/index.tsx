@@ -66,8 +66,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 return symbol(scatterSymbol, d.size * d.size)();
             })
             .attr('transform', (d) => {
-                // Offset from top left point to center point of symbol shape
-                return 'translate(' + (d.cx - d.size / 2) + ',' + (d.cy - d.size / 2) + ')';
+                return 'translate(' + d.cx + ',' + d.cy + ')';
             })
             .attr('fill', (d) => d.data.color || d.series.color || '');
 

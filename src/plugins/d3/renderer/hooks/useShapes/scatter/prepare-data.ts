@@ -5,7 +5,7 @@ import type {PreparedAxis} from '../../useChartOptions/types';
 import {PreparedScatterSeries} from '../../useSeries/types';
 import {getXValue, getYValue} from '../utils';
 
-const DEFAULT_SCATTER_POINT_SIZE = 8;
+const DEFAULT_SCATTER_POINT_SIZE = 7;
 
 export type PreparedScatterData = Omit<TooltipDataChunkScatter, 'series'> & {
     cx: number;
