@@ -67,7 +67,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 const seriesIdIndex = d.series.index;
 
                 const scatterStyle =
-                    (d.series as ScatterSeries).symbol || getScatterStyle(seriesIdIndex);
+                    (d.series as ScatterSeries).symbol || getScatterStyle(seriesIdIndex || 0);
                 const scatterSymbol = getScatterSymbol(scatterStyle);
 
                 const size = d.data.radius ? d.data.radius * 2 : DEFAULT_SCATTER_POINT_SIZE;
