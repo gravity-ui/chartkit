@@ -1,4 +1,4 @@
-import {SeriesType} from '../../constants';
+import {SeriesType, SymbolType} from '../../constants';
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
@@ -34,7 +34,7 @@ export type ScatterSeries<T = any> = BaseSeries & {
     /** The main color of the series (hex, rgba) */
     color?: string;
     /** A predefined shape or symbol for the dot */
-    symbolType?: string;
+    symbolType?: SymbolType;
     // yAxisIndex?: number;
 
     /** Individual series legend options. Has higher priority than legend options in widget data */

@@ -3,6 +3,7 @@ import {PreparedLegendSymbol, PreparedSeries, StackedSeries} from './types';
 import {ChartKitWidgetSeries} from '../../../../../types';
 import {getRandomCKId} from '../../../../../utils';
 import {DEFAULT_LEGEND_SYMBOL_PADDING} from './constants';
+import {SymbolType} from '../../../../../constants';
 
 const DEFAULT_LEGEND_SYMBOL_SIZE = 8;
 
@@ -22,13 +23,13 @@ export const getAllLegendItems = (series: PreparedSeries[]) => {
 
 export function prepareLegendSymbol(
     series: ChartKitWidgetSeries,
-    symbolType?: string,
+    symbolType?: SymbolType,
 ): PreparedLegendSymbol {
     const symbolOptions = series.legend?.symbol || {};
 
     return {
         shape: 'symbol',
-        symbolType: symbolType || 'circle',
+        symbolType: symbolType || SymbolType.Circle,
         width: symbolOptions?.width || DEFAULT_LEGEND_SYMBOL_SIZE,
         padding: symbolOptions?.padding || DEFAULT_LEGEND_SYMBOL_PADDING,
     };

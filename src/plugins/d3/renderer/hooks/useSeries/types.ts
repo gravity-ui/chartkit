@@ -20,7 +20,7 @@ import {
     AreaSeriesData,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
-import {DashStyle, LineCap} from '../../../../../constants';
+import {DashStyle, LineCap, SymbolType} from '../../../../../constants';
 
 export type RectLegendSymbol = {
     shape: 'rect';
@@ -33,7 +33,7 @@ export type PathLegendSymbol = {
 
 export type SymbolLegendSymbol = {
     shape: 'symbol';
-    symbolType: string;
+    symbolType: SymbolType;
 } & Required<SymbolLegendSymbolOptions>;
 
 export type PreparedLegendSymbol = RectLegendSymbol | PathLegendSymbol | SymbolLegendSymbol;
@@ -86,7 +86,7 @@ type BasePreparedSeries = {
 export type PreparedScatterSeries = {
     type: ScatterSeries['type'];
     data: ScatterSeriesData[];
-    symbolType: string;
+    symbolType: SymbolType;
 } & BasePreparedSeries;
 
 export type PreparedBarXSeries = {

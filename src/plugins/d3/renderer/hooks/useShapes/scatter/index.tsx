@@ -11,6 +11,7 @@ import {PreparedSeriesOptions} from '../../useSeries/types';
 import type {PreparedScatterData} from './prepare-data';
 import {shapeKey} from '../utils';
 import {ScatterSeries} from '../../../../../../types/widget-data';
+import {SymbolType} from '../../../../../../constants';
 
 export {prepareScatterData} from './prepare-data';
 export type {PreparedScatterData} from './prepare-data';
@@ -57,7 +58,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
                 (exit) => exit.remove(),
             )
             .attr('d', (d) => {
-                const symbolType = (d.series as ScatterSeries).symbolType || 'circle';
+                const symbolType = (d.series as ScatterSeries).symbolType || SymbolType.Circle;
                 const scatterSymbol = getSymbol(symbolType);
 
                 // D3 takes size as square pixels, so we need to make square pixels size by multiplying

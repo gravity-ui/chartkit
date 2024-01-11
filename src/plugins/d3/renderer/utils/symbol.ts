@@ -1,9 +1,9 @@
 import {symbolDiamond2, symbolCircle, symbolSquare, symbolTriangle2} from 'd3';
 
-import {DotStyle} from '../../../../constants';
+import {SymbolType} from '../../../../constants';
 
 export const getSymbolType = (index: number) => {
-    const scatterStyles = Object.values(DotStyle);
+    const scatterStyles = Object.values(SymbolType);
 
     return scatterStyles[index % scatterStyles.length];
 };
@@ -22,17 +22,17 @@ const triangleDown = {
     },
 };
 
-export const getSymbol = (symbolType: string) => {
+export const getSymbol = (symbolType: SymbolType) => {
     switch (symbolType) {
-        case DotStyle.Diamond:
+        case SymbolType.Diamond:
             return symbolDiamond2;
-        case DotStyle.Circle:
+        case SymbolType.Circle:
             return symbolCircle;
-        case DotStyle.Square:
+        case SymbolType.Square:
             return symbolSquare;
-        case DotStyle.Triangle:
+        case SymbolType.Triangle:
             return symbolTriangle2;
-        case DotStyle.TriangleDown:
+        case SymbolType.TriangleDown:
             return triangleDown;
         default:
             return symbolCircle;

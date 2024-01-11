@@ -21,7 +21,7 @@ export enum DashStyle {
     Solid = 'Solid',
 }
 
-export enum DotStyle {
+export enum SymbolType {
     Circle = 'circle',
     Diamond = 'diamond',
     Square = 'square',
