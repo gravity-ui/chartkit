@@ -13,11 +13,12 @@ export const getSymbolType = (index: number) => {
 const sqrt3 = Math.sqrt(3);
 const triangleDown = {
     draw: (context: CanvasPath, size: number) => {
-        const y = -Math.sqrt(size / (sqrt3 * 3));
-
-        context.moveTo(0, -y * 2);
-        context.lineTo(-sqrt3 * y, y);
-        context.lineTo(sqrt3 * y, y);
+        const s = Math.sqrt(size) * 0.6824;
+        const t = s / 2;
+        const u = (s * sqrt3) / 2;
+        context.moveTo(0, s);
+        context.lineTo(u, -t);
+        context.lineTo(-u, -t);
         context.closePath();
     },
 };
