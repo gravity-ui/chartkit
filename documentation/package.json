@@ -30,6 +30,7 @@
     "@docusaurus/tsconfig": "3.0.1",
     "@docusaurus/types": "^3.0.1",
     "docusaurus-plugin-sass": "^0.2.5",
+    "patch-package": "^8.0.0",
     "sass": "^1.69.5",
     "typescript": "~5.2.2"
   },
