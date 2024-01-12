@@ -5,8 +5,8 @@ on:
     branches: [main]
 
 jobs:
-  test-docs-deploy:
-    name: Test deployment
+  docs-deploy:
+    name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,6 +14,8 @@ jobs:
         with:
           node-version: 18
           cache: npm
+      - name: Install tsconfig
+        run: npm i @gravity-ui/tsconfig
       - name: Install dependencies
         run: npm run docs:deps
       - name: Build
