@@ -32,6 +32,10 @@
         &_shape_path#{&}_unselected {
             stroke: var(--g-color-text-hint);
         }
+
+        &_shape_symbol#{&}_unselected {
+            fill: var(--g-color-text-hint);
+        }
     }
 
     &__item-text {

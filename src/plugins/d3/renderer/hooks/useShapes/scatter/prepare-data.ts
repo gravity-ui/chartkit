@@ -5,6 +5,8 @@ import type {PreparedAxis} from '../../useChartOptions/types';
 import {PreparedScatterSeries} from '../../useSeries/types';
 import {getXValue, getYValue} from '../utils';
 
+const DEFAULT_SCATTER_POINT_SIZE = 7;
+
 export type PreparedScatterData = Omit<TooltipDataChunkScatter, 'series'> & {
     cx: number;
     cy: number;
@@ -12,6 +14,7 @@ export type PreparedScatterData = Omit<TooltipDataChunkScatter, 'series'> & {
     hovered: boolean;
     active: boolean;
     id: number;
+    size: number;
 };
 
 const getFilteredLinearScatterData = (data: ScatterSeriesData[]) => {
@@ -32,7 +35,10 @@ export const prepareScatterData = (args: {
             xAxis.type === 'category' || yAxis.type === 'category'
                 ? s.data
                 : getFilteredLinearScatterData(s.data);
+
         filteredData.forEach((d) => {
+            const size = d.radius ? d.radius * 2 : DEFAULT_SCATTER_POINT_SIZE;
+
             acc.push({
                 data: d,
                 series: s,
@@ -41,6 +47,7 @@ export const prepareScatterData = (args: {
                 hovered: false,
                 active: true,
                 id: acc.length - 1,
+                size,
             });
         });
 

@@ -66,3 +66,12 @@ export type PathLegendSymbolOptions = BaseLegendSymbol & {
      * */
     width?: number;
 };
+
+export type SymbolLegendSymbolOptions = BaseLegendSymbol & {
+    /**
+     * The pixel width of the symbol for series types that use a symbol in the legend
+     *
+     * @default 8
+     * */
+    width?: number;
+};

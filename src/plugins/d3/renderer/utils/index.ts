@@ -20,6 +20,7 @@ export * from './text';
 export * from './time';
 export * from './axis';
 export * from './labels';
+export * from './symbol';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie'];
 

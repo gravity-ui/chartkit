@@ -1,7 +1,8 @@
 import React from 'react';
-import {BaseType, select, line as lineGenerator} from 'd3';
+import {symbol, BaseType, select, line as lineGenerator} from 'd3';
 import type {Selection} from 'd3';
 
+import {getSymbol} from '../utils';
 import {block} from '../../../../utils/cn';
 import type {
     OnLegendItemClick,
@@ -9,6 +10,7 @@ import type {
     PreparedSeries,
     LegendItem,
     LegendConfig,
+    SymbolLegendSymbol,
 } from '../hooks';
 
 import {getLineDashArray} from '../hooks/useShapes/utils';
@@ -159,6 +161,28 @@ function renderLegendSymbol(args: {
                     .attr('width', d.symbol.width)
                     .attr('height', d.symbol.height)
                     .attr('rx', d.symbol.radius)
+                    .attr('class', className)
+                    .style('fill', color);
+
+                break;
+            }
+            case 'symbol': {
+                const y = legend.lineHeight / 2;
+
+                element
+                    .append('svg:path')
+                    .attr('d', () => {
+                        const scatterSymbol = getSymbol(
+                            (d.symbol as SymbolLegendSymbol).symbolType,
+                        );
+
+                        // D3 takes size as square pixels, so we need to make square pixels size by multiplying
+                        // https://d3js.org/d3-shape/symbol#symbol
+                        return symbol(scatterSymbol, d.symbol.width * d.symbol.width)();
+                    })
+                    .attr('transform', () => {
+                        return 'translate(' + x + ',' + y + ')';
+                    })
                     .attr('class', className)
                     .style('fill', color);
 

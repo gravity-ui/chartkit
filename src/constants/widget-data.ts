@@ -21,6 +21,14 @@ export enum DashStyle {
     Solid = 'Solid',
 }
 
+export enum SymbolType {
+    Circle = 'circle',
+    Diamond = 'diamond',
+    Square = 'square',
+    Triangle = 'triangle',
+    TriangleDown = 'triangle-down',
+}
+
 export enum LineCap {
     Butt = 'butt',
     Round = 'round',

@@ -15,11 +15,12 @@ import {
     ConnectorShape,
     ConnectorCurve,
     PathLegendSymbolOptions,
+    SymbolLegendSymbolOptions,
     AreaSeries,
     AreaSeriesData,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
-import {DashStyle, LineCap} from '../../../../../constants';
+import {DashStyle, LineCap, SymbolType} from '../../../../../constants';
 
 export type RectLegendSymbol = {
     shape: 'rect';
@@ -30,7 +31,12 @@ export type PathLegendSymbol = {
     strokeWidth: number;
 } & Required<PathLegendSymbolOptions>;
 
-export type PreparedLegendSymbol = RectLegendSymbol | PathLegendSymbol;
+export type SymbolLegendSymbol = {
+    shape: 'symbol';
+    symbolType: SymbolType;
+} & Required<SymbolLegendSymbolOptions>;
+
+export type PreparedLegendSymbol = RectLegendSymbol | PathLegendSymbol | SymbolLegendSymbol;
 
 export type PreparedLegend = Required<ChartKitWidgetLegend> & {
     height: number;
@@ -79,6 +85,7 @@ type BasePreparedSeries = {
 export type PreparedScatterSeries = {
     type: ScatterSeries['type'];
     data: ScatterSeriesData[];
+    symbolType: SymbolType;
 } & BasePreparedSeries;
 
 export type PreparedBarXSeries = {

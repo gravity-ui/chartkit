@@ -1,15 +1,16 @@
 import React from 'react';
 import get from 'lodash/get';
-import {color, pointer, select} from 'd3';
+import {symbol, color, pointer, select} from 'd3';
 import type {BaseType, Dispatch, Selection} from 'd3';
 
 import {block} from '../../../../../../utils/cn';
 
-import {extractD3DataFromNode, isNodeContainsD3Data} from '../../../utils';
+import {extractD3DataFromNode, isNodeContainsD3Data, getSymbol} from '../../../utils';
 import type {NodeWithD3Data} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
 import type {PreparedScatterData} from './prepare-data';
 import {shapeKey} from '../utils';
+import {SymbolType} from '../../../../../../constants';
 
 export {prepareScatterData} from './prepare-data';
 export type {PreparedScatterData} from './prepare-data';
@@ -22,7 +23,7 @@ type ScatterSeriesShapeProps = {
 };
 
 const b = block('d3-scatter');
-const DEFAULT_SCATTER_POINT_RADIUS = 4;
+
 const EMPTY_SELECTION = null as unknown as Selection<
     BaseType,
     PreparedScatterData,
@@ -48,17 +49,25 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         const inactiveOptions = get(seriesOptions, 'scatter.states.inactive');
 
         const selection = svgElement
-            .selectAll('circle')
+            .selectAll('path')
             .data(preparedData, shapeKey)
             .join(
-                (enter) => enter.append('circle').attr('class', b('point')),
+                (enter) => enter.append('path').attr('class', b('point')),
                 (update) => update,
                 (exit) => exit.remove(),
             )
-            .attr('fill', (d) => d.data.color || d.series.color || '')
-            .attr('r', (d) => d.data.radius || DEFAULT_SCATTER_POINT_RADIUS)
-            .attr('cx', (d) => d.cx)
-            .attr('cy', (d) => d.cy);
+            .attr('d', (d) => {
+                const symbolType = d.series.symbolType || SymbolType.Circle;
+                const scatterSymbol = getSymbol(symbolType);
+
+                // D3 takes size as square pixels, so we need to make square pixels size by multiplying
+                // https://d3js.org/d3-shape/symbol#symbol
+                return symbol(scatterSymbol, d.size * d.size)();
+            })
+            .attr('transform', (d) => {
+                return 'translate(' + d.cx + ',' + d.cy + ')';
+            })
+            .attr('fill', (d) => d.data.color || d.series.color || '');
 
         svgElement
             .on('mousemove', (e) => {
