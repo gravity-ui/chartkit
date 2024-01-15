@@ -35,14 +35,15 @@ const config: Config = {
     title: 'ChartKit',
     favicon: 'img/favicon.ico',
 
-    // Set the production url of your site here
-    url: 'https://github.com',
+    url: 'https://gravity-ui.github.io',
     // Set the /<baseUrl>/ pathname under which your site is served
     // For GitHub pages deployment, it is often '/<projectName>/'
-    baseUrl: '/',
+    baseUrl: '/chartkit/',
+    deploymentBranch: 'gh-pages',
 
     organizationName: 'gravity-ui',
     projectName: 'chartkit',
+    trailingSlash: false,
 
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
