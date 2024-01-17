@@ -9,6 +9,11 @@ jobs:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
     steps:
+      - name: Check ref
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: |
+          echo "It looks like you're trying to execute a workflow not from the main branch."
+          exit 1
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -21,7 +26,8 @@ jobs:
       - name: Build
         run: npm run docs:build
       - name: Deploy
-        if: ${{ github.ref == 'refs/heads/main' }}
+        env:
+          USE_SSH: true
         run: npm run docs:deploy
         
         
