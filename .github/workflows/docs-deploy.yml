@@ -21,9 +21,7 @@ jobs:
       - name: Build
         run: npm run docs:build
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: npm run docs:deploy
+        
+        

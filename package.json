@@ -125,6 +125,7 @@
     "docs:start:ru": "cd ./documentation && npm run start:ru",
     "docs:build": "cd ./documentation && npm run build",
     "docs:serve": "cd ./documentation && npm run serve",
+    "docs:deploy": "cd ./documentation && npm run deploy",
     "prepublishOnly": "npm run build"
   },
   "husky": {
