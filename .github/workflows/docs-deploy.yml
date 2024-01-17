@@ -26,8 +26,13 @@ jobs:
       - name: Build
         run: npm run docs:build
       - name: Deploy
-        env:
-          USE_SSH: true
         run: npm run docs:deploy
+        env:
+          GIT_USER: gravity-ui-bot 
+          GIT_USER_NAME: gravity-ui-bot
+          GIT_USER_EMAIL: 111915794+gravity-ui-bot@users.noreply.github.com
+          GIT_PASS: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
+          USE_SSH: false
+        
         
         
