@@ -25,7 +25,7 @@ export const DonutWithTotals = () => {
                     type: 'pie',
                     innerRadius: '50%',
                     data: data,
-                    renderCustomShape: CustomShapeRenderer.pieCenterText(`Total value: ${totals}`),
+                    renderCustomShape: CustomShapeRenderer.pieCenterText(`${totals}`),
                 },
             ],
         },
