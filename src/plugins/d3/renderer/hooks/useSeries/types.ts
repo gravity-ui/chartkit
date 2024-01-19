@@ -21,7 +21,6 @@ import {
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
 import {DashStyle, LineCap, SymbolType} from '../../../../../constants';
-import {BaseType} from 'd3';
 
 export type RectLegendSymbol = {
     shape: 'rect';
@@ -142,7 +141,7 @@ export type PreparedPieSeries = {
             halo: PreparedHaloOptions;
         };
     };
-    renderCustomShape?: (args: {series: {innerRadius: number}}) => BaseType;
+    renderCustomShape?: PieSeries['renderCustomShape'];
 } & BasePreparedSeries;
 
 export type PreparedLineSeries = {
