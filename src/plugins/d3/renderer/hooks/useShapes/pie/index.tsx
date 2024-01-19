@@ -132,7 +132,12 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
 
         // Render custom shapes if defined
         shapesSelection.each(function (d, index, nodes) {
-            const customShape = d.series.renderCustomShape?.();
+            const customShape = d.series.renderCustomShape?.({
+                series: {
+                    innerRadius: d.innerRadius,
+                },
+            });
+
             if (customShape) {
                 (nodes[index] as Element).append(customShape as Node);
             }

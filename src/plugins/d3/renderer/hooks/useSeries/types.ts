@@ -142,7 +142,7 @@ export type PreparedPieSeries = {
             halo: PreparedHaloOptions;
         };
     };
-    renderCustomShape?: () => BaseType;
+    renderCustomShape?: (args: {series: {innerRadius: number}}) => BaseType;
 } & BasePreparedSeries;
 
 export type PreparedLineSeries = {

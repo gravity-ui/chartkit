@@ -75,6 +75,10 @@ export type PieSeries<T = any> = BaseSeries & {
          * */
         connectorCurve?: ConnectorCurve;
     };
-    /** ??? */
-    renderCustomShape?: () => BaseType;
+    /**
+     * Function for adding custom svg nodes for a series
+     *
+     * @return BaseType
+     * */
+    renderCustomShape?: (args: {series: {innerRadius: number}}) => BaseType;
 };

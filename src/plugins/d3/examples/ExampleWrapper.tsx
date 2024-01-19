@@ -7,7 +7,7 @@ type Props = {
 
 export const ExampleWrapper = (props: Props) => {
     const styles: React.CSSProperties = {
-        height: 280,
+        height: 500,
         ...props.styles,
     };
     return <div style={styles}>{props.children}</div>;
