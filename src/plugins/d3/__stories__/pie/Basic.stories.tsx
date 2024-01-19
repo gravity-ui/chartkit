@@ -6,6 +6,7 @@ import {settings} from '../../../../libs';
 import {D3Plugin} from '../..';
 import {BasicPie} from '../../examples/pie/Basic';
 import {Donut} from '../../examples/pie/Donut';
+import {DonutWithTotals} from '../../examples/pie/DonutWithTotals';
 
 const ChartStory = ({Chart}: {Chart: React.FC}) => {
     const [shown, setShown] = React.useState(false);
@@ -38,6 +39,13 @@ export const BasicDonutStory: StoryObj<typeof ChartStory> = {
     name: 'Basic donut',
     args: {
         Chart: Donut,
+    },
+};
+
+export const DonutWithTotalsStory: StoryObj<typeof ChartStory> = {
+    name: 'Donut with totals',
+    args: {
+        Chart: DonutWithTotals,
     },
 };
 

@@ -60,6 +60,7 @@ export function preparePieSeries(args: PreparePieSeriesArgs) {
                     },
                 },
             },
+            renderCustomShape: series.renderCustomShape,
         };
 
         return result;
