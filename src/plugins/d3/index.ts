@@ -2,7 +2,7 @@ import React from 'react';
 import {ChartKitPlugin} from '../../types';
 
 export * from './types';
-
+export * from './utils';
 /**
  * It is an experemental plugin
  *

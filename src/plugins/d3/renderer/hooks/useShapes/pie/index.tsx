@@ -55,6 +55,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .style('stroke', (pieData) => pieData.borderColor)
             .style('stroke-width', (pieData) => pieData.borderWidth);
 
+        // Render halo appearing outside the hovered slice
         shapesSelection
             .selectAll('halo')
             .data((pieData) => {
@@ -77,6 +78,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .attr('z-index', -1)
             .attr('visibility', getHaloVisibility);
 
+        // Render segments
         shapesSelection
             .selectAll(segmentSelector)
             .data((pieData) => pieData.segments)
@@ -127,6 +129,19 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .attr('stroke-linejoin', 'round')
             .attr('stroke-linecap', 'round')
             .style('fill', 'none');
+
+        // Render custom shapes if defined
+        shapesSelection.each(function (d, index, nodes) {
+            const customShape = d.series.renderCustomShape?.({
+                series: {
+                    innerRadius: d.innerRadius,
+                },
+            });
+
+            if (customShape) {
+                (nodes[index] as Element).append(customShape as Node);
+            }
+        });
 
         const eventName = `hover-shape.pie`;
         const hoverOptions = get(seriesOptions, 'pie.states.hover');

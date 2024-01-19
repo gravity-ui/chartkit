@@ -1,3 +1,4 @@
+import {BaseType} from 'd3';
 import {SeriesType} from '../../constants';
 import type {BaseSeries, BaseSeriesData} from './base';
 import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
@@ -74,4 +75,10 @@ export type PieSeries<T = any> = BaseSeries & {
          * */
         connectorCurve?: ConnectorCurve;
     };
+    /**
+     * Function for adding custom svg nodes for a series
+     *
+     * @return BaseType
+     * */
+    renderCustomShape?: (args: {series: {innerRadius: number}}) => BaseType;
 };

@@ -141,6 +141,7 @@ export type PreparedPieSeries = {
             halo: PreparedHaloOptions;
         };
     };
+    renderCustomShape?: PieSeries['renderCustomShape'];
 } & BasePreparedSeries;
 
 export type PreparedLineSeries = {
