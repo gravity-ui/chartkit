@@ -1,4 +1,4 @@
-import {group, sort} from 'd3';
+import {group, ScaleLinear, sort} from 'd3';
 import type {PreparedAreaSeries} from '../../useSeries/types';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {ChartScale} from '../../useAxisScales';
@@ -70,6 +70,8 @@ export const prepareAreaData = (args: {
     yScale: ChartScale;
 }): PreparedAreaData[] => {
     const {series, xAxis, xScale, yScale} = args;
+    const yLinearScale = yScale as ScaleLinear<number, number>;
+    const plotHeight = yLinearScale(yLinearScale.domain()[0]);
     const yAxis = args.yAxis[0];
     const [_xMin, xRangeMax] = xScale.range();
     const xMax = xRangeMax / (1 - xAxis.maxPadding);
@@ -139,6 +141,26 @@ export const prepareAreaData = (args: {
 
                 return acc;
             }, []);
+
+            if (series.some((s) => s.stacking === 'percent')) {
+                xValues.forEach(([x], index) => {
+                    const stackHeight = accumulatedYValues.get(x) || 0;
+                    let acc = 0;
+                    const ratio = plotHeight / stackHeight;
+
+                    seriesStackData.forEach((item) => {
+                        const point = item.points[index];
+
+                        if (point) {
+                            const height = (point.y0 - point.y) * ratio;
+                            point.y0 = plotHeight - height - acc;
+                            point.y = point.y0 + height;
+
+                            acc += height;
+                        }
+                    });
+                });
+            }
 
             return result.concat(seriesStackData);
         },

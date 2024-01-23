@@ -77,6 +77,8 @@ export const prepareBarYData = (args: {
     yScale: ChartScale;
 }): PreparedBarYData[] => {
     const {series, seriesOptions, yAxis, xScale, yScale} = args;
+    const xLinearScale = xScale as ScaleLinear<number, number>;
+    const plotWidth = xLinearScale(xLinearScale.domain()[1]);
     const barMaxWidth = get(seriesOptions, 'bar-y.barMaxWidth');
     const barPadding = get(seriesOptions, 'bar-y.barPadding');
     const groupPadding = get(seriesOptions, 'bar-y.groupPadding');
@@ -116,6 +118,7 @@ export const prepareBarYData = (args: {
         stacks.forEach((measureValues, groupItemIndex) => {
             let stackSum = 0;
 
+            const stackItems: PreparedBarYData[] = [];
             const sortedData = sortKey
                 ? sort(measureValues, (a, b) => comparator(get(a, sortKey), get(b, sortKey)))
                 : measureValues;
@@ -131,11 +134,10 @@ export const prepareBarYData = (args: {
                 }
 
                 const y = center - currentBarHeight / 2 + (barHeight + rectGap) * groupItemIndex;
-                const xLinearScale = xScale as ScaleLinear<number, number>;
-                const x = xLinearScale(data.x as number);
-                const width = x - xLinearScale(xLinearScale.domain()[0]);
+                // const x = xLinearScale(data.x as number);
+                const width = xLinearScale(data.x as number);
 
-                result.push({
+                stackItems.push({
                     x: stackSum,
                     y,
                     width,
@@ -147,6 +149,19 @@ export const prepareBarYData = (args: {
 
                 stackSum += width + 1;
             });
+
+            if (series.some((s) => s.stacking === 'percent')) {
+                let acc = 0;
+                const ratio = plotWidth / (stackSum - stackItems.length);
+                stackItems.forEach((item) => {
+                    item.width = item.width * ratio;
+                    item.x = acc;
+
+                    acc += item.width;
+                });
+            }
+
+            result.push(...stackItems);
         });
     });
 

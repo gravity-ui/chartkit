@@ -46,6 +46,8 @@ export const prepareBarXData = (args: {
     yScale: ChartScale;
 }): PreparedBarXData[] => {
     const {series, seriesOptions, xAxis, xScale, yScale} = args;
+    const yLinearScale = yScale as ScaleLinear<number, number>;
+    const plotHeight = yLinearScale(yLinearScale.domain()[0]);
     const categories = get(xAxis, 'categories', [] as string[]);
     const barMaxWidth = get(seriesOptions, 'bar-x.barMaxWidth');
     const barPadding = get(seriesOptions, 'bar-x.barPadding');
@@ -131,6 +133,7 @@ export const prepareBarXData = (args: {
         const currentGroupWidth = rectWidth * stacks.length + rectGap * (stacks.length - 1);
         stacks.forEach((yValues, groupItemIndex) => {
             let stackHeight = 0;
+            const stackItems: PreparedBarXData[] = [];
 
             const sortedData = sortKey
                 ? sort(yValues, (a, b) => comparator(get(a, sortKey), get(b, sortKey)))
@@ -149,9 +152,8 @@ export const prepareBarXData = (args: {
                 }
 
                 const x = xCenter - currentGroupWidth / 2 + (rectWidth + rectGap) * groupItemIndex;
-                const yLinearScale = yScale as ScaleLinear<number, number>;
                 const y = yLinearScale(yValue.data.y as number);
-                const height = yLinearScale(yLinearScale.domain()[0]) - y;
+                const height = plotHeight - y;
 
                 const barData: PreparedBarXData = {
                     x,
@@ -164,10 +166,23 @@ export const prepareBarXData = (args: {
 
                 barData.label = getLabelData(barData);
 
-                result.push(barData);
+                stackItems.push(barData);
 
                 stackHeight += height + 1;
             });
+
+            if (series.some((s) => s.stacking === 'percent')) {
+                let acc = 0;
+                const ratio = plotHeight / (stackHeight - stackItems.length);
+                stackItems.forEach((item) => {
+                    item.height = item.height * ratio;
+                    item.y = plotHeight - item.height - acc;
+
+                    acc += item.height + 1;
+                });
+            }
+
+            result.push(...stackItems);
         });
     });
 
