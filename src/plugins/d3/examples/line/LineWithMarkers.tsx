@@ -4,6 +4,7 @@ import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, LineSeries, LineSeriesData} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
+import {SymbolType} from '../../../../constants';
 
 function prepareData() {
     const dataset = nintendoGames.filter(
@@ -34,7 +35,7 @@ export const LineWithMarkers = () => {
                 type: 'line',
                 data: s.data.filter((d) => d.x),
                 name: s.name,
-                marker: {enabled: true, symbol: 'square'},
+                marker: {enabled: true, symbol: SymbolType.Square},
             })),
         },
         yAxis: [

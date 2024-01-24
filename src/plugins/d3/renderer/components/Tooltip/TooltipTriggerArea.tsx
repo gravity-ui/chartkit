@@ -9,6 +9,7 @@ import type {NodeWithD3Data} from '../../utils';
 import {PreparedLineData} from '../../hooks/useShapes/line/types';
 import {BarYSeriesData, LineSeriesData} from '../../../../../types';
 import {PreparedBarYData} from '../../hooks/useShapes/bar-y/types';
+import get from 'lodash/get';
 
 const THROTTLE_DELAY = 50;
 
@@ -119,7 +120,7 @@ export const TooltipTriggerArea = (args: Args) => {
     const rectRef = React.useRef<SVGRectElement>(null);
     const xBarData = React.useMemo(() => {
         const result = shapesData
-            .filter((sd) => sd.series.type === 'bar-x')
+            .filter((sd) => get(sd, 'series.type') === 'bar-x')
             .map((sd) => ({x: (sd as PreparedBarXData).x, data: sd}));
 
         return sort(result, (item) => item.x);
@@ -127,13 +128,13 @@ export const TooltipTriggerArea = (args: Args) => {
 
     const xLineData = React.useMemo(() => {
         const result = shapesData
-            .filter((sd) => ['line', 'area'].includes(sd.series.type))
+            .filter((sd) => ['line', 'area'].includes((sd as PreparedLineData).series.type))
             .reduce((acc, sd) => {
                 return acc.concat(
                     (sd as PreparedLineData).points.map<XLineData>((d) => ({
                         x: d.x,
                         data: d.data,
-                        series: sd.series,
+                        series: d.series,
                     })),
                 );
             }, [] as XLineData[]);
@@ -142,7 +143,7 @@ export const TooltipTriggerArea = (args: Args) => {
     }, [shapesData]);
 
     const barYData = React.useMemo(() => {
-        const barYShapeData = shapesData.filter((sd) => sd.series.type === 'bar-y');
+        const barYShapeData = shapesData.filter((sd) => get(sd, 'series.type') === 'bar-y');
         const result = Array.from(group(barYShapeData, (sd) => (sd as PreparedBarYData).y)).map(
             ([y, shapes]) => {
                 const yValue = y + (shapes[0] as PreparedBarYData).height / 2;
@@ -156,7 +157,7 @@ export const TooltipTriggerArea = (args: Args) => {
                             return {
                                 x: preparedData.x + preparedData.width,
                                 data: preparedData.data,
-                                series: shape.series,
+                                series: preparedData.series,
                             };
                         }),
                         (item) => item.x,

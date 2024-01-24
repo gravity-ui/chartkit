@@ -1,8 +1,9 @@
-import {DEFAULT_MARKER, prepareLine} from '../prepare-line-series';
+import {DEFAULT_MARKER, prepareLine} from '../prepare-line';
 import {scaleOrdinal} from 'd3';
 import type {LineSeries} from '../../../../../../types';
 import type {PreparedLegend} from '../types';
 import {DEFAULT_PALETTE} from '../../../constants';
+import {SymbolType} from '../../../../../../constants';
 
 describe('prepareLineSeries', () => {
     describe('marker', () => {
@@ -31,7 +32,7 @@ describe('prepareLineSeries', () => {
                         marker: {
                             enabled: true,
                             radius: 100,
-                            symbol: 'square',
+                            symbol: SymbolType.Square,
                         },
                     },
                 },
