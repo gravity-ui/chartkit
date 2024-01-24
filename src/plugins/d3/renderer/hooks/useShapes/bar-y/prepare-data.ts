@@ -134,7 +134,6 @@ export const prepareBarYData = (args: {
                 }
 
                 const y = center - currentBarHeight / 2 + (barHeight + rectGap) * groupItemIndex;
-                // const x = xLinearScale(data.x as number);
                 const width = xLinearScale(data.x as number);
 
                 stackItems.push({

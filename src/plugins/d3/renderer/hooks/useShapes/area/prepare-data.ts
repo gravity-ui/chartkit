@@ -1,4 +1,5 @@
-import {group, ScaleLinear, sort} from 'd3';
+import type {ScaleLinear} from 'd3';
+import {group, sort} from 'd3';
 import type {PreparedAreaSeries} from '../../useSeries/types';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {ChartScale} from '../../useAxisScales';
