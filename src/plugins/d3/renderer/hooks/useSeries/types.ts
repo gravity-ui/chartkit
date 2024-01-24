@@ -92,6 +92,7 @@ export type PreparedBarXSeries = {
     type: BarXSeries['type'];
     data: BarXSeriesData[];
     stackId: string;
+    stacking: BarXSeries['stacking'];
     dataLabels: {
         enabled: boolean;
         inside: boolean;
@@ -105,6 +106,7 @@ export type PreparedBarYSeries = {
     type: BarYSeries['type'];
     data: BarYSeriesData[];
     stackId: string;
+    stacking: BarYSeries['stacking'];
     dataLabels: {
         enabled: boolean;
         inside: boolean;

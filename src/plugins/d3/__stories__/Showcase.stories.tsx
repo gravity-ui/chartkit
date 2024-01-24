@@ -9,6 +9,7 @@ import {D3Plugin} from '../index';
 import {BasicBarXChart} from '../examples/bar-x/Basic';
 import {GroupedColumns} from '../examples/bar-x/GroupedColumns';
 import {StackedColumns} from '../examples/bar-x/StackedColumns';
+import {PercentStackColumns} from '../examples/bar-x/PercentStack';
 import {DataLabels as BarXDataLabels} from '../examples/bar-x/DataLabels';
 import {Basic as BasicBarY} from '../examples/bar-y/Basic';
 import {GroupedColumns as GroupedColumnsBarY} from '../examples/bar-y/GroupedColumns';
@@ -23,6 +24,8 @@ import {Donut} from '../examples/pie/Donut';
 import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
 import {LineWithMarkers} from '../examples/line/LineWithMarkers';
 import {StackedArea} from '../examples/area/StackedArea';
+import {PercentStackingBars} from '../examples/bar-y/PercentStacking';
+import {PercentStackingArea} from '../examples/area/PercentStacking';
 
 const ShowcaseStory = () => {
     const [loading, setLoading] = React.useState(true);
@@ -71,6 +74,10 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Stacked area</Text>
                             <StackedArea />
                         </Col>
+                        <Col s={12} m={6}>
+                            <Text variant="subheader-1">Stacked percentage areas</Text>
+                            <PercentStackingArea />
+                        </Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>
@@ -85,8 +92,12 @@ const ShowcaseStory = () => {
                             <GroupedColumns />
                         </Col>
                         <Col s={12} m={6}>
-                            <Text variant="subheader-1">Stacked columns</Text>
+                            <Text variant="subheader-1">Stacked columns(normal)</Text>
                             <StackedColumns />
+                        </Col>
+                        <Col s={12} m={6}>
+                            <Text variant="subheader-1">Stacked percentage column</Text>
+                            <PercentStackColumns />
                         </Col>
                         <Col s={12} m={6}>
                             <Text variant="subheader-1">Bar-x chart with data labels</Text>
@@ -105,9 +116,13 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Grouped bars</Text>
                             <GroupedColumnsBarY />
                         </Col>
-                        <Col s={12} m={12}>
+                        <Col s={12} m={6}>
                             <Text variant="subheader-1">Stacked bars</Text>
                             <StackedColumnsBarY />
+                        </Col>
+                        <Col s={12} m={6}>
+                            <Text variant="subheader-1">Stacked percentage bars</Text>
+                            <PercentStackingBars />
                         </Col>
                     </Row>
                     <Row space={1}>

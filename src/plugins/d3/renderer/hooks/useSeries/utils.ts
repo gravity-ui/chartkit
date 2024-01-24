@@ -39,7 +39,7 @@ export function getSeriesStackId(series: StackedSeries) {
     let stackId = series.stackId;
 
     if (!stackId) {
-        stackId = series.stacking === 'normal' ? getCommonStackId() : getRandomCKId();
+        stackId = series.stacking ? getCommonStackId() : getRandomCKId();
     }
 
     return stackId;

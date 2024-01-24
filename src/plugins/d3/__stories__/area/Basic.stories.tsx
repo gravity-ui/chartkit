@@ -6,6 +6,7 @@ import {settings} from '../../../../libs';
 import {D3Plugin} from '../..';
 import {Basic} from '../../examples/area/Basic';
 import {StackedArea} from '../../examples/area/StackedArea';
+import {PercentStackingArea} from '../../examples/area/PercentStacking';
 
 const ChartStory = ({Chart}: {Chart: React.FC}) => {
     const [shown, setShown] = React.useState(false);
@@ -38,6 +39,13 @@ export const StackedAreaChartStory: StoryObj<typeof ChartStory> = {
     name: 'Stacked',
     args: {
         Chart: StackedArea,
+    },
+};
+
+export const PercentStackingAreaChartStory: StoryObj<typeof ChartStory> = {
+    name: 'Stacked percentage areas',
+    args: {
+        Chart: PercentStackingArea,
     },
 };
 

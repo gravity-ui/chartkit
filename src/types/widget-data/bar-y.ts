@@ -29,7 +29,6 @@ export type BarYSeries<T = any> = BaseSeries & {
     name: string;
     /** The main color of the series (hex, rgba) */
     color?: string;
-    // fixme 'percent'
     /** Whether to stack the values of each series on top of each other.
      * Possible values are undefined to disable, "normal" to stack by value or "percent"
      *

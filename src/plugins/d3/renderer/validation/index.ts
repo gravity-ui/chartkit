@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import {SeriesType} from '../../../../constants';
 import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
 import {
+    AreaSeries,
     BarXSeries,
     BarYSeries,
     ChartKitWidgetAxis,
@@ -17,7 +18,7 @@ import {i18n} from '../../../../i18n';
 
 import {DEFAULT_AXIS_TYPE} from '../constants';
 
-type XYSeries = ScatterSeries | BarXSeries | BarYSeries | LineSeries;
+type XYSeries = ScatterSeries | BarXSeries | BarYSeries | LineSeries | AreaSeries;
 
 const AVAILABLE_SERIES_TYPES = Object.values(SeriesType);
 
@@ -122,6 +123,20 @@ const validatePieSeries = ({series}: {series: PieSeries}) => {
     });
 };
 
+const validateStacking = ({series}: {series: AreaSeries | BarXSeries | BarYSeries}) => {
+    const availableStackingValues = ['normal', 'percent'];
+
+    if (series.stacking && !availableStackingValues.includes(series.stacking)) {
+        throw new ChartKitError({
+            code: CHARTKIT_ERROR_CODE.INVALID_DATA,
+            message: i18n('error', 'label_invalid-series-property', {
+                key: 'stacking',
+                values: availableStackingValues,
+            }),
+        });
+    }
+};
+
 const validateSeries = (args: {
     series: ChartKitWidgetSeries;
     xAxis?: ChartKitWidgetAxis;
@@ -139,8 +154,13 @@ const validateSeries = (args: {
     }
 
     switch (series.type) {
-        case 'bar-x':
+        case 'area':
         case 'bar-y':
+        case 'bar-x': {
+            validateXYSeries({series, xAxis, yAxis});
+            validateStacking({series});
+            break;
+        }
         case 'line':
         case 'scatter': {
             validateXYSeries({series, xAxis, yAxis});

@@ -70,4 +70,23 @@ describe('plugins/d3/validation', () => {
             expect(error?.code).toEqual(CHARTKIT_ERROR_CODE.INVALID_DATA);
         },
     );
+
+    test.each([
+        {series: {data: [{type: 'area', stacking: 'notNormal', data: [{x: 1, y: 1}]}]}},
+        {series: {data: [{type: 'bar-x', stacking: 'notNormal', data: [{x: 1, y: 1}]}]}},
+        {series: {data: [{type: 'bar-y', stacking: 'notNormal', data: [{x: 1, y: 1}]}]}},
+    ])(
+        'validateData should throw an error in case of invalid stacking value (data: %j)',
+        (data) => {
+            let error: ChartKitError | null = null;
+
+            try {
+                validateData(data as ChartKitWidgetData);
+            } catch (e) {
+                error = e as ChartKitError;
+            }
+
+            expect(error?.code).toEqual(CHARTKIT_ERROR_CODE.INVALID_DATA);
+        },
+    );
 });

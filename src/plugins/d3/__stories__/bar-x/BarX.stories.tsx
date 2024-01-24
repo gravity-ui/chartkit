@@ -11,6 +11,7 @@ import {
 } from '../../examples/bar-x/Basic';
 import {GroupedColumns} from '../../examples/bar-x/GroupedColumns';
 import {StackedColumns} from '../../examples/bar-x/StackedColumns';
+import {PercentStackColumns} from '../../examples/bar-x/PercentStack';
 
 const ChartStory = ({Chart}: {Chart: React.FC}) => {
     const [shown, setShown] = React.useState(false);
@@ -64,6 +65,13 @@ export const StackedBarXChartStory: StoryObj<typeof ChartStory> = {
     name: 'Stacked columns',
     args: {
         Chart: StackedColumns,
+    },
+};
+
+export const PercentStackBarXChartStory: StoryObj<typeof ChartStory> = {
+    name: 'Stacked percentage columns',
+    args: {
+        Chart: PercentStackColumns,
     },
 };
 

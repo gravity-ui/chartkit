@@ -6,6 +6,7 @@ import {D3Plugin} from '../..';
 import {Basic} from '../../examples/bar-y/Basic';
 import {GroupedColumns} from '../../examples/bar-y/GroupedColumns';
 import {StackedColumns} from '../../examples/bar-y/StackedColumns';
+import {PercentStackingBars} from '../../examples/bar-y/PercentStacking';
 
 const ChartStory = ({Chart}: {Chart: React.FC}) => {
     const [shown, setShown] = React.useState(false);
@@ -45,6 +46,13 @@ export const StackedBarYChartStory: StoryObj<typeof ChartStory> = {
     name: 'Stacked bars',
     args: {
         Chart: StackedColumns,
+    },
+};
+
+export const PercentStackingBarYChartStory: StoryObj<typeof ChartStory> = {
+    name: 'Stacked percentage bars',
+    args: {
+        Chart: PercentStackingBars,
     },
 };
 
