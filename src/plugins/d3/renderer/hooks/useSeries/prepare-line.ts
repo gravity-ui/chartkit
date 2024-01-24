@@ -89,7 +89,7 @@ function prepareMarker(series: LineSeries, seriesOptions?: ChartKitWidgetSeriesO
     };
 }
 
-export function prepareLineSeries(args: PrepareLineSeriesArgs) {
+export function prepareLine(args: PrepareLineSeriesArgs) {
     const {colorScale, series: seriesList, seriesOptions, legend} = args;
 
     const defaultLineWidth = get(seriesOptions, 'line.lineWidth', DEFAULT_LINE_WIDTH);

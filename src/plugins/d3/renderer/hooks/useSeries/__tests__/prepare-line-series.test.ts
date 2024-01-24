@@ -1,4 +1,4 @@
-import {DEFAULT_MARKER, prepareLineSeries} from '../prepare-line-series';
+import {DEFAULT_MARKER, prepareLine} from '../prepare-line-series';
 import {scaleOrdinal} from 'd3';
 import type {LineSeries} from '../../../../../../types';
 import type {PreparedLegend} from '../types';
@@ -12,7 +12,7 @@ describe('prepareLineSeries', () => {
         };
 
         it('If the marker parameters are not specified, the default values should be applied', () => {
-            const preparedSeries = prepareLineSeries({
+            const preparedSeries = prepareLine({
                 ...commonArgs,
                 series: [{}] as LineSeries[],
             });
@@ -24,7 +24,7 @@ describe('prepareLineSeries', () => {
         });
 
         it('Normal state. The settings of a specific series should be prioritized over the seriesOptions', () => {
-            const preparedSeries = prepareLineSeries({
+            const preparedSeries = prepareLine({
                 ...commonArgs,
                 seriesOptions: {
                     line: {

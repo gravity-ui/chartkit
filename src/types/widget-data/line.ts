@@ -22,12 +22,6 @@ export type LineSeriesData<T = any> = BaseSeriesData<T> & {
     label?: string | number;
 };
 
-export type LineMarkerSymbol = 'circle' | 'square';
-
-export type LineMarkerOptions = PointMarkerOptions & {
-    symbol?: LineMarkerSymbol;
-};
-
 export type LineSeries<T = any> = BaseSeries & {
     type: typeof SeriesType.Line;
     data: LineSeriesData<T>[];
@@ -45,7 +39,7 @@ export type LineSeries<T = any> = BaseSeries & {
         symbol?: RectLegendSymbolOptions;
     };
     /** Options for the point markers of line series */
-    marker?: LineMarkerOptions;
+    marker?: PointMarkerOptions;
     /** Option for line stroke style */
     dashStyle?: `${DashStyle}`;
     /** Option for line cap style */

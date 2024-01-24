@@ -1,13 +1,17 @@
-import {BaseType, Selection, symbol, symbolCircle, symbolSquare} from 'd3';
+import {BaseType, Selection, symbol} from 'd3';
 import {MarkerData as LineMarkerData} from './line/types';
 import {MarkerData as AreaMarkerData} from './area/types';
+import {MarkerData as ScatterMarkerData} from './scatter/types';
 import {block} from '../../../../../utils/cn';
+import {SymbolType} from '../../../../../constants';
+import {getSymbol} from '../../utils';
+import get from 'lodash/get';
 
 const b = block('d3-marker');
 const haloClassName = b('halo');
 const symbolClassName = b('symbol');
 
-type MarkerData = LineMarkerData | AreaMarkerData;
+type MarkerData = LineMarkerData | AreaMarkerData | ScatterMarkerData;
 
 export function renderMarker<T extends MarkerData>(
     selection: Selection<BaseType | SVGGElement, T, SVGGElement, unknown>,
@@ -22,9 +26,11 @@ export function renderMarker<T extends MarkerData>(
         .append('path')
         .attr('class', haloClassName)
         .attr('d', (d) => {
-            const type = d.point.series.marker.states.normal.symbol;
-            const radius = d.point.series.marker.states.hover.halo.size;
-            return getMarkerSymbol(type, radius);
+            const series = d.point.series;
+            const type = series.marker.states.normal.symbol;
+            const radius = get(d.point.data, 'radius', series.marker.states.hover.radius);
+            const haloSize = series.marker.states.hover.halo.size;
+            return getMarkerSymbol(type, radius + haloSize);
         })
         .attr('fill', (d) => d.point.series.color)
         .attr('opacity', (d) => d.point.series.marker.states.hover.halo.opacity)
@@ -57,27 +63,21 @@ export function setMarker<T extends BaseType, D extends MarkerData>(
 ) {
     selection
         .attr('d', (d) => {
-            const radius =
-                d.point.series.marker.states[state].radius +
-                d.point.series.marker.states[state].borderWidth;
-            return getMarkerSymbol(d.point.series.marker.states.normal.symbol, radius);
+            const series = d.point.series;
+            const type = series.marker.states.normal.symbol;
+            const radius = get(d.point.data, 'radius', series.marker.states[state].radius);
+            const size = radius + series.marker.states[state].borderWidth;
+            return getMarkerSymbol(type, size);
         })
         .attr('stroke-width', (d) => d.point.series.marker.states[state].borderWidth)
         .attr('stroke', (d) => d.point.series.marker.states[state].borderColor);
 }
 
-export function getMarkerSymbol(type: string, radius: number) {
-    switch (type) {
-        case 'square': {
-            const size = Math.pow(radius, 2) * Math.PI;
-            return symbol(symbolSquare, size)();
-        }
-        case 'circle':
-        default: {
-            const size = Math.pow(radius, 2) * Math.PI;
-            return symbol(symbolCircle, size)();
-        }
-    }
+export function getMarkerSymbol(type: SymbolType = SymbolType.Circle, radius: number) {
+    const symbolFn = getSymbol(type);
+    const size = Math.pow(radius, 2) * Math.PI;
+
+    return symbol(symbolFn, size)();
 }
 
 export function selectMarkerHalo<T>(parentSelection: Selection<BaseType, T, null, undefined>) {

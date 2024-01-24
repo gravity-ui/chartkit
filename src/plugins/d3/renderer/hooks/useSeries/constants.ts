@@ -15,5 +15,5 @@ export const DEFAULT_DATALABELS_STYLE: BaseTextStyle = {
 export const DEFAULT_HALO_OPTIONS: Required<Halo> = {
     enabled: true,
     opacity: 0.25,
-    size: 10,
+    size: 6,
 };

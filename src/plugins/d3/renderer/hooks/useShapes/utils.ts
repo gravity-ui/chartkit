@@ -8,7 +8,6 @@ import type {ChartScale} from '../useAxisScales';
 import type {PreparedAxis} from '../useChartOptions/types';
 
 import type {PreparedLineData} from './line/types';
-import type {PreparedScatterData} from './scatter';
 import {DashStyle} from '../../../../../constants';
 
 export function getXValue(args: {
@@ -47,7 +46,7 @@ export function getYValue(args: {
     return yLinearScale(point.y as number);
 }
 
-export const shapeKey = (d: unknown) => (d as PreparedLineData | PreparedScatterData).id || -1;
+export const shapeKey = (d: unknown) => (d as PreparedLineData).id || -1;
 
 export function setActiveState<T extends {active?: boolean}>(args: {
     element: BaseType;

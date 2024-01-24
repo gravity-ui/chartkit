@@ -12,12 +12,14 @@ import {
 } from './constants';
 import {getRandomCKId} from '../../../../../utils';
 import {getSeriesStackId, prepareLegendSymbol} from './utils';
+import {SymbolType} from '../../../../../constants';
+import {PointMarkerOptions} from '../../../../../types/widget-data/marker';
 
 export const DEFAULT_LINE_WIDTH = 1;
 
 export const DEFAULT_MARKER = {
     enabled: false,
-    symbol: 'circle',
+    symbol: SymbolType.Circle,
     radius: 4,
     borderWidth: 0,
     borderColor: '',
@@ -32,7 +34,7 @@ type PrepareAreaSeriesArgs = {
 
 function prepareMarker(series: AreaSeries, seriesOptions?: ChartKitWidgetSeriesOptions) {
     const seriesHoverState = get(seriesOptions, 'area.states.hover');
-    const markerNormalState = Object.assign(
+    const markerNormalState: Required<PointMarkerOptions> = Object.assign(
         {},
         DEFAULT_MARKER,
         seriesOptions?.area?.marker,
