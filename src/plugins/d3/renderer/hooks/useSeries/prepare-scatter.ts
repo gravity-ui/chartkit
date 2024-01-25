@@ -4,10 +4,9 @@ import merge from 'lodash/merge';
 import type {PreparedLegend, PreparedScatterSeries} from './types';
 import type {ChartKitWidgetSeriesOptions, ScatterSeries} from '../../../../../types';
 import {getSymbolType} from '../../utils';
-import {SymbolType} from '../../../../../constants';
 
 import {prepareLegendSymbol} from './utils';
-import {DEFAULT_HALO_OPTIONS} from './constants';
+import {DEFAULT_HALO_OPTIONS, DEFAULT_POINT_MARKER_OPTIONS} from './constants';
 
 import {PointMarkerOptions} from '../../../../../types/widget-data/marker';
 import {getRandomCKId} from '../../../../../utils';
@@ -19,11 +18,9 @@ function prepareMarker(
 ) {
     const seriesHoverState = get(seriesOptions, 'scatter.states.hover');
     const markerNormalState: Required<PointMarkerOptions> = {
+        ...DEFAULT_POINT_MARKER_OPTIONS,
         enabled: true,
-        radius: 4,
-        borderColor: '',
-        borderWidth: 0,
-        symbol: ((series as ScatterSeries).symbolType || getSymbolType(index)) as SymbolType,
+        symbol: (series as ScatterSeries).symbolType || getSymbolType(index),
     };
 
     const hoveredMarkerDefaultOptions = {
@@ -55,13 +52,12 @@ export function prepareScatterSeries(args: PrepareScatterSeriesArgs): PreparedSc
     return series.map<PreparedScatterSeries>((s, index) => {
         const id = getRandomCKId();
         const name = 'name' in s && s.name ? s.name : '';
-        const symbolType = ((s as ScatterSeries).symbolType || getSymbolType(index)) as SymbolType;
+        const symbolType = (s as ScatterSeries).symbolType || getSymbolType(index);
 
         const prepared: PreparedScatterSeries = {
             id,
             type: s.type,
             name,
-            symbolType,
             color: get(s, 'color', colorScale(name)),
             visible: get(s, 'visible', true),
             legend: {

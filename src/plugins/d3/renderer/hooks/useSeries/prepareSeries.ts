@@ -12,7 +12,7 @@ import type {
 } from '../../../../../types';
 
 import type {PreparedLegend, PreparedSeries} from './types';
-import {prepareLine} from './prepare-line';
+import {prepareLineSeries} from './prepare-line';
 import {prepareBarXSeries} from './prepare-bar-x';
 import {prepareBarYSeries} from './prepare-bar-y';
 import {ChartKitError} from '../../../../../libs';
@@ -48,7 +48,7 @@ export function prepareSeries(args: {
             return prepareScatterSeries({series: series as ScatterSeries[], legend, colorScale});
         }
         case 'line': {
-            return prepareLine({
+            return prepareLineSeries({
                 series: series as LineSeries[],
                 seriesOptions,
                 legend,

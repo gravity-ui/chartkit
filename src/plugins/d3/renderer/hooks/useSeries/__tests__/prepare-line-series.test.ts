@@ -1,9 +1,8 @@
-import {DEFAULT_MARKER, prepareLine} from '../prepare-line';
+import {DEFAULT_MARKER, prepareLineSeries} from '../prepare-line';
 import {scaleOrdinal} from 'd3';
 import type {LineSeries} from '../../../../../../types';
 import type {PreparedLegend} from '../types';
 import {DEFAULT_PALETTE} from '../../../constants';
-import {SymbolType} from '../../../../../../constants';
 
 describe('prepareLineSeries', () => {
     describe('marker', () => {
@@ -13,7 +12,7 @@ describe('prepareLineSeries', () => {
         };
 
         it('If the marker parameters are not specified, the default values should be applied', () => {
-            const preparedSeries = prepareLine({
+            const preparedSeries = prepareLineSeries({
                 ...commonArgs,
                 series: [{}] as LineSeries[],
             });
@@ -25,14 +24,14 @@ describe('prepareLineSeries', () => {
         });
 
         it('Normal state. The settings of a specific series should be prioritized over the seriesOptions', () => {
-            const preparedSeries = prepareLine({
+            const preparedSeries = prepareLineSeries({
                 ...commonArgs,
                 seriesOptions: {
                     line: {
                         marker: {
                             enabled: true,
                             radius: 100,
-                            symbol: SymbolType.Square,
+                            symbol: 'square',
                         },
                     },
                 },

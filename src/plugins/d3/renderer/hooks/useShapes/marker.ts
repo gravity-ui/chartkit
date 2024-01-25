@@ -73,7 +73,7 @@ export function setMarker<T extends BaseType, D extends MarkerData>(
         .attr('stroke', (d) => d.point.series.marker.states[state].borderColor);
 }
 
-export function getMarkerSymbol(type: SymbolType = SymbolType.Circle, radius: number) {
+export function getMarkerSymbol(type: `${SymbolType}` = SymbolType.Circle, radius: number) {
     const symbolFn = getSymbol(type);
     const size = Math.pow(radius, 2) * Math.PI;
 

@@ -23,7 +23,7 @@ const triangleDown = {
     },
 };
 
-export const getSymbol = (symbolType: SymbolType) => {
+export const getSymbol = (symbolType: `${SymbolType}`) => {
     switch (symbolType) {
         case SymbolType.Diamond:
             return symbolDiamond2;

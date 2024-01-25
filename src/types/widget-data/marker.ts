@@ -9,5 +9,5 @@ export type PointMarkerOptions = {
     borderColor?: string;
     /** The width of the point marker's border */
     borderWidth?: number;
-    symbol?: SymbolType;
+    symbol?: `${SymbolType}`;
 };

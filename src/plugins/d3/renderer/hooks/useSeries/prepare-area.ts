@@ -9,20 +9,17 @@ import {
     DEFAULT_DATALABELS_PADDING,
     DEFAULT_DATALABELS_STYLE,
     DEFAULT_HALO_OPTIONS,
+    DEFAULT_POINT_MARKER_OPTIONS,
 } from './constants';
 import {getRandomCKId} from '../../../../../utils';
 import {getSeriesStackId, prepareLegendSymbol} from './utils';
-import {SymbolType} from '../../../../../constants';
 import {PointMarkerOptions} from '../../../../../types/widget-data/marker';
 
 export const DEFAULT_LINE_WIDTH = 1;
 
 export const DEFAULT_MARKER = {
+    ...DEFAULT_POINT_MARKER_OPTIONS,
     enabled: false,
-    symbol: SymbolType.Circle,
-    radius: 4,
-    borderWidth: 0,
-    borderColor: '',
 };
 
 type PrepareAreaSeriesArgs = {
