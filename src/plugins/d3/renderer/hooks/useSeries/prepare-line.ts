@@ -17,6 +17,7 @@ import {
     DEFAULT_DATALABELS_STYLE,
     DEFAULT_HALO_OPTIONS,
     DEFAULT_LEGEND_SYMBOL_PADDING,
+    DEFAULT_POINT_MARKER_OPTIONS,
 } from './constants';
 import {getRandomCKId} from '../../../../../utils';
 
@@ -25,11 +26,8 @@ export const DEFAULT_LINE_WIDTH = 1;
 export const DEFAULT_DASH_STYLE = DashStyle.Solid;
 
 export const DEFAULT_MARKER = {
+    ...DEFAULT_POINT_MARKER_OPTIONS,
     enabled: false,
-    symbol: 'circle',
-    radius: 4,
-    borderWidth: 0,
-    borderColor: '',
 };
 
 type PrepareLineSeriesArgs = {

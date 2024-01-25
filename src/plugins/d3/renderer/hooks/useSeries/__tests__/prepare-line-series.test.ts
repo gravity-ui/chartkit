@@ -1,4 +1,4 @@
-import {DEFAULT_MARKER, prepareLineSeries} from '../prepare-line-series';
+import {DEFAULT_MARKER, prepareLineSeries} from '../prepare-line';
 import {scaleOrdinal} from 'd3';
 import type {LineSeries} from '../../../../../../types';
 import type {PreparedLegend} from '../types';

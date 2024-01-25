@@ -1,7 +1,6 @@
 import React from 'react';
-import {dateTime} from '@gravity-ui/date-utils';
 import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitWidgetData, ScatterSeries, ScatterSeriesData} from '../../../../types';
+import type {ChartKitWidgetData, ScatterSeries} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
 
@@ -45,29 +44,6 @@ export const Basic = () => {
             type: 'datetime',
             title: {
                 text: 'Release dates',
-            },
-        },
-        tooltip: {
-            renderer: (d) => {
-                const point = d.hovered[0]?.data as ScatterSeriesData;
-
-                if (!point) {
-                    return null;
-                }
-
-                const title = point.custom.title;
-                const score = point.custom.user_score;
-                const date = dateTime({input: point.custom.date}).format('DD MMM YYYY');
-
-                return (
-                    <React.Fragment>
-                        <b>{title}</b>
-                        <br />
-                        Release date: {date}
-                        <br />
-                        User score: {score}
-                    </React.Fragment>
-                );
             },
         },
     };

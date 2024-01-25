@@ -1,3 +1,5 @@
+import {SymbolType} from '../../constants';
+
 export type PointMarkerOptions = {
     /** Enable or disable the point marker */
     enabled?: boolean;
@@ -7,4 +9,5 @@ export type PointMarkerOptions = {
     borderColor?: string;
     /** The width of the point marker's border */
     borderWidth?: number;
+    symbol?: `${SymbolType}`;
 };

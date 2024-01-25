@@ -1,5 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep';
-import get from 'lodash/get';
 import type {ScaleOrdinal} from 'd3';
 
 import type {
@@ -10,46 +8,17 @@ import type {
     ChartKitWidgetSeriesOptions,
     LineSeries,
     PieSeries,
+    ScatterSeries,
 } from '../../../../../types';
-import {SymbolType} from '../../../../../constants';
 
-import {getSymbolType} from '../../utils';
-import {ScatterSeries} from '../../../../../types/widget-data';
-
-import type {PreparedLegend, PreparedSeries, PreparedScatterSeries} from './types';
-import {prepareLineSeries} from './prepare-line-series';
+import type {PreparedLegend, PreparedSeries} from './types';
+import {prepareLineSeries} from './prepare-line';
 import {prepareBarXSeries} from './prepare-bar-x';
 import {prepareBarYSeries} from './prepare-bar-y';
-import {prepareLegendSymbol} from './utils';
 import {ChartKitError} from '../../../../../libs';
 import {preparePieSeries} from './prepare-pie';
 import {prepareArea} from './prepare-area';
-
-type PrepareAxisRelatedSeriesArgs = {
-    colorScale: ScaleOrdinal<string, string>;
-    series: ChartKitWidgetSeries;
-    legend: PreparedLegend;
-    index: number;
-};
-
-function prepareAxisRelatedSeries(args: PrepareAxisRelatedSeriesArgs): PreparedScatterSeries[] {
-    const {colorScale, series, legend, index} = args;
-    const preparedSeries = cloneDeep(series) as PreparedScatterSeries;
-    const name = 'name' in series && series.name ? series.name : '';
-
-    const symbolType = ((series as ScatterSeries).symbolType || getSymbolType(index)) as SymbolType;
-
-    preparedSeries.symbolType = symbolType;
-    preparedSeries.color = 'color' in series && series.color ? series.color : colorScale(name);
-    preparedSeries.name = name;
-    preparedSeries.visible = get(preparedSeries, 'visible', true);
-    preparedSeries.legend = {
-        enabled: get(preparedSeries, 'legend.enabled', legend.enabled),
-        symbol: prepareLegendSymbol(series, symbolType),
-    };
-
-    return [preparedSeries];
-}
+import {prepareScatterSeries} from './prepare-scatter';
 
 export function prepareSeries(args: {
     type: ChartKitWidgetSeries['type'];
@@ -76,12 +45,7 @@ export function prepareSeries(args: {
             return prepareBarYSeries({series: series as BarYSeries[], legend, colorScale});
         }
         case 'scatter': {
-            return series.reduce<PreparedSeries[]>((acc, singleSeries, index) => {
-                acc.push(
-                    ...prepareAxisRelatedSeries({series: singleSeries, legend, colorScale, index}),
-                );
-                return acc;
-            }, []);
+            return prepareScatterSeries({series: series as ScatterSeries[], legend, colorScale});
         }
         case 'line': {
             return prepareLineSeries({

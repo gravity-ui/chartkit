@@ -17,7 +17,7 @@ import type {
 import {BarXSeriesShapes, prepareBarXData} from './bar-x';
 import type {PreparedBarXData} from './bar-x';
 import {ScatterSeriesShape, prepareScatterData} from './scatter';
-import type {PreparedScatterData} from './scatter';
+import type {PreparedScatterData} from './scatter/types';
 import {PieSeriesShapes} from './pie';
 import {preparePieData} from './pie/prepare-data';
 import type {PreparedPieData} from './pie/types';
@@ -27,7 +27,7 @@ import type {PreparedLineData} from './line/types';
 import {BarYSeriesShapes, prepareBarYData} from './bar-y';
 import type {PreparedBarYData} from './bar-y/types';
 export type {PreparedBarXData} from './bar-x';
-export type {PreparedScatterData} from './scatter';
+export type {PreparedScatterData} from './scatter/types';
 import {AreaSeriesShapes} from './area';
 import {prepareAreaData} from './area/prepare-data';
 import type {PreparedAreaData} from './area/types';

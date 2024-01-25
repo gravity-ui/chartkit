@@ -33,7 +33,7 @@ export type PathLegendSymbol = {
 
 export type SymbolLegendSymbol = {
     shape: 'symbol';
-    symbolType: SymbolType;
+    symbolType: `${SymbolType}`;
 } & Required<SymbolLegendSymbolOptions>;
 
 export type PreparedLegendSymbol = RectLegendSymbol | PathLegendSymbol | SymbolLegendSymbol;
@@ -85,7 +85,24 @@ type BasePreparedSeries = {
 export type PreparedScatterSeries = {
     type: ScatterSeries['type'];
     data: ScatterSeriesData[];
-    symbolType: SymbolType;
+    marker: {
+        states: {
+            normal: {
+                symbol: `${SymbolType}`;
+                enabled: boolean;
+                radius: number;
+                borderWidth: number;
+                borderColor: string;
+            };
+            hover: {
+                enabled: boolean;
+                radius: number;
+                borderWidth: number;
+                borderColor: string;
+                halo: PreparedHaloOptions;
+            };
+        };
+    };
 } & BasePreparedSeries;
 
 export type PreparedBarXSeries = {
@@ -159,7 +176,7 @@ export type PreparedLineSeries = {
     marker: {
         states: {
             normal: {
-                symbol: string;
+                symbol: `${SymbolType}`;
                 enabled: boolean;
                 radius: number;
                 borderWidth: number;
@@ -194,7 +211,7 @@ export type PreparedAreaSeries = {
     marker: {
         states: {
             normal: {
-                symbol: string;
+                symbol: `${SymbolType}`;
                 enabled: boolean;
                 radius: number;
                 borderWidth: number;

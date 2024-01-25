@@ -21,7 +21,7 @@ export const getAllLegendItems = (series: PreparedSeries[]) => {
 
 export function prepareLegendSymbol(
     series: ChartKitWidgetSeries,
-    symbolType?: SymbolType,
+    symbolType?: `${SymbolType}`,
 ): PreparedLegendSymbol {
     const symbolOptions = series.legend?.symbol || {};
 

@@ -1,21 +1,10 @@
-import type {TooltipDataChunkScatter, ScatterSeriesData} from '../../../../../../types';
+import type {ScatterSeriesData} from '../../../../../../types';
 
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import {PreparedScatterSeries} from '../../useSeries/types';
 import {getXValue, getYValue} from '../utils';
-
-const DEFAULT_SCATTER_POINT_SIZE = 7;
-
-export type PreparedScatterData = Omit<TooltipDataChunkScatter, 'series'> & {
-    cx: number;
-    cy: number;
-    series: PreparedScatterSeries;
-    hovered: boolean;
-    active: boolean;
-    id: number;
-    size: number;
-};
+import {PreparedScatterData} from './types';
 
 const getFilteredLinearScatterData = (data: ScatterSeriesData[]) => {
     return data.filter((d) => typeof d.x === 'number' && typeof d.y === 'number');
@@ -37,17 +26,15 @@ export const prepareScatterData = (args: {
                 : getFilteredLinearScatterData(s.data);
 
         filteredData.forEach((d) => {
-            const size = d.radius ? d.radius * 2 : DEFAULT_SCATTER_POINT_SIZE;
-
             acc.push({
-                data: d,
-                series: s,
-                cx: getXValue({point: d, xAxis, xScale}),
-                cy: getYValue({point: d, yAxis, yScale}),
+                point: {
+                    data: d,
+                    series: s,
+                    x: getXValue({point: d, xAxis, xScale}),
+                    y: getYValue({point: d, yAxis, yScale}),
+                },
                 hovered: false,
                 active: true,
-                id: acc.length - 1,
-                size,
             });
         });
 
