@@ -64,6 +64,7 @@
     "@gravity-ui/stylelint-config": "^1.0.1",
     "@gravity-ui/tsconfig": "^1.0.0",
     "@gravity-ui/uikit": "^5.6.0",
+    "@playwright/experimental-ct-react17": "^1.41.1",
     "@storybook/addon-essentials": "^7.0.26",
     "@storybook/addon-knobs": "^7.0.2",
     "@storybook/cli": "^7.0.26",
@@ -126,7 +127,8 @@
     "docs:build": "cd ./documentation && npm run build",
     "docs:serve": "cd ./documentation && npm run serve",
     "docs:deploy": "cd ./documentation && npm run deploy",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test:playwright": "playwright test -c tests/playwright.config.ts"
   },
   "husky": {
     "hooks": {

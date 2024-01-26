@@ -10,3 +10,7 @@ build
 compiled
 .awcache
 .rpt2_cache
+/test-results/
+/playwright-report/
+/blob-report/
+/tests/playwright/.cache/
