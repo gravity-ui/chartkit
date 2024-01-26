@@ -23,6 +23,7 @@ const cfg: Config.InitialOptions = {
         '^.+\\.(css|scss)$': '<rootDir>/test-utils/style.mock.ts',
     },
     setupFiles: ['<rootDir>/test-utils/globals.mock.ts'],
+    testPathIgnorePatterns: ['.visual.'],
 };
 
 export default cfg;

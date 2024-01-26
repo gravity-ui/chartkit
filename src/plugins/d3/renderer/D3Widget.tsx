@@ -17,6 +17,7 @@ type ChartDimensions = {
 const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'d3'>>(
     function D3Widget(props, forwardedRef) {
         const {data, onLoad, onRender, onChartLoad} = props;
+        const validatedData = React.useRef<typeof data>();
         const ref = React.useRef<HTMLDivElement>(null);
         const debounced = React.useRef<DebouncedFunc<() => void> | undefined>();
         const [dimensions, setDimensions] = React.useState<Partial<ChartDimensions>>();
@@ -66,9 +67,10 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
             handleResize();
         }, [handleResize]);
 
-        React.useEffect(() => {
+        if (validatedData.current !== data) {
             validateData(data);
-        }, [data]);
+            validatedData.current = data;
+        }
 
         React.useLayoutEffect(() => {
             if (onChartLoad) {
