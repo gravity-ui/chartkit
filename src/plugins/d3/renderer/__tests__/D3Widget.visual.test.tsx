@@ -1,7 +1,7 @@
 import React from 'react';
 import {test, expect} from '@playwright/experimental-ct-react17';
 import {ChartKitWidgetData} from '../../../../types';
-import {TestStory} from './TestStory';
+import {TestStory} from './TestStory.visual';
 
 const VALID_CHART_DATA = {
     series: {
