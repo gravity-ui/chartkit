@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.18.0](https://github.com/gravity-ui/chartkit/compare/v4.17.0...v4.18.0) (2024-01-26)
+
+
+### Features
+
+* **D3 plugin:** add halo to scatter hover series ([#394](https://github.com/gravity-ui/chartkit/issues/394)) ([af2ac7c](https://github.com/gravity-ui/chartkit/commit/af2ac7c6ec3e104ac060b342a9f8ebb88e3e646c))
+* **D3 plugin:** Stacked percentage charts (bar-x, bar-y, area) ([#391](https://github.com/gravity-ui/chartkit/issues/391)) ([590f342](https://github.com/gravity-ui/chartkit/commit/590f342f01ec1fcc9b1dadf99942712b657526b3))
+* **d3:** Add text for center in donut charts ([#389](https://github.com/gravity-ui/chartkit/issues/389)) ([da86362](https://github.com/gravity-ui/chartkit/commit/da86362a1248606a483c82d77e00906fba8130dc))
+
+
+### Bug Fixes
+
+* bumped yagr to 4.2.1 (fixing .setSeries updates) ([#395](https://github.com/gravity-ui/chartkit/issues/395)) ([ada09ed](https://github.com/gravity-ui/chartkit/commit/ada09ed17414b95aada4eb6d148b9df462430c1c))
+* **D3 plugin:** When updating data to empty, an unhandled error is thrown ([#396](https://github.com/gravity-ui/chartkit/issues/396)) ([290d2cd](https://github.com/gravity-ui/chartkit/commit/290d2cd2f0ce8e70e89cca17daae8c123c41970e))
+
 ## [4.17.0](https://github.com/gravity-ui/chartkit/compare/v4.16.0...v4.17.0) (2024-01-18)
 
 
