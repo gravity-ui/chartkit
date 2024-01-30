@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.18.1](https://github.com/gravity-ui/chartkit/compare/v4.18.0...v4.18.1) (2024-01-30)
+
+
+### Bug Fixes
+
+* bump yagr to 4.2.3 ([#401](https://github.com/gravity-ui/chartkit/issues/401)) ([3ecdd7d](https://github.com/gravity-ui/chartkit/commit/3ecdd7d5d6a123d94d53ab6148c905ad24004987))
+
 ## [4.18.0](https://github.com/gravity-ui/chartkit/compare/v4.17.0...v4.18.0) (2024-01-26)
 
 
