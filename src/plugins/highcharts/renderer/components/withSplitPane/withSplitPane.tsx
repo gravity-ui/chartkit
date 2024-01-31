@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-import {debounce, get} from 'lodash';
+import debounce from 'lodash/debounce';
+import get from 'lodash/get';
 
 import {getRandomCKId} from '../../../../../utils';
 import {cn} from '../../../../../utils/cn';

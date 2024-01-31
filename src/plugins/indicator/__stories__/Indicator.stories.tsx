@@ -2,7 +2,7 @@ import React from 'react';
 import {Meta, Story} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {withKnobs, boolean, color as colorKnob, radios, text} from '@storybook/addon-knobs';
-import {cloneDeep} from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../libs';
 import {ChartKit} from '../../../components/ChartKit';
