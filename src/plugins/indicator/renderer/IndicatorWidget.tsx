@@ -1,5 +1,5 @@
 import React from 'react';
-import {isEmpty} from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import {i18n} from '../../../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from '../../../constants';
