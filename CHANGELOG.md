@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.18.2](https://github.com/gravity-ui/chartkit/compare/v4.18.1...v4.18.2) (2024-01-31)
+
+
+### Bug Fixes
+
+* fix lodash imports ([#403](https://github.com/gravity-ui/chartkit/issues/403)) ([27158cb](https://github.com/gravity-ui/chartkit/commit/27158cb05e8f68239811b5fcb1eff4e2ee0762b3))
+
 ## [4.18.1](https://github.com/gravity-ui/chartkit/compare/v4.18.0...v4.18.1) (2024-01-30)
 
 
