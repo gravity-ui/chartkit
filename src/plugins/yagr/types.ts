@@ -18,6 +18,14 @@ export type YagrWidgetData = {
     data: {
         graphs: RawSerieData[];
         timeline: number[];
+        /**
+         * Allow to setup timezone for X axis and tooltip's header.
+         *
+         * Format example: "UTC", "Europe/Moscow".
+         *
+         * For more examples check [wiki](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)
+         */
+        timeZone?: string;
     };
     libraryConfig: Partial<YagrConfig>;
     sources?: Record<

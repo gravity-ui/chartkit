@@ -1,1 +1,1 @@
-export {renderTooltip} from './renderTooltip';
+export {getRenderTooltip} from './renderTooltip';

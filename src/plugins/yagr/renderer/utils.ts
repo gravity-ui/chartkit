@@ -3,7 +3,7 @@ import {dateTime} from '@gravity-ui/date-utils';
 import {defaults} from '@gravity-ui/yagr';
 import {settings} from '../../../libs';
 import type {Yagr, YagrWidgetData, YagrTheme, YagrChartOptions, MinimalValidConfig} from '../types';
-import {renderTooltip} from './tooltip';
+import {getRenderTooltip} from './tooltip';
 
 const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
 const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
@@ -117,11 +117,11 @@ export const detectClickOutside =
     };
 
 const getXAxisFormatter =
-    (msm = 1) =>
+    (msm = 1, timeZone?: string) =>
     (_: unknown, ticks: number[]) => {
         const range = (ticks[ticks.length - 1] - ticks[0]) / msm;
         return ticks.map((rawValue) => {
-            const d = dateTime({input: rawValue / msm});
+            const d = dateTime({input: rawValue / msm, timeZone});
 
             if (d.hour() === 0 && d.minute() === 0 && d.second() === 0) {
                 return d.format('DD.MM.YY');
@@ -139,6 +139,8 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
         series: data.graphs,
     };
 
+    const {timeZone} = data;
+
     const chart: YagrChartOptions = {
         appearance: {
             locale: settings.get('lang'),
@@ -152,7 +154,7 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
 
     if (config.tooltip?.show) {
         config.tooltip = config.tooltip || {};
-        config.tooltip.render = config.tooltip?.render || renderTooltip;
+        config.tooltip.render = config.tooltip?.render || getRenderTooltip(timeZone);
 
         if (!config.tooltip.className) {
             // "className" property prevent default yagr styles adding
@@ -175,12 +177,12 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
     const xAxis = config.axes[defaults.DEFAULT_X_SCALE];
 
     if (xAxis && !xAxis.values) {
-        xAxis.values = getXAxisFormatter(config.chart.timeMultiplier);
+        xAxis.values = getXAxisFormatter(config.chart.timeMultiplier, timeZone);
     }
 
     if (!xAxis) {
         config.axes[defaults.DEFAULT_X_SCALE] = {
-            values: getXAxisFormatter(config.chart.timeMultiplier),
+            values: getXAxisFormatter(config.chart.timeMultiplier, timeZone),
         };
     }
 
