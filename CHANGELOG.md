@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.19.0](https://github.com/gravity-ui/chartkit/compare/v4.18.2...v4.19.0) (2024-02-02)
+
+
+### Features
+
+* **yagr:** add timezone support for tooltip header and x axis labels ([#405](https://github.com/gravity-ui/chartkit/issues/405)) ([ab74dc2](https://github.com/gravity-ui/chartkit/commit/ab74dc2dfbdc10252bdecc97f9d49b9049a5b8d5))
+
 ## [4.18.2](https://github.com/gravity-ui/chartkit/compare/v4.18.1...v4.18.2) (2024-01-31)
 
 
