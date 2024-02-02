@@ -16,7 +16,7 @@ const calcOption = <T>(d: T | {[key in string]: T} | undefined) => {
  * Adapter between native Yagr tooltip config and ChartKit
  * tooltip renderer.
  */
-export const renderTooltip = (data: TooltipRenderOptions) => {
+export const getRenderTooltip = (timeZone?: string) => (data: TooltipRenderOptions) => {
     const cfg = data.yagr.config;
     const timeMultiplier = cfg.chart.timeMultiplier || 1;
     const opts = data.options;
@@ -50,7 +50,9 @@ export const renderTooltip = (data: TooltipRenderOptions) => {
 
     const tooltipFormatOptions: TooltipData = {
         activeRowAlwaysFirstInTooltip: rows.length > 1,
-        tooltipHeader: dateTime({input: x / timeMultiplier}).format('DD MMMM YYYY HH:mm:ss'),
+        tooltipHeader: dateTime({input: x / timeMultiplier, timeZone}).format(
+            'DD MMMM YYYY HH:mm:ss',
+        ),
         shared: true,
         lines: rows.map(
             (row, i) =>

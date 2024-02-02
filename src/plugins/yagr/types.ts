@@ -18,6 +18,7 @@ export type YagrWidgetData = {
     data: {
         graphs: RawSerieData[];
         timeline: number[];
+        timeZone?: string;
     };
     libraryConfig: Partial<YagrConfig>;
     sources?: Record<
