@@ -11,15 +11,13 @@ export type TreemapSeriesData<T = any> = BaseSeriesData<T> & {
      * Note: don't set this property for node with children, this may lead to incorrect chart display.
      * */
     value?: number;
-    /** Initial visibility of the point. */
-    visible?: boolean;
     /** An id for the point. Used to group child points. */
     id?: string;
     /**
      * Parent id. Used to build a tree structure. The value should be the id of the point which is the parent.
      * If no points has a matching id, or this option is undefined, then the parent will be set to the root.
      */
-    parent?: string;
+    parentId?: string;
 };
 
 export type TreemapSeries<T = any> = BaseSeries & {

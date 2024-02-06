@@ -10,7 +10,8 @@ export function prepareTreemapData(args: {series: PreparedTreemapSeries}): Prepa
     const dataWithRootNode = getSeriesDataWithRootNode(series);
     const hierarchy = stratify<PreparedTreemapSeriesData>()
         .id((d) => d.id || d.name)
-        .parentId((d) => d.parent)(dataWithRootNode);
+        .parentId((d) => d.parentId)(dataWithRootNode)
+        .sum((d) => d.value || 0);
 
     return {hierarchy, series};
 }
@@ -20,8 +21,8 @@ function getSeriesDataWithRootNode(series: PreparedTreemapSeries) {
         (acc, d) => {
             const dataChunk = Object.assign({_nodeId: getRandomCKId()}, d);
 
-            if (!dataChunk.parent) {
-                dataChunk.parent = series.id;
+            if (!dataChunk.parentId) {
+                dataChunk.parentId = series.id;
             }
 
             acc.push(dataChunk);

@@ -74,7 +74,7 @@ export const TreemapSeriesShape = (props: ShapeProps) => {
         const root = treemapInstance.size([width, height]).paddingInner((d) => {
             const levelOptions = series.levels?.find((l) => l.index === d.depth + 1);
             return levelOptions?.padding ?? DEFAULT_PADDING;
-        })(hierarchy.sum((d) => d.value || 0));
+        })(hierarchy);
 
         const leaf = svgElement
             .selectAll('g')

@@ -89,4 +89,45 @@ describe('plugins/d3/validation', () => {
             expect(error?.code).toEqual(CHARTKIT_ERROR_CODE.INVALID_DATA);
         },
     );
+
+    test.each([
+        [[{name: '1'} /* error */]],
+        [[{name: '1'}, {name: '2', parentId: '1'} /* error */]],
+        [
+            [
+                {name: '1', value: 1}, // error
+                {name: '2', parentId: '1', value: 1},
+            ],
+        ],
+        [
+            [
+                {name: '1'},
+                {name: '2', parentId: '1', value: 1}, // error
+                {name: '3', parentId: '2', value: 1},
+                {name: '4', parentId: '2', value: 1},
+            ],
+        ],
+    ])(
+        '[Treemap Series] validateData should throw an error in case of invalid data (data: %j)',
+        (data) => {
+            let error: ChartKitError | null = null;
+
+            try {
+                validateData({
+                    series: {
+                        data: [
+                            {
+                                type: 'treemap',
+                                data,
+                            },
+                        ] as ChartKitWidgetData['series']['data'],
+                    },
+                });
+            } catch (e) {
+                error = e as ChartKitError;
+            }
+
+            expect(error?.code).toEqual(CHARTKIT_ERROR_CODE.INVALID_DATA);
+        },
+    );
 });
