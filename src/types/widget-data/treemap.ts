@@ -8,7 +8,7 @@ export type TreemapSeriesData<T = any> = BaseSeriesData<T> & {
     /**
      * The value of the point.
      *
-     * Note: don't set this value for node with children, еhis may lead to incorrect chart display.
+     * Note: don't set this property for node with children, this may lead to incorrect chart display.
      * */
     value?: number;
     /** Initial visibility of the point. */
