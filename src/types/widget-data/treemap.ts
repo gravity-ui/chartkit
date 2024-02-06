@@ -3,19 +3,15 @@ import type {BaseSeries, BaseSeriesData} from './base';
 import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
 export type TreemapSeriesData<T = any> = BaseSeriesData<T> & {
-    /** The name of the point (used in legend, tooltip etc). */
+    /** The name of the node (used in legend, tooltip etc). */
     name: string;
-    /**
-     * The value of the point.
-     *
-     * Note: don't set this property for node with children, this may lead to incorrect chart display.
-     * */
+    /** The value of the node. All nodes should have this property except nodes that have children. */
     value?: number;
-    /** An id for the point. Used to group child points. */
+    /** An id for the node. Used to group children. */
     id?: string;
     /**
-     * Parent id. Used to build a tree structure. The value should be the id of the point which is the parent.
-     * If no points has a matching id, or this option is undefined, then the parent will be set to the root.
+     * Parent id. Used to build a tree structure. The value should be the id of the node which is the parent.
+     * If no nodes has a matching id, or this option is undefined, then the parent will be set to the root.
      */
     parentId?: string;
 };
