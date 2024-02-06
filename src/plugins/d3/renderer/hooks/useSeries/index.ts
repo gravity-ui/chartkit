@@ -62,9 +62,7 @@ export const useSeries = (args: Args) => {
         getActiveLegendItems(preparedSeries),
     );
     const chartSeries = React.useMemo<PreparedSeries[]>(() => {
-        return preparedSeries.map((singleSeries, i) => {
-            singleSeries.id = `Series ${i + 1}`;
-
+        return preparedSeries.map((singleSeries) => {
             if (singleSeries.legend.enabled) {
                 return {
                     ...singleSeries,

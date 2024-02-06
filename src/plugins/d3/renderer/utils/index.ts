@@ -22,7 +22,7 @@ export * from './axis';
 export * from './labels';
 export * from './symbol';
 
-const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie'];
+const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie', 'treemap'];
 
 export type AxisDirection = 'x' | 'y';
 

@@ -11,6 +11,7 @@ import type {
     PreparedLineSeries,
     PreparedPieSeries,
     PreparedScatterSeries,
+    PreparedTreemapSeries,
     PreparedSeries,
     PreparedSeriesOptions,
 } from '../';
@@ -31,6 +32,8 @@ export type {PreparedScatterData} from './scatter/types';
 import {AreaSeriesShapes} from './area';
 import {prepareAreaData} from './area/prepare-data';
 import type {PreparedAreaData} from './area/types';
+import {TreemapSeriesShape} from './treemap';
+import {prepareTreemapData} from './treemap/prepare-data';
 
 import './styles.scss';
 
@@ -189,7 +192,6 @@ export const useShapes = (args: Args) => {
                         boundsWidth,
                         boundsHeight,
                     });
-
                     acc.push(
                         <PieSeriesShapes
                             key="pie"
@@ -197,6 +199,25 @@ export const useShapes = (args: Args) => {
                             preparedData={preparedData}
                             seriesOptions={seriesOptions}
                             svgContainer={svgContainer}
+                        />,
+                    );
+                    break;
+                }
+                case 'treemap': {
+                    const preparedData = prepareTreemapData({
+                        // We should have exactly one series with "treemap" type
+                        // Otherwise data validation should emit an error
+                        series: chartSeries[0] as PreparedTreemapSeries,
+                    });
+                    acc.push(
+                        <TreemapSeriesShape
+                            key="treemap"
+                            dispatcher={dispatcher}
+                            preparedData={preparedData}
+                            seriesOptions={seriesOptions}
+                            svgContainer={svgContainer}
+                            width={boundsWidth}
+                            height={boundsHeight}
                         />,
                     );
                 }

@@ -172,6 +172,22 @@ const validateSeries = (args: {
     }
 };
 
+const countSeriesByType = (args: {
+    series: ChartKitWidgetSeries[];
+    type: ChartKitWidgetSeries['type'];
+}) => {
+    const {series, type} = args;
+    let count = 0;
+
+    series.forEach((s) => {
+        if (s.type === type) {
+            count += 1;
+        }
+    });
+
+    return count;
+};
+
 export const validateData = (data?: ChartKitWidgetData) => {
     if (isEmpty(data) || isEmpty(data.series) || isEmpty(data.series.data)) {
         throw new ChartKitError({
@@ -184,6 +200,18 @@ export const validateData = (data?: ChartKitWidgetData) => {
         throw new ChartKitError({
             code: CHARTKIT_ERROR_CODE.INVALID_DATA,
             message: 'You should specify data for all series',
+        });
+    }
+
+    const treemapSeriesCount = countSeriesByType({
+        series: data.series.data,
+        type: SeriesType.Treemap,
+    });
+
+    if (treemapSeriesCount > 1) {
+        throw new ChartKitError({
+            code: CHARTKIT_ERROR_CODE.INVALID_DATA,
+            message: 'It looks like you are trying to define more than one "treemap" series.',
         });
     }
 
