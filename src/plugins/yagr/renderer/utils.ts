@@ -131,6 +131,12 @@ const getXAxisFormatter =
         });
     };
 
+/**
+ * This function needs to align timezone which processed in uplot.
+ * Uplot uses simple new Date() when [processing ticks](https://github.com/leeoniya/uPlot/blob/master/src/opts.js#L177) on axis.
+ * It leads that timestamp will be converted to user browser timezone and ignore timeZone props
+ * In this function we artificially add shift diff between browser timezone and user timeozne to reset new Date() affects.
+ */
 const getUplotTimezoneAligner = (config: MinimalValidConfig, timeZone?: string) => (ts: number) => {
     const dt = ts / (config.chart?.timeMultiplier || 1);
     const browserDate = dateTime({input: dt});
