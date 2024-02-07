@@ -52,6 +52,7 @@ describe('plugins/yagr/utils', () => {
             [{}, 'Europe/Belgrade', 1706659878000, 1706667078000],
             // UTC - 1
             [{}, 'America/Scoresbysund', 1706659878000, 1706674278000],
+            // UTC + 4
             [{}, 'Asia/Muscat', 1706659878000, 1706656278000],
         ])(
             'should return timestamp with added timezone diff',
