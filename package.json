@@ -1,6 +1,6 @@
 {
   "name": "@gravity-ui/chartkit",
-  "version": "4.19.0",
+  "version": "4.19.1",
   "description": "React component used to render charts based on any sources you need",
   "license": "MIT",
   "repository": "git@github.com:gravity-ui/ChartKit.git",
