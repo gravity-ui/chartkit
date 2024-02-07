@@ -131,6 +131,17 @@ const getXAxisFormatter =
         });
     };
 
+const getUplotTimezoneAligner = (config: MinimalValidConfig, timeZone?: string) => (ts: number) => {
+    const dt = ts / (config.chart?.timeMultiplier || 1);
+    const browserDate = dateTime({input: dt});
+    const browserTimezone = browserDate.utcOffset();
+    const timestampRealTimezone = dateTime({input: dt, timeZone}).utcOffset();
+
+    const uPlotOffset = (browserTimezone - timestampRealTimezone) * 60 * 1000;
+
+    return new Date(browserDate.valueOf() + uPlotOffset);
+};
+
 export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig => {
     const {data, libraryConfig, theme} = args;
     const config: MinimalValidConfig = {
@@ -175,6 +186,11 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
 
     config.axes = config.axes || {};
     const xAxis = config.axes[defaults.DEFAULT_X_SCALE];
+
+    config.editUplotOptions = (opts) => ({
+        ...opts,
+        tzDate: timeZone ? getUplotTimezoneAligner(config, timeZone) : undefined,
+    });
 
     if (xAxis && !xAxis.values) {
         xAxis.values = getXAxisFormatter(config.chart.timeMultiplier, timeZone);
