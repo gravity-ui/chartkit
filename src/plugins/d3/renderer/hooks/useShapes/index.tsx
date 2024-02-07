@@ -208,6 +208,8 @@ export const useShapes = (args: Args) => {
                         // We should have exactly one series with "treemap" type
                         // Otherwise data validation should emit an error
                         series: chartSeries[0] as PreparedTreemapSeries,
+                        width: boundsWidth,
+                        height: boundsHeight,
                     });
                     acc.push(
                         <TreemapSeriesShape
@@ -216,8 +218,6 @@ export const useShapes = (args: Args) => {
                             preparedData={preparedData}
                             seriesOptions={seriesOptions}
                             svgContainer={svgContainer}
-                            width={boundsWidth}
-                            height={boundsHeight}
                         />,
                     );
                 }
