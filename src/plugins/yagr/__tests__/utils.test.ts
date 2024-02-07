@@ -13,7 +13,6 @@ jest.mock('@gravity-ui/date-utils', () => {
         __esModule: true,
         ...originalModule,
         dateTime: ({input, timeZone}: {input: number; timeZone?: string}) => {
-            const originalModule = jest.requireActual('@gravity-ui/date-utils');
             const browserMockedTimezone = 'Europe/Moscow';
             return originalModule.dateTime({
                 input,
