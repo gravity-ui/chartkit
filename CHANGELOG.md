@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.19.1](https://github.com/gravity-ui/chartkit/compare/v4.19.0...v4.19.1) (2024-02-07)
+
+
+### Bug Fixes
+
+* **Yagr plugin:** add aligner for uplot date ([#410](https://github.com/gravity-ui/chartkit/issues/410)) ([7774575](https://github.com/gravity-ui/chartkit/commit/777457559ca9b35cf5a9b64fc844d395cdf9a109))
+
 ## [4.19.0](https://github.com/gravity-ui/chartkit/compare/v4.18.2...v4.19.0) (2024-02-02)
 
 
