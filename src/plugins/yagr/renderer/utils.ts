@@ -131,6 +131,24 @@ const getXAxisFormatter =
         });
     };
 
+/**
+ * This function needs to align timezone that uplot is processing.
+ * Uplot uses simple new Date() when [processing ticks](https://github.com/leeoniya/uPlot/blob/master/src/opts.js#L177) on axis.
+ * It leads that timestamp will be converted to user browser timezone.
+ * In this function we artificially add shift diff between browser timezone and user timeozne to reset new Date() affects.
+ */
+export const getUplotTimezoneAligner =
+    (chart?: YagrChartOptions, timeZone?: string) => (ts: number) => {
+        const dt = ts / (chart?.timeMultiplier || 1);
+        const browserDate = dateTime({input: dt});
+        const browserTimezone = browserDate.utcOffset();
+        const timestampRealTimezone = dateTime({input: dt, timeZone}).utcOffset();
+
+        const uPlotOffset = (browserTimezone - timestampRealTimezone) * 60 * 1000;
+
+        return new Date(browserDate.valueOf() + uPlotOffset);
+    };
+
 export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig => {
     const {data, libraryConfig, theme} = args;
     const config: MinimalValidConfig = {
@@ -175,6 +193,11 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
 
     config.axes = config.axes || {};
     const xAxis = config.axes[defaults.DEFAULT_X_SCALE];
+
+    config.editUplotOptions = (opts) => ({
+        ...opts,
+        tzDate: timeZone ? getUplotTimezoneAligner(config.chart, timeZone) : undefined,
+    });
 
     if (xAxis && !xAxis.values) {
         xAxis.values = getXAxisFormatter(config.chart.timeMultiplier, timeZone);
