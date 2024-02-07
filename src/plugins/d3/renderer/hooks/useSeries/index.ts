@@ -62,9 +62,7 @@ export const useSeries = (args: Args) => {
         getActiveLegendItems(preparedSeries),
     );
     const chartSeries = React.useMemo<PreparedSeries[]>(() => {
-        return preparedSeries.map((singleSeries, i) => {
-            singleSeries.id = `Series ${i + 1}`;
-
+        return preparedSeries.map((singleSeries) => {
             if (singleSeries.legend.enabled) {
                 return {
                     ...singleSeries,
@@ -88,6 +86,7 @@ export const useSeries = (args: Args) => {
 
     const handleLegendItemClick: OnLegendItemClick = React.useCallback(
         ({name, metaKey}) => {
+            const allItems = getAllLegendItems(preparedSeries);
             const onlyItemSelected =
                 activeLegendItems.length === 1 && activeLegendItems.includes(name);
             let nextActiveLegendItems: string[];
@@ -96,8 +95,10 @@ export const useSeries = (args: Args) => {
                 nextActiveLegendItems = activeLegendItems.filter((item) => item !== name);
             } else if (metaKey && !activeLegendItems.includes(name)) {
                 nextActiveLegendItems = activeLegendItems.concat(name);
+            } else if (onlyItemSelected && allItems.length === 1) {
+                nextActiveLegendItems = [];
             } else if (onlyItemSelected) {
-                nextActiveLegendItems = getAllLegendItems(preparedSeries);
+                nextActiveLegendItems = allItems;
             } else {
                 nextActiveLegendItems = [name];
             }

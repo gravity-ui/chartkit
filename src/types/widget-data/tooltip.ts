@@ -4,6 +4,7 @@ import type {ScatterSeries, ScatterSeriesData} from './scatter';
 import type {LineSeries, LineSeriesData} from './line';
 import type {BarYSeries, BarYSeriesData} from './bar-y';
 import type {AreaSeries, AreaSeriesData} from './area';
+import type {TreemapSeries, TreemapSeriesData} from './treemap';
 
 export type TooltipDataChunkBarX<T = any> = {
     data: BarXSeriesData<T>;
@@ -51,13 +52,19 @@ export type TooltipDataChunkArea<T = any> = {
     };
 };
 
+export type TooltipDataChunkTreemap<T = any> = {
+    data: TreemapSeriesData<T>;
+    series: TreemapSeries<T>;
+};
+
 export type TooltipDataChunk<T = any> =
     | TooltipDataChunkBarX<T>
     | TooltipDataChunkBarY<T>
     | TooltipDataChunkPie<T>
     | TooltipDataChunkScatter<T>
     | TooltipDataChunkLine<T>
-    | TooltipDataChunkArea<T>;
+    | TooltipDataChunkArea<T>
+    | TooltipDataChunkTreemap<T>;
 
 export type ChartKitWidgetTooltip<T = any> = {
     enabled?: boolean;

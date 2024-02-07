@@ -6,6 +6,7 @@ import type {LineSeries, LineSeriesData} from './line';
 import type {BarYSeries, BarYSeriesData} from './bar-y';
 import type {PointMarkerOptions} from './marker';
 import type {AreaSeries, AreaSeriesData} from './area';
+import type {TreemapSeries, TreemapSeriesData} from './treemap';
 import type {Halo} from './halo';
 
 import {DashStyle, LineCap} from '../../constants';
@@ -16,7 +17,8 @@ export type ChartKitWidgetSeries<T = any> =
     | BarXSeries<T>
     | BarYSeries<T>
     | LineSeries<T>
-    | AreaSeries<T>;
+    | AreaSeries<T>
+    | TreemapSeries<T>;
 
 export type ChartKitWidgetSeriesData<T = any> =
     | ScatterSeriesData<T>
@@ -24,7 +26,8 @@ export type ChartKitWidgetSeriesData<T = any> =
     | BarXSeriesData<T>
     | BarYSeriesData<T>
     | LineSeriesData<T>
-    | AreaSeriesData<T>;
+    | AreaSeriesData<T>
+    | TreemapSeriesData<T>;
 
 export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;
@@ -64,7 +67,6 @@ export type BasicInactiveState = {
 };
 
 export type ChartKitWidgetSeriesOptions = {
-    // todo
     /** Individual data label for each point. */
     dataLabels?: {
         /** Enable or disable the data labels */
@@ -215,5 +217,12 @@ export type ChartKitWidgetSeriesOptions = {
         };
         /** Options for the point markers of line series */
         marker?: PointMarkerOptions;
+    };
+    treemap?: {
+        /** Options for the series states that provide additional styling information to the series. */
+        states?: {
+            hover?: BasicHoverState;
+            inactive?: BasicInactiveState;
+        };
     };
 };

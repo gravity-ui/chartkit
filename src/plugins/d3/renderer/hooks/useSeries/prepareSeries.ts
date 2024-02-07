@@ -9,16 +9,18 @@ import type {
     LineSeries,
     PieSeries,
     ScatterSeries,
+    TreemapSeries,
 } from '../../../../../types';
+import {ChartKitError} from '../../../../../libs';
 
 import type {PreparedLegend, PreparedSeries} from './types';
 import {prepareLineSeries} from './prepare-line';
 import {prepareBarXSeries} from './prepare-bar-x';
 import {prepareBarYSeries} from './prepare-bar-y';
-import {ChartKitError} from '../../../../../libs';
 import {preparePieSeries} from './prepare-pie';
 import {prepareArea} from './prepare-area';
 import {prepareScatterSeries} from './prepare-scatter';
+import {prepareTreemap} from './prepare-treemap';
 
 export function prepareSeries(args: {
     type: ChartKitWidgetSeries['type'];
@@ -58,6 +60,14 @@ export function prepareSeries(args: {
         case 'area': {
             return prepareArea({
                 series: series as AreaSeries[],
+                seriesOptions,
+                legend,
+                colorScale,
+            });
+        }
+        case 'treemap': {
+            return prepareTreemap({
+                series: series as TreemapSeries[],
                 seriesOptions,
                 legend,
                 colorScale,

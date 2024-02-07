@@ -5,6 +5,7 @@ export const SeriesType = {
     Line: 'line',
     Pie: 'pie',
     Scatter: 'scatter',
+    Treemap: 'treemap',
 } as const;
 
 export enum DashStyle {
@@ -34,4 +35,12 @@ export enum LineCap {
     Round = 'round',
     Square = 'square',
     None = 'none',
+}
+
+export enum LayoutAlgorithm {
+    Binary = 'binary',
+    Dice = 'dice',
+    Slice = 'slice',
+    SliceDice = 'slice-dice',
+    Squarify = 'squarify',
 }

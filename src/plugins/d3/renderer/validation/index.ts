@@ -13,6 +13,7 @@ import {
     LineSeries,
     PieSeries,
     ScatterSeries,
+    TreemapSeries,
 } from '../../../../types';
 import {i18n} from '../../../../i18n';
 
@@ -137,6 +138,38 @@ const validateStacking = ({series}: {series: AreaSeries | BarXSeries | BarYSerie
     }
 };
 
+const validateTreemapSeries = ({series}: {series: TreemapSeries}) => {
+    const parentIds: Record<string, boolean> = {};
+    series.data.forEach((d) => {
+        if (d.parentId && !parentIds[d.parentId]) {
+            parentIds[d.parentId] = true;
+        }
+    });
+    series.data.forEach((d) => {
+        const idOrName = d.id || d.name;
+
+        if (parentIds[idOrName] && typeof d.value === 'number') {
+            throw new ChartKitError({
+                code: CHARTKIT_ERROR_CODE.INVALID_DATA,
+                message: i18n('error', 'label_invalid-treemap-redundant-value', {
+                    id: d.id,
+                    name: d.name,
+                }),
+            });
+        }
+
+        if (!parentIds[idOrName] && typeof d.value !== 'number') {
+            throw new ChartKitError({
+                code: CHARTKIT_ERROR_CODE.INVALID_DATA,
+                message: i18n('error', 'label_invalid-treemap-missing-value', {
+                    id: d.id,
+                    name: d.name,
+                }),
+            });
+        }
+    });
+};
+
 const validateSeries = (args: {
     series: ChartKitWidgetSeries;
     xAxis?: ChartKitWidgetAxis;
@@ -168,8 +201,28 @@ const validateSeries = (args: {
         }
         case 'pie': {
             validatePieSeries({series});
+            break;
+        }
+        case 'treemap': {
+            validateTreemapSeries({series});
         }
     }
+};
+
+const countSeriesByType = (args: {
+    series: ChartKitWidgetSeries[];
+    type: ChartKitWidgetSeries['type'];
+}) => {
+    const {series, type} = args;
+    let count = 0;
+
+    series.forEach((s) => {
+        if (s.type === type) {
+            count += 1;
+        }
+    });
+
+    return count;
 };
 
 export const validateData = (data?: ChartKitWidgetData) => {
@@ -184,6 +237,18 @@ export const validateData = (data?: ChartKitWidgetData) => {
         throw new ChartKitError({
             code: CHARTKIT_ERROR_CODE.INVALID_DATA,
             message: 'You should specify data for all series',
+        });
+    }
+
+    const treemapSeriesCount = countSeriesByType({
+        series: data.series.data,
+        type: SeriesType.Treemap,
+    });
+
+    if (treemapSeriesCount > 1) {
+        throw new ChartKitError({
+            code: CHARTKIT_ERROR_CODE.INVALID_DATA,
+            message: 'It looks like you are trying to define more than one "treemap" series.',
         });
     }
 

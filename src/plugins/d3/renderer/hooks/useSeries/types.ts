@@ -18,9 +18,11 @@ import {
     SymbolLegendSymbolOptions,
     AreaSeries,
     AreaSeriesData,
+    TreemapSeries,
+    TreemapSeriesData,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
-import {DashStyle, LineCap, SymbolType} from '../../../../../constants';
+import {DashStyle, LayoutAlgorithm, LineCap, SymbolType} from '../../../../../constants';
 
 export type RectLegendSymbol = {
     shape: 'rect';
@@ -228,13 +230,27 @@ export type PreparedAreaSeries = {
     };
 } & BasePreparedSeries;
 
+export type PreparedTreemapSeries = {
+    type: TreemapSeries['type'];
+    data: TreemapSeriesData[];
+    dataLabels: {
+        enabled: boolean;
+        style: BaseTextStyle;
+        padding: number;
+        allowOverlap: boolean;
+    };
+    layoutAlgorithm: `${LayoutAlgorithm}`;
+} & BasePreparedSeries &
+    TreemapSeries;
+
 export type PreparedSeries =
     | PreparedScatterSeries
     | PreparedBarXSeries
     | PreparedBarYSeries
     | PreparedPieSeries
     | PreparedLineSeries
-    | PreparedAreaSeries;
+    | PreparedAreaSeries
+    | PreparedTreemapSeries;
 
 export type PreparedSeriesOptions = SeriesOptionsDefaults;
 

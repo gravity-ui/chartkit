@@ -31,3 +31,12 @@
         alignment-baseline: after-edge;
     }
 }
+
+.chartkit-d3-treemap {
+    &__label {
+        fill: var(--g-color-text-complementary);
+        alignment-baseline: text-before-edge;
+        user-select: none;
+        pointer-events: none;
+    }
+}

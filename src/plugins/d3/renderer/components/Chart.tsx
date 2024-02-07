@@ -32,7 +32,6 @@ type Props = {
 };
 
 export const Chart = (props: Props) => {
-    // FIXME: add data validation
     const {width, height, data} = props;
     const svgRef = React.useRef<SVGSVGElement>(null);
     const dispatcher = React.useMemo(() => {
@@ -45,7 +44,6 @@ export const Chart = (props: Props) => {
         () => getPreparedXAxis({xAxis: data.xAxis, width, series: data.series.data}),
         [data, width],
     );
-
     const yAxis = React.useMemo(
         () => getPreparedYAxis({series: data.series.data, yAxis: data.yAxis}),
         [data, width],
