@@ -146,7 +146,7 @@ export const getUplotTimezoneAligner =
 
         const uPlotOffset = (browserTimezone - timestampRealTimezone) * 60 * 1000;
 
-        return new Date(browserDate.valueOf() + uPlotOffset);
+        return new Date(browserDate.valueOf() - uPlotOffset);
     };
 
 export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig => {

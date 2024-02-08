@@ -46,15 +46,15 @@ describe('plugins/yagr/utils', () => {
     describe('GetUplotTimezoneAligner', () => {
         test.each<[YagrChartOptions | undefined, string | undefined, number, number]>([
             // UTC
-            [{}, 'UTC', 1706659878000, 1706670678000],
+            [{}, 'UTC', 1706659878000, 1706649078000],
             // UTC + 1
-            [{}, 'Europe/Belgrade', 1706659878000, 1706667078000],
+            [{}, 'Europe/Belgrade', 1706659878000, 1706652678000],
             // UTC - 1
-            [{}, 'America/Scoresbysund', 1706659878000, 1706674278000],
+            [{}, 'America/Scoresbysund', 1706659878000, 1706645478000],
             // UTC + 4
-            [{}, 'Asia/Muscat', 1706659878000, 1706656278000],
+            [{}, 'Asia/Muscat', 1706659878000, 1706663478000],
         ])(
-            'should return timestamp with added timezone diff',
+            'should return timestamp with subtracted timezone diff',
             (chart, timeZone, timestamp, expectedResult) => {
                 const uplotTimezoneAligener = getUplotTimezoneAligner(chart, timeZone);
 
