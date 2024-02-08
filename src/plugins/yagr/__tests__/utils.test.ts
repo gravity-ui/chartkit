@@ -54,7 +54,7 @@ describe('plugins/yagr/utils', () => {
             // UTC + 4
             [{}, 'Asia/Muscat', 1706659878000, 1706663478000],
         ])(
-            'should return timestamp with added timezone diff',
+            'should return timestamp with subtracted timezone diff',
             (chart, timeZone, timestamp, expectedResult) => {
                 const uplotTimezoneAligener = getUplotTimezoneAligner(chart, timeZone);
 
