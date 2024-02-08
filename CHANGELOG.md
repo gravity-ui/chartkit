@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.20.0](https://github.com/gravity-ui/chartkit/compare/v4.19.1...v4.20.0) (2024-02-08)
+
+
+### Features
+
+* **D3 plugin:** add treemap chart ([#408](https://github.com/gravity-ui/chartkit/issues/408)) ([7b55f2f](https://github.com/gravity-ui/chartkit/commit/7b55f2f496fccca099a2bb24a9cf74129f91875a))
+
+
+### Bug Fixes
+
+* **Yagr plugin:** fix alignment with timezone ([#413](https://github.com/gravity-ui/chartkit/issues/413)) ([e278db5](https://github.com/gravity-ui/chartkit/commit/e278db5e56dd2153e58cf63897869b5c512354cc))
+
 ## [4.19.1](https://github.com/gravity-ui/chartkit/compare/v4.19.0...v4.19.1) (2024-02-07)
 
 
