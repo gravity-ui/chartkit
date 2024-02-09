@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.20.1](https://github.com/gravity-ui/chartkit/compare/v4.20.0...v4.20.1) (2024-02-09)
+
+
+### Bug Fixes
+
+* update .prettierignore ([ddce044](https://github.com/gravity-ui/chartkit/commit/ddce0448fcba081c8f3df4c22dcf3b184c923c40))
+
 ## [4.20.0](https://github.com/gravity-ui/chartkit/compare/v4.19.1...v4.20.0) (2024-02-08)
 
 
