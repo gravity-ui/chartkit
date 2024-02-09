@@ -20,7 +20,7 @@ export function preparePieSeries(args: PreparePieSeriesArgs) {
     const stackId = getRandomCKId();
     const seriesHoverState = get(seriesOptions, 'pie.states.hover');
 
-    const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem) => {
+    const preparedSeries: PreparedSeries[] = series.data.map<PreparedPieSeries>((dataItem, i) => {
         const result: PreparedPieSeries = {
             type: 'pie',
             data: dataItem,
@@ -38,7 +38,7 @@ export function preparePieSeries(args: PreparePieSeriesArgs) {
             value: dataItem.value,
             visible: typeof dataItem.visible === 'boolean' ? dataItem.visible : true,
             name: dataItem.name,
-            id: '',
+            id: `Series ${i}`,
             color: dataItem.color || colorScale(dataItem.name),
             legend: {
                 enabled: get(series, 'legend.enabled', legend.enabled),
