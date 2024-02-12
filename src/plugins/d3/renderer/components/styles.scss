@@ -84,7 +84,7 @@
 
 .chartkit-d3-tooltip {
     &[class] {
-        --yc-popup-border-width: 0;
+        --g-popup-border-width: 0;
         pointer-events: none;
 
         > div {

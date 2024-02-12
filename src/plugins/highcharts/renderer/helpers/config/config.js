@@ -215,12 +215,12 @@ export function buildLegend(options) {
             }
         },
         navigation: {
-            activeColor: 'var(--yc-color-base-special)',
-            inactiveColor: 'var(--yc-color-base-generic-accent-disabled)',
-            style: {color: 'var(--yc-color-text-primary)'},
+            activeColor: 'var(--g-color-text-brand)',
+            inactiveColor: 'var(--g-color-base-generic-accent-disabled)',
+            style: {color: 'var(--g-color-text-primary)'},
         },
         title: {
-            style: {color: 'var(--yc-color-text-secondary)'},
+            style: {color: 'var(--g-color-text-secondary)'},
         },
     };
 

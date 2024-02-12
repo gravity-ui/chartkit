@@ -294,7 +294,7 @@ export const data: HighchartsWidgetData = {
                         .rect(rect.x, rect.y, rect.width, rect.height)
                         .addClass('highcharts-axis-grid-divider')
                         .attr({
-                            fill: 'var(--yc-color-base-background)',
+                            fill: 'var(--g-color-base-background)',
                             zIndex: 8,
                         })
                         .add();
