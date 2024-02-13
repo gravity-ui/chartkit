@@ -12,8 +12,10 @@ import './polyfills';
 import {useWidgetData} from './useWidgetData';
 import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from './utils';
 
-import './YagrWidget.scss';
 import '@gravity-ui/yagr/dist/index.css';
+// We need to save order in such state
+// eslint-disable-next-line import/order
+import './YagrWidget.scss';
 
 const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetProps>(
     function YagrWidget(props, forwardedRef) {
