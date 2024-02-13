@@ -1,7 +1,9 @@
 import {dateTime} from '@gravity-ui/date-utils';
-import type {TooltipRow, TooltipRenderOptions, ValueFormatter} from '../../types';
-import type {TooltipData, TooltipLine} from './types';
+
+import type {TooltipRenderOptions, TooltipRow, ValueFormatter} from '../../types';
+
 import {formatTooltip} from './tooltip';
+import type {TooltipData, TooltipLine} from './types';
 
 const calcOption = <T>(d: T | {[key in string]: T} | undefined) => {
     return typeof d === 'object' && d !== null
@@ -37,8 +39,8 @@ export const getRenderTooltip = (timeZone?: string) => (data: TooltipRenderOptio
     const hiddenRowsNumber = state.pinned
         ? undefined
         : lines > maxLines
-        ? Math.abs(maxLines - lines)
-        : undefined;
+          ? Math.abs(maxLines - lines)
+          : undefined;
 
     const hiddenRowsSum = hiddenRowsNumber
         ? valueFormatter(
@@ -64,7 +66,7 @@ export const getRenderTooltip = (timeZone?: string) => (data: TooltipRenderOptio
                     seriesIdx: row.seriesIdx,
                     percentValue:
                         typeof row.transformed === 'number' ? row.transformed.toFixed(1) : '',
-                } as TooltipLine),
+                }) as TooltipLine,
         ),
         withPercent: calcOption<boolean>(opts.percent),
         hiddenRowsNumber: hiddenRowsNumber as number,

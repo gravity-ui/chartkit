@@ -1,4 +1,5 @@
 import 'highcharts';
+
 import type {StringParams} from './misc';
 
 declare module 'highcharts' {

@@ -3,14 +3,14 @@ import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
 import type {BarXSeriesData} from '../../../../../../types';
-
+import {LabelData} from '../../../types';
 import {getDataCategoryValue, getLabelsSize} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedBarXSeries, PreparedSeriesOptions} from '../../useSeries/types';
 import {MIN_BAR_GAP, MIN_BAR_GROUP_GAP, MIN_BAR_WIDTH} from '../constants';
+
 import {PreparedBarXData} from './types';
-import {LabelData} from '../../../types';
 
 function getLabelData(d: PreparedBarXData): LabelData | undefined {
     if (!d.series.dataLabels.enabled) {

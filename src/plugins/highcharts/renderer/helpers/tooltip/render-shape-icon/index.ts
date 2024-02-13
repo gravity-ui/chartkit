@@ -1,4 +1,5 @@
 import {LineShapeType} from '../constants';
+
 import {
     DashDotLineIcon,
     DashLineIcon,

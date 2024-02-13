@@ -1,13 +1,15 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
+import {StoryObj} from '@storybook/react';
+import {descending, groups, sort} from 'd3';
+
 import {D3Plugin} from '../..';
-import {ChartKitWidgetData} from '../../../../types';
 import {ChartKit} from '../../../../components/ChartKit';
-import nintendoGames from '../../examples/nintendoGames';
+import {settings} from '../../../../libs';
+import {ChartKitWidgetData} from '../../../../types';
 import {HighchartsPlugin} from '../../../highcharts';
-import {groups, sort, descending} from 'd3';
+import nintendoGames from '../../examples/nintendoGames';
 
 function prepareData(): ChartKitWidgetData {
     const gamesByPlatform = groups(nintendoGames, (item) => item.platform);

@@ -1,9 +1,7 @@
 import React from 'react';
+
 import {Dispatch, group} from 'd3';
 
-import {getOnlyVisibleSeries} from '../../utils';
-import type {PreparedAxis} from '../useChartOptions/types';
-import type {ChartScale} from '../useAxisScales';
 import type {
     PreparedAreaSeries,
     PreparedBarXSeries,
@@ -11,27 +9,31 @@ import type {
     PreparedLineSeries,
     PreparedPieSeries,
     PreparedScatterSeries,
-    PreparedTreemapSeries,
     PreparedSeries,
     PreparedSeriesOptions,
+    PreparedTreemapSeries,
 } from '../';
-import {BarXSeriesShapes, prepareBarXData} from './bar-x';
-import type {PreparedBarXData} from './bar-x';
-import {ScatterSeriesShape, prepareScatterData} from './scatter';
-import type {PreparedScatterData} from './scatter/types';
-import {PieSeriesShapes} from './pie';
-import {preparePieData} from './pie/prepare-data';
-import type {PreparedPieData} from './pie/types';
-import {prepareLineData} from './line/prepare-data';
-import {LineSeriesShapes} from './line';
-import type {PreparedLineData} from './line/types';
-import {BarYSeriesShapes, prepareBarYData} from './bar-y';
-import type {PreparedBarYData} from './bar-y/types';
-export type {PreparedBarXData} from './bar-x';
-export type {PreparedScatterData} from './scatter/types';
+import {getOnlyVisibleSeries} from '../../utils';
+import type {ChartScale} from '../useAxisScales';
+import type {PreparedAxis} from '../useChartOptions/types';
+
 import {AreaSeriesShapes} from './area';
 import {prepareAreaData} from './area/prepare-data';
 import type {PreparedAreaData} from './area/types';
+import {BarXSeriesShapes, prepareBarXData} from './bar-x';
+import type {PreparedBarXData} from './bar-x';
+import {BarYSeriesShapes, prepareBarYData} from './bar-y';
+import type {PreparedBarYData} from './bar-y/types';
+import {LineSeriesShapes} from './line';
+import {prepareLineData} from './line/prepare-data';
+import type {PreparedLineData} from './line/types';
+import {PieSeriesShapes} from './pie';
+import {preparePieData} from './pie/prepare-data';
+import type {PreparedPieData} from './pie/types';
+import {ScatterSeriesShape, prepareScatterData} from './scatter';
+import type {PreparedScatterData} from './scatter/types';
+export type {PreparedBarXData} from './bar-x';
+export type {PreparedScatterData} from './scatter/types';
 import {TreemapSeriesShape} from './treemap';
 import {prepareTreemapData} from './treemap/prepare-data';
 

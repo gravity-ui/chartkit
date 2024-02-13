@@ -1,11 +1,13 @@
 import React from 'react';
-import {select} from 'd3';
-import debounce from 'lodash/debounce';
-import type {DebouncedFunc} from 'lodash';
+
 import afterFrame from 'afterframe';
+import {select} from 'd3';
+import type {DebouncedFunc} from 'lodash';
+import debounce from 'lodash/debounce';
 
 import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {getRandomCKId, measurePerformance} from '../../../utils';
+
 import {Chart} from './components';
 import {validateData} from './validation';
 

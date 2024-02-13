@@ -1,4 +1,5 @@
 import {HighchartsType} from '../../constants';
+
 import {checkTooltipPinningAvailability, isTooltipShared} from './tooltip';
 
 const chartTypes: [HighchartsType, boolean][] = [

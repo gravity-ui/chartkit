@@ -1,8 +1,9 @@
 /* eslint complexity: 0 */
 
 import {i18n} from '../../../../i18n';
+
 import {escapeHTML} from './helpers/escapeHTML';
-import type {TooltipData, TooltipExtraData, TooltipLine, RowRenderingConfig} from './types';
+import type {RowRenderingConfig, TooltipData, TooltipExtraData, TooltipLine} from './types';
 
 import './tooltip.scss';
 
@@ -315,8 +316,8 @@ export const formatTooltip = (data: TooltipData, tooltip: TooltipExtraData) => {
                                                 cellsRenderers.length - 1
                                             }" class="_hidden-rows-number">
                                                 ${i18n('common', 'tooltip-rest')} ${
-                                              data.hiddenRowsNumber
-                                          }
+                                                    data.hiddenRowsNumber
+                                                }
                                             </td>
                                             <td class="_hidden-rows-value">${
                                                 data.hiddenRowsSum

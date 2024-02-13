@@ -1,6 +1,6 @@
-import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../../libs';
-import {ChartKitWidgetData} from '../../../../../types';
 import {validateData} from '../';
+import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../../../libs';
+import {ChartKitWidgetData} from '../../../../../types';
 import {PIE_SERIES, XY_SERIES} from '../__mocks__';
 
 describe('plugins/d3/validation', () => {

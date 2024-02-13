@@ -1,4 +1,5 @@
-import type {Chart, SeriesZonesOptionsObject, BBoxObject, OffsetObject} from 'highcharts';
+import type {BBoxObject, Chart, OffsetObject, SeriesZonesOptionsObject} from 'highcharts';
+
 import type {HighchartsWidgetData} from '../types';
 
 /**

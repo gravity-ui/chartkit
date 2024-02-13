@@ -1,12 +1,12 @@
-import get from 'lodash/get';
 import type {AxisDomain, AxisScale} from 'd3';
-import type {BaseTextStyle, ChartKitWidgetSeries, ChartKitWidgetAxis} from '../../../../../types';
+import get from 'lodash/get';
+
+import type {BaseTextStyle, ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
 import {
-    axisLabelsDefaults,
     DEFAULT_AXIS_LABEL_FONT_SIZE,
+    axisLabelsDefaults,
     xAxisTitleDefaults,
 } from '../../constants';
-import type {PreparedAxis} from './types';
 import {
     calculateCos,
     formatAxisTickLabel,
@@ -19,6 +19,8 @@ import {
     hasOverlappingLabels,
 } from '../../utils';
 import {createXScale} from '../useAxisScales';
+
+import type {PreparedAxis} from './types';
 
 function getLabelSettings({
     axis,

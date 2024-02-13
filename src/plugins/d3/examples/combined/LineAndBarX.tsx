@@ -1,7 +1,9 @@
 import React from 'react';
-import {groups, max, min, median} from 'd3';
-import {ChartKitWidgetData} from '../../../../types';
+
+import {groups, max, median, min} from 'd3';
+
 import {ChartKit} from '../../../../components/ChartKit';
+import {ChartKitWidgetData} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
 

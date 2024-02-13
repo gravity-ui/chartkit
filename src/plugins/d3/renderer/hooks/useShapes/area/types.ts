@@ -1,6 +1,6 @@
-import {PreparedAreaSeries} from '../../useSeries/types';
 import {AreaSeriesData} from '../../../../../../types';
 import {LabelData} from '../../../types';
+import {PreparedAreaSeries} from '../../useSeries/types';
 
 export type PointData = {
     y0: number;

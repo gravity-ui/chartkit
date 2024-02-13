@@ -1,28 +1,28 @@
+import {DashStyle, LayoutAlgorithm, LineCap, SymbolType} from '../../../../../constants';
 import {
+    AreaSeries,
+    AreaSeriesData,
     BarXSeries,
     BarXSeriesData,
+    BarYSeries,
+    BarYSeriesData,
     BaseTextStyle,
     ChartKitWidgetLegend,
+    ConnectorCurve,
+    ConnectorShape,
+    LineSeries,
+    LineSeriesData,
+    PathLegendSymbolOptions,
     PieSeries,
     PieSeriesData,
     RectLegendSymbolOptions,
     ScatterSeries,
     ScatterSeriesData,
-    BarYSeries,
-    BarYSeriesData,
-    LineSeries,
-    LineSeriesData,
-    ConnectorShape,
-    ConnectorCurve,
-    PathLegendSymbolOptions,
     SymbolLegendSymbolOptions,
-    AreaSeries,
-    AreaSeriesData,
     TreemapSeries,
     TreemapSeriesData,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
-import {DashStyle, LayoutAlgorithm, LineCap, SymbolType} from '../../../../../constants';
 
 export type RectLegendSymbol = {
     shape: 'rect';

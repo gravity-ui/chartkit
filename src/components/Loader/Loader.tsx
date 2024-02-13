@@ -1,7 +1,9 @@
 import React from 'react';
+
 import {Loader as BaseLoader, LoaderProps as BaseLoaderProps} from '@gravity-ui/uikit';
-import {block} from '../../utils/cn';
+
 import type {ChartKitRenderPluginLoader} from '../../types';
+import {block} from '../../utils/cn';
 
 import './Loader.scss';
 

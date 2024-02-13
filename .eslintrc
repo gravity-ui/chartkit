@@ -2,10 +2,17 @@
     "extends": [
         "@gravity-ui/eslint-config",
         "@gravity-ui/eslint-config/client",
-        "@gravity-ui/eslint-config/prettier"
+        "@gravity-ui/eslint-config/prettier",
+        "@gravity-ui/eslint-config/import-order"
     ],
     "rules": {
         "valid-jsdoc": 0
     },
-    "root": true
+    "root": true,
+    "overrides": [{
+        "files": ["*.ts", "*.tsx"],
+        "parserOptions": {
+            "project": ["./tsconfig.json"]
+        }
+    }]
 }

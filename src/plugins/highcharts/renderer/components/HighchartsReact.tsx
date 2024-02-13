@@ -1,6 +1,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"]}] */
 
 import React from 'react';
+
 import Highcharts from 'highcharts';
 
 interface HighchartsReactRefObject {
@@ -54,7 +55,13 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
             if (!chartRef.current) {
                 createChart();
             }
-        }, [props.options, props.allowChartUpdate, props.containerProps, props.highcharts, props.constructorType]);
+        }, [
+            props.options,
+            props.allowChartUpdate,
+            props.containerProps,
+            props.highcharts,
+            props.constructorType,
+        ]);
 
         useIsomorphicLayoutEffect(() => {
             return () => {

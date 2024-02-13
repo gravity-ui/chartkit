@@ -1,8 +1,9 @@
-import {DEFAULT_MARKER, prepareLineSeries} from '../prepare-line';
 import {scaleOrdinal} from 'd3';
+
 import type {LineSeries} from '../../../../../../types';
-import type {PreparedLegend} from '../types';
 import {DEFAULT_PALETTE} from '../../../constants';
+import {DEFAULT_MARKER, prepareLineSeries} from '../prepare-line';
+import type {PreparedLegend} from '../types';
 
 describe('prepareLineSeries', () => {
     describe('marker', () => {

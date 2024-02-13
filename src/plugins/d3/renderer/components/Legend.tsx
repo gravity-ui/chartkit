@@ -1,19 +1,19 @@
 import React from 'react';
-import {symbol, BaseType, select, line as lineGenerator} from 'd3';
+
+import {BaseType, line as lineGenerator, select, symbol} from 'd3';
 import type {Selection} from 'd3';
 
-import {getSymbol} from '../utils';
 import {block} from '../../../../utils/cn';
 import type {
+    LegendConfig,
+    LegendItem,
     OnLegendItemClick,
     PreparedLegend,
     PreparedSeries,
-    LegendItem,
-    LegendConfig,
     SymbolLegendSymbol,
 } from '../hooks';
-
 import {getLineDashArray} from '../hooks/useShapes/utils';
+import {getSymbol} from '../utils';
 
 const b = block('d3-legend');
 

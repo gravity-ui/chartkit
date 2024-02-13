@@ -1,11 +1,13 @@
 /* eslint-disable complexity */
 
 import _escape from 'lodash/escape';
+
 import {i18n} from '../../../../../i18n';
 import type {Highcharts} from '../../../types';
-import type {TooltipData, TooltipLine, RowRenderingConfig} from './types';
-import {renderShapeIcon} from './render-shape-icon';
+
 import {escapeHTML} from './helpers';
+import {renderShapeIcon} from './render-shape-icon';
+import type {RowRenderingConfig, TooltipData, TooltipLine} from './types';
 
 import './tooltip.scss';
 
@@ -344,8 +346,8 @@ export const formatTooltip = (
                                                 cellsRenderers.length - 1
                                             }" class="_hidden-rows-number">
                                                 ${i18n('chartkit', 'tooltip-rest')} ${
-                                              data.hiddenRowsNumber
-                                          }
+                                                    data.hiddenRowsNumber
+                                                }
                                             </td>
                                             <td class="_hidden-rows-value">${
                                                 data.hiddenRowsSum

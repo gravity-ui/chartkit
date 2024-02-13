@@ -1,6 +1,5 @@
-import type {Config} from '@jest/types';
-
 const esModules = [
+    '@gravity-ui/date-utils',
     '@gravity-ui/yagr',
     'uplot',
     'd3',
@@ -10,7 +9,7 @@ const esModules = [
     'robust-predicates',
 ].join('|');
 
-const cfg: Config.InitialOptions = {
+module.exports = {
     verbose: true,
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
@@ -25,5 +24,3 @@ const cfg: Config.InitialOptions = {
     setupFiles: ['<rootDir>/test-utils/globals.mock.ts'],
     testPathIgnorePatterns: ['.visual.'],
 };
-
-export default cfg;

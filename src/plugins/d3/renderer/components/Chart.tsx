@@ -2,7 +2,6 @@ import React from 'react';
 
 import type {ChartKitWidgetData} from '../../../../types';
 import {block} from '../../../../utils/cn';
-
 import {getD3Dispatcher} from '../d3-dispatcher';
 import {
     useAxisScales,
@@ -12,14 +11,15 @@ import {
     useShapes,
     useTooltip,
 } from '../hooks';
-import {AxisY} from './AxisY';
+import {getWidthOccupiedByYAxis} from '../hooks/useChartDimensions/utils';
+import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
+import {getPreparedYAxis} from '../hooks/useChartOptions/y-axis';
+
 import {AxisX} from './AxisX';
+import {AxisY} from './AxisY';
 import {Legend} from './Legend';
 import {Title} from './Title';
 import {Tooltip, TooltipTriggerArea} from './Tooltip';
-import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
-import {getWidthOccupiedByYAxis} from '../hooks/useChartDimensions/utils';
-import {getPreparedYAxis} from '../hooks/useChartOptions/y-axis';
 
 import './styles.scss';
 

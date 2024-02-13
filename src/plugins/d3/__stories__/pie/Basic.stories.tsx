@@ -1,9 +1,11 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
-import {withKnobs} from '@storybook/addon-knobs';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
+import {withKnobs} from '@storybook/addon-knobs';
+import {StoryObj} from '@storybook/react';
+
 import {D3Plugin} from '../..';
+import {settings} from '../../../../libs';
 import {BasicPie} from '../../examples/pie/Basic';
 import {Donut} from '../../examples/pie/Donut';
 import {DonutWithTotals} from '../../examples/pie/DonutWithTotals';

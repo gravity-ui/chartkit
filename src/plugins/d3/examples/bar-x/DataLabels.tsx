@@ -1,5 +1,7 @@
 import React from 'react';
+
 import {groups, sort} from 'd3';
+
 import {ChartKit} from '../../../../components/ChartKit';
 import type {BarXSeries, BarXSeriesData, ChartKitWidgetData} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';

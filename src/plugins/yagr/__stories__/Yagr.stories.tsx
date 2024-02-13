@@ -1,15 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {Meta, Story} from '@storybook/react';
+
+import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../libs';
-import {ChartKit} from '../../../components/ChartKit';
-import type {ChartKitRef} from '../../../types';
+import placement from '@gravity-ui/yagr/dist/YagrCore/plugins/tooltip/placement';
+import {Meta, Story} from '@storybook/react';
+
 import {CustomTooltipProps, TooltipHandlerData, YagrPlugin} from '../';
+import {ChartKit} from '../../../components/ChartKit';
+import {settings} from '../../../libs';
+import type {ChartKitRef} from '../../../types';
+
 import {getNewConfig, line10} from './mocks/line10';
 
 import '@gravity-ui/yagr/dist/index.css';
-import placement from '@gravity-ui/yagr/dist/YagrCore/plugins/tooltip/placement';
-import {dateTime} from '@gravity-ui/date-utils';
 
 export default {
     title: 'Plugins/Yagr',

@@ -1,13 +1,15 @@
 import React from 'react';
-import {Meta, Story} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
-import {withKnobs, boolean, color as colorKnob, radios, text} from '@storybook/addon-knobs';
-import cloneDeep from 'lodash/cloneDeep';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../libs';
-import {ChartKit} from '../../../components/ChartKit';
-import type {ChartKitRef} from '../../../types';
+import {action} from '@storybook/addon-actions';
+import {boolean, color as colorKnob, radios, text, withKnobs} from '@storybook/addon-knobs';
+import {Meta, Story} from '@storybook/react';
+import cloneDeep from 'lodash/cloneDeep';
+
 import {IndicatorPlugin} from '../';
+import {ChartKit} from '../../../components/ChartKit';
+import {settings} from '../../../libs';
+import type {ChartKitRef} from '../../../types';
 import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types';
 
 const data: IndicatorWidgetData = {

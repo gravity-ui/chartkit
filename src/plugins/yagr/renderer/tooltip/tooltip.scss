@@ -179,8 +179,7 @@
 
             tbody {
                 display: block;
-                overflow-y: auto;
-                overflow-x: hidden;
+                overflow: hidden auto;
 
                 &._tooltip-footer {
                     width: 100%;

@@ -1,7 +1,8 @@
+import {DashStyle, LineCap, SeriesType} from '../../constants';
+
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 import type {PointMarkerOptions} from './marker';
-import {DashStyle, LineCap, SeriesType} from '../../constants';
 
 export type LineSeriesData<T = any> = BaseSeriesData<T> & {
     /**

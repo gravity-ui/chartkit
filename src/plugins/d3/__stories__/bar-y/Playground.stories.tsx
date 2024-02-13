@@ -1,11 +1,13 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
-import {D3Plugin} from '../..';
-import {ChartKitWidgetData} from '../../../../types';
-import {ChartKit} from '../../../../components/ChartKit';
+import {StoryObj} from '@storybook/react';
 import {groups} from 'd3';
+
+import {D3Plugin} from '../..';
+import {ChartKit} from '../../../../components/ChartKit';
+import {settings} from '../../../../libs';
+import {ChartKitWidgetData} from '../../../../types';
 import nintendoGames from '../../examples/nintendoGames';
 
 function prepareData(): ChartKitWidgetData {

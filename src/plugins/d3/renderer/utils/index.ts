@@ -1,7 +1,7 @@
+import {dateTime} from '@gravity-ui/date-utils';
 import {AxisDomain, group, select} from 'd3';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
-import {dateTime} from '@gravity-ui/date-utils';
 
 import type {
     BaseTextStyle,
@@ -9,11 +9,12 @@ import type {
     ChartKitWidgetSeriesData,
 } from '../../../../types';
 import {formatNumber} from '../../../shared';
-import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
 import {getNumberUnitRate} from '../../../shared/format-number/format-number';
+import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
 import {PreparedAxis, StackedSeries} from '../hooks';
-import {getDefaultDateFormat} from './time';
 import {getSeriesStackId} from '../hooks/useSeries/utils';
+
+import {getDefaultDateFormat} from './time';
 
 export * from './math';
 export * from './text';

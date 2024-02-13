@@ -1,4 +1,5 @@
 import type {Highcharts} from '../../../../types';
+
 import {getXAxisThresholdValue} from './getXAxisThresholdValue';
 
 const MOCKED_SERIES = [

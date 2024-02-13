@@ -2,22 +2,23 @@ import type {AxisDomain, AxisScale} from 'd3';
 import get from 'lodash/get';
 
 import type {BaseTextStyle, ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types';
+import {ChartKitWidgetAxis} from '../../../../../types';
 import {
-    axisLabelsDefaults,
     DEFAULT_AXIS_LABEL_FONT_SIZE,
+    axisLabelsDefaults,
     yAxisTitleDefaults,
 } from '../../constants';
 import {
-    getHorisontalSvgTextHeight,
     formatAxisTickLabel,
     getClosestPointsRange,
-    getScaleTicks,
+    getHorisontalSvgTextHeight,
     getLabelsSize,
+    getScaleTicks,
 } from '../../utils';
-import type {PreparedAxis} from './types';
 import {createYScale} from '../useAxisScales';
 import {PreparedSeries} from '../useSeries/types';
-import {ChartKitWidgetAxis} from '../../../../../types';
+
+import type {PreparedAxis} from './types';
 
 const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetSeries[]}) => {
     const {axis, series} = args;

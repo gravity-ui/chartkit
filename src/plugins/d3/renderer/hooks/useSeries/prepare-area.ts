@@ -2,8 +2,9 @@ import {ScaleOrdinal} from 'd3';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 
-import {ChartKitWidgetSeriesOptions, AreaSeries} from '../../../../../types';
-import {PreparedAreaSeries, PreparedLegend} from './types';
+import {AreaSeries, ChartKitWidgetSeriesOptions} from '../../../../../types';
+import {PointMarkerOptions} from '../../../../../types/widget-data/marker';
+import {getRandomCKId} from '../../../../../utils';
 
 import {
     DEFAULT_DATALABELS_PADDING,
@@ -11,9 +12,8 @@ import {
     DEFAULT_HALO_OPTIONS,
     DEFAULT_POINT_MARKER_OPTIONS,
 } from './constants';
-import {getRandomCKId} from '../../../../../utils';
+import {PreparedAreaSeries, PreparedLegend} from './types';
 import {getSeriesStackId, prepareLegendSymbol} from './utils';
-import {PointMarkerOptions} from '../../../../../types/widget-data/marker';
 
 export const DEFAULT_LINE_WIDTH = 1;
 

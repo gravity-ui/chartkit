@@ -1,10 +1,13 @@
 import React from 'react';
-import random from 'lodash/random';
-import {Meta, Story} from '@storybook/react';
-import {withKnobs, select, radios, text} from '@storybook/addon-knobs';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
+import {radios, select, text, withKnobs} from '@storybook/addon-knobs';
+import {Meta, Story} from '@storybook/react';
+import random from 'lodash/random';
+
+import {D3Plugin} from '../..';
 import {ChartKit} from '../../../../components/ChartKit';
+import {settings} from '../../../../libs';
 import type {ChartKitRef} from '../../../../types';
 import type {
     ChartKitWidgetAxis,
@@ -12,7 +15,7 @@ import type {
     ScatterSeries,
     ScatterSeriesData,
 } from '../../../../types/widget-data';
-import {D3Plugin} from '../..';
+
 import penguins from '../penguins.json';
 
 const shapeScatterSeriesData = (args: {data: Record<string, any>[]; groupBy: string; map: any}) => {

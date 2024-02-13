@@ -1,7 +1,9 @@
-import lodashMin from 'lodash/min';
 import {dateTime} from '@gravity-ui/date-utils';
+import lodashMin from 'lodash/min';
+
 import {i18n} from '../../../../i18n';
-import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
+import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../../libs';
+
 import {DEFAULT_LINES_LIMIT} from './constants';
 
 function prepareValue(value, firstValue, options) {

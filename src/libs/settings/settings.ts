@@ -1,8 +1,10 @@
+import {configure} from '@gravity-ui/uikit';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
-import {configure} from '@gravity-ui/uikit';
+
 import {i18nFactory} from '../../i18n';
-import type {ChartKitPlugin, ChartKitLang, ChartKitHolidays} from '../../types';
+import type {ChartKitHolidays, ChartKitLang, ChartKitPlugin} from '../../types';
+
 import {EventEmitter} from './eventEmitter';
 
 interface Settings {

@@ -3,13 +3,13 @@ import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
 import type {BarYSeriesData} from '../../../../../../types';
-
 import {getDataCategoryValue} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedBarYSeries, PreparedSeriesOptions} from '../../useSeries/types';
-import type {PreparedBarYData} from './types';
 import {MIN_BAR_GAP, MIN_BAR_GROUP_GAP, MIN_BAR_WIDTH} from '../constants';
+
+import type {PreparedBarYData} from './types';
 
 function groupByYValue(series: PreparedBarYSeries[], yAxis: PreparedAxis[]) {
     const data: Record<

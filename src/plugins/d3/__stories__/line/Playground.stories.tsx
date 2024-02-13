@@ -1,12 +1,14 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
+import {StoryObj} from '@storybook/react';
+
 import {D3Plugin} from '../..';
-import {ChartKitWidgetData, LineSeriesData} from '../../../../types';
 import {ChartKit} from '../../../../components/ChartKit';
-import nintendoGames from '../../examples/nintendoGames';
+import {settings} from '../../../../libs';
+import {ChartKitWidgetData, LineSeriesData} from '../../../../types';
 import {HighchartsPlugin} from '../../../highcharts';
+import nintendoGames from '../../examples/nintendoGames';
 
 function prepareData(): ChartKitWidgetData {
     const games = nintendoGames.filter((d) => {

@@ -1,4 +1,5 @@
 import {NavigatorLinesMode} from '../../constants';
+
 import {getXAxisThresholdValue} from './getXAxisThresholdValue';
 
 type AddShowInNavigatorToSeriesArgs = {

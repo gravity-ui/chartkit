@@ -1,8 +1,10 @@
 /** Default options for Highcharts & Highstock */
 
 import merge from 'lodash/merge';
+
 import {i18n} from '../../../../../i18n';
 import {block} from '../../../../../utils/cn';
+
 import {getChartKitFormattedValue} from './utils';
 import LocalStorage from './utils/localStorage';
 
@@ -25,8 +27,8 @@ function getTooltipPointFormat(cells, showColor) {
             typeof showColor === 'boolean'
                 ? `<div class="${b('cell')}">
                 <span class="${b('color')}" ${
-                      showColor ? 'style="background-color:{point.color};"' : ''
-                  }></span>
+                    showColor ? 'style="background-color:{point.color};"' : ''
+                }></span>
             </div>`
                 : ''
         }

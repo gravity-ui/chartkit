@@ -1,6 +1,5 @@
-import {PreparedPieSeries} from '../../useSeries/types';
-import {arc, group, PieArcDatum} from 'd3';
-import {PieLabelData, PreparedPieData, SegmentData} from './types';
+import {PieArcDatum, arc, group} from 'd3';
+
 import {PieSeries} from '../../../../../../types';
 import {
     calculateNumericProperty,
@@ -8,6 +7,9 @@ import {
     getLeftPosition,
     isLabelsOverlapping,
 } from '../../../utils';
+import {PreparedPieSeries} from '../../useSeries/types';
+
+import {PieLabelData, PreparedPieData, SegmentData} from './types';
 import {pieGenerator} from './utils';
 
 const FULL_CIRCLE = Math.PI * 2;

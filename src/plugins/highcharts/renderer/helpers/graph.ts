@@ -1,17 +1,18 @@
 import type {ChartKitHolidays} from '../../../../types';
 import type {
-    Highcharts,
-    HighchartsWidgetData,
-    HighchartsComment,
     ExtendedHChart,
+    Highcharts,
+    HighchartsComment,
+    HighchartsWidgetData,
     XAxisItem,
 } from '../../types';
+
+import {addHolidays} from './add-holidays';
 import {drawComments} from './comments/drawing';
-import {prepareData} from './prepare-data';
 import {prepareConfig} from './config/config';
 import {initHighcharts} from './highcharts/highcharts';
+import {prepareData} from './prepare-data';
 import type {ConfigOptions} from './types';
-import {addHolidays} from './add-holidays';
 
 import './graph.scss';
 

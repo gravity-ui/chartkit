@@ -1,17 +1,17 @@
 import React from 'react';
+
 import {select} from 'd3';
-import type {AxisScale, AxisDomain} from 'd3';
+import type {AxisDomain, AxisScale} from 'd3';
 
 import {block} from '../../../../utils/cn';
-
 import type {ChartScale, PreparedAxis} from '../hooks';
 import {
     formatAxisTickLabel,
     getClosestPointsRange,
-    setEllipsisForOverflowText,
-    getTicksCount,
-    getScaleTicks,
     getMaxTickCount,
+    getScaleTicks,
+    getTicksCount,
+    setEllipsisForOverflowText,
 } from '../utils';
 import {axisBottom} from '../utils/axis-generators';
 
@@ -41,7 +41,7 @@ function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale
     };
 }
 
-export const AxisX = React.memo(({axis, width, height, scale}: Props) => {
+export const AxisX = React.memo(function AxisX({axis, width, height, scale}: Props) {
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {

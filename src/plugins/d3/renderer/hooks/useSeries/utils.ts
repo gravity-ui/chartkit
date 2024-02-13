@@ -1,9 +1,11 @@
 import memoize from 'lodash/memoize';
-import {PreparedLegendSymbol, PreparedSeries, StackedSeries} from './types';
+
+import {SymbolType} from '../../../../../constants';
 import {ChartKitWidgetSeries} from '../../../../../types';
 import {getRandomCKId} from '../../../../../utils';
+
 import {DEFAULT_LEGEND_SYMBOL_PADDING, DEFAULT_LEGEND_SYMBOL_SIZE} from './constants';
-import {SymbolType} from '../../../../../constants';
+import {PreparedLegendSymbol, PreparedSeries, StackedSeries} from './types';
 
 export const getActiveLegendItems = (series: PreparedSeries[]) => {
     return series.reduce<string[]>((acc, s) => {

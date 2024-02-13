@@ -1,6 +1,6 @@
 import {TooltipDataChunkBarX} from '../../../../../../types';
-import {PreparedBarXSeries} from '../../useSeries/types';
 import {LabelData} from '../../../types';
+import {PreparedBarXSeries} from '../../useSeries/types';
 
 export type PreparedBarXData = Omit<TooltipDataChunkBarX, 'series'> & {
     x: number;

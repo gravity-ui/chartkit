@@ -3,6 +3,7 @@ import React from 'react';
 import type {ChartMargin} from '../../../../../types';
 import type {PreparedAxis, PreparedLegend, PreparedSeries} from '../../hooks';
 import {isAxisRelatedSeries} from '../../utils';
+
 import {getBoundsWidth} from './utils';
 
 export {getBoundsWidth} from './utils';

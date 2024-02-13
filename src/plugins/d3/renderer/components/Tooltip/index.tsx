@@ -1,12 +1,13 @@
 import React from 'react';
-import isNil from 'lodash/isNil';
-import type {Dispatch} from 'd3';
+
 import {Popup, useVirtualElementRef} from '@gravity-ui/uikit';
+import type {Dispatch} from 'd3';
+import isNil from 'lodash/isNil';
 
 import type {TooltipDataChunk} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
-
 import type {PointerPosition, PreparedAxis, PreparedTooltip} from '../../hooks';
+
 import {DefaultContent} from './DefaultContent';
 
 export * from './TooltipTriggerArea';

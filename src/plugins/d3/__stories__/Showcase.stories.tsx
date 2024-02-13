@@ -1,31 +1,32 @@
 import React from 'react';
-import {Container, Row, Col, Text} from '@gravity-ui/uikit';
-import {StoryObj} from '@storybook/react';
-import {withKnobs} from '@storybook/addon-knobs';
 
-import {settings} from '../../../libs';
+import {Col, Container, Row, Text} from '@gravity-ui/uikit';
+import {withKnobs} from '@storybook/addon-knobs';
+import {StoryObj} from '@storybook/react';
+
 import {Loader} from '../../../components/Loader/Loader';
-import {D3Plugin} from '../index';
+import {settings} from '../../../libs';
+import {Basic as BasicArea} from '../examples/area/Basic';
+import {PercentStackingArea} from '../examples/area/PercentStacking';
+import {StackedArea} from '../examples/area/StackedArea';
 import {BasicBarXChart} from '../examples/bar-x/Basic';
-import {GroupedColumns} from '../examples/bar-x/GroupedColumns';
-import {StackedColumns} from '../examples/bar-x/StackedColumns';
-import {PercentStackColumns} from '../examples/bar-x/PercentStack';
 import {DataLabels as BarXDataLabels} from '../examples/bar-x/DataLabels';
+import {GroupedColumns} from '../examples/bar-x/GroupedColumns';
+import {PercentStackColumns} from '../examples/bar-x/PercentStack';
+import {StackedColumns} from '../examples/bar-x/StackedColumns';
 import {Basic as BasicBarY} from '../examples/bar-y/Basic';
 import {GroupedColumns as GroupedColumnsBarY} from '../examples/bar-y/GroupedColumns';
-import {StackedColumns as StackedColumnsBarY} from '../examples/bar-y/StackedColumns';
-import {BasicPie} from '../examples/pie/Basic';
-import {Basic as BasicScatter} from '../examples/scatter/Basic';
-import {Basic as BasicLine} from '../examples/line/Basic';
-import {Basic as BasicArea} from '../examples/area/Basic';
-import {LinesWithShapes} from '../examples/line/Shapes';
-import {DataLabels as LineWithDataLabels} from '../examples/line/DataLabels';
-import {Donut} from '../examples/pie/Donut';
-import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
-import {LineWithMarkers} from '../examples/line/LineWithMarkers';
-import {StackedArea} from '../examples/area/StackedArea';
 import {PercentStackingBars} from '../examples/bar-y/PercentStacking';
-import {PercentStackingArea} from '../examples/area/PercentStacking';
+import {StackedColumns as StackedColumnsBarY} from '../examples/bar-y/StackedColumns';
+import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
+import {Basic as BasicLine} from '../examples/line/Basic';
+import {DataLabels as LineWithDataLabels} from '../examples/line/DataLabels';
+import {LineWithMarkers} from '../examples/line/LineWithMarkers';
+import {LinesWithShapes} from '../examples/line/Shapes';
+import {BasicPie} from '../examples/pie/Basic';
+import {Donut} from '../examples/pie/Donut';
+import {Basic as BasicScatter} from '../examples/scatter/Basic';
+import {D3Plugin} from '../index';
 
 const ShowcaseStory = () => {
     const [loading, setLoading] = React.useState(true);

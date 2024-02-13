@@ -1,5 +1,6 @@
 import type {ScaleOrdinal} from 'd3';
 
+import {ChartKitError} from '../../../../../libs';
 import type {
     AreaSeries,
     BarXSeries,
@@ -11,16 +12,15 @@ import type {
     ScatterSeries,
     TreemapSeries,
 } from '../../../../../types';
-import {ChartKitError} from '../../../../../libs';
 
-import type {PreparedLegend, PreparedSeries} from './types';
-import {prepareLineSeries} from './prepare-line';
+import {prepareArea} from './prepare-area';
 import {prepareBarXSeries} from './prepare-bar-x';
 import {prepareBarYSeries} from './prepare-bar-y';
+import {prepareLineSeries} from './prepare-line';
 import {preparePieSeries} from './prepare-pie';
-import {prepareArea} from './prepare-area';
 import {prepareScatterSeries} from './prepare-scatter';
 import {prepareTreemap} from './prepare-treemap';
+import type {PreparedLegend, PreparedSeries} from './types';
 
 export function prepareSeries(args: {
     type: ChartKitWidgetSeries['type'];

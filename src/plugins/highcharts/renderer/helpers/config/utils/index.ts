@@ -1,4 +1,5 @@
 import orderBy from 'lodash/orderBy';
+
 import type {HighchartsSortData} from '../../../../types/widget';
 
 export {addShowInNavigatorToSeries} from './addShowInNavigatorToSeries';

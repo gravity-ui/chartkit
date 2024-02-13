@@ -1,8 +1,8 @@
 import get from 'lodash/get';
 
 import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types';
-
 import {getHorisontalSvgTextHeight} from '../../utils';
+
 import type {PreparedTitle} from './types';
 
 const DEFAULT_TITLE_FONT_SIZE = '15px';

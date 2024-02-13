@@ -1,6 +1,7 @@
-import {shapeYagrConfig, getUplotTimezoneAligner} from '../renderer/utils';
-import type {YagrWidgetData, MinimalValidConfig} from '../types';
 import type {YagrChartOptions} from '@gravity-ui/yagr';
+
+import {getUplotTimezoneAligner, shapeYagrConfig} from '../renderer/utils';
+import type {MinimalValidConfig, YagrWidgetData} from '../types';
 
 const DATA: YagrWidgetData['data'] = {
     timeline: [1],
