@@ -1,6 +1,8 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
+
 import {Button} from '@gravity-ui/uikit';
+import {action} from '@storybook/addon-actions';
+import {StoryObj} from '@storybook/react';
 import {settings} from '../../../../libs';
 import {D3Plugin} from '../..';
 import {ChartKitWidgetData} from '../../../../types';
@@ -27,7 +29,7 @@ function prepareData(): ChartKitWidgetData {
         },
         xAxis: {
             type: 'category',
-            categories: gamesByPlatform.map(([key]) => key),
+            categories: gamesByPlatform.map(([key, _group]) => key),
             title: {
                 text: 'Game Platforms',
             },
@@ -48,6 +50,11 @@ function prepareData(): ChartKitWidgetData {
                 },
             },
         ],
+        chart: {
+            events: {
+                click: action('chart.events.click'),
+            },
+        },
     };
 }
 

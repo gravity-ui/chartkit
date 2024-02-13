@@ -143,23 +143,22 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             }
         });
 
+        const getSelectedSegment = (element: Element) => {
+            const datum = select<BaseType, PieArcDatum<SegmentData> | PieLabelData>(
+                element,
+            ).datum();
+            const seriesId = get(datum, 'data.series.id', get(datum, 'series.id'));
+            return preparedData.reduce<SegmentData | undefined>((result, pie) => {
+                return result || pie.segments.find((s) => s.data.series.id === seriesId)?.data;
+            }, undefined);
+        };
+
         const eventName = `hover-shape.pie`;
         const hoverOptions = get(seriesOptions, 'pie.states.hover');
         const inactiveOptions = get(seriesOptions, 'pie.states.inactive');
         svgElement
             .on('mousemove', (e) => {
-                const datum = select<BaseType, PieArcDatum<SegmentData> | PieLabelData>(
-                    e.target,
-                ).datum();
-                const seriesId = get(datum, 'data.series.id', get(datum, 'series.id'));
-                const currentSegment = preparedData.reduce<SegmentData | undefined>(
-                    (result, pie) => {
-                        return (
-                            result || pie.segments.find((s) => s.data.series.id === seriesId)?.data
-                        );
-                    },
-                    undefined,
-                );
+                const currentSegment = getSelectedSegment(e.target);
 
                 if (currentSegment) {
                     const data: TooltipDataChunkPie = {
@@ -176,6 +175,17 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             })
             .on('mouseleave', () => {
                 dispatcher.call('hover-shape', {}, undefined);
+            })
+            .on('click', (e) => {
+                const selectedSegment = getSelectedSegment(e.target);
+                if (selectedSegment) {
+                    dispatcher.call(
+                        'click-chart',
+                        undefined,
+                        {point: selectedSegment.series.data, series: selectedSegment.series},
+                        e,
+                    );
+                }
             });
 
         dispatcher.on(eventName, (data?: TooltipDataChunkPie[]) => {
