@@ -1,5 +1,7 @@
 import React from 'react';
-import {Story, Meta} from '@storybook/react';
+
+import {Meta, Story} from '@storybook/react';
+
 import {ChartKit} from '../../../../components/ChartKit';
 import {data} from '../../mocks/combo-chart-with-same-legend-titles';
 import {ChartStory} from '../components/ChartStory';

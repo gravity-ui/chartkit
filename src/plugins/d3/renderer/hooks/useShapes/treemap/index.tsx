@@ -1,13 +1,14 @@
 import React from 'react';
+
 import {color, pointer, select} from 'd3';
 import type {BaseType, Dispatch, HierarchyRectangularNode} from 'd3';
 import get from 'lodash/get';
 
 import type {TooltipDataChunkTreemap, TreemapSeriesData} from '../../../../../../types';
-import {setEllipsisForOverflowTexts} from '../../../utils';
 import {block} from '../../../../../../utils/cn';
-
+import {setEllipsisForOverflowTexts} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
+
 import type {PreparedTreemapData, TreemapLabelData} from './types';
 
 const b = block('d3-treemap');

@@ -1,12 +1,14 @@
 import React from 'react';
-import {Meta, Story} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
-import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitRef} from '../../../../types';
-import {HighchartsPlugin, HighchartsWidgetData} from '../..';
+import {action} from '@storybook/addon-actions';
+import {Meta, Story} from '@storybook/react';
 import {randomNormal} from 'd3';
+
+import {HighchartsPlugin, HighchartsWidgetData} from '../..';
+import {ChartKit} from '../../../../components/ChartKit';
+import {settings} from '../../../../libs';
+import type {ChartKitRef} from '../../../../types';
 
 const Template: Story = () => {
     const [shown, setShown] = React.useState(false);

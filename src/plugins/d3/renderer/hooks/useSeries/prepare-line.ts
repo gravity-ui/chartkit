@@ -3,14 +3,13 @@ import get from 'lodash/get';
 import merge from 'lodash/merge';
 
 import {DashStyle, LineCap} from '../../../../../constants';
-
 import {
     ChartKitWidgetSeries,
     ChartKitWidgetSeriesOptions,
     LineSeries,
     RectLegendSymbolOptions,
 } from '../../../../../types';
-import {PreparedLineSeries, PreparedLegend, PreparedLegendSymbol} from './types';
+import {getRandomCKId} from '../../../../../utils';
 
 import {
     DEFAULT_DATALABELS_PADDING,
@@ -19,7 +18,7 @@ import {
     DEFAULT_LEGEND_SYMBOL_PADDING,
     DEFAULT_POINT_MARKER_OPTIONS,
 } from './constants';
-import {getRandomCKId} from '../../../../../utils';
+import {PreparedLegend, PreparedLegendSymbol, PreparedLineSeries} from './types';
 
 export const DEFAULT_LEGEND_SYMBOL_SIZE = 16;
 export const DEFAULT_LINE_WIDTH = 1;

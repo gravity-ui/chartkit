@@ -1,15 +1,16 @@
 import React from 'react';
-import throttle from 'lodash/throttle';
-import {bisector, pointer, sort, group} from 'd3';
-import type {Dispatch} from 'd3';
 
-import type {ShapeData, PreparedBarXData, PointerPosition, PreparedSeries} from '../../hooks';
+import {bisector, group, pointer, sort} from 'd3';
+import type {Dispatch} from 'd3';
+import get from 'lodash/get';
+import throttle from 'lodash/throttle';
+
+import {BarYSeriesData, LineSeriesData} from '../../../../../types';
+import type {PointerPosition, PreparedBarXData, PreparedSeries, ShapeData} from '../../hooks';
+import {PreparedBarYData} from '../../hooks/useShapes/bar-y/types';
+import {PreparedLineData} from '../../hooks/useShapes/line/types';
 import {extractD3DataFromNode, isNodeContainsD3Data} from '../../utils';
 import type {NodeWithD3Data} from '../../utils';
-import {PreparedLineData} from '../../hooks/useShapes/line/types';
-import {BarYSeriesData, LineSeriesData} from '../../../../../types';
-import {PreparedBarYData} from '../../hooks/useShapes/bar-y/types';
-import get from 'lodash/get';
 
 const THROTTLE_DELAY = 50;
 

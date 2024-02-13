@@ -1,5 +1,5 @@
-import {filterOverlappingLabels} from '../labels';
 import type {LabelData} from '../../types';
+import {filterOverlappingLabels} from '../labels';
 
 describe('filterOverlappingLabels', () => {
     const label1 = {

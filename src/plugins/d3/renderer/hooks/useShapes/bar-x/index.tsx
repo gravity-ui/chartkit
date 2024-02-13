@@ -1,14 +1,15 @@
 import React from 'react';
-import get from 'lodash/get';
+
 import {color, select} from 'd3';
 import type {Dispatch} from 'd3';
+import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
-
-import type {PreparedSeriesOptions} from '../../useSeries/types';
-import type {PreparedBarXData} from './types';
 import {LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
+import type {PreparedSeriesOptions} from '../../useSeries/types';
+
+import type {PreparedBarXData} from './types';
 
 export {prepareBarXData} from './prepare-data';
 export * from './types';

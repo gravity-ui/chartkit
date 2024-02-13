@@ -1,21 +1,22 @@
 import React from 'react';
-import {scaleBand, scaleLinear, scaleUtc, extent} from 'd3';
+
+import {extent, scaleBand, scaleLinear, scaleUtc} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import type {PreparedAxis} from '../useChartOptions/types';
+import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
+import {DEFAULT_AXIS_TYPE} from '../../constants';
 import {
-    getOnlyVisibleSeries,
     getDataCategoryValue,
-    getDomainDataYBySeries,
     getDomainDataXBySeries,
+    getDomainDataYBySeries,
+    getOnlyVisibleSeries,
     isAxisRelatedSeries,
     isSeriesWithCategoryValues,
 } from '../../utils';
 import type {AxisDirection} from '../../utils';
+import type {PreparedAxis} from '../useChartOptions/types';
 import {PreparedSeries} from '../useSeries/types';
-import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
-import {DEFAULT_AXIS_TYPE} from '../../constants';
 
 export type ChartScale =
     | ScaleLinear<number, number>

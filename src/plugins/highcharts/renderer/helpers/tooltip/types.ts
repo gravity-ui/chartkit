@@ -1,4 +1,5 @@
 import type {FormatNumberOptions} from '../../../../shared';
+
 import type {LineShapeType} from './constants';
 
 export type TooltipData = {

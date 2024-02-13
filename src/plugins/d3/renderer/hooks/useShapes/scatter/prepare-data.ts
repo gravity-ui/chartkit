@@ -1,9 +1,9 @@
 import type {ScatterSeriesData} from '../../../../../../types';
-
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import {PreparedScatterSeries} from '../../useSeries/types';
 import {getXValue, getYValue} from '../utils';
+
 import {PreparedScatterData} from './types';
 
 const getFilteredLinearScatterData = (data: ScatterSeriesData[]) => {

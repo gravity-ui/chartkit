@@ -1,16 +1,17 @@
 import React from 'react';
+
 import {group, scaleOrdinal} from 'd3';
 
 import type {ChartKitWidgetData} from '../../../../../types';
-
 import {DEFAULT_PALETTE} from '../../constants';
 import {getSeriesNames} from '../../utils';
 import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
-import {getActiveLegendItems, getAllLegendItems} from './utils';
-import type {PreparedSeries, OnLegendItemClick} from './types';
-import {getPreparedLegend, getLegendComponents} from './prepare-legend';
+
+import {getLegendComponents, getPreparedLegend} from './prepare-legend';
 import {getPreparedOptions} from './prepare-options';
 import {prepareSeries} from './prepareSeries';
+import type {OnLegendItemClick, PreparedSeries} from './types';
+import {getActiveLegendItems, getAllLegendItems} from './utils';
 
 type Args = {
     chartWidth: number;

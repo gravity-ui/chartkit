@@ -1,7 +1,8 @@
 import React from 'react';
-import {ChartKitWidgetData, LineSeriesData, LineSeries} from '../../../../types';
+
 import {ChartKit} from '../../../../components/ChartKit';
 import {DashStyle} from '../../../../constants';
+import {ChartKitWidgetData, LineSeries, LineSeriesData} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
 

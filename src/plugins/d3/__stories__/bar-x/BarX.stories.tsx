@@ -1,17 +1,19 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
-import {withKnobs} from '@storybook/addon-knobs';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
+import {withKnobs} from '@storybook/addon-knobs';
+import {StoryObj} from '@storybook/react';
+
 import {D3Plugin} from '../..';
+import {settings} from '../../../../libs';
 import {
     BasicBarXChart,
-    BasicLinearBarXChart,
     BasicDateTimeBarXChart,
+    BasicLinearBarXChart,
 } from '../../examples/bar-x/Basic';
 import {GroupedColumns} from '../../examples/bar-x/GroupedColumns';
-import {StackedColumns} from '../../examples/bar-x/StackedColumns';
 import {PercentStackColumns} from '../../examples/bar-x/PercentStack';
+import {StackedColumns} from '../../examples/bar-x/StackedColumns';
 
 const ChartStory = ({Chart}: {Chart: React.FC}) => {
     const [shown, setShown] = React.useState(false);

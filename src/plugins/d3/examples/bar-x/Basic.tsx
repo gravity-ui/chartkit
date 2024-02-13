@@ -1,7 +1,9 @@
 import React from 'react';
+
 import {groups} from 'd3';
+
 import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitWidgetData, BarXSeries, BarXSeriesData} from '../../../../types';
+import type {BarXSeries, BarXSeriesData, ChartKitWidgetData} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
 

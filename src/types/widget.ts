@@ -1,6 +1,7 @@
-import type {CustomTooltipProps, Yagr, YagrWidgetData} from '../plugins/yagr/types';
-import type {IndicatorWidgetData} from '../plugins/indicator/types';
 import type {Highcharts, HighchartsWidgetData, StringParams} from '../plugins/highcharts/types';
+import type {IndicatorWidgetData} from '../plugins/indicator/types';
+import type {CustomTooltipProps, Yagr, YagrWidgetData} from '../plugins/yagr/types';
+
 import type {ChartKitWidgetData} from './widget-data';
 
 export interface ChartKitWidget {

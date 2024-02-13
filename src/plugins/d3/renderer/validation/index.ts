@@ -2,7 +2,8 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 import {SeriesType} from '../../../../constants';
-import {ChartKitError, CHARTKIT_ERROR_CODE} from '../../../../libs';
+import {i18n} from '../../../../i18n';
+import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../../libs';
 import {
     AreaSeries,
     BarXSeries,
@@ -15,8 +16,6 @@ import {
     ScatterSeries,
     TreemapSeries,
 } from '../../../../types';
-import {i18n} from '../../../../i18n';
-
 import {DEFAULT_AXIS_TYPE} from '../constants';
 
 type XYSeries = ScatterSeries | BarXSeries | BarYSeries | LineSeries | AreaSeries;

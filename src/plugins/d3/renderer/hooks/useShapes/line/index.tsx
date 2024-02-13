@@ -1,15 +1,14 @@
 import React from 'react';
-import type {Dispatch, BaseType} from 'd3';
+
+import type {BaseType, Dispatch} from 'd3';
 import {color, line as lineGenerator, select} from 'd3';
 import get from 'lodash/get';
 
-import {block} from '../../../../../../utils/cn';
-import type {PreparedSeriesOptions} from '../../useSeries/types';
-import type {MarkerData, PointData, PreparedLineData} from './types';
 import type {TooltipDataChunkLine} from '../../../../../../types';
+import {block} from '../../../../../../utils/cn';
 import type {LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
-import {getLineDashArray, setActiveState} from '../utils';
+import type {PreparedSeriesOptions} from '../../useSeries/types';
 import {
     getMarkerHaloVisibility,
     getMarkerVisibility,
@@ -18,6 +17,9 @@ import {
     selectMarkerSymbol,
     setMarker,
 } from '../marker';
+import {getLineDashArray, setActiveState} from '../utils';
+
+import type {MarkerData, PointData, PreparedLineData} from './types';
 
 const b = block('d3-line');
 

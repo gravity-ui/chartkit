@@ -1,7 +1,8 @@
 import {SeriesType} from '../../constants';
+
 import type {BaseSeries, BaseSeriesData} from './base';
-import type {ChartKitWidgetSeriesOptions} from './series';
 import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
+import type {ChartKitWidgetSeriesOptions} from './series';
 
 export type BarYSeriesData<T = any> = BaseSeriesData<T> & {
     /**

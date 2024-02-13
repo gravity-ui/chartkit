@@ -1,11 +1,13 @@
 import React from 'react';
-import {Meta, Story} from '@storybook/react';
-import {withKnobs, object} from '@storybook/addon-knobs';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
-import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitWidgetData, ChartKitRef} from '../../../../types';
+import {object, withKnobs} from '@storybook/addon-knobs';
+import {Meta, Story} from '@storybook/react';
+
 import {D3Plugin} from '../..';
+import {ChartKit} from '../../../../components/ChartKit';
+import {settings} from '../../../../libs';
+import type {ChartKitRef, ChartKitWidgetData} from '../../../../types';
 
 const Template: Story = () => {
     const [shown, setShown] = React.useState(false);

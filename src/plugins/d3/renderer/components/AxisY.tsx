@@ -1,20 +1,20 @@
 import React from 'react';
+
 import {axisLeft, select} from 'd3';
-import type {AxisScale, AxisDomain} from 'd3';
+import type {AxisDomain, AxisScale} from 'd3';
 
 import {block} from '../../../../utils/cn';
-
 import type {ChartScale, PreparedAxis} from '../hooks';
 import {
+    calculateCos,
+    calculateSin,
     formatAxisTickLabel,
     getClosestPointsRange,
+    getScaleTicks,
+    getTicksCount,
     parseTransformStyle,
     setEllipsisForOverflowText,
     setEllipsisForOverflowTexts,
-    getTicksCount,
-    getScaleTicks,
-    calculateSin,
-    calculateCos,
 } from '../utils';
 
 const b = block('d3-axis');

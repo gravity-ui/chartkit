@@ -1,11 +1,13 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
+import {StoryObj} from '@storybook/react';
+
+import {D3Plugin} from '../..';
 import {ChartKit} from '../../../../components/ChartKit';
+import {settings} from '../../../../libs';
 import type {ChartKitRef} from '../../../../types';
 import type {ChartKitWidgetData} from '../../../../types/widget-data';
-import {D3Plugin} from '../..';
 
 const prepareData = (): ChartKitWidgetData => {
     return {

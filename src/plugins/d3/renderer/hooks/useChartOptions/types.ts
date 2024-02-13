@@ -1,9 +1,9 @@
 import type {
     BaseTextStyle,
-    ChartKitWidgetData,
     ChartKitWidgetAxis,
-    ChartKitWidgetAxisType,
     ChartKitWidgetAxisLabels,
+    ChartKitWidgetAxisType,
+    ChartKitWidgetData,
     ChartMargin,
 } from '../../../../../types';
 

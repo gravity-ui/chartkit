@@ -1,5 +1,6 @@
 import type {CurveFactory} from 'd3';
-import {pie, curveBasis, curveLinear} from 'd3';
+import {curveBasis, curveLinear, pie} from 'd3';
+
 import type {PreparedPieData, SegmentData} from './types';
 
 export const pieGenerator = pie<SegmentData>()

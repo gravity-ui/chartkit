@@ -1,10 +1,12 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
+
 import {Button} from '@gravity-ui/uikit';
-import {YagrPlugin, YagrWidgetData} from '../index';
-import {ChartKitRef} from '../../../types';
-import {settings} from '../../../libs';
+import {StoryObj} from '@storybook/react';
+
 import {ChartKit} from '../../../components/ChartKit';
+import {settings} from '../../../libs';
+import {ChartKitRef} from '../../../types';
+import {YagrPlugin, YagrWidgetData} from '../index';
 
 function prepareData(): YagrWidgetData {
     return {

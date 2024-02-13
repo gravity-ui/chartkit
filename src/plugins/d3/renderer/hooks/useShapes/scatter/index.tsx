@@ -1,13 +1,12 @@
 import React from 'react';
-import get from 'lodash/get';
+
 import {pointer, select} from 'd3';
 import type {BaseType, Dispatch} from 'd3';
+import get from 'lodash/get';
 
-import {block} from '../../../../../../utils/cn';
 import {TooltipDataChunkScatter} from '../../../../../../types';
+import {block} from '../../../../../../utils/cn';
 import {PreparedSeriesOptions} from '../../useSeries/types';
-import {setActiveState, shapeKey} from '../utils';
-import type {PreparedScatterData, MarkerData} from './types';
 import {
     getMarkerHaloVisibility,
     renderMarker,
@@ -15,6 +14,9 @@ import {
     selectMarkerSymbol,
     setMarker,
 } from '../marker';
+import {setActiveState, shapeKey} from '../utils';
+
+import type {MarkerData, PreparedScatterData} from './types';
 export {prepareScatterData} from './prepare-data';
 
 type ScatterSeriesShapeProps = {

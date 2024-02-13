@@ -1,5 +1,7 @@
 import React from 'react';
-import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
+
+import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
+
 import {HighchartsComponent} from './components/HighchartsComponent';
 
 const HighchartsWidget = React.forwardRef<

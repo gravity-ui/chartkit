@@ -11,8 +11,8 @@ import type {HierarchyRectangularNode} from 'd3';
 
 import {LayoutAlgorithm} from '../../../../../../constants';
 import type {TreemapSeriesData} from '../../../../../../types';
-
 import type {PreparedTreemapSeries} from '../../useSeries/types';
+
 import type {PreparedTreemapData, TreemapLabelData} from './types';
 
 const DEFAULT_PADDING = 1;

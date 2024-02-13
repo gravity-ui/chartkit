@@ -1,10 +1,12 @@
-import {ChartKitWidgetSeriesOptions, PieSeries} from '../../../../../types';
-import {PreparedLegend, PreparedPieSeries, PreparedSeries} from './types';
 import {scaleOrdinal} from 'd3';
-import {DEFAULT_PALETTE} from '../../constants';
-import {getRandomCKId} from '../../../../../utils';
 import get from 'lodash/get';
+
+import {ChartKitWidgetSeriesOptions, PieSeries} from '../../../../../types';
+import {getRandomCKId} from '../../../../../utils';
+import {DEFAULT_PALETTE} from '../../constants';
+
 import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
+import {PreparedLegend, PreparedPieSeries, PreparedSeries} from './types';
 import {prepareLegendSymbol} from './utils';
 
 type PreparePieSeriesArgs = {

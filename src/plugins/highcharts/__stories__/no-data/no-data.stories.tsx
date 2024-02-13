@@ -1,9 +1,11 @@
 import React from 'react';
-import {Meta, Story} from '@storybook/react';
-import {ChartKit} from '../../../../components/ChartKit';
-import {noData, filledData} from '../../mocks/no-data';
-import {ChartStory} from '../components/ChartStory';
+
 import {Button} from '@gravity-ui/uikit';
+import {Meta, Story} from '@storybook/react';
+
+import {ChartKit} from '../../../../components/ChartKit';
+import {filledData, noData} from '../../mocks/no-data';
+import {ChartStory} from '../components/ChartStory';
 
 export default {
     title: 'Plugins/Highcharts/NoData',

@@ -1,22 +1,24 @@
 import React from 'react';
-import isEmpty from 'lodash/isEmpty';
 
 import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/react';
+import isEmpty from 'lodash/isEmpty';
 
 import {i18n} from '../../../i18n';
-import type {ChartKitWidgetRef} from '../../../types';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
-import {useWidgetData} from './useWidgetData';
-import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from './utils';
+import type {ChartKitWidgetRef} from '../../../types';
 import {Yagr, YagrWidgetProps} from '../types';
 
 import './polyfills';
+import {useWidgetData} from './useWidgetData';
+import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from './utils';
 
 import '@gravity-ui/yagr/dist/index.css';
+// We need to save order in such state
+// eslint-disable-next-line import/order
 import './YagrWidget.scss';
 
 const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetProps>(
-    (props, forwardedRef) => {
+    function YagrWidget(props, forwardedRef) {
         const {
             id,
             data: {data},

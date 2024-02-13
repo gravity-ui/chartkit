@@ -1,6 +1,8 @@
 import React from 'react';
-import get from 'lodash/get';
+
 import {dateTime} from '@gravity-ui/date-utils';
+import get from 'lodash/get';
+
 import type {
     ChartKitWidgetSeriesData,
     TooltipDataChunk,

@@ -1,5 +1,6 @@
 import type {Selection} from 'd3';
 import {select} from 'd3';
+
 import {BaseTextStyle} from '../../../../types';
 
 export function setEllipsisForOverflowText<T>(

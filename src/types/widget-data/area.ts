@@ -1,4 +1,5 @@
 import {SeriesType} from '../../constants';
+
 import type {BaseSeries, BaseSeriesData} from './base';
 import type {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 import type {PointMarkerOptions} from './marker';

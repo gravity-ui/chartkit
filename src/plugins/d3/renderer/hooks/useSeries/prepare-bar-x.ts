@@ -1,10 +1,12 @@
 import type {ScaleOrdinal} from 'd3';
 import get from 'lodash/get';
+
 import type {BarXSeries} from '../../../../../types';
-import type {PreparedBarXSeries, PreparedLegend, PreparedSeries} from './types';
 import {getRandomCKId} from '../../../../../utils';
-import {getSeriesStackId, prepareLegendSymbol} from './utils';
+
 import {DEFAULT_DATALABELS_PADDING, DEFAULT_DATALABELS_STYLE} from './constants';
+import type {PreparedBarXSeries, PreparedLegend, PreparedSeries} from './types';
+import {getSeriesStackId, prepareLegendSymbol} from './utils';
 
 type PrepareBarXSeriesArgs = {
     colorScale: ScaleOrdinal<string, string>;

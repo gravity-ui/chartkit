@@ -1,6 +1,8 @@
 import {dateTime} from '@gravity-ui/date-utils';
+
 import type {Highcharts} from '../../../../types';
 import type {NavigatorPeriod} from '../types';
+
 import {getXAxisThresholdValue} from './getXAxisThresholdValue';
 
 type SetNavigatorDefaultPeriod = {

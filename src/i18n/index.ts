@@ -1,5 +1,7 @@
 import {I18N, I18NFn} from '@gravity-ui/i18n';
+
 import type {ChartKitLang} from '../types';
+
 import en from './keysets/en.json';
 import ru from './keysets/ru.json';
 

@@ -1,4 +1,5 @@
 import {LayoutAlgorithm, SeriesType} from '../../constants';
+
 import type {BaseSeries, BaseSeriesData} from './base';
 import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 

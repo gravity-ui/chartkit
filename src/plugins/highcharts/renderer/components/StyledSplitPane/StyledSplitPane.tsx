@@ -1,5 +1,7 @@
 import React from 'react';
+
 import SplitPane, {Pane, Split, SplitPaneProps} from 'react-split-pane';
+
 import {cn} from '../../../../../utils/cn';
 
 import './StyledSplitPane.scss';

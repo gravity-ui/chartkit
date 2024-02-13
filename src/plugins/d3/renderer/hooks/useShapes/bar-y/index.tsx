@@ -1,10 +1,12 @@
 import React from 'react';
-import get from 'lodash/get';
+
 import {color, select} from 'd3';
 import type {Dispatch} from 'd3';
+import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
+
 import type {PreparedBarYData} from './types';
 export {prepareBarYData} from './prepare-data';
 

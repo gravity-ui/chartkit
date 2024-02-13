@@ -1,4 +1,5 @@
 import React from 'react';
+
 import type {ChartKitProps} from '../../../types';
 import {block} from '../../../utils/cn';
 import type {IndicatorWidgetDataItem} from '../types';

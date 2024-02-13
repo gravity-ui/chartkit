@@ -1,15 +1,16 @@
 import React from 'react';
-import type {PieSeries, PieSeriesData} from './pie';
-import type {ScatterSeries, ScatterSeriesData} from './scatter';
-import type {BarXSeries, BarXSeriesData} from './bar-x';
-import type {LineSeries, LineSeriesData} from './line';
-import type {BarYSeries, BarYSeriesData} from './bar-y';
-import type {PointMarkerOptions} from './marker';
-import type {AreaSeries, AreaSeriesData} from './area';
-import type {TreemapSeries, TreemapSeriesData} from './treemap';
-import type {Halo} from './halo';
 
 import {DashStyle, LineCap} from '../../constants';
+
+import type {AreaSeries, AreaSeriesData} from './area';
+import type {BarXSeries, BarXSeriesData} from './bar-x';
+import type {BarYSeries, BarYSeriesData} from './bar-y';
+import type {Halo} from './halo';
+import type {LineSeries, LineSeriesData} from './line';
+import type {PointMarkerOptions} from './marker';
+import type {PieSeries, PieSeriesData} from './pie';
+import type {ScatterSeries, ScatterSeriesData} from './scatter';
+import type {TreemapSeries, TreemapSeriesData} from './treemap';
 
 export type ChartKitWidgetSeries<T = any> =
     | ScatterSeries<T>

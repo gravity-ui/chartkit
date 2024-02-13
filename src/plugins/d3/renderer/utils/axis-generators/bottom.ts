@@ -1,9 +1,10 @@
 import type {AxisDomain, AxisScale, Selection} from 'd3';
 import {select} from 'd3';
+
 import {BaseTextStyle} from '../../../../../types';
 import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
-import {getLabelsSize, setEllipsisForOverflowText} from '../text';
 import {calculateCos, calculateSin} from '../math';
+import {getLabelsSize, setEllipsisForOverflowText} from '../text';
 
 type AxisBottomArgs = {
     scale: AxisScale<AxisDomain>;

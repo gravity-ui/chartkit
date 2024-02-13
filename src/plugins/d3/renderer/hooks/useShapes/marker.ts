@@ -1,11 +1,13 @@
 import {BaseType, Selection, symbol} from 'd3';
-import {MarkerData as LineMarkerData} from './line/types';
-import {MarkerData as AreaMarkerData} from './area/types';
-import {MarkerData as ScatterMarkerData} from './scatter/types';
-import {block} from '../../../../../utils/cn';
-import {SymbolType} from '../../../../../constants';
-import {getSymbol} from '../../utils';
 import get from 'lodash/get';
+
+import {SymbolType} from '../../../../../constants';
+import {block} from '../../../../../utils/cn';
+import {getSymbol} from '../../utils';
+
+import {MarkerData as AreaMarkerData} from './area/types';
+import {MarkerData as LineMarkerData} from './line/types';
+import {MarkerData as ScatterMarkerData} from './scatter/types';
 
 const b = block('d3-marker');
 const haloClassName = b('halo');

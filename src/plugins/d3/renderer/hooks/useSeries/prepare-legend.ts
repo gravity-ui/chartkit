@@ -1,16 +1,16 @@
+import {select} from 'd3';
 import clone from 'lodash/clone';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
-import {select} from 'd3';
 
 import type {ChartKitWidgetData} from '../../../../../types';
-
 import {legendDefaults} from '../../constants';
 import {getHorisontalSvgTextHeight} from '../../utils';
 import {getBoundsWidth} from '../useChartDimensions';
-import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
-import type {PreparedLegend, PreparedSeries, LegendConfig, LegendItem} from './types';
 import {getWidthOccupiedByYAxis} from '../useChartDimensions/utils';
+import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
+
+import type {LegendConfig, LegendItem, PreparedLegend, PreparedSeries} from './types';
 
 type LegendItemWithoutTextWidth = Omit<LegendItem, 'textWidth'>;
 

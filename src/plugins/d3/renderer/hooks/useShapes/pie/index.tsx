@@ -1,17 +1,17 @@
 import React from 'react';
-import get from 'lodash/get';
-import {arc, color, pointer, select} from 'd3';
+
+import {arc, color, line as lineGenerator, pointer, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum} from 'd3';
+import get from 'lodash/get';
 
+import {TooltipDataChunkPie} from '../../../../../../types';
 import {block} from '../../../../../../utils/cn';
-
+import {setEllipsisForOverflowTexts} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
-import {PieLabelData, PreparedPieData, SegmentData} from './types';
 import {PreparedLineData} from '../line/types';
 import {setActiveState} from '../utils';
-import {line as lineGenerator} from 'd3-shape';
-import {setEllipsisForOverflowTexts} from '../../../utils';
-import {TooltipDataChunkPie} from '../../../../../../types';
+
+import {PieLabelData, PreparedPieData, SegmentData} from './types';
 import {getCurveFactory} from './utils';
 
 const b = block('d3-pie');

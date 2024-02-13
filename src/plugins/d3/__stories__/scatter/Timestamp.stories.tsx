@@ -1,19 +1,21 @@
-import {range} from 'd3';
 import React from 'react';
-import random from 'lodash/random';
-import {Meta, Story} from '@storybook/react';
-import {date} from '@storybook/addon-knobs';
+
 import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
+import {date} from '@storybook/addon-knobs';
+import {Meta, Story} from '@storybook/react';
+import {range} from 'd3';
+import random from 'lodash/random';
+
+import {D3Plugin} from '../..';
 import {ChartKit} from '../../../../components/ChartKit';
+import {settings} from '../../../../libs';
 import type {ChartKitRef} from '../../../../types';
 import type {
     ChartKitWidgetData,
     ScatterSeries,
     ScatterSeriesData,
 } from '../../../../types/widget-data';
-import {D3Plugin} from '../..';
 
 const rowData: ScatterSeriesData<string>[] = [
     {

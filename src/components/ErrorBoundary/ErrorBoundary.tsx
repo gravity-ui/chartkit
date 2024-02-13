@@ -1,8 +1,9 @@
 import React from 'react';
+
 import type {ChartKitError} from '../../libs';
+import {CHARTKIT_ERROR_CODE} from '../../libs';
 import type {ChartKitOnError, ChartKitType, ChartKitWidget, RenderError} from '../../types';
 import {getErrorMessage} from '../../utils/getErrorMessage';
-import {CHARTKIT_ERROR_CODE} from '../../libs';
 
 type Props = {
     onError?: ChartKitOnError;

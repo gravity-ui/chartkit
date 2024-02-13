@@ -1,15 +1,17 @@
 import React from 'react';
-import range from 'lodash/range';
-import random from 'lodash/random';
-import {Meta, Story} from '@storybook/react';
-import {boolean, number, select} from '@storybook/addon-knobs';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
+import {boolean, number, select} from '@storybook/addon-knobs';
+import {Meta, Story} from '@storybook/react';
+import random from 'lodash/random';
+import range from 'lodash/range';
+
+import {D3Plugin} from '../..';
 import {ChartKit} from '../../../../components/ChartKit';
-import {randomString} from '../../../../utils';
+import {settings} from '../../../../libs';
 import type {ChartKitRef} from '../../../../types';
 import type {ChartKitWidgetData, ScatterSeries} from '../../../../types/widget-data';
-import {D3Plugin} from '../..';
+import {randomString} from '../../../../utils';
 
 const TEMPLATE_STRING = '0123456789abcdefghijklmnopqrstuvwxyz';
 

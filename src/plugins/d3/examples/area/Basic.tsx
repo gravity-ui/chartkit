@@ -1,6 +1,7 @@
 import React from 'react';
+
 import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitWidgetData, AreaSeries, AreaSeriesData} from '../../../../types';
+import type {AreaSeries, AreaSeriesData, ChartKitWidgetData} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
 

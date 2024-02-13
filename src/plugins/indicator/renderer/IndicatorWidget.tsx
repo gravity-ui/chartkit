@@ -1,11 +1,14 @@
 import React from 'react';
+
 import isEmpty from 'lodash/isEmpty';
+
+import {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from '../../../constants';
 import {i18n} from '../../../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
-import {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from '../../../constants';
+import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../utils';
 import {block} from '../../../utils/cn';
-import type {ChartKitWidgetRef, ChartKitProps} from '../../../types';
+
 import {IndicatorItem} from './IndicatorItem';
 
 import './IndicatorWidget.scss';

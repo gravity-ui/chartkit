@@ -18,30 +18,30 @@
 
     &._tooltip-with-scroll {
         ._tooltip-header td:last-child {
-            padding-right: calc(#{18px} + var(--yc-scrollbar-width, #{15px}));
+            padding-right: calc(#{18px} + var(--g-scrollbar-width, #{15px}));
         }
 
         ._tooltip-footer td:last-child {
-            padding-right: calc(#{18px} + var(--yc-scrollbar-width, #{15px}));
+            padding-right: calc(#{18px} + var(--g-scrollbar-width, #{15px}));
         }
     }
 
     &._tooltip-with-scroll-in-safari {
         ._tooltip-row td:last-child {
-            padding-right: calc(#{18px} + var(--yc-scrollbar-width, #{15px}));
+            padding-right: calc(#{18px} + var(--g-scrollbar-width, #{15px}));
         }
 
         ._tooltip-rows__summ-tr td:last-child {
-            padding-right: calc(#{18px} + var(--yc-scrollbar-width, #{15px}));
+            padding-right: calc(#{18px} + var(--g-scrollbar-width, #{15px}));
         }
     }
 }
 
 ._tooltip {
     border-radius: 5px;
-    background: var(--yc-color-infographics-tooltip-bg);
-    background-color: var(--yc-color-infographics-tooltip-bg);
-    color: var(--yc-color-text-primary);
+    background: var(--g-color-infographics-tooltip-bg);
+    background-color: var(--g-color-infographics-tooltip-bg);
+    color: var(--g-color-text-primary);
     font-size: 12px;
     overflow: hidden;
     box-sizing: border-box;
@@ -173,14 +173,13 @@
                 &._tooltip-header tr:not(._tooltip-fake-row):first-child td {
                     padding-top: 6px;
                     padding-bottom: 6px;
-                    border-bottom: 1px solid var(--yc-color-line-generic);
+                    border-bottom: 1px solid var(--g-color-line-generic);
                 }
             }
 
             tbody {
                 display: block;
-                overflow-y: auto;
-                overflow-x: hidden;
+                overflow: hidden auto;
 
                 &._tooltip-footer {
                     width: 100%;
@@ -191,13 +190,13 @@
                     overflow-x: hidden;
 
                     ._tooltip-row-dark-bg {
-                        background-color: var(--yc-color-base-generic);
+                        background-color: var(--g-color-base-generic);
                     }
                 }
 
                 ._hidden-rows-sum {
                     &._hidden-rows-sum-dark-bg {
-                        background-color: var(--yc-color-base-generic);
+                        background-color: var(--g-color-base-generic);
                     }
 
                     td {
@@ -311,9 +310,9 @@
 
         &__summ-td {
             padding: 6px 0 6px 3px;
-            color: var(--yc-color-text-complementary);
+            color: var(--g-color-text-secondary);
             font-size: 12px;
-            border-top: 1px solid var(--yc-color-line-generic);
+            border-top: 1px solid var(--g-color-line-generic);
 
             &-value {
                 @include monospaceFont;
@@ -341,7 +340,7 @@
         &__td {
             vertical-align: top;
             opacity: 0.9;
-            border-left: 1px solid var(--yc-color-line-generic);
+            border-left: 1px solid var(--g-color-line-generic);
             white-space: normal;
             font-size: 8pt;
             position: relative;
@@ -382,7 +381,7 @@
             word-break: break-word;
 
             &_for-split-tooltip {
-                color: var(--yc-color-text-secondary);
+                color: var(--g-color-text-secondary);
                 padding-left: 8px;
                 border-top: none;
                 border-left: 2px solid;

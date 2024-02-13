@@ -1,9 +1,10 @@
 import React from 'react';
+
 import type {Dispatch} from 'd3';
 
 import type {TooltipDataChunk} from '../../../../../types/widget-data';
-
 import {PreparedTooltip} from '../useChartOptions/types';
+
 import type {PointerPosition} from './types';
 
 type Args = {

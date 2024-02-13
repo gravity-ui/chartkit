@@ -1,12 +1,14 @@
 import React from 'react';
-import {StoryObj} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+
 import {Button} from '@gravity-ui/uikit';
-import {settings} from '../../../../libs';
-import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitRef, ChartKitWidgetData} from '../../../../types';
-import {D3Plugin} from '../..';
+import {action} from '@storybook/addon-actions';
+import {StoryObj} from '@storybook/react';
 import {randomNormal} from 'd3';
+
+import {D3Plugin} from '../..';
+import {ChartKit} from '../../../../components/ChartKit';
+import {settings} from '../../../../libs';
+import type {ChartKitRef, ChartKitWidgetData} from '../../../../types';
 import {randomString} from '../../../../utils';
 
 const randomFn = randomNormal(0, 10);

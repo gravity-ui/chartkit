@@ -1,4 +1,5 @@
 import type {FormatNumberOptions} from '../../plugins/shared';
+
 import type {BaseTextStyle} from './base';
 
 export type ChartKitWidgetAxisType = 'category' | 'datetime' | 'linear';

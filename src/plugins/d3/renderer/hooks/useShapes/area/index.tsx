@@ -1,15 +1,14 @@
 import React from 'react';
-import type {Dispatch, BaseType} from 'd3';
-import {color, line as lineGenerator, area as areaGenerator, select} from 'd3';
+
+import type {BaseType, Dispatch} from 'd3';
+import {area as areaGenerator, color, line as lineGenerator, select} from 'd3';
 import get from 'lodash/get';
 
-import {block} from '../../../../../../utils/cn';
-import type {PreparedSeriesOptions} from '../../useSeries/types';
-import type {MarkerData, PointData, PreparedAreaData} from './types';
 import type {TooltipDataChunkArea} from '../../../../../../types';
+import {block} from '../../../../../../utils/cn';
 import type {LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
-import {setActiveState} from '../utils';
+import type {PreparedSeriesOptions} from '../../useSeries/types';
 import {
     getMarkerHaloVisibility,
     getMarkerVisibility,
@@ -18,6 +17,9 @@ import {
     selectMarkerSymbol,
     setMarker,
 } from '../marker';
+import {setActiveState} from '../utils';
+
+import type {MarkerData, PointData, PreparedAreaData} from './types';
 
 const b = block('d3-area');
 

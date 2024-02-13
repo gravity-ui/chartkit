@@ -1,5 +1,7 @@
 import React from 'react';
+
 import {dateTime} from '@gravity-ui/date-utils';
+
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, LineSeries, LineSeriesData} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';

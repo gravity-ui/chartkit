@@ -1,15 +1,15 @@
 import {ScaleOrdinal} from 'd3';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
-import type {PreparedLegend, PreparedScatterSeries} from './types';
+
 import type {ChartKitWidgetSeriesOptions, ScatterSeries} from '../../../../../types';
-import {getSymbolType} from '../../utils';
-
-import {prepareLegendSymbol} from './utils';
-import {DEFAULT_HALO_OPTIONS, DEFAULT_POINT_MARKER_OPTIONS} from './constants';
-
 import {PointMarkerOptions} from '../../../../../types/widget-data/marker';
 import {getRandomCKId} from '../../../../../utils';
+import {getSymbolType} from '../../utils';
+
+import {DEFAULT_HALO_OPTIONS, DEFAULT_POINT_MARKER_OPTIONS} from './constants';
+import type {PreparedLegend, PreparedScatterSeries} from './types';
+import {prepareLegendSymbol} from './utils';
 
 function prepareMarker(
     series: ScatterSeries,

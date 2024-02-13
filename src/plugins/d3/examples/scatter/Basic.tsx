@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData, ScatterSeries} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';

@@ -1,10 +1,12 @@
 import React from 'react';
+
 import {groups} from 'd3';
+
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData} from '../../../../types';
+import {CustomShapeRenderer} from '../../utils';
 import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
-import {CustomShapeRenderer} from '../../utils';
 
 function prepareData() {
     const gamesByPlatform = groups(nintendoGames, (d) => d.esrb_rating || 'unknown');

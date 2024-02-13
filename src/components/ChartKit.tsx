@@ -1,9 +1,11 @@
 import React from 'react';
+
 import {i18n} from '../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError, settings} from '../libs';
+import type {ChartKitProps, ChartKitRef, ChartKitType, ChartKitWidgetRef} from '../types';
 import {getRandomCKId, typedMemo} from '../utils';
 import {cn} from '../utils/cn';
-import type {ChartKitType, ChartKitRef, ChartKitWidgetRef, ChartKitProps} from '../types';
+
 import {ErrorBoundary} from './ErrorBoundary/ErrorBoundary';
 import {Loader} from './Loader/Loader';
 

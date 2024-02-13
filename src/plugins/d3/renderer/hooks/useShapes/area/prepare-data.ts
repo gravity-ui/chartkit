@@ -1,13 +1,15 @@
 import type {ScaleLinear} from 'd3';
 import {group, sort} from 'd3';
-import type {PreparedAreaSeries} from '../../useSeries/types';
-import type {PreparedAxis} from '../../useChartOptions/types';
-import type {ChartScale} from '../../useAxisScales';
-import type {MarkerData, PointData, PreparedAreaData} from './types';
-import {getXValue, getYValue} from '../utils';
-import {getLabelsSize, getLeftPosition} from '../../../utils';
-import type {LabelData} from '../../../types';
+
 import type {AreaSeriesData} from '../../../../../../types';
+import type {LabelData} from '../../../types';
+import {getLabelsSize, getLeftPosition} from '../../../utils';
+import type {ChartScale} from '../../useAxisScales';
+import type {PreparedAxis} from '../../useChartOptions/types';
+import type {PreparedAreaSeries} from '../../useSeries/types';
+import {getXValue, getYValue} from '../utils';
+
+import type {MarkerData, PointData, PreparedAreaData} from './types';
 
 function getLabelData(point: PointData, series: PreparedAreaSeries, xMax: number) {
     const text = String(point.data.label || point.data.y);
