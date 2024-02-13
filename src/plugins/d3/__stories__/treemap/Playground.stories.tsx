@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
+import {action} from '@storybook/addon-actions';
 import {StoryObj} from '@storybook/react';
 
 import {D3Plugin} from '../..';
@@ -15,7 +16,7 @@ const prepareData = (): ChartKitWidgetData => {
         dataLabels: {
             enabled: true,
         },
-        // layoutAlgorithm: 'binary',
+        layoutAlgorithm: 'binary',
         levels: [{index: 1}, {index: 2}, {index: 3}],
         data: [
             {name: 'One', value: 15},

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
+import {action} from '@storybook/addon-actions';
 import {StoryObj} from '@storybook/react';
 import {descending, groups, sort} from 'd3';
 
