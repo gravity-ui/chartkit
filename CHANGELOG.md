@@ -7,10 +7,6 @@
 
 * move to uikit 6 ([#419](https://github.com/gravity-ui/chartkit/issues/419))
 
-### Features
-
-* move to uikit 6 ([#419](https://github.com/gravity-ui/chartkit/issues/419)) ([ea981f6](https://github.com/gravity-ui/chartkit/commit/ea981f6f558223591c9e8d9ff7b5073db51cd3a7))
-
 ## [4.20.1](https://github.com/gravity-ui/chartkit/compare/v4.20.0...v4.20.1) (2024-02-09)
 
 
