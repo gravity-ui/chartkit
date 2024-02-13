@@ -1,8 +1,7 @@
 import React from 'react';
 
-import {arc, color, pointer, select} from 'd3';
+import {arc, color, line as lineGenerator, pointer, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum} from 'd3';
-import {line as lineGenerator} from 'd3-shape';
 import get from 'lodash/get';
 
 import {TooltipDataChunkPie} from '../../../../../../types';
