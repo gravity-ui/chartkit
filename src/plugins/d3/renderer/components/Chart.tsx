@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import type {ChartKitWidgetData} from '../../../../types';
 import {block} from '../../../../utils/cn';
@@ -37,11 +37,6 @@ export const Chart = (props: Props) => {
     const dispatcher = React.useMemo(() => {
         return getD3Dispatcher();
     }, []);
-    useEffect(() => {
-        if (data.chart?.events?.click) {
-            dispatcher.on('click-chart', data.chart?.events?.click);
-        }
-    }, [dispatcher]);
     const {chart, title, tooltip} = useChartOptions({
         data,
     });
@@ -98,6 +93,15 @@ export const Chart = (props: Props) => {
         yScale,
         svgContainer: svgRef.current,
     });
+    React.useEffect(() => {
+        if (data.chart?.events?.click) {
+            dispatcher.on('click-chart', data.chart?.events?.click);
+        }
+
+        return () => {
+            dispatcher.on('click-chart', null);
+        };
+    }, [dispatcher]);
 
     const boundsOffsetTop = chart.margin.top;
     const boundsOffsetLeft = chart.margin.left + getWidthOccupiedByYAxis({preparedAxis: yAxis});
