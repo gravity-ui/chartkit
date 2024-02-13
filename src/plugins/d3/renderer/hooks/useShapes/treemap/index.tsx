@@ -63,15 +63,17 @@ export const TreemapSeriesShape = (props: ShapeProps) => {
             .style('fill', () => series.dataLabels.style?.fontColor || null)
             .call(setEllipsisForOverflowTexts, (d) => d.width);
 
-        const eventName = `hover-shape.pie`;
+        const getSelectedPart = (node: Element) => {
+            const hoveredRect = select<BaseType, HierarchyRectangularNode<TreemapSeriesData>>(node);
+            return hoveredRect.datum();
+        };
+
+        const eventName = `hover-shape.treemap`;
         const hoverOptions = get(seriesOptions, 'treemap.states.hover');
         const inactiveOptions = get(seriesOptions, 'treemap.states.inactive');
         svgElement
             .on('mousemove', (e) => {
-                const hoveredRect = select<BaseType, HierarchyRectangularNode<TreemapSeriesData>>(
-                    e.target,
-                );
-                const datum = hoveredRect.datum();
+                const datum = getSelectedPart(e.target);
                 dispatcher.call(
                     'hover-shape',
                     {},
@@ -81,6 +83,10 @@ export const TreemapSeriesShape = (props: ShapeProps) => {
             })
             .on('mouseleave', () => {
                 dispatcher.call('hover-shape', {}, undefined);
+            })
+            .on('click', (e) => {
+                const datum = getSelectedPart(e.target);
+                dispatcher.call('click-chart', undefined, {point: datum.data, series}, e);
             });
 
         dispatcher.on(eventName, (data?: TooltipDataChunkTreemap[]) => {

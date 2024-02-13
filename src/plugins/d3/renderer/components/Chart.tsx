@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import type {ChartKitWidgetData} from '../../../../types';
 import {block} from '../../../../utils/cn';
@@ -37,6 +37,11 @@ export const Chart = (props: Props) => {
     const dispatcher = React.useMemo(() => {
         return getD3Dispatcher();
     }, []);
+    useEffect(() => {
+        if (data.chart?.events?.click) {
+            dispatcher.on('click-chart', data.chart?.events?.click);
+        }
+    }, [dispatcher]);
     const {chart, title, tooltip} = useChartOptions({
         data,
     });

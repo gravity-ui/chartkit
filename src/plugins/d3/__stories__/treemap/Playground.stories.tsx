@@ -6,35 +6,39 @@ import {StoryObj} from '@storybook/react';
 import {D3Plugin} from '../..';
 import {ChartKit} from '../../../../components/ChartKit';
 import {settings} from '../../../../libs';
-import type {ChartKitRef} from '../../../../types';
-import type {ChartKitWidgetData} from '../../../../types/widget-data';
+import type {ChartKitRef, ChartKitWidgetData, TreemapSeries} from '../../../../types';
 
 const prepareData = (): ChartKitWidgetData => {
+    const treemapSeries: TreemapSeries = {
+        type: 'treemap',
+        name: 'Example',
+        dataLabels: {
+            enabled: true,
+        },
+        // layoutAlgorithm: 'binary',
+        levels: [{index: 1}, {index: 2}, {index: 3}],
+        data: [
+            {name: 'One', value: 15},
+            {name: 'Two', value: 10},
+            {name: 'Three', value: 15},
+            {name: 'Four'},
+            {name: 'Four-1', value: 5, parentId: 'Four'},
+            {name: 'Four-2', parentId: 'Four'},
+            {name: 'Four-3', value: 4, parentId: 'Four'},
+            {name: 'Four-2-1', value: 5, parentId: 'Four-2'},
+            {name: 'Four-2-2', value: 7, parentId: 'Four-2'},
+            {name: 'Four-2-3', value: 10, parentId: 'Four-2'},
+        ],
+    };
+
     return {
         series: {
-            data: [
-                {
-                    type: 'treemap',
-                    name: 'Example',
-                    dataLabels: {
-                        enabled: true,
-                    },
-                    layoutAlgorithm: 'binary',
-                    levels: [{index: 1}, {index: 2}, {index: 3}],
-                    data: [
-                        {name: 'One', value: 15},
-                        {name: 'Two', value: 10},
-                        {name: 'Three', value: 15},
-                        {name: 'Four'},
-                        {name: 'Four-1', value: 5, parentId: 'Four'},
-                        {name: 'Four-2', parentId: 'Four'},
-                        {name: 'Four-3', value: 4, parentId: 'Four'},
-                        {name: 'Four-2-1', value: 5, parentId: 'Four-2'},
-                        {name: 'Four-2-2', value: 7, parentId: 'Four-2'},
-                        {name: 'Four-2-3', value: 10, parentId: 'Four-2'},
-                    ],
-                },
-            ],
+            data: [treemapSeries],
+        },
+        chart: {
+            events: {
+                click: action('chart.events.click'),
+            },
         },
     };
 };
