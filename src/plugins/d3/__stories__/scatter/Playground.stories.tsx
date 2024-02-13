@@ -3,7 +3,6 @@ import React from 'react';
 import {Button} from '@gravity-ui/uikit';
 import {action} from '@storybook/addon-actions';
 import {StoryObj} from '@storybook/react';
-import {groups} from 'd3';
 
 import {D3Plugin} from '../..';
 import {ChartKit} from '../../../../components/ChartKit';
@@ -11,53 +10,45 @@ import {settings} from '../../../../libs';
 import {ChartKitWidgetData} from '../../../../types';
 import nintendoGames from '../../examples/nintendoGames';
 
-function prepareData(): ChartKitWidgetData {
-    const gamesByPlatform = groups(nintendoGames, (item) => item['platform']);
-    const data = gamesByPlatform.map(([value, games]) => ({
-        x: games.length,
-        y: value,
+function prepareData() {
+    const dataset = nintendoGames.filter((d) => d.date && d.user_score);
+    const data = dataset.map((d) => ({
+        x: d.date || undefined,
+        y: d.user_score || undefined,
+        custom: d,
     }));
 
-    return {
+    const widgetData: ChartKitWidgetData = {
         series: {
             data: [
                 {
-                    type: 'bar-y',
+                    type: 'scatter',
                     data,
-                    name: 'Games released',
-                    dataLabels: {
-                        enabled: true,
-                    },
+                    name: 'Scatter series',
                 },
             ],
         },
-        xAxis: {
-            title: {text: 'Number of games released'},
-            labels: {
-                enabled: true,
-            },
-        },
         yAxis: [
             {
-                type: 'category',
-                categories: gamesByPlatform.map(([key]) => key),
                 title: {
-                    text: 'Game Platforms',
-                },
-                labels: {
-                    enabled: true,
-                },
-                ticks: {
-                    pixelInterval: 120,
+                    text: 'User score',
                 },
             },
         ],
+        xAxis: {
+            type: 'datetime',
+            title: {
+                text: 'Release dates',
+            },
+        },
         chart: {
             events: {
                 click: action('chart.events.click'),
             },
         },
     };
+
+    return widgetData;
 }
 
 const ChartStory = ({data}: {data: ChartKitWidgetData}) => {
@@ -93,6 +84,6 @@ export const PlaygroundBarYChartStory: StoryObj<typeof ChartStory> = {
 };
 
 export default {
-    title: 'Plugins/D3/Bar-Y',
+    title: 'Plugins/D3/Scatter',
     component: ChartStory,
 };

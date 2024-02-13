@@ -93,6 +93,15 @@ export const Chart = (props: Props) => {
         yScale,
         svgContainer: svgRef.current,
     });
+    React.useEffect(() => {
+        if (data.chart?.events?.click) {
+            dispatcher.on('click-chart', data.chart?.events?.click);
+        }
+
+        return () => {
+            dispatcher.on('click-chart', null);
+        };
+    }, [dispatcher]);
 
     const boundsOffsetTop = chart.margin.top;
     const boundsOffsetLeft = chart.margin.left + getWidthOccupiedByYAxis({preparedAxis: yAxis});

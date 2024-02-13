@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
+import {action} from '@storybook/addon-actions';
 import {StoryObj} from '@storybook/react';
 
 import {D3Plugin} from '../..';
@@ -86,6 +87,11 @@ function prepareData(): ChartKitWidgetData {
                 },
             },
         ],
+        chart: {
+            events: {
+                click: action('chart.events.click'),
+            },
+        },
     };
 }
 
