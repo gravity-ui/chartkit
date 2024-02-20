@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.21.0](https://github.com/gravity-ui/chartkit/compare/v4.20.1...v4.21.0) (2024-02-20)
+
+
+### Features
+
+* **D3 plugin:** add chart click event ([#423](https://github.com/gravity-ui/chartkit/issues/423)) ([647b127](https://github.com/gravity-ui/chartkit/commit/647b1276f4fd7a46b1966145c3f1531f26050124))
+* **D3 plugin:** add opacity and marker setting to shape  ([#426](https://github.com/gravity-ui/chartkit/issues/426)) ([089ab9d](https://github.com/gravity-ui/chartkit/commit/089ab9d65fdc0cac2def23e91cee89bda4e47d81))
+
 ## [4.20.1](https://github.com/gravity-ui/chartkit/compare/v4.20.0...v4.20.1) (2024-02-09)
 
 
