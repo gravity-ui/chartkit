@@ -25,6 +25,7 @@ export type ScatterSeriesData<T = any> = BaseSeriesData<T> & {
      */
     category?: string;
     radius?: number;
+    opacity?: number;
 };
 
 export type ScatterSeries<T = any> = BaseSeries & {

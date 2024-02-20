@@ -14,6 +14,8 @@ export type PieSeriesData<T = any> = BaseSeriesData<T> & {
     visible?: boolean;
     /** Initial data label of the pie segment. If not specified, the value is used. */
     label?: string;
+    /** Individual opacity for the pie segment. */
+    opacity?: number;
 };
 
 export type ConnectorShape = 'straight-line' | 'polyline';

@@ -119,6 +119,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
             marker: prepareMarker(series, seriesOptions),
             dashStyle: dashStyle as DashStyle,
             linecap: prepareLinecap(dashStyle as DashStyle, series, seriesOptions) as LineCap,
+            opacity: get(series, 'opacity', null),
         };
 
         return prepared;

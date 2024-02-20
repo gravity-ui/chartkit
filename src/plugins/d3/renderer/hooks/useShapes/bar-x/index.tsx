@@ -45,7 +45,8 @@ export const BarXSeriesShapes = (args: Args) => {
             .attr('y', (d) => d.y)
             .attr('height', (d) => d.height)
             .attr('width', (d) => d.width)
-            .attr('fill', (d) => d.data.color || d.series.color);
+            .attr('fill', (d) => d.data.color || d.series.color)
+            .attr('opacity', (d) => d.opacity);
 
         let dataLabels = preparedData.map((d) => d.label).filter(Boolean) as LabelData[];
         if (!preparedData[0]?.series.dataLabels.allowOverlap) {

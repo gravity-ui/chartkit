@@ -21,6 +21,7 @@ export type BarYSeriesData<T = any> = BaseSeriesData<T> & {
     y?: string | number;
     /** Data label value of the bar. If not specified, the x value is used. */
     label?: string | number;
+    opacity?: number;
 };
 
 export type BarYSeries<T = any> = BaseSeries & {
