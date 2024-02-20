@@ -7,6 +7,7 @@ import {ConnectorCurve} from '../../../../../../types';
 export type SegmentData = {
     value: number;
     color: string;
+    opacity: number | null;
     series: PreparedPieSeries;
     hovered: boolean;
     active: boolean;

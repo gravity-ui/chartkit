@@ -20,6 +20,21 @@ export type AreaSeriesData<T = any> = BaseSeriesData<T> & {
     y?: string | number;
     /** Data label value of the point. If not specified, the y value is used. */
     label?: string | number;
+    /** Individual marker options for the point. */
+    marker?: {
+        /** States for a single point marker. */
+        states?: {
+            /** The normal state of a single point marker. */
+            normal?: {
+                /**
+                 * Enable or disable the point marker.
+                 *
+                 * @default false
+                 * */
+                enabled: boolean;
+            };
+        };
+    };
 };
 
 export type AreaMarkerSymbol = 'circle' | 'square';

@@ -23,7 +23,10 @@ export type ScatterSeriesData<T = any> = BaseSeriesData<T> & {
      * @deprecated use `x` or `y` instead
      */
     category?: string;
+    /** Individual radius for the point. */
     radius?: number;
+    /** Individual opacity for the point. */
+    opacity?: number;
 };
 
 export type ScatterSeries<T = any> = BaseSeries & {

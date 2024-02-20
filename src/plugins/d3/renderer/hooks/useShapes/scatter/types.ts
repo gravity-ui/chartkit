@@ -4,6 +4,7 @@ import {PreparedScatterSeries} from '../../useSeries/types';
 type PointData = {
     x: number;
     y: number;
+    opacity: number | null;
     data: ScatterSeriesData;
     series: PreparedScatterSeries;
 };
