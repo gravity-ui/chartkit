@@ -82,6 +82,7 @@ export const prepareLineData = (args: {
             id: s.id,
             dashStyle: s.dashStyle,
             linecap: s.linecap,
+            opacity: s.opacity,
         };
 
         acc.push(result);

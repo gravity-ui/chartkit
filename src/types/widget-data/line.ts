@@ -20,6 +20,13 @@ export type LineSeriesData<T = any> = BaseSeriesData<T> & {
     y?: string | number;
     /** Data label value of the point. If not specified, the y value is used. */
     label?: string | number;
+    marker?: {
+        states?: {
+            normal?: {
+                enabled: boolean;
+            };
+        };
+    };
 };
 
 export type LineSeries<T = any> = BaseSeries & {
@@ -44,4 +51,6 @@ export type LineSeries<T = any> = BaseSeries & {
     dashStyle?: `${DashStyle}`;
     /** Option for line cap style */
     linecap?: `${LineCap}`;
+    /** Individual opacity for the line. */
+    opacity?: number;
 };

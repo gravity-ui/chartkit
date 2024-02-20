@@ -79,6 +79,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
             return {
                 value: item.value,
                 color: item.color,
+                opacity: item.opacity,
                 series: item,
                 hovered: false,
                 active: true,

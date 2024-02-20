@@ -160,6 +160,7 @@ export const prepareBarXData = (args: {
                     y: y - stackHeight,
                     width: rectWidth,
                     height,
+                    opacity: get(yValue.data, 'opacity', null),
                     data: yValue.data,
                     series: yValue.series,
                 };
