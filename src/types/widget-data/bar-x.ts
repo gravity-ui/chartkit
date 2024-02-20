@@ -27,6 +27,7 @@ export type BarXSeriesData<T = any> = BaseSeriesData<T> & {
     category?: string;
     /** Data label value of the bar-x column. If not specified, the y value is used. */
     label?: string | number;
+    /** Individual opacity for the bar-x column. */
     opacity?: number;
 };
 

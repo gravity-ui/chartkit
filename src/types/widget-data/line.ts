@@ -52,5 +52,6 @@ export type LineSeries<T = any> = BaseSeries & {
     dashStyle?: `${DashStyle}`;
     /** Option for line cap style */
     linecap?: `${LineCap}`;
+    /** Individual opacity for the line. */
     opacity?: number;
 };
