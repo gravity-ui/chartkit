@@ -31,6 +31,11 @@ function prepareData(): ChartKitWidgetData {
             ],
         },
         legend: {enabled: true},
+        chart: {
+            events: {
+                click: action('chart.events.click'),
+            },
+        },
     };
 }
 

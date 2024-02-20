@@ -169,7 +169,7 @@ export const TooltipTriggerArea = (args: Args) => {
         return sort(result, (item) => item.y);
     }, [shapesData]);
 
-    const handleMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
+    const getShapeData = (point: [number, number]) => {
         const {left: ownLeft, top: ownTop} = rectRef.current?.getBoundingClientRect() || {
             left: 0,
             top: 0,
@@ -178,10 +178,10 @@ export const TooltipTriggerArea = (args: Args) => {
             left: 0,
             top: 0,
         };
-        const [pointerX, pointerY] = pointer(e, svgContainer);
-        const hoverShapeData = [];
+        const [pointerX, pointerY] = point; //pointer(e, svgContainer);
+        const result = [];
 
-        hoverShapeData?.push(
+        result?.push(
             ...getBarXShapeData({
                 shapesData,
                 point: [pointerX, pointerY],
@@ -200,6 +200,13 @@ export const TooltipTriggerArea = (args: Args) => {
             }),
         );
 
+        return result;
+    };
+
+    const handleMouseMove: React.MouseEventHandler<SVGRectElement> = (e) => {
+        const [pointerX, pointerY] = pointer(e, svgContainer);
+        const hoverShapeData = getShapeData([pointerX, pointerY]);
+
         if (hoverShapeData.length) {
             const position: PointerPosition = [pointerX, pointerY];
             dispatcher.call('hover-shape', e.target, hoverShapeData, position);
@@ -213,6 +220,20 @@ export const TooltipTriggerArea = (args: Args) => {
         dispatcher.call('hover-shape', {}, undefined);
     };
 
+    const handleClick: React.MouseEventHandler<SVGRectElement> = (e) => {
+        const [pointerX, pointerY] = pointer(e, svgContainer);
+        const shapeData = getShapeData([pointerX, pointerY]);
+
+        if (shapeData.length) {
+            dispatcher.call(
+                'click-chart',
+                undefined,
+                {point: get(shapeData, '[0].data'), series: get(shapeData, '[0].series')},
+                e,
+            );
+        }
+    };
+
     return (
         <rect
             ref={rectRef}
@@ -221,6 +242,7 @@ export const TooltipTriggerArea = (args: Args) => {
             fill="transparent"
             onMouseMove={throttledHandleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onClick={handleClick}
         />
     );
 };

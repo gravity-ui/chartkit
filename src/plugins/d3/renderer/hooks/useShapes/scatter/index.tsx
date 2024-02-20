@@ -48,9 +48,13 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
             .call(renderMarker)
             .attr('fill', (d) => d.point.data.color || d.point.series.color || '');
 
+        const getSelectedPoint = (element: Element) => {
+            return select<BaseType, PreparedScatterData>(element).datum();
+        };
+
         svgElement
             .on('mousemove', (e) => {
-                const datum = select<BaseType, PreparedScatterData>(e.target).datum();
+                const datum = getSelectedPoint(e.target);
 
                 if (!datum) {
                     return;
@@ -69,6 +73,17 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
             })
             .on('mouseleave', () => {
                 dispatcher.call('hover-shape', {}, undefined);
+            })
+            .on('click', (e) => {
+                const datum = getSelectedPoint(e.target);
+                if (datum) {
+                    dispatcher.call(
+                        'click-chart',
+                        undefined,
+                        {point: datum.point.data, series: datum.point.series},
+                        e,
+                    );
+                }
             });
 
         const hoverEnabled = hoverOptions?.enabled;

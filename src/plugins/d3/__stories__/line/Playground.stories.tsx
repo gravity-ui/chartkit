@@ -84,6 +84,11 @@ function prepareData(): ChartKitWidgetData {
                 },
             },
         ],
+        chart: {
+            events: {
+                click: action('chart.events.click'),
+            },
+        },
     };
 }
 
