@@ -163,6 +163,7 @@ export type PreparedPieSeries = {
         };
     };
     renderCustomShape?: PieSeries['renderCustomShape'];
+    opacity: number | null;
 } & BasePreparedSeries;
 
 export type PreparedLineSeries = {
@@ -195,6 +196,7 @@ export type PreparedLineSeries = {
     };
     dashStyle: DashStyle;
     linecap: LineCap;
+    opacity: number | null;
 } & BasePreparedSeries;
 
 export type PreparedAreaSeries = {

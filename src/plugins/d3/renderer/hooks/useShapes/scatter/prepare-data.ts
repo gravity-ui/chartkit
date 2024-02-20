@@ -1,3 +1,5 @@
+import get from 'lodash/get';
+
 import type {ScatterSeriesData} from '../../../../../../types';
 
 import type {ChartScale} from '../../useAxisScales';
@@ -32,6 +34,7 @@ export const prepareScatterData = (args: {
                     series: s,
                     x: getXValue({point: d, xAxis, xScale}),
                     y: getYValue({point: d, yAxis, yScale}),
+                    opacity: get(d, 'opacity', null),
                 },
                 hovered: false,
                 active: true,

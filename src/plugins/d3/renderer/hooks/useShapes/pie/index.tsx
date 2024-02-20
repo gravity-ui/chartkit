@@ -91,7 +91,8 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
                 return arcGenerator(d);
             })
             .attr('class', b('segment'))
-            .attr('fill', (d) => d.data.color);
+            .attr('fill', (d) => d.data.color)
+            .attr('opacity', (d) => d.data.opacity);
 
         shapesSelection
             .selectAll<SVGTextElement, PieLabelData>('text')
@@ -167,7 +168,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
                             type: 'pie',
                             name: currentSegment.series.name,
                         },
-                        data: currentSegment.series,
+                        data: currentSegment.series.data,
                     };
 
                     dispatcher.call('hover-shape', {}, [data], pointer(e, svgContainer));
