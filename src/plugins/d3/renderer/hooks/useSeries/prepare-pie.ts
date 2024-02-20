@@ -61,6 +61,7 @@ export function preparePieSeries(args: PreparePieSeriesArgs) {
                 },
             },
             renderCustomShape: series.renderCustomShape,
+            opacity: get(dataItem, 'opacity', null),
         };
 
         return result;
