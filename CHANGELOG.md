@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.20.2](https://github.com/gravity-ui/chartkit/compare/v4.20.1...v4.20.2) (2024-02-20)
+
+
+### Bug Fixes
+
+* check release attempt 1 ([c59ce5b](https://github.com/gravity-ui/chartkit/commit/c59ce5bc247f240b0892f0c628b52c890dc7aa64))
+
 ## [4.20.1](https://github.com/gravity-ui/chartkit/compare/v4.20.0...v4.20.1) (2024-02-09)
 
 
