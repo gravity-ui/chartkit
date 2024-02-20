@@ -27,7 +27,7 @@ function prepareData(): ChartKitWidgetData {
         },
         xAxis: {
             type: 'category',
-            categories: gamesByPlatform.map(([key]) => key),
+            categories: gamesByPlatform.map(([key, _group]) => key),
             title: {
                 text: 'Game Platforms',
             },
@@ -48,6 +48,11 @@ function prepareData(): ChartKitWidgetData {
                 },
             },
         ],
+        chart: {
+            events: {
+                click: action('chart.events.click'),
+            },
+        },
     };
 }
 
