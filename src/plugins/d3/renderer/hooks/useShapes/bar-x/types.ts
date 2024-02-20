@@ -7,6 +7,7 @@ export type PreparedBarXData = Omit<TooltipDataChunkBarX, 'series'> & {
     y: number;
     width: number;
     height: number;
+    opacity: number | null;
     series: PreparedBarXSeries;
     label?: LabelData;
 };

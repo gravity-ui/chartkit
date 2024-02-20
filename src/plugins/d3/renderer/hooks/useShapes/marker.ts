@@ -49,7 +49,15 @@ export function renderMarker<T extends MarkerData>(
 
 export function getMarkerVisibility(d: MarkerData) {
     const markerStates = d.point.series.marker.states;
-    const enabled = (markerStates.hover.enabled && d.hovered) || markerStates.normal.enabled;
+    let enabled: Boolean;
+
+    if (d.hovered) {
+        enabled = markerStates.hover.enabled && d.hovered;
+    } else {
+        enabled =
+            markerStates.normal.enabled || get(d.point.data, 'marker.states.normal.enabled', false);
+    }
+
     return enabled ? '' : 'hidden';
 }
 

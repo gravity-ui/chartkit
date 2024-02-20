@@ -28,4 +28,5 @@ export type PreparedLineData = {
     labels: LabelData[];
     dashStyle: DashStyle;
     linecap: LineCap;
+    opacity: number | null;
 };

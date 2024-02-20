@@ -142,6 +142,7 @@ export const prepareBarYData = (args: {
                     width,
                     height: barHeight,
                     color: data.color || s.color,
+                    opacity: get(data, 'opacity', null),
                     data,
                     series: s,
                 });
