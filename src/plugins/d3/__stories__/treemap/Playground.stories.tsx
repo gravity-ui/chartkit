@@ -1,9 +1,10 @@
 import React from 'react';
+import {action} from '@storybook/addon-actions';
 import {StoryObj} from '@storybook/react';
 import {Button} from '@gravity-ui/uikit';
 import {settings} from '../../../../libs';
 import {ChartKit} from '../../../../components/ChartKit';
-import type {ChartKitRef} from '../../../../types';
+import type {ChartKitRef, TreemapSeries} from '../../../../types';
 import type {ChartKitWidgetData} from '../../../../types/widget-data';
 import {D3Plugin} from '../..';
 
