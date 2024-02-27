@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, v4-2]
+    branches: [main]
   pull_request:
-    branches: [main, v4-2]
+    branches: [main]
 
 jobs:
   verify_files:
