@@ -49,7 +49,8 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
             .join('g')
             .call(renderMarker)
             .attr('fill', (d) => d.point.data.color || d.point.series.color || '')
-            .attr('opacity', (d) => d.point.opacity);
+            .attr('opacity', (d) => d.point.opacity)
+            .attr('cursor', (d) => d.point.series.cursor);
 
         const getSelectedPoint = (element: Element) => {
             return select<BaseType, PreparedScatterData>(element).datum();

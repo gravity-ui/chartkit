@@ -82,6 +82,7 @@ type BasePreparedSeries = {
         enabled: boolean;
         symbol: PreparedLegendSymbol;
     };
+    cursor: string | null;
 };
 
 export type PreparedScatterSeries = {
@@ -243,7 +244,7 @@ export type PreparedTreemapSeries = {
     };
     layoutAlgorithm: `${LayoutAlgorithm}`;
 } & BasePreparedSeries &
-    TreemapSeries;
+    Omit<TreemapSeries, keyof BasePreparedSeries>;
 
 export type PreparedSeries =
     | PreparedScatterSeries
