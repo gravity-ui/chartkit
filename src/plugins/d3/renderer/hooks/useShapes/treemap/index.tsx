@@ -36,7 +36,8 @@ export const TreemapSeriesShape = (props: ShapeProps) => {
             .selectAll('g')
             .data(leaves)
             .join('g')
-            .attr('transform', (d) => `translate(${d.x0},${d.y0})`);
+            .attr('transform', (d) => `translate(${d.x0},${d.y0})`)
+            .attr('cursor', series.cursor);
         const rectSelection = leaf
             .append('rect')
             .attr('id', (d) => d.id || d.name)

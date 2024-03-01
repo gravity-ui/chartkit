@@ -53,7 +53,8 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
                 return `translate(${x}, ${y})`;
             })
             .style('stroke', (pieData) => pieData.borderColor)
-            .style('stroke-width', (pieData) => pieData.borderWidth);
+            .style('stroke-width', (pieData) => pieData.borderWidth)
+            .attr('cursor', (pieData) => pieData.series.cursor);
 
         // Render halo appearing outside the hovered slice
         shapesSelection

@@ -85,6 +85,7 @@ export function prepareArea(args: PrepareAreaSeriesArgs) {
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
             },
             marker: prepareMarker(series, seriesOptions),
+            cursor: get(series, 'cursor', null),
         };
 
         return prepared;

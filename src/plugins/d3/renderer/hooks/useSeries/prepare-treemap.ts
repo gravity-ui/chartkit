@@ -24,7 +24,7 @@ export function prepareTreemap(args: PrepareTreemapSeriesArgs) {
         const name = s.name || '';
         const color = s.color || colorScale(name);
 
-        return {
+        const preparedSeries: PreparedTreemapSeries = {
             color,
             data: s.data,
             dataLabels: {
@@ -43,6 +43,9 @@ export function prepareTreemap(args: PrepareTreemapSeriesArgs) {
             },
             levels: s.levels,
             layoutAlgorithm: get(s, 'layoutAlgorithm', LayoutAlgorithm.Binary),
+            cursor: get(s, 'cursor', null),
         };
+
+        return preparedSeries;
     });
 }
