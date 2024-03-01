@@ -42,6 +42,7 @@ export function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[]
                 allowOverlap: series.dataLabels?.allowOverlap || false,
                 padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
             },
+            cursor: get(series, 'cursor', null),
         };
     }, []);
 }

@@ -58,7 +58,8 @@ export const LineSeriesShapes = (args: Args) => {
             .attr('stroke-linejoin', (d) => d.linecap)
             .attr('stroke-linecap', (d) => d.linecap)
             .attr('stroke-dasharray', (d) => getLineDashArray(d.dashStyle, d.width))
-            .attr('opacity', (d) => d.opacity);
+            .attr('opacity', (d) => d.opacity)
+            .attr('cursor', (d) => d.series.cursor);
 
         let dataLabels = preparedData.reduce((acc, d) => {
             return acc.concat(d.labels);

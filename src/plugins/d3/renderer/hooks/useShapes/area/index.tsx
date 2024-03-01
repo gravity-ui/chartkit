@@ -51,7 +51,8 @@ export const AreaSeriesShapes = (args: Args) => {
             .selectAll('shape')
             .data(preparedData)
             .join('g')
-            .attr('class', b('series'));
+            .attr('class', b('series'))
+            .attr('cursor', (d) => d.series.cursor);
 
         shapeSelection
             .append('path')

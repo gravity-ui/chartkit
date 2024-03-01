@@ -53,6 +53,7 @@ export function prepareBarYSeries(args: PrepareBarYSeriesArgs): PreparedSeries[]
             stacking: series.stacking,
             stackId: getSeriesStackId(series),
             dataLabels: prepareDataLabels(series),
+            cursor: get(series, 'cursor', null),
         };
     }, []);
 }
