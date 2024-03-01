@@ -39,7 +39,8 @@ export const BarYSeriesShapes = (args: Args) => {
             .attr('height', (d) => d.height)
             .attr('width', (d) => d.width)
             .attr('fill', (d) => d.color)
-            .attr('opacity', (d) => d.data.opacity || null);
+            .attr('opacity', (d) => d.data.opacity || null)
+            .attr('cursor', (d) => d.series.cursor);
 
         const dataLabels = preparedData.filter((d) => d.series.dataLabels.enabled);
         const labelSelection = svgElement
