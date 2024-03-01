@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.22.0](https://github.com/gravity-ui/chartkit/compare/v4.21.1...v4.22.0) (2024-03-01)
+
+
+### Features
+
+* **D3 plugin:** add cursor option for series ([#441](https://github.com/gravity-ui/chartkit/issues/441)) ([9aedc59](https://github.com/gravity-ui/chartkit/commit/9aedc59de0fa628cc04037740c350b3dc69e1c59))
+
 ## [4.21.1](https://github.com/gravity-ui/chartkit/compare/v4.21.0...v4.21.1) (2024-02-27)
 
 
