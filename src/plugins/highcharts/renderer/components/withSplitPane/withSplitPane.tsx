@@ -114,6 +114,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
     type WrapperComponentPropsWithForwardedRef = WrapperComponentProps & {
         current: any;
         forwardedRef: React.Ref<ComposedComponentProps>;
+        callback?: Highcharts.ChartCallbackFunction;
     };
 
     class WithSplitPane extends React.PureComponent<
@@ -200,6 +201,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
         private afterCreateCallback = (chart: Highcharts.Chart) => {
             chart.tooltip.splitTooltip = true;
             chart.tooltip.getTooltipContainer = this.getTooltipContainer;
+            this.props.callback?.(chart);
         };
 
         private setInitialPaneSize = (callback: () => void) => {
