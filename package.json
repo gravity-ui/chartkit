@@ -48,6 +48,7 @@
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
     "@gravity-ui/date-utils": "^2.1.0",
+    "@gravity-ui/i18n": "^1.0.0",
     "@gravity-ui/yagr": "^4.2.3",
     "afterframe": "^1.0.2",
     "d3": "^7.8.5",
@@ -60,7 +61,6 @@
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@gravity-ui/eslint-config": "^3.1.1",
-    "@gravity-ui/i18n": "^1.0.0",
     "@gravity-ui/prettier-config": "^1.1.0",
     "@gravity-ui/stylelint-config": "^4.0.1",
     "@gravity-ui/tsconfig": "^1.0.0",
