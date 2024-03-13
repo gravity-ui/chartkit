@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.22.1](https://github.com/gravity-ui/chartkit/compare/v4.22.0...v4.22.1) (2024-03-12)
+
+
+### Bug Fixes
+
+* fix chart config with params methods for Highcharts with split pane ([#447](https://github.com/gravity-ui/chartkit/issues/447)) ([5908995](https://github.com/gravity-ui/chartkit/commit/5908995d31fb5e2e5269bc424375d617be9c9c99))
+* fix chart config with params methods for Highcharts with split pane ([#448](https://github.com/gravity-ui/chartkit/issues/448)) ([5908995](https://github.com/gravity-ui/chartkit/commit/5908995d31fb5e2e5269bc424375d617be9c9c99))
+
 ## [4.22.0](https://github.com/gravity-ui/chartkit/compare/v4.21.1...v4.22.0) (2024-03-01)
 
 
