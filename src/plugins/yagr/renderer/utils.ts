@@ -172,7 +172,7 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
 
     if (config.tooltip?.show) {
         config.tooltip = config.tooltip || {};
-        config.tooltip.render = config.tooltip?.render || getRenderTooltip(timeZone);
+        config.tooltip.render = config.tooltip?.render || getRenderTooltip(data);
 
         if (!config.tooltip.className) {
             // "className" property prevent default yagr styles adding
