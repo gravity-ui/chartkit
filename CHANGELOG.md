@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.23.0](https://github.com/gravity-ui/chartkit/compare/v4.22.1...v4.23.0) (2024-03-14)
+
+
+### Features
+
+* **Yagr plugin:** add `legendColorKey` property to series options ([#440](https://github.com/gravity-ui/chartkit/issues/440)) ([dc9b438](https://github.com/gravity-ui/chartkit/commit/dc9b438357fc69efa92e569b469c67dbe15fe3c3))
+
 ## [4.22.1](https://github.com/gravity-ui/chartkit/compare/v4.22.0...v4.22.1) (2024-03-12)
 
 
