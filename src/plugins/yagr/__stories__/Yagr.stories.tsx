@@ -10,7 +10,7 @@ import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
 import type {ChartKitRef} from '../../../types';
 
-import {getNewConfig, line10} from './mocks/line10';
+import {getNewConfig, line10, line10WithGrafanaStyle} from './mocks/line10';
 
 import '@gravity-ui/yagr/dist/index.css';
 
@@ -132,6 +132,23 @@ const CustomTooltipImpl: Story<any> = () => {
     );
 };
 
+const AreaTemplate: Story<any> = () => {
+    const [shown, setShown] = React.useState(false);
+    const chartkitRef = React.useRef<ChartKitRef>();
+
+    if (!shown) {
+        settings.set({plugins: [YagrPlugin]});
+        return <Button onClick={() => setShown(true)}>Show chart</Button>;
+    }
+
+    return (
+        <div style={{height: 300, width: '100%'}}>
+            <ChartKit ref={chartkitRef} id="1" type="yagr" data={line10WithGrafanaStyle} />
+        </div>
+    );
+};
+
 export const Line = LineTemplate.bind({});
 export const Updates = UpdatesTemplate.bind({});
 export const CustomTooltip = CustomTooltipImpl.bind({});
+export const Area = AreaTemplate.bind({});

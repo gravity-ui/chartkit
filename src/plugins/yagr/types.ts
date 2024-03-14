@@ -1,4 +1,4 @@
-import type {MinimalValidConfig, RawSerieData, YagrConfig} from '@gravity-ui/yagr';
+import type {MinimalValidConfig, RawSerieData, SeriesOptions, YagrConfig} from '@gravity-ui/yagr';
 import type Yagr from '@gravity-ui/yagr';
 
 import {ChartKitProps} from 'src/types';
@@ -15,9 +15,20 @@ export type YagrWidgetProps = ChartKitProps<'yagr'> & {
     id: string;
 };
 
+export type YagrSeriesData<T = Omit<SeriesOptions, 'type'>> = RawSerieData<T> & {
+    /**
+     * Determines what data value should be used to get a color for tooltip series. Does not work in case of using custom tooltip rendered via `tooltip` property.
+     * - `lineColor` indicates that lineColor property should be used
+     * - `color` indicates that color property should be used
+     *
+     * @default 'color'
+     */
+    legendColorKey?: 'color' | 'lineColor';
+};
+
 export type YagrWidgetData = {
     data: {
-        graphs: RawSerieData[];
+        graphs: YagrSeriesData[];
         timeline: number[];
         /**
          * Allow to setup timezone for X axis and tooltip's header.
