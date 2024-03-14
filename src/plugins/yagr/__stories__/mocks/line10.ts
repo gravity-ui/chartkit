@@ -1,4 +1,4 @@
-import type {AreaSeriesOptions, RawSerieData, YagrWidgetData} from '../../types';
+import type {AreaSeriesOptions, YagrSeriesData, YagrWidgetData} from '../../types';
 
 export const line10: YagrWidgetData = {
     data: {
@@ -118,13 +118,14 @@ function colorHexToRGBA(htmlColor: string, opacity: number) {
     return `rgba(${[red, green, blue, opacity].join(',')})`;
 }
 
-const graphs: RawSerieData<AreaSeriesOptions>[] = [
+const graphs: YagrSeriesData<AreaSeriesOptions>[] = [
     {
         id: '0',
         name: 'Serie 1',
         type: 'area',
         color: colorHexToRGBA(colors[0], 0.1),
         lineColor: colors[0],
+        legendColorKey: 'lineColor',
         data: [45, 52, 89, 72, 39, 49, 82, 59, 36, 5],
     },
     {
@@ -133,6 +134,7 @@ const graphs: RawSerieData<AreaSeriesOptions>[] = [
         type: 'area',
         color: colorHexToRGBA(colors[1], 0.1),
         lineColor: colors[1],
+        legendColorKey: 'lineColor',
         data: [37, 6, 51, 10, 65, 35, 72, 0, 94, 54],
     },
     {
@@ -141,6 +143,7 @@ const graphs: RawSerieData<AreaSeriesOptions>[] = [
         type: 'area',
         color: colorHexToRGBA(colors[2], 0.1),
         lineColor: colors[2],
+        legendColorKey: 'lineColor',
         data: [26, 54, 15, 40, 43, 18, 65, 46, 51, 33],
     },
 ];

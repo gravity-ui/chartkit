@@ -1,6 +1,6 @@
 import {dateTime} from '@gravity-ui/date-utils';
 
-import type {TooltipRenderOptions, TooltipRow, ValueFormatter} from '../../types';
+import type {TooltipRenderOptions, TooltipRow, ValueFormatter, YagrWidgetData} from '../../types';
 
 import {formatTooltip} from './tooltip';
 import type {TooltipData, TooltipLine} from './types';
@@ -13,71 +13,98 @@ const calcOption = <T>(d: T | {[key in string]: T} | undefined) => {
         : d;
 };
 
+const getSeriesColorProperty = (args: {
+    data: TooltipRenderOptions;
+    userData: YagrWidgetData['data'];
+    row: TooltipRow;
+    rowIndex: number;
+}) => {
+    const {data, userData, row, rowIndex} = args;
+    const userSeries = userData.graphs[rowIndex];
+    const lineColor = data.yagr.getSeriesById(row.id)?.lineColor;
+    let seriesColor = row.color;
+
+    switch (userSeries?.legendColorKey) {
+        case 'lineColor': {
+            if (lineColor) {
+                seriesColor = lineColor;
+            }
+            break;
+        }
+        case 'color':
+        default: {
+            seriesColor = row.color;
+        }
+    }
+
+    return seriesColor;
+};
+
 /*
  * Default tooltip renderer.
  * Adapter between native Yagr tooltip config and ChartKit
  * tooltip renderer.
  */
-export const getRenderTooltip = (timeZone?: string) => (data: TooltipRenderOptions) => {
-    const cfg = data.yagr.config;
-    const timeMultiplier = cfg.chart.timeMultiplier || 1;
-    const opts = data.options;
-    const {x, state} = data;
+export const getRenderTooltip =
+    (userData: YagrWidgetData['data']) => (data: TooltipRenderOptions) => {
+        const {timeZone} = userData;
+        const cfg = data.yagr.config;
+        const timeMultiplier = cfg.chart.timeMultiplier || 1;
+        const opts = data.options;
+        const {x, state} = data;
 
-    let sumTotal = 0;
-    const rows = Object.values(data.scales).reduce((acc, scale) => {
-        sumTotal += scale.sum || 0;
-        return acc.concat(scale.rows);
-    }, [] as TooltipRow[]);
+        let sumTotal = 0;
+        const rows = Object.values(data.scales).reduce((acc, scale) => {
+            sumTotal += scale.sum || 0;
+            return acc.concat(scale.rows);
+        }, [] as TooltipRow[]);
+        const lines = rows.length;
+        const sum = calcOption(opts.sum);
 
-    const lines = rows.length;
-    const sum = calcOption(opts.sum);
+        const maxLines = calcOption<number>(opts.maxLines);
+        const valueFormatter = calcOption<ValueFormatter>(opts.value);
+        // eslint-disable-next-line no-nested-ternary
+        const hiddenRowsNumber = state.pinned
+            ? undefined
+            : lines > maxLines
+              ? Math.abs(maxLines - lines)
+              : undefined;
 
-    const maxLines = calcOption<number>(opts.maxLines);
-    const valueFormatter = calcOption<ValueFormatter>(opts.value);
-    // eslint-disable-next-line no-nested-ternary
-    const hiddenRowsNumber = state.pinned
-        ? undefined
-        : lines > maxLines
-          ? Math.abs(maxLines - lines)
-          : undefined;
+        const hiddenRowsSum = hiddenRowsNumber
+            ? valueFormatter(
+                  rows
+                      .slice(-hiddenRowsNumber)
+                      .reduce((acc, {originalValue}) => acc + (originalValue || 0), 0),
+              )
+            : undefined;
+        const tooltipFormatOptions: TooltipData = {
+            activeRowAlwaysFirstInTooltip: rows.length > 1,
+            tooltipHeader: dateTime({input: x / timeMultiplier, timeZone}).format(
+                'DD MMMM YYYY HH:mm:ss',
+            ),
+            shared: true,
+            lines: rows.map(
+                (row, i) =>
+                    ({
+                        ...row,
+                        seriesName: row.name || 'Serie ' + (i + 1),
+                        seriesColor: getSeriesColorProperty({data, userData, row, rowIndex: i}),
+                        selectedSeries: row.active,
+                        seriesIdx: row.seriesIdx,
+                        percentValue:
+                            typeof row.transformed === 'number' ? row.transformed.toFixed(1) : '',
+                    }) as TooltipLine,
+            ),
+            withPercent: calcOption<boolean>(opts.percent),
+            hiddenRowsNumber: hiddenRowsNumber as number,
+            hiddenRowsSum,
+        };
 
-    const hiddenRowsSum = hiddenRowsNumber
-        ? valueFormatter(
-              rows
-                  .slice(-hiddenRowsNumber)
-                  .reduce((acc, {originalValue}) => acc + (originalValue || 0), 0),
-          )
-        : undefined;
+        if (sum) {
+            tooltipFormatOptions.sum = valueFormatter(sumTotal);
+        }
 
-    const tooltipFormatOptions: TooltipData = {
-        activeRowAlwaysFirstInTooltip: rows.length > 1,
-        tooltipHeader: dateTime({input: x / timeMultiplier, timeZone}).format(
-            'DD MMMM YYYY HH:mm:ss',
-        ),
-        shared: true,
-        lines: rows.map(
-            (row, i) =>
-                ({
-                    ...row,
-                    seriesName: row.name || 'Serie ' + (i + 1),
-                    seriesColor: row.color,
-                    selectedSeries: row.active,
-                    seriesIdx: row.seriesIdx,
-                    percentValue:
-                        typeof row.transformed === 'number' ? row.transformed.toFixed(1) : '',
-                }) as TooltipLine,
-        ),
-        withPercent: calcOption<boolean>(opts.percent),
-        hiddenRowsNumber: hiddenRowsNumber as number,
-        hiddenRowsSum,
+        return formatTooltip(tooltipFormatOptions, {
+            lastVisibleRowIndex: state.pinned ? rows.length - 1 : maxLines - 1,
+        });
     };
-
-    if (sum) {
-        tooltipFormatOptions.sum = valueFormatter(sumTotal);
-    }
-
-    return formatTooltip(tooltipFormatOptions, {
-        lastVisibleRowIndex: state.pinned ? rows.length - 1 : maxLines - 1,
-    });
-};
