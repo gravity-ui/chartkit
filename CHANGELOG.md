@@ -1,5 +1,24 @@
 # Changelog
 
+## [5.2.0](https://github.com/gravity-ui/chartkit/compare/v5.1.0...v5.2.0) (2024-03-14)
+
+
+### Features
+
+* **D3 plugin:** add cursor option for series ([#441](https://github.com/gravity-ui/chartkit/issues/441)) ([32d4e6f](https://github.com/gravity-ui/chartkit/commit/32d4e6f8aa8c00f47d3ae33be6d45571a3429069))
+* **D3 plugin:** add cursor option for series ([#444](https://github.com/gravity-ui/chartkit/issues/444)) ([32d4e6f](https://github.com/gravity-ui/chartkit/commit/32d4e6f8aa8c00f47d3ae33be6d45571a3429069))
+* **Yagr plugin:** add `legendColorKey` property to series options ([#440](https://github.com/gravity-ui/chartkit/issues/440)) ([ae6a00f](https://github.com/gravity-ui/chartkit/commit/ae6a00f5751047c7509d8942de28a517d375e255))
+
+
+### Bug Fixes
+
+* add tslib to dependencies ([#446](https://github.com/gravity-ui/chartkit/issues/446)) ([5108bd5](https://github.com/gravity-ui/chartkit/commit/5108bd5b2deab8b36649797fe95bbba69304b37f))
+* **D3 plugin:** fix click event handler ([#436](https://github.com/gravity-ui/chartkit/issues/436)) ([71801cf](https://github.com/gravity-ui/chartkit/commit/71801cf59b9a51191b310652062e6877d5bb06f3))
+* **D3 plugin:** fix click event handler ([#443](https://github.com/gravity-ui/chartkit/issues/443)) ([71801cf](https://github.com/gravity-ui/chartkit/commit/71801cf59b9a51191b310652062e6877d5bb06f3))
+* **d3:** fix click event handler ([71801cf](https://github.com/gravity-ui/chartkit/commit/71801cf59b9a51191b310652062e6877d5bb06f3))
+* fix chart config with params methods for Highcharts with split pane ([#447](https://github.com/gravity-ui/chartkit/issues/447)) ([7a7b2da](https://github.com/gravity-ui/chartkit/commit/7a7b2dae08b4eb024a3e7f3b705db97ef4a536b2))
+* move @gravity-ui/i18n to dependencies ([#450](https://github.com/gravity-ui/chartkit/issues/450)) ([8853135](https://github.com/gravity-ui/chartkit/commit/8853135a561061bb0d30a85b70a8c0dd43d5506a))
+
 ## [5.1.0](https://github.com/gravity-ui/chartkit/compare/v5.0.0...v5.1.0) (2024-02-20)
 
 
