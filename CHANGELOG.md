@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.1](https://github.com/gravity-ui/chartkit/compare/v5.2.0...v5.2.1) (2024-03-15)
+
+
+### Bug Fixes
+
+* **D3 plugin:** fix chart reflow ([#452](https://github.com/gravity-ui/chartkit/issues/452)) ([601d603](https://github.com/gravity-ui/chartkit/commit/601d60364354268d4016fcea876c814e0bec3bd5))
+
 ## [5.2.0](https://github.com/gravity-ui/chartkit/compare/v5.1.0...v5.2.0) (2024-03-14)
 
 
