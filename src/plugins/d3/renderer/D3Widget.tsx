@@ -46,10 +46,10 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
             forwardedRef,
             () => ({
                 reflow() {
-                    handleResize();
+                    debuncedHandleResize();
                 },
             }),
-            [handleResize],
+            [debuncedHandleResize],
         );
 
         React.useEffect(() => {
@@ -66,8 +66,8 @@ const D3Widget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'
 
         React.useEffect(() => {
             // dimensions initialize
-            handleResize();
-        }, [handleResize]);
+            debuncedHandleResize();
+        }, [debuncedHandleResize]);
 
         if (validatedData.current !== data) {
             validateData(data);
