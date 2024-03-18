@@ -1,3 +1,7 @@
+.chartkit-d3 {
+    position: absolute;
+}
+
 .chartkit-d3-axis {
     & .domain {
         stroke: var(--g-color-line-generic-active);
