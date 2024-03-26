@@ -1413,8 +1413,9 @@ function drillOnClick(event, {options, chartType}) {
                     chartType === 'scatter' ? drillDownFilter - 180 * 60 * 1000 : drillDownFilter;
             }
 
+            const dateTimeFormat = get(options.drillDownData, 'dateFormat', 'YYYY-MM-DD');
             return isDateTime
-                ? dateTime({input: drillDownFilter}).format('YYYY-MM-DD')
+                ? dateTime({input: drillDownFilter, timeZone: 'UTC'}).format(dateTimeFormat)
                 : drillDownFilter;
         }
 
