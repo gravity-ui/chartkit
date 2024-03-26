@@ -1392,27 +1392,32 @@ function drillOnClick(event, {options, chartType}) {
 
     const drillDownFilters = filters.map((filter, index) => {
         if (level === index) {
+            const point = event.point;
+            const series = point.series;
+
             if (isColorDrillDown) {
-                return event.point.series.name;
+                return series.name;
             }
 
             let drillDownFilter =
-                event.point.options.drillDownFilterValue ||
-                event.point.category ||
-                event.point.name;
+                point.options.drillDownFilterValue || point.category || point.name;
 
             const isDateTime =
                 chartType !== 'pie' &&
-                event.point.series.userOptions.type !== 'pie' &&
-                event.point.series.xAxis.options.type === 'datetime';
+                series.userOptions.type !== 'pie' &&
+                series.xAxis.options.type === 'datetime';
 
             if (isDateTime) {
                 drillDownFilter =
                     chartType === 'scatter' ? drillDownFilter - 180 * 60 * 1000 : drillDownFilter;
             }
 
+            const dateTimeFormat = get(options.drillDownData, 'dateFormat', 'YYYY-MM-DD');
+            const useUTC = get(series, 'chart.time.useUTC');
+            const dateTimeOptions = useUTC ? {timeZone: 'UTC'} : {};
+
             return isDateTime
-                ? dateTime({input: drillDownFilter}).format('YYYY-MM-DD')
+                ? dateTime({input: drillDownFilter, ...dateTimeOptions}).format(dateTimeFormat)
                 : drillDownFilter;
         }
 
