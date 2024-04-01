@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.2](https://github.com/gravity-ui/chartkit/compare/v5.2.1...v5.2.2) (2024-03-26)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** add dateFormat option for drillDown handler ([#456](https://github.com/gravity-ui/chartkit/issues/456)) ([ff016f7](https://github.com/gravity-ui/chartkit/commit/ff016f799806545ec2bd17ae2678ea85e04d296c))
+
 ## [5.2.1](https://github.com/gravity-ui/chartkit/compare/v5.2.0...v5.2.1) (2024-03-15)
 
 
