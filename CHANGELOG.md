@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.1](https://github.com/gravity-ui/chartkit/compare/v5.3.0...v5.3.1) (2024-04-11)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix `getXAxisThresholdValue` helper ([#463](https://github.com/gravity-ui/chartkit/issues/463)) ([b5b112c](https://github.com/gravity-ui/chartkit/commit/b5b112c87bf676c88d2de1c48bfa00a95528a791))
+* **Highcharts plugin:** fix getXAxisThresholdValue helper ([b5b112c](https://github.com/gravity-ui/chartkit/commit/b5b112c87bf676c88d2de1c48bfa00a95528a791))
+
 ## [5.3.0](https://github.com/gravity-ui/chartkit/compare/v5.2.2...v5.3.0) (2024-04-09)
 
 
