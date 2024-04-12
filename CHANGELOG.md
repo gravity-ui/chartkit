@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.23.3](https://github.com/gravity-ui/chartkit/compare/v4.23.2...v4.23.3) (2024-04-12)
+
+
+### Bug Fixes
+
+* **settings:** fix merge logic for plugins update in settings ([#465](https://github.com/gravity-ui/chartkit/issues/465)) ([#467](https://github.com/gravity-ui/chartkit/issues/467)) ([cca3d94](https://github.com/gravity-ui/chartkit/commit/cca3d941164815bfd6519dd905bde5ccc2ceb31c))
+
 ## [4.23.2](https://github.com/gravity-ui/chartkit/compare/v4.23.1...v4.23.2) (2024-03-26)
 
 
