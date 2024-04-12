@@ -1,11 +1,12 @@
 import {configure} from '@gravity-ui/uikit';
 import get from 'lodash/get';
-import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
 
 import {i18nFactory} from '../../i18n';
 import type {ChartKitHolidays, ChartKitLang, ChartKitPlugin} from '../../types';
 
 import {EventEmitter} from './eventEmitter';
+import {mergeSettingStrategy} from './mergeSettingStrategy';
 
 interface Settings {
     plugins: ChartKitPlugin[];
@@ -54,7 +55,7 @@ class ChartKitSettings {
     set(updates: Partial<Settings>) {
         const filteredUpdates = removeUndefinedValues(updates);
 
-        this.settings = merge(this.settings, filteredUpdates);
+        this.settings = mergeWith(this.settings, filteredUpdates, mergeSettingStrategy);
 
         if (filteredUpdates.lang) {
             const lang = filteredUpdates.lang || this.get('lang');
