@@ -3,7 +3,6 @@
 import {dateTime} from '@gravity-ui/date-utils';
 import Highcharts from 'highcharts';
 import clamp from 'lodash/clamp';
-import debounce from 'lodash/debounce';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
@@ -1523,7 +1522,6 @@ export function prepareConfig(data, options, isMobile, holidays) {
     const chartType = get(options, 'highcharts.chart.type') || 'line';
     const {entryId} = options;
     const testClassName = `data-qa-chartkit-tooltip-entry-${entryId}`;
-    const debouncedAdjustDonutFontSize = debounce(adjustDonutFontSize, 100);
     const params = merge(getParamsByCustomType(options.type, options), defaultOptions, {
         _config: options,
         chart: {
@@ -1627,12 +1625,7 @@ export function prepareConfig(data, options, isMobile, holidays) {
                             const chartSeries = chart.series[0];
                             const innerWidth = chartSeries?.center[3];
                             if (innerWidth) {
-                                debouncedAdjustDonutFontSize(
-                                    chart,
-                                    chartSeries,
-                                    innerWidth,
-                                    totals,
-                                );
+                                adjustDonutFontSize(chart, chartSeries, innerWidth, totals);
                             }
                         },
                     }),
