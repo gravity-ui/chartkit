@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.3](https://github.com/gravity-ui/chartkit/compare/v5.3.2...v5.3.3) (2024-04-15)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** Remove debounce to render the totals in a donut chart ([#469](https://github.com/gravity-ui/chartkit/issues/469)) ([4b808b8](https://github.com/gravity-ui/chartkit/commit/4b808b8be2555cc29575b8ce6193690ccda23abf))
+
 ## [5.3.2](https://github.com/gravity-ui/chartkit/compare/v5.3.1...v5.3.2) (2024-04-12)
 
 
