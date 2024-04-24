@@ -4,9 +4,9 @@ import {Popup, useVirtualElementRef} from '@gravity-ui/uikit';
 import type {Dispatch} from 'd3';
 import isNil from 'lodash/isNil';
 
-import type {TooltipDataChunk} from '../../../../../types/widget-data';
 import {block} from '../../../../../utils/cn';
-import type {PointerPosition, PreparedAxis, PreparedTooltip} from '../../hooks';
+import type {PreparedAxis, PreparedTooltip} from '../../hooks';
+import {useTooltip} from '../../hooks';
 
 import {DefaultContent} from './DefaultContent';
 
@@ -20,12 +20,11 @@ type TooltipProps = {
     svgContainer: SVGSVGElement | null;
     xAxis: PreparedAxis;
     yAxis: PreparedAxis;
-    hovered?: TooltipDataChunk[];
-    pointerPosition?: PointerPosition;
 };
 
 export const Tooltip = (props: TooltipProps) => {
-    const {tooltip, xAxis, yAxis, hovered, svgContainer, pointerPosition} = props;
+    const {tooltip, xAxis, yAxis, svgContainer, dispatcher} = props;
+    const {hovered, pointerPosition} = useTooltip({dispatcher, tooltip});
     const containerRect = svgContainer?.getBoundingClientRect() || {left: 0, top: 0};
     const left = (pointerPosition?.[0] || 0) + containerRect.left;
     const top = (pointerPosition?.[1] || 0) + containerRect.top;
@@ -47,7 +46,7 @@ export const Tooltip = (props: TooltipProps) => {
         window.dispatchEvent(new CustomEvent('scroll'));
     }, [left, top]);
 
-    return hovered ? (
+    return hovered?.length ? (
         <Popup
             className={b()}
             open={true}

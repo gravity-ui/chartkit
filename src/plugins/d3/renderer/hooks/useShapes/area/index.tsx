@@ -109,14 +109,14 @@ export const AreaSeriesShapes = (args: Args) => {
         const inactiveEnabled = inactiveOptions?.enabled;
 
         dispatcher.on('hover-shape.area', (data?: TooltipDataChunkArea[]) => {
-            const selected = data?.find((d) => d.series.type === 'area');
-            const selectedDataItem = selected?.data;
-            const selectedSeriesId = selected?.series?.id;
+            const selected = data?.filter((d) => d.series.type === 'area') || [];
+            const selectedDataItems = selected.map((d) => d.data);
+            const selectedSeriesIds = selected.map((d) => d.series?.id);
 
             shapeSelection.datum((d, index, list) => {
                 const elementSelection = select<BaseType, PreparedAreaData>(list[index]);
 
-                const hovered = Boolean(hoverEnabled && d.id === selectedSeriesId);
+                const hovered = Boolean(hoverEnabled && selectedSeriesIds.includes(d.id));
                 if (d.hovered !== hovered) {
                     d.hovered = hovered;
 
@@ -135,7 +135,9 @@ export const AreaSeriesShapes = (args: Args) => {
                     element: list[index],
                     state: inactiveOptions,
                     active: Boolean(
-                        !inactiveEnabled || !selectedSeriesId || selectedSeriesId === d.id,
+                        !inactiveEnabled ||
+                            !selectedSeriesIds.length ||
+                            selectedSeriesIds.includes(d.id),
                     ),
                     datum: d,
                 });
@@ -146,7 +148,9 @@ export const AreaSeriesShapes = (args: Args) => {
                     element: list[index],
                     state: inactiveOptions,
                     active: Boolean(
-                        !inactiveEnabled || !selectedSeriesId || selectedSeriesId === d.series.id,
+                        !inactiveEnabled ||
+                            !selectedSeriesIds.length ||
+                            selectedSeriesIds.includes(d.series.id),
                     ),
                     datum: d,
                 });
@@ -155,7 +159,7 @@ export const AreaSeriesShapes = (args: Args) => {
             markerSelection.datum((d, index, list) => {
                 const elementSelection = select<BaseType, MarkerData>(list[index]);
 
-                const hovered = Boolean(hoverEnabled && d.point.data === selectedDataItem);
+                const hovered = Boolean(hoverEnabled && selectedDataItems.includes(d.point.data));
                 if (d.hovered !== hovered) {
                     d.hovered = hovered;
                     elementSelection.attr('visibility', getMarkerVisibility(d));
@@ -169,8 +173,8 @@ export const AreaSeriesShapes = (args: Args) => {
                 if (d.point.series.marker.states.normal.enabled) {
                     const isActive = Boolean(
                         !inactiveEnabled ||
-                            !selectedSeriesId ||
-                            selectedSeriesId === d.point.series.id,
+                            !selectedSeriesIds.length ||
+                            selectedSeriesIds.includes(d.point.series.id),
                     );
                     setActiveState<MarkerData>({
                         element: list[index],

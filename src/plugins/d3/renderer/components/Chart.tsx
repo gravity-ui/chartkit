@@ -1,25 +1,22 @@
-import React from 'react';
+import React, {MouseEventHandler} from 'react';
+
+import {pointer} from 'd3';
+import throttle from 'lodash/throttle';
 
 import type {ChartKitWidgetData} from '../../../../types';
 import {block} from '../../../../utils/cn';
 import {getD3Dispatcher} from '../d3-dispatcher';
-import {
-    useAxisScales,
-    useChartDimensions,
-    useChartOptions,
-    useSeries,
-    useShapes,
-    useTooltip,
-} from '../hooks';
+import {useAxisScales, useChartDimensions, useChartOptions, useSeries, useShapes} from '../hooks';
 import {getWidthOccupiedByYAxis} from '../hooks/useChartDimensions/utils';
 import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
 import {getPreparedYAxis} from '../hooks/useChartOptions/y-axis';
+import {getClosestPoints} from '../utils/get-closest-data';
 
 import {AxisX} from './AxisX';
 import {AxisY} from './AxisY';
 import {Legend} from './Legend';
 import {Title} from './Title';
-import {Tooltip, TooltipTriggerArea} from './Tooltip';
+import {Tooltip} from './Tooltip';
 
 import './styles.scss';
 
@@ -80,7 +77,6 @@ export const Chart = (props: Props) => {
         xAxis,
         yAxis,
     });
-    const {hovered, pointerPosition} = useTooltip({dispatcher, tooltip});
     const {shapes, shapesData} = useShapes({
         boundsWidth,
         boundsHeight,
@@ -108,9 +104,34 @@ export const Chart = (props: Props) => {
     const boundsOffsetTop = chart.margin.top;
     const boundsOffsetLeft = chart.margin.left + getWidthOccupiedByYAxis({preparedAxis: yAxis});
 
+    console.log({shapesData});
+    const THROTTLE_DELAY = 50;
+    const handleMouseMove: MouseEventHandler<SVGSVGElement> = (event) => {
+        const [pointerX, pointerY] = pointer(event, svgRef.current);
+        const closest = getClosestPoints({
+            position: [pointerX - boundsOffsetLeft, pointerY - boundsOffsetTop],
+            shapesData,
+        });
+        dispatcher.call('hover-shape', event.target, closest, [pointerX, pointerY]);
+        // console.log({pointerX, pointerY, closestPoint});
+    };
+    const throttledHandleMouseMove = throttle(handleMouseMove, THROTTLE_DELAY);
+
+    const handleMouseLeave = () => {
+        throttledHandleMouseMove.cancel();
+        dispatcher.call('hover-shape', {}, undefined);
+    };
+
     return (
         <React.Fragment>
-            <svg ref={svgRef} className={b()} width={width} height={height}>
+            <svg
+                ref={svgRef}
+                className={b()}
+                width={width}
+                height={height}
+                onMouseMove={throttledHandleMouseMove}
+                onMouseLeave={handleMouseLeave}
+            >
                 {title && <Title {...title} chartWidth={width} />}
                 <g
                     width={boundsWidth}
@@ -136,15 +157,6 @@ export const Chart = (props: Props) => {
                         </React.Fragment>
                     )}
                     {shapes}
-                    {tooltip?.enabled && Boolean(shapesData.length) && (
-                        <TooltipTriggerArea
-                            boundsWidth={boundsWidth}
-                            boundsHeight={boundsHeight}
-                            dispatcher={dispatcher}
-                            shapesData={shapesData}
-                            svgContainer={svgRef.current}
-                        />
-                    )}
                 </g>
                 {preparedLegend.enabled && (
                     <Legend
@@ -163,8 +175,6 @@ export const Chart = (props: Props) => {
                 svgContainer={svgRef.current}
                 xAxis={xAxis}
                 yAxis={yAxis[0]}
-                hovered={hovered}
-                pointerPosition={pointerPosition}
             />
         </React.Fragment>
     );

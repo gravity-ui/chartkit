@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {arc, color, line as lineGenerator, pointer, select} from 'd3';
+import {arc, color, line as lineGenerator, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum} from 'd3';
 import get from 'lodash/get';
 
@@ -158,40 +158,20 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
         const eventName = `hover-shape.pie`;
         const hoverOptions = get(seriesOptions, 'pie.states.hover');
         const inactiveOptions = get(seriesOptions, 'pie.states.inactive');
-        svgElement
-            .on('mousemove', (e) => {
-                const currentSegment = getSelectedSegment(e.target);
-
-                if (currentSegment) {
-                    const data: TooltipDataChunkPie = {
-                        series: {
-                            id: currentSegment.series.id,
-                            type: 'pie',
-                            name: currentSegment.series.name,
-                        },
-                        data: currentSegment.series.data,
-                    };
-
-                    dispatcher.call('hover-shape', {}, [data], pointer(e, svgContainer));
-                }
-            })
-            .on('mouseleave', () => {
-                dispatcher.call('hover-shape', {}, undefined);
-            })
-            .on('click', (e) => {
-                const selectedSegment = getSelectedSegment(e.target);
-                if (selectedSegment) {
-                    dispatcher.call(
-                        'click-chart',
-                        undefined,
-                        {point: selectedSegment.series.data, series: selectedSegment.series},
-                        e,
-                    );
-                }
-            });
+        svgElement.on('click', (e) => {
+            const selectedSegment = getSelectedSegment(e.target);
+            if (selectedSegment) {
+                dispatcher.call(
+                    'click-chart',
+                    undefined,
+                    {point: selectedSegment.series.data, series: selectedSegment.series},
+                    e,
+                );
+            }
+        });
 
         dispatcher.on(eventName, (data?: TooltipDataChunkPie[]) => {
-            const selectedSeriesId = data?.[0].series.id;
+            const selectedSeriesId = data?.[0]?.series?.id;
             const hoverEnabled = hoverOptions?.enabled;
             const inactiveEnabled = inactiveOptions?.enabled;
 

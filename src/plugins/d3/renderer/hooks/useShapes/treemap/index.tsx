@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {color, pointer, select} from 'd3';
+import {color, select} from 'd3';
 import type {BaseType, Dispatch, HierarchyRectangularNode} from 'd3';
 import get from 'lodash/get';
 
@@ -72,28 +72,15 @@ export const TreemapSeriesShape = (props: ShapeProps) => {
         const eventName = `hover-shape.treemap`;
         const hoverOptions = get(seriesOptions, 'treemap.states.hover');
         const inactiveOptions = get(seriesOptions, 'treemap.states.inactive');
-        svgElement
-            .on('mousemove', (e) => {
-                const datum = getSelectedPart(e.target);
-                dispatcher.call(
-                    'hover-shape',
-                    {},
-                    [{data: datum.data, series}],
-                    pointer(e, svgContainer),
-                );
-            })
-            .on('mouseleave', () => {
-                dispatcher.call('hover-shape', {}, undefined);
-            })
-            .on('click', (e) => {
-                const datum = getSelectedPart(e.target);
-                dispatcher.call('click-chart', undefined, {point: datum.data, series}, e);
-            });
+        svgElement.on('click', (e) => {
+            const datum = getSelectedPart(e.target);
+            dispatcher.call('click-chart', undefined, {point: datum.data, series}, e);
+        });
 
         dispatcher.on(eventName, (data?: TooltipDataChunkTreemap[]) => {
             const hoverEnabled = hoverOptions?.enabled;
             const inactiveEnabled = inactiveOptions?.enabled;
-            const hoveredData = data?.[0].data;
+            const hoveredData = data?.[0]?.data;
             rectSelection.datum((d, index, list) => {
                 const currentRect = select<BaseType, HierarchyRectangularNode<TreemapSeriesData>>(
                     list[index],

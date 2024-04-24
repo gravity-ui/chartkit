@@ -185,6 +185,7 @@ export const useShapes = (args: Args) => {
                                 svgContainer={svgContainer}
                             />,
                         );
+                        shapesData.push(...preparedData);
                     }
                     break;
                 }
@@ -203,6 +204,7 @@ export const useShapes = (args: Args) => {
                             svgContainer={svgContainer}
                         />,
                     );
+                    shapesData.push(...preparedData);
                     break;
                 }
                 case 'treemap': {
@@ -222,6 +224,7 @@ export const useShapes = (args: Args) => {
                             svgContainer={svgContainer}
                         />,
                     );
+                    shapesData.push(preparedData as unknown as ShapeData);
                 }
             }
             return acc;

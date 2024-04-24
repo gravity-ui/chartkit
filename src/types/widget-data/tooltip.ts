@@ -57,14 +57,15 @@ export type TooltipDataChunkTreemap<T = any> = {
     series: TreemapSeries<T>;
 };
 
-export type TooltipDataChunk<T = any> =
+export type TooltipDataChunk<T = any> = (
     | TooltipDataChunkBarX<T>
     | TooltipDataChunkBarY<T>
     | TooltipDataChunkPie<T>
     | TooltipDataChunkScatter<T>
     | TooltipDataChunkLine<T>
     | TooltipDataChunkArea<T>
-    | TooltipDataChunkTreemap<T>;
+    | TooltipDataChunkTreemap<T>
+) & {closest?: boolean};
 
 export type ChartKitWidgetTooltip<T = any> = {
     enabled?: boolean;
