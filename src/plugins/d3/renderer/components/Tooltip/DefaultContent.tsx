@@ -8,9 +8,12 @@ import type {
     TooltipDataChunk,
     TreemapSeriesData,
 } from '../../../../../types';
+import {block} from '../../../../../utils/cn';
 import {formatNumber} from '../../../../shared';
 import type {PreparedAxis, PreparedPieSeries} from '../../hooks';
 import {getDataCategoryValue} from '../../utils';
+
+const b = block('d3-tooltip');
 
 type Props = {
     hovered: TooltipDataChunk[];
@@ -47,54 +50,67 @@ const getXRowData = (xAxis: PreparedAxis, data: ChartKitWidgetSeriesData) =>
 const getYRowData = (yAxis: PreparedAxis, data: ChartKitWidgetSeriesData) =>
     getRowData('y', yAxis, data);
 
+const getMeasureValue = (data: TooltipDataChunk[], xAxis: PreparedAxis, yAxis: PreparedAxis) => {
+    if (data.every((item) => item.series.type === 'pie' || item.series.type === 'treemap')) {
+        return null;
+    }
+
+    if (data.some((item) => item.series.type === 'bar-y')) {
+        return getYRowData(yAxis, data[0]?.data);
+    }
+
+    return getXRowData(xAxis, data[0]?.data);
+};
+
 export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
+    const measureValue = getMeasureValue(hovered, xAxis, yAxis);
+
     return (
         <>
-            {hovered.map(({data, series}, i) => {
-                const id = get(series, 'id', i);
+            {measureValue && <div>{measureValue}</div>}
+            {hovered.map(({data, series, closest}, i) => {
+                const id = `${get(series, 'id')}_${i}`;
+                const color = get(series, 'color');
 
                 switch (series.type) {
                     case 'scatter':
                     case 'line':
                     case 'area':
                     case 'bar-x': {
-                        const xRow = getXRowData(xAxis, data);
-                        const yRow = getYRowData(yAxis, data);
-
+                        const value = (
+                            <React.Fragment>
+                                {series.name}: {getYRowData(yAxis, data)}
+                            </React.Fragment>
+                        );
                         return (
-                            <div key={id}>
-                                <div>{xRow}</div>
-                                <div>
-                                    <span>
-                                        <b>{series.name}</b>: {yRow}
-                                    </span>
-                                </div>
+                            <div key={id} className={b('content-row')}>
+                                <div className={b('color')} style={{backgroundColor: color}} />
+                                <div>{closest ? <b>{value}</b> : <span>{value}</span>}</div>
                             </div>
                         );
                     }
                     case 'bar-y': {
-                        const xRow = getXRowData(xAxis, data);
-                        const yRow = getYRowData(yAxis, data);
-
+                        const value = (
+                            <React.Fragment>
+                                {series.name}: {getXRowData(xAxis, data)}
+                            </React.Fragment>
+                        );
                         return (
-                            <div key={id}>
-                                <div>{yRow}</div>
-                                <div>
-                                    <span>
-                                        <b>{series.name}</b>: {xRow}
-                                    </span>
-                                </div>
+                            <div key={id} className={b('content-row')}>
+                                <div className={b('color')} style={{backgroundColor: color}} />
+                                <div>{closest ? <b>{value}</b> : <span>{value}</span>}</div>
                             </div>
                         );
                     }
                     case 'pie':
                     case 'treemap': {
-                        const pieSeriesData = data as PreparedPieSeries | TreemapSeriesData;
+                        const seriesData = data as PreparedPieSeries | TreemapSeriesData;
 
                         return (
-                            <div key={id}>
-                                <span>{pieSeriesData.name || pieSeriesData.id}&nbsp;</span>
-                                <span>{pieSeriesData.value}</span>
+                            <div key={id} className={b('content-row')}>
+                                <div className={b('color')} style={{backgroundColor: color}} />
+                                <span>{seriesData.name || seriesData.id}&nbsp;</span>
+                                <span>{seriesData.value}</span>
                             </div>
                         );
                     }

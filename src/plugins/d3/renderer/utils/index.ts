@@ -27,8 +27,6 @@ const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie', 'treemap'];
 
 export type AxisDirection = 'x' | 'y';
 
-export type NodeWithD3Data<T = unknown> = Element & {__data__: T};
-
 type UnknownSeries = {type: ChartKitWidgetSeries['type']; data: unknown};
 
 /**
@@ -250,12 +248,3 @@ export function getClosestPointsRange(axis: PreparedAxis, points: AxisDomain[]) 
 
     return (points[1] as number) - (points[0] as number);
 }
-
-// https://d3js.org/d3-selection/joining#selection_data
-export const isNodeContainsD3Data = (node?: Element | null): node is NodeWithD3Data => {
-    return Boolean(node && '__data__' in node);
-};
-
-export const extractD3DataFromNode = <T extends unknown>(node: NodeWithD3Data<T>) => {
-    return node.__data__;
-};

@@ -55,7 +55,6 @@ type Args = {
     seriesOptions: PreparedSeriesOptions;
     xAxis: PreparedAxis;
     yAxis: PreparedAxis[];
-    svgContainer: SVGSVGElement | null;
     xScale?: ChartScale;
     yScale?: ChartScale;
 };
@@ -71,7 +70,6 @@ export const useShapes = (args: Args) => {
         xScale,
         yAxis,
         yScale,
-        svgContainer,
     } = args;
 
     const shapesComponents = React.useMemo(() => {
@@ -182,9 +180,9 @@ export const useShapes = (args: Args) => {
                                 dispatcher={dispatcher}
                                 preparedData={preparedData}
                                 seriesOptions={seriesOptions}
-                                svgContainer={svgContainer}
                             />,
                         );
+                        shapesData.push(...preparedData);
                     }
                     break;
                 }
@@ -200,9 +198,9 @@ export const useShapes = (args: Args) => {
                             dispatcher={dispatcher}
                             preparedData={preparedData}
                             seriesOptions={seriesOptions}
-                            svgContainer={svgContainer}
                         />,
                     );
+                    shapesData.push(...preparedData);
                     break;
                 }
                 case 'treemap': {
@@ -219,9 +217,9 @@ export const useShapes = (args: Args) => {
                             dispatcher={dispatcher}
                             preparedData={preparedData}
                             seriesOptions={seriesOptions}
-                            svgContainer={svgContainer}
                         />,
                     );
+                    shapesData.push(preparedData as unknown as ShapeData);
                 }
             }
             return acc;
@@ -238,7 +236,6 @@ export const useShapes = (args: Args) => {
         xScale,
         yAxis,
         yScale,
-        svgContainer,
     ]);
 
     return {shapes: shapesComponents.shapes, shapesData: shapesComponents.shapesData};

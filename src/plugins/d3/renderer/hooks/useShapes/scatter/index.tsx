@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {pointer, select} from 'd3';
+import {select} from 'd3';
 import type {BaseType, Dispatch} from 'd3';
 import get from 'lodash/get';
 
@@ -23,13 +23,12 @@ type ScatterSeriesShapeProps = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedScatterData[];
     seriesOptions: PreparedSeriesOptions;
-    svgContainer: SVGSVGElement | null;
 };
 
 const b = block('d3-scatter');
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
-    const {dispatcher, preparedData, seriesOptions, svgContainer} = props;
+    const {dispatcher, preparedData, seriesOptions} = props;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -56,39 +55,17 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
             return select<BaseType, PreparedScatterData>(element).datum();
         };
 
-        svgElement
-            .on('mousemove', (e) => {
-                const datum = getSelectedPoint(e.target);
-
-                if (!datum) {
-                    return;
-                }
-
-                const [pointerX, pointerY] = pointer(e, svgContainer);
-                const data: TooltipDataChunkScatter = {
-                    series: {
-                        id: datum.point.series.id,
-                        type: 'scatter',
-                        name: datum.point.series.name,
-                    },
-                    data: datum.point.data,
-                };
-                dispatcher.call('hover-shape', {}, [data], [pointerX, pointerY]);
-            })
-            .on('mouseleave', () => {
-                dispatcher.call('hover-shape', {}, undefined);
-            })
-            .on('click', (e) => {
-                const datum = getSelectedPoint(e.target);
-                if (datum) {
-                    dispatcher.call(
-                        'click-chart',
-                        undefined,
-                        {point: datum.point.data, series: datum.point.series},
-                        e,
-                    );
-                }
-            });
+        svgElement.on('click', (e) => {
+            const datum = getSelectedPoint(e.target);
+            if (datum) {
+                dispatcher.call(
+                    'click-chart',
+                    undefined,
+                    {point: datum.point.data, series: datum.point.series},
+                    e,
+                );
+            }
+        });
 
         const hoverEnabled = hoverOptions?.enabled;
         const inactiveEnabled = inactiveOptions?.enabled;
@@ -136,7 +113,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         return () => {
             dispatcher.on('hover-shape.scatter', null);
         };
-    }, [dispatcher, preparedData, seriesOptions, svgContainer]);
+    }, [dispatcher, preparedData, seriesOptions]);
 
     return <g ref={ref} className={b()} />;
 }
