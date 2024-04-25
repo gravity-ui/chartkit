@@ -1,7 +1,6 @@
-import {Delaunay, bisector} from 'd3';
+import {Delaunay, bisector, sort} from 'd3';
 import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
-import sortBy from 'lodash/sortBy';
 
 import {
     AreaSeries,
@@ -33,9 +32,10 @@ export type ShapePoint = {
 };
 
 function getClosestPointsByXValue(x: number, y: number, points: ShapePoint[]) {
-    const closestXIndex = bisector<ShapePoint, number>((p) => p.x).center(points, x);
-    const closestX = points[closestXIndex]?.x;
-    const closestPoints = sortBy(
+    const sorted = sort(points, (p) => p.x);
+    const closestXIndex = bisector<ShapePoint, number>((p) => p.x).center(sorted, x);
+    const closestX = sorted[closestXIndex]?.x;
+    const closestPoints = sort(
         points.filter((p) => p.x === closestX),
         (p) => p.y0,
     );
@@ -119,16 +119,28 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
             }
             case 'bar-y': {
                 const points = list as PreparedBarYData[];
-                const delaunayY = Delaunay.from(
-                    points,
-                    (_p) => 0,
-                    (p) => p.y,
+                const sorted = sort(points, (p) => p.y);
+                const closestYIndex = bisector<PreparedBarYData, number>((p) => p.y).center(
+                    sorted,
+                    pointerY,
                 );
-                const closestY = points[delaunayY.find(0, pointerY)]?.y;
-                const closestPoints = points.filter((p) => p.y === closestY);
-                const closestXIndex = closestPoints.findIndex(
-                    (p) => pointerX > p.x && pointerX < p.x + p.width,
+                const closestY = sorted[closestYIndex]?.y;
+                const closestPoints = sort(
+                    points.filter((p) => p.y === closestY),
+                    (p) => p.x,
                 );
+
+                let closestXIndex = -1;
+                const lastPoint = closestPoints[closestPoints.length - 1];
+                if (pointerX < closestPoints[0]?.x) {
+                    closestXIndex = 0;
+                } else if (lastPoint && pointerX > lastPoint.x + lastPoint.width) {
+                    closestXIndex = closestPoints.length - 1;
+                } else {
+                    closestXIndex = closestPoints.findIndex(
+                        (p) => pointerX > p.x && pointerX < p.x + p.width,
+                    );
+                }
                 const chunks = closestPoints.map((p, i) => ({
                     data: p.data,
                     series: p.series,
