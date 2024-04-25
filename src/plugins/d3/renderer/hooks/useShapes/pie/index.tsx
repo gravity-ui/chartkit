@@ -20,7 +20,6 @@ type PreparePieSeriesArgs = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedPieData[];
     seriesOptions: PreparedSeriesOptions;
-    svgContainer: SVGSVGElement | null;
 };
 
 export function getHaloVisibility(d: PieArcDatum<SegmentData>) {
@@ -29,7 +28,7 @@ export function getHaloVisibility(d: PieArcDatum<SegmentData>) {
 }
 
 export function PieSeriesShapes(args: PreparePieSeriesArgs) {
-    const {dispatcher, preparedData, seriesOptions, svgContainer} = args;
+    const {dispatcher, preparedData, seriesOptions} = args;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -243,7 +242,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
         return () => {
             dispatcher.on(eventName, null);
         };
-    }, [dispatcher, preparedData, seriesOptions, svgContainer]);
+    }, [dispatcher, preparedData, seriesOptions]);
 
     return <g ref={ref} className={b()} style={{zIndex: 9}} />;
 }

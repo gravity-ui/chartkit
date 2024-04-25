@@ -17,11 +17,10 @@ type ShapeProps = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedTreemapData;
     seriesOptions: PreparedSeriesOptions;
-    svgContainer: SVGSVGElement | null;
 };
 
 export const TreemapSeriesShape = (props: ShapeProps) => {
-    const {dispatcher, preparedData, seriesOptions, svgContainer} = props;
+    const {dispatcher, preparedData, seriesOptions} = props;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -126,7 +125,7 @@ export const TreemapSeriesShape = (props: ShapeProps) => {
         return () => {
             dispatcher.on(eventName, null);
         };
-    }, [dispatcher, preparedData, seriesOptions, svgContainer]);
+    }, [dispatcher, preparedData, seriesOptions]);
 
     return <g ref={ref} className={b()} />;
 };

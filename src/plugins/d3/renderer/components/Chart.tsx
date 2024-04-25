@@ -89,7 +89,6 @@ export const Chart = (props: Props) => {
         xScale,
         yAxis,
         yScale,
-        svgContainer: svgRef.current,
     });
 
     const clickHandler = data.chart?.events?.click;

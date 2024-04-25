@@ -2,7 +2,7 @@ import {Delaunay, bisector, sort} from 'd3';
 import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
 
-import {
+import type {
     AreaSeries,
     BarXSeries,
     ChartKitWidgetSeries,
@@ -11,12 +11,12 @@ import {
     TooltipDataChunk,
     TreemapSeries,
 } from '../../../../types';
-import {PreparedBarXData, PreparedScatterData, ShapeData} from '../hooks';
-import {PreparedAreaData} from '../hooks/useShapes/area/types';
-import {PreparedBarYData} from '../hooks/useShapes/bar-y/types';
-import {PreparedLineData} from '../hooks/useShapes/line/types';
-import {PreparedPieData} from '../hooks/useShapes/pie/types';
-import {PreparedTreemapData} from '../hooks/useShapes/treemap/types';
+import type {PreparedBarXData, PreparedScatterData, ShapeData} from '../hooks';
+import type {PreparedAreaData} from '../hooks/useShapes/area/types';
+import type {PreparedBarYData} from '../hooks/useShapes/bar-y/types';
+import type {PreparedLineData} from '../hooks/useShapes/line/types';
+import type {PreparedPieData} from '../hooks/useShapes/pie/types';
+import type {PreparedTreemapData} from '../hooks/useShapes/treemap/types';
 
 type GetClosestPointsArgs = {
     position: [number, number];
@@ -34,7 +34,11 @@ export type ShapePoint = {
 function getClosestPointsByXValue(x: number, y: number, points: ShapePoint[]) {
     const sorted = sort(points, (p) => p.x);
     const closestXIndex = bisector<ShapePoint, number>((p) => p.x).center(sorted, x);
-    const closestX = sorted[closestXIndex]?.x;
+    if (closestXIndex === -1) {
+        return [];
+    }
+
+    const closestX = sorted[closestXIndex].x;
     const closestPoints = sort(
         points.filter((p) => p.x === closestX),
         (p) => p.y0,
@@ -64,8 +68,7 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
     const {position, shapesData} = args;
     const [pointerX, pointerY] = position;
 
-    let result: TooltipDataChunk[] = [];
-
+    const result: TooltipDataChunk[] = [];
     const groups = groupBy(shapesData, getSeriesType);
     Object.entries(groups).forEach(([seriesType, list]) => {
         switch (seriesType) {
@@ -77,7 +80,8 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                     y0: d.y,
                     y1: d.y + d.height,
                 }));
-                result = result.concat(
+                Array.prototype.push.apply(
+                    result,
                     getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[],
                 );
 
@@ -85,7 +89,8 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
             }
             case 'area': {
                 const points = (list as PreparedAreaData[]).reduce<ShapePoint[]>((acc, d) => {
-                    return acc.concat(
+                    Array.prototype.push.apply(
+                        acc,
                         d.points.map((p) => ({
                             data: p.data,
                             series: p.series as AreaSeries,
@@ -94,15 +99,18 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                             y1: p.y,
                         })),
                     );
+                    return acc;
                 }, []);
-                result = result.concat(
+                Array.prototype.push.apply(
+                    result,
                     getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[],
                 );
                 break;
             }
             case 'line': {
                 const points = (list as PreparedLineData[]).reduce<ShapePoint[]>((acc, d) => {
-                    return acc.concat(
+                    Array.prototype.push.apply(
+                        acc,
                         d.points.map((p) => ({
                             data: p.data,
                             series: p.series as LineSeries,
@@ -111,8 +119,10 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                             y1: p.y,
                         })),
                     );
+                    return acc;
                 }, []);
-                result = result.concat(
+                Array.prototype.push.apply(
+                    result,
                     getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[],
                 );
                 break;
@@ -124,29 +134,36 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                     sorted,
                     pointerY,
                 );
-                const closestY = sorted[closestYIndex]?.y;
-                const closestPoints = sort(
-                    points.filter((p) => p.y === closestY),
-                    (p) => p.x,
-                );
 
+                let closestPoints: PreparedBarYData[] = [];
                 let closestXIndex = -1;
-                const lastPoint = closestPoints[closestPoints.length - 1];
-                if (pointerX < closestPoints[0]?.x) {
-                    closestXIndex = 0;
-                } else if (lastPoint && pointerX > lastPoint.x + lastPoint.width) {
-                    closestXIndex = closestPoints.length - 1;
-                } else {
-                    closestXIndex = closestPoints.findIndex(
-                        (p) => pointerX > p.x && pointerX < p.x + p.width,
+                if (closestYIndex !== -1) {
+                    const closestY = sorted[closestYIndex].y;
+                    closestPoints = sort(
+                        points.filter((p) => p.y === closestY),
+                        (p) => p.x,
                     );
+
+                    const lastPoint = closestPoints[closestPoints.length - 1];
+                    if (pointerX < closestPoints[0]?.x) {
+                        closestXIndex = 0;
+                    } else if (lastPoint && pointerX > lastPoint.x + lastPoint.width) {
+                        closestXIndex = closestPoints.length - 1;
+                    } else {
+                        closestXIndex = closestPoints.findIndex(
+                            (p) => pointerX > p.x && pointerX < p.x + p.width,
+                        );
+                    }
                 }
-                const chunks = closestPoints.map((p, i) => ({
-                    data: p.data,
-                    series: p.series,
-                    closest: i === closestXIndex,
-                }));
-                result = result.concat(chunks as TooltipDataChunk[]);
+
+                Array.prototype.push.apply(
+                    result,
+                    closestPoints.map((p, i) => ({
+                        data: p.data,
+                        series: p.series,
+                        closest: i === closestXIndex,
+                    })) as TooltipDataChunk[],
+                );
                 break;
             }
             case 'scatter': {
@@ -157,13 +174,14 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                     (d) => d.point.y,
                 );
                 const closestPoint = points[delaunayX.find(pointerX, pointerY)];
-                result = result.concat([
-                    {
+                if (closestPoint) {
+                    result.push({
                         data: closestPoint.point.data,
                         series: closestPoint.point.series,
                         closest: true,
-                    },
-                ]);
+                    });
+                }
+
                 break;
             }
             case 'pie': {
@@ -180,13 +198,11 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                 });
 
                 if (closestPoint) {
-                    result = result.concat([
-                        {
-                            data: closestPoint.data.series.data,
-                            series: closestPoint.data.series,
-                            closest: true,
-                        },
-                    ]);
+                    result.push({
+                        data: closestPoint.data.series.data,
+                        series: closestPoint.data.series,
+                        closest: true,
+                    });
                 }
 
                 break;

@@ -23,13 +23,12 @@ type ScatterSeriesShapeProps = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedScatterData[];
     seriesOptions: PreparedSeriesOptions;
-    svgContainer: SVGSVGElement | null;
 };
 
 const b = block('d3-scatter');
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
-    const {dispatcher, preparedData, seriesOptions, svgContainer} = props;
+    const {dispatcher, preparedData, seriesOptions} = props;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -114,7 +113,7 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         return () => {
             dispatcher.on('hover-shape.scatter', null);
         };
-    }, [dispatcher, preparedData, seriesOptions, svgContainer]);
+    }, [dispatcher, preparedData, seriesOptions]);
 
     return <g ref={ref} className={b()} />;
 }
