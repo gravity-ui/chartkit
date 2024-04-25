@@ -1,6 +1,7 @@
-import {Delaunay} from 'd3';
+import {Delaunay, bisector} from 'd3';
 import get from 'lodash/get';
 import groupBy from 'lodash/groupBy';
+import sortBy from 'lodash/sortBy';
 
 import {
     AreaSeries,
@@ -32,15 +33,22 @@ export type ShapePoint = {
 };
 
 function getClosestPointsByXValue(x: number, y: number, points: ShapePoint[]) {
-    const delaunayX = Delaunay.from(
-        points,
-        (p) => p.x,
-        (_p) => 0,
-    );
-    const closestXIndex = delaunayX.find(x, 0);
+    const closestXIndex = bisector<ShapePoint, number>((p) => p.x).center(points, x);
     const closestX = points[closestXIndex]?.x;
-    const closestPoints = points.filter((p) => p.x === closestX);
-    const closestYIndex = closestPoints.findIndex((p) => y > p.y0 && y < p.y1);
+    const closestPoints = sortBy(
+        points.filter((p) => p.x === closestX),
+        (p) => p.y0,
+    );
+
+    let closestYIndex = -1;
+    if (y < closestPoints[0]?.y0) {
+        closestYIndex = 0;
+    } else if (y > closestPoints[closestPoints.length - 1]?.y1) {
+        closestYIndex = closestPoints.length - 1;
+    } else {
+        closestYIndex = closestPoints.findIndex((p) => y > p.y0 && y < p.y1);
+    }
+
     return closestPoints.map((p, i) => ({
         data: p.data,
         series: p.series,

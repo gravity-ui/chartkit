@@ -22,6 +22,8 @@ import './styles.scss';
 
 const b = block('d3');
 
+const THROTTLE_DELAY = 50;
+
 type Props = {
     width: number;
     height: number;
@@ -104,16 +106,20 @@ export const Chart = (props: Props) => {
     const boundsOffsetTop = chart.margin.top;
     const boundsOffsetLeft = chart.margin.left + getWidthOccupiedByYAxis({preparedAxis: yAxis});
 
-    console.log({shapesData});
-    const THROTTLE_DELAY = 50;
     const handleMouseMove: MouseEventHandler<SVGSVGElement> = (event) => {
         const [pointerX, pointerY] = pointer(event, svgRef.current);
+        const x = pointerX - boundsOffsetLeft;
+        const y = pointerY - boundsOffsetTop;
+        if (x < 0 || x > boundsWidth || y < 0 || y > boundsHeight) {
+            dispatcher.call('hover-shape', {}, undefined);
+            return;
+        }
+
         const closest = getClosestPoints({
-            position: [pointerX - boundsOffsetLeft, pointerY - boundsOffsetTop],
+            position: [x, y],
             shapesData,
         });
         dispatcher.call('hover-shape', event.target, closest, [pointerX, pointerY]);
-        // console.log({pointerX, pointerY, closestPoint});
     };
     const throttledHandleMouseMove = throttle(handleMouseMove, THROTTLE_DELAY);
 

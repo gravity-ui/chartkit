@@ -10,8 +10,6 @@ import {useTooltip} from '../../hooks';
 
 import {DefaultContent} from './DefaultContent';
 
-export * from './TooltipTriggerArea';
-
 const b = block('d3-tooltip');
 
 type TooltipProps = {

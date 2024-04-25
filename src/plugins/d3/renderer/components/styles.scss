@@ -106,4 +106,18 @@
         box-shadow: 0 2px 12px var(--g-color-sfx-shadow);
         text-wrap: nowrap;
     }
+
+    &__content-row {
+        display: flex;
+        align-items: center;
+    }
+
+    &__color {
+        height: 8px;
+        width: 16px;
+        display: inline-block;
+        margin-right: 8px;
+        border-radius: 2px;
+        background-color: #dddddd;
+    }
 }

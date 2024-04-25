@@ -8,9 +8,12 @@ import type {
     TooltipDataChunk,
     TreemapSeriesData,
 } from '../../../../../types';
+import {block} from '../../../../../utils/cn';
 import {formatNumber} from '../../../../shared';
 import type {PreparedAxis, PreparedPieSeries} from '../../hooks';
 import {getDataCategoryValue} from '../../utils';
+
+const b = block('d3-tooltip');
 
 type Props = {
     hovered: TooltipDataChunk[];
@@ -66,7 +69,8 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
         <>
             {measureValue && <div>{measureValue}</div>}
             {hovered.map(({data, series, closest}, i) => {
-                const id = get(series, 'id', i);
+                const id = `${get(series, 'id')}_${i}`;
+                const color = get(series, 'color');
 
                 switch (series.type) {
                     case 'scatter':
@@ -79,7 +83,8 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                             </React.Fragment>
                         );
                         return (
-                            <div key={id}>
+                            <div key={id} className={b('content-row')}>
+                                <div className={b('color')} style={{backgroundColor: color}} />
                                 <div>{closest ? <b>{value}</b> : <span>{value}</span>}</div>
                             </div>
                         );
@@ -91,10 +96,9 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                             </React.Fragment>
                         );
                         return (
-                            <div key={id}>
-                                <div>
-                                    <span>{closest ? <b>{value}</b> : <span>{value}</span>}</span>
-                                </div>
+                            <div key={id} className={b('content-row')}>
+                                <div className={b('color')} style={{backgroundColor: color}} />
+                                <div>{closest ? <b>{value}</b> : <span>{value}</span>}</div>
                             </div>
                         );
                     }
@@ -103,7 +107,8 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                         const seriesData = data as PreparedPieSeries | TreemapSeriesData;
 
                         return (
-                            <div key={id}>
+                            <div key={id} className={b('content-row')}>
+                                <div className={b('color')} style={{backgroundColor: color}} />
                                 <span>{seriesData.name || seriesData.id}&nbsp;</span>
                                 <span>{seriesData.value}</span>
                             </div>
