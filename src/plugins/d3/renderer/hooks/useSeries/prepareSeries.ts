@@ -11,6 +11,7 @@ import type {
     PieSeries,
     ScatterSeries,
     TreemapSeries,
+    WaterfallSeries,
 } from '../../../../../types';
 
 import {prepareArea} from './prepare-area';
@@ -20,6 +21,7 @@ import {prepareLineSeries} from './prepare-line';
 import {preparePieSeries} from './prepare-pie';
 import {prepareScatterSeries} from './prepare-scatter';
 import {prepareTreemap} from './prepare-treemap';
+import {prepareWaterfallSeries} from './prepare-waterfall';
 import type {PreparedLegend, PreparedSeries} from './types';
 
 export function prepareSeries(args: {
@@ -69,6 +71,13 @@ export function prepareSeries(args: {
             return prepareTreemap({
                 series: series as TreemapSeries[],
                 seriesOptions,
+                legend,
+                colorScale,
+            });
+        }
+        case 'waterfall': {
+            return prepareWaterfallSeries({
+                series: series as WaterfallSeries[],
                 legend,
                 colorScale,
             });

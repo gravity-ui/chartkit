@@ -108,6 +108,16 @@ export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
 
                 break;
             }
+            case 'waterfall': {
+                let yValue = 0;
+                seriesList.forEach((s) => {
+                    s.data.forEach((d) => {
+                        yValue += d.y;
+                        acc.push(yValue);
+                    });
+                });
+                break;
+            }
             default: {
                 seriesList.filter(isSeriesWithNumericalYValues).forEach((s) => {
                     acc.push(...s.data.map((d) => d.y));

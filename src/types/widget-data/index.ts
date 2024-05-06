@@ -20,6 +20,7 @@ export * from './title';
 export * from './tooltip';
 export * from './halo';
 export * from './treemap';
+export * from './waterfall';
 
 export type ChartKitWidgetData<T = any> = {
     chart?: ChartKitWidgetChart;

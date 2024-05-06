@@ -51,7 +51,7 @@ const getYRowData = (yAxis: PreparedAxis, data: ChartKitWidgetSeriesData) =>
     getRowData('y', yAxis, data);
 
 const getMeasureValue = (data: TooltipDataChunk[], xAxis: PreparedAxis, yAxis: PreparedAxis) => {
-    if (data.every((item) => item.series.type === 'pie' || item.series.type === 'treemap')) {
+    if (data.every((item) => ['pie', 'treemap', 'waterfall'].includes(item.series.type))) {
         return null;
     }
 
@@ -86,6 +86,25 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                             <div key={id} className={b('content-row')}>
                                 <div className={b('color')} style={{backgroundColor: color}} />
                                 <div>{closest ? <b>{value}</b> : <span>{value}</span>}</div>
+                            </div>
+                        );
+                    }
+                    case 'waterfall': {
+                        const value = get(data, 'y');
+                        let pointColor = get(series, 'color');
+                        if (!get(data, 'total')) {
+                            if (value > 0) {
+                                pointColor = get(series, 'positiveColor', pointColor);
+                            } else if (value < 0) {
+                                pointColor = get(series, 'negativeColor', pointColor);
+                            }
+                        }
+
+                        return (
+                            <div key={id} className={b('content-row')}>
+                                <div className={b('color')} style={{backgroundColor: pointColor}} />
+                                <span>{getXRowData(xAxis, data)}&nbsp;</span>
+                                <span>{getYRowData(yAxis, data)}</span>
                             </div>
                         );
                     }

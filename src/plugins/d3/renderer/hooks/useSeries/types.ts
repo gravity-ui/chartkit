@@ -1,5 +1,5 @@
 import {DashStyle, LayoutAlgorithm, LineCap, SymbolType} from '../../../../../constants';
-import {
+import type {
     AreaSeries,
     AreaSeriesData,
     BarXSeries,
@@ -21,6 +21,8 @@ import {
     SymbolLegendSymbolOptions,
     TreemapSeries,
     TreemapSeriesData,
+    WaterfallSeries,
+    WaterfallSeriesData,
 } from '../../../../../types';
 import type {SeriesOptionsDefaults} from '../../constants';
 
@@ -246,6 +248,20 @@ export type PreparedTreemapSeries = {
 } & BasePreparedSeries &
     Omit<TreemapSeries, keyof BasePreparedSeries>;
 
+export type PreparedWaterfallSeries = {
+    type: WaterfallSeries['type'];
+    data: WaterfallSeriesData[];
+    dataLabels: {
+        enabled: boolean;
+        inside: boolean;
+        style: BaseTextStyle;
+        allowOverlap: boolean;
+        padding: number;
+    };
+    positiveColor: string;
+    negativeColor: string;
+} & BasePreparedSeries;
+
 export type PreparedSeries =
     | PreparedScatterSeries
     | PreparedBarXSeries
@@ -253,7 +269,8 @@ export type PreparedSeries =
     | PreparedPieSeries
     | PreparedLineSeries
     | PreparedAreaSeries
-    | PreparedTreemapSeries;
+    | PreparedTreemapSeries
+    | PreparedWaterfallSeries;
 
 export type PreparedSeriesOptions = SeriesOptionsDefaults;
 

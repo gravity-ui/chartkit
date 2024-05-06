@@ -11,6 +11,7 @@ import type {PointMarkerOptions} from './marker';
 import type {PieSeries, PieSeriesData} from './pie';
 import type {ScatterSeries, ScatterSeriesData} from './scatter';
 import type {TreemapSeries, TreemapSeriesData} from './treemap';
+import type {WaterfallSeries, WaterfallSeriesData} from './waterfall';
 
 export type ChartKitWidgetSeries<T = any> =
     | ScatterSeries<T>
@@ -19,7 +20,8 @@ export type ChartKitWidgetSeries<T = any> =
     | BarYSeries<T>
     | LineSeries<T>
     | AreaSeries<T>
-    | TreemapSeries<T>;
+    | TreemapSeries<T>
+    | WaterfallSeries<T>;
 
 export type ChartKitWidgetSeriesData<T = any> =
     | ScatterSeriesData<T>
@@ -28,7 +30,8 @@ export type ChartKitWidgetSeriesData<T = any> =
     | BarYSeriesData<T>
     | LineSeriesData<T>
     | AreaSeriesData<T>
-    | TreemapSeriesData<T>;
+    | TreemapSeriesData<T>
+    | WaterfallSeriesData<T>;
 
 export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;

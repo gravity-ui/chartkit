@@ -50,7 +50,7 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
 
 function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) {
     const min = axis?.min;
-    const seriesWithVolume = ['bar-x', 'area'];
+    const seriesWithVolume = ['bar-x', 'area', 'waterfall'];
 
     if (typeof min === 'undefined' && series?.some((s) => seriesWithVolume.includes(s.type))) {
         return 0;

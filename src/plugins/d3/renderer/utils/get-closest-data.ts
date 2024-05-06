@@ -10,6 +10,8 @@ import type {
     LineSeries,
     TooltipDataChunk,
     TreemapSeries,
+    WaterfallSeries,
+    WaterfallSeriesData,
 } from '../../../../types';
 import type {PreparedBarXData, PreparedScatterData, ShapeData} from '../hooks';
 import type {PreparedAreaData} from '../hooks/useShapes/area/types';
@@ -17,6 +19,7 @@ import type {PreparedBarYData} from '../hooks/useShapes/bar-y/types';
 import type {PreparedLineData} from '../hooks/useShapes/line/types';
 import type {PreparedPieData} from '../hooks/useShapes/pie/types';
 import type {PreparedTreemapData} from '../hooks/useShapes/treemap/types';
+import type {PreparedWaterfallData} from '../hooks/useShapes/waterfall';
 
 type GetClosestPointsArgs = {
     position: [number, number];
@@ -76,6 +79,21 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                 const points = (list as PreparedBarXData[]).map<ShapePoint>((d) => ({
                     data: d.data,
                     series: d.series as BarXSeries,
+                    x: d.x + d.width / 2,
+                    y0: d.y,
+                    y1: d.y + d.height,
+                }));
+                Array.prototype.push.apply(
+                    result,
+                    getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[],
+                );
+
+                break;
+            }
+            case 'waterfall': {
+                const points = (list as PreparedWaterfallData[]).map<ShapePoint>((d) => ({
+                    data: d.data as WaterfallSeriesData,
+                    series: d.series as WaterfallSeries,
                     x: d.x + d.width / 2,
                     y0: d.y,
                     y1: d.y + d.height,

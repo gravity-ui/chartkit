@@ -12,6 +12,7 @@ import type {
     PreparedSeries,
     PreparedSeriesOptions,
     PreparedTreemapSeries,
+    PreparedWaterfallSeries,
 } from '../';
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartScale} from '../useAxisScales';
@@ -36,6 +37,7 @@ export type {PreparedBarXData} from './bar-x';
 export type {PreparedScatterData} from './scatter/types';
 import {TreemapSeriesShape} from './treemap';
 import {prepareTreemapData} from './treemap/prepare-data';
+import {PreparedWaterfallData, WaterfallSeriesShapes, prepareWaterfallData} from './waterfall';
 
 import './styles.scss';
 
@@ -45,7 +47,8 @@ export type ShapeData =
     | PreparedScatterData
     | PreparedLineData
     | PreparedPieData
-    | PreparedAreaData;
+    | PreparedAreaData
+    | PreparedWaterfallData;
 
 type Args = {
     boundsWidth: number;
@@ -114,6 +117,28 @@ export const useShapes = (args: Args) => {
                         acc.push(
                             <BarYSeriesShapes
                                 key="bar-y"
+                                dispatcher={dispatcher}
+                                seriesOptions={seriesOptions}
+                                preparedData={preparedData}
+                            />,
+                        );
+                        shapesData.push(...preparedData);
+                    }
+                    break;
+                }
+                case 'waterfall': {
+                    if (xScale && yScale) {
+                        const preparedData = prepareWaterfallData({
+                            series: chartSeries as PreparedWaterfallSeries[],
+                            seriesOptions,
+                            xAxis,
+                            xScale,
+                            yAxis,
+                            yScale,
+                        });
+                        acc.push(
+                            <WaterfallSeriesShapes
+                                key="waterfall"
                                 dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
                                 preparedData={preparedData}
