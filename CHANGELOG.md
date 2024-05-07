@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.4.0](https://github.com/gravity-ui/chartkit/compare/v5.3.3...v5.4.0) (2024-05-07)
+
+
+### Features
+
+* **D3 plugin:** add multiple series hover support ([#471](https://github.com/gravity-ui/chartkit/issues/471)) ([781708a](https://github.com/gravity-ui/chartkit/commit/781708ae1b8ab03f4a7be3dfd882f4f0f1d1ddf1))
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** remove default point shift+click event ([#473](https://github.com/gravity-ui/chartkit/issues/473)) ([6fd4dea](https://github.com/gravity-ui/chartkit/commit/6fd4dea725d4a8981231c0e3b62c51c86ac34451))
+
 ## [5.3.3](https://github.com/gravity-ui/chartkit/compare/v5.3.2...v5.3.3) (2024-04-15)
 
 
