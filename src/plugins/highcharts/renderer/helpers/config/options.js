@@ -78,7 +78,7 @@ const first = {
 
 const second = {
     allowPointSelect: true,
-    slicedOffset: 20,
+    slicedOffset: 0,
     cursor: 'pointer',
     showInLegend: true,
 };

@@ -1682,18 +1682,6 @@ export function prepareConfig(data, options, isMobile, holidays) {
                         }
                     },
                 },
-                point: {
-                    events: {
-                        click: function (event) {
-                            if (event.shiftKey) {
-                                this.series.chart.tooltip.hide();
-                                this.series.data[this.index].remove();
-                                return true;
-                            }
-                            return false;
-                        },
-                    },
-                },
                 marker: options.splitTooltip
                     ? {
                           states: {
