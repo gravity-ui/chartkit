@@ -17,7 +17,7 @@ import {
     getWaterfallPointSubtotal,
 } from '../../utils';
 import {createYScale} from '../useAxisScales';
-import {PreparedSeries} from '../useSeries/types';
+import {PreparedSeries, PreparedWaterfallSeries} from '../useSeries/types';
 
 import type {PreparedAxis} from './types';
 
@@ -58,7 +58,11 @@ function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) 
             switch (s.type) {
                 case 'waterfall': {
                     const minSubTotal = s.data.reduce(
-                        (res, d) => Math.min(res, getWaterfallPointSubtotal(d, s) || 0),
+                        (res, d) =>
+                            Math.min(
+                                res,
+                                getWaterfallPointSubtotal(d, s as PreparedWaterfallSeries) || 0,
+                            ),
                         0,
                     );
                     return Math.min(minValue, minSubTotal);

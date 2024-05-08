@@ -78,22 +78,23 @@ export const WaterfallSeriesShapes = (args: Args) => {
             .attr('class', b('connector'))
             .attr('d', (d, index) => {
                 const line = lineGenerator();
-                let points = [];
+
                 const prev = preparedData[index - 1];
                 if (!prev) {
                     return null;
                 }
 
-                if (d.data?.y > 0 && !d.data.total) {
-                    points = [
-                        prev.data.y > 0 ? [prev.x, prev.y] : [prev.x, prev.y + prev.height],
-                        [d.x + d.width, d.y + d.height],
-                    ];
+                const points: [number, number][] = [];
+                if (Number(prev.data.y) > 0) {
+                    points.push([prev.x, prev.y]);
                 } else {
-                    points = [
-                        prev.data.y > 0 ? [prev.x, prev.y] : [prev.x, prev.y + prev.height],
-                        [d.x + d.width, d.y],
-                    ];
+                    points.push([prev.x, prev.y + prev.height]);
+                }
+
+                if (Number(d.data.y) > 0 && !d.data.total) {
+                    points.push([d.x + d.width, d.y + d.height]);
+                } else {
+                    points.push([d.x + d.width, d.y]);
                 }
 
                 return line(points);

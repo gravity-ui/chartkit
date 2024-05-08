@@ -14,10 +14,8 @@ export type WaterfallSeriesData<T = any> = BaseSeriesData<T> & {
     /**
      * The `y` value. Depending on the context , it may represents:
      * - numeric value (for `linear` y axis)
-     * - timestamp value (for `datetime` y axis)
-     * - y axis category value (for `category` y axis). If the type is a string, then it is a category value itself. If the type is a number, then it is the index of an element in the array of categories described in `yAxis[0].categories`
      */
-    y?: string | number;
+    y?: number;
     /** Data label value of the point. If not specified, the y value is used. */
     label?: string | number;
     /** Individual opacity for the point. */

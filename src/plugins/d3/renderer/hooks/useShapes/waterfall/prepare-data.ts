@@ -23,7 +23,7 @@ function getLabelData(d: PreparedWaterfallData, plotHeight: number): LabelData |
     const {maxHeight: height, maxWidth: width} = getLabelsSize({labels: [text], style});
 
     let y: number;
-    if (d.data.y > 0 || d.data.total) {
+    if (Number(d.data.y) > 0 || d.data.total) {
         y = Math.max(height, d.y - d.series.dataLabels.padding);
     } else {
         y = Math.min(
@@ -74,30 +74,37 @@ function getBandWidth(args: {
     return bandWidth;
 }
 
+type DataItem = {data: WaterfallSeriesData; series: PreparedWaterfallSeries};
+
 export const prepareWaterfallData = (args: {
     series: PreparedWaterfallSeries[];
     seriesOptions: PreparedSeriesOptions;
     xAxis: PreparedAxis;
     xScale: ChartScale;
-    yAxis: PreparedAxis;
+    yAxis: PreparedAxis[];
     yScale: ChartScale;
 }): PreparedWaterfallData[] => {
-    const {series, seriesOptions, xAxis, xScale, yAxis, yScale} = args;
+    const {
+        series,
+        seriesOptions,
+        xAxis,
+        xScale,
+        yAxis: [yAxis],
+        yScale,
+    } = args;
     const yLinearScale = yScale as ScaleLinear<number, number>;
     const plotHeight = yLinearScale(yLinearScale.domain()[0]);
     const barMaxWidth = get(seriesOptions, 'waterfall.barMaxWidth');
     const barPadding = get(seriesOptions, 'waterfall.barPadding');
 
-    const data: {data: WaterfallSeriesData; series: PreparedWaterfallSeries}[] = sortBy(
-        series.reduce((acc, s) => {
-            Array.prototype.push.apply(
-                acc,
-                s.data.map((d) => ({data: d, series: s})),
-            );
-            return acc;
-        }, []),
-        (d) => d.data.x,
-    );
+    const flattenData = series.reduce((acc, s) => {
+        Array.prototype.push.apply(
+            acc,
+            s.data.map((d) => ({data: d, series: s})),
+        );
+        return acc;
+    }, [] as DataItem[]);
+    const data: DataItem[] = sortBy<DataItem>(flattenData, (d) => d.data.x);
 
     const bandWidth = getBandWidth({
         series,
@@ -144,13 +151,13 @@ export const prepareWaterfallData = (args: {
                 yScale,
                 yAxis,
             });
-        } else if (prevPoint.data.y < 0) {
-            if (item.data.y > 0) {
+        } else if (Number(prevPoint.data.y) < 0) {
+            if (Number(item.data.y) > 0) {
                 y = prevPoint.y + prevPoint.height - height;
             } else {
                 y = prevPoint.y + prevPoint.height;
             }
-        } else if (item.data.y < 0) {
+        } else if (Number(item.data.y) < 0) {
             y = prevPoint.y;
         } else {
             y = prevPoint.y - height;
@@ -164,7 +171,6 @@ export const prepareWaterfallData = (args: {
             opacity: get(item.data, 'opacity', null),
             data: item.data,
             series: item.series,
-            total: item.data.total,
             subTotal: totalValue,
         };
 

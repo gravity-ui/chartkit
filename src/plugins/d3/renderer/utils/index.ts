@@ -11,7 +11,7 @@ import type {
 import {formatNumber} from '../../../shared';
 import {getNumberUnitRate} from '../../../shared/format-number/format-number';
 import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
-import {PreparedAxis, StackedSeries} from '../hooks';
+import {PreparedAxis, PreparedWaterfallSeries, StackedSeries} from '../hooks';
 import {getSeriesStackId} from '../hooks/useSeries/utils';
 
 import {getDefaultDateFormat} from './time';
@@ -111,9 +111,9 @@ export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
             }
             case 'waterfall': {
                 let yValue = 0;
-                seriesList.forEach((s) => {
+                (seriesList as PreparedWaterfallSeries[]).forEach((s) => {
                     s.data.forEach((d) => {
-                        yValue += d.y;
+                        yValue += Number(d.y) || 0;
                         acc.push(yValue);
                     });
                 });

@@ -13,7 +13,7 @@ export function getWaterfallPointColor(
         return series.color;
     }
 
-    if (point.y > 0) {
+    if (Number(point.y) > 0) {
         return series.positiveColor;
     }
 

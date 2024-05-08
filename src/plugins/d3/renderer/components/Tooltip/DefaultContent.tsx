@@ -7,6 +7,7 @@ import type {
     ChartKitWidgetSeriesData,
     TooltipDataChunk,
     TreemapSeriesData,
+    WaterfallSeriesData,
 } from '../../../../../types';
 import {block} from '../../../../../utils/cn';
 import {formatNumber} from '../../../../shared';
@@ -92,12 +93,12 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                     case 'waterfall': {
                         const isTotal = get(data, 'total', false);
                         const subTotal = getWaterfallPointSubtotal(
-                            data,
+                            data as WaterfallSeriesData,
                             series as PreparedWaterfallSeries,
                         );
 
                         return (
-                            <div key={`${id}_${data.x}`}>
+                            <div key={`${id}_${get(data, 'x')}`}>
                                 {!isTotal && (
                                     <div key={id} className={b('content-row')}>
                                         <b>{getXRowData(xAxis, data)}</b>
