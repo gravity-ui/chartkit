@@ -22,6 +22,7 @@ export * from './time';
 export * from './axis';
 export * from './labels';
 export * from './symbol';
+export * from './series';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie', 'treemap'];
 

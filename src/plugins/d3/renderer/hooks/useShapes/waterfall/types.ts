@@ -9,7 +9,7 @@ export type PreparedWaterfallData = Omit<TooltipDataChunkWaterfall, 'series' | '
     height: number;
     opacity: number | null;
     series: PreparedWaterfallSeries;
-    data?: WaterfallSeriesData;
+    data: WaterfallSeriesData;
     label?: LabelData;
-    total?: boolean;
+    subTotal: number;
 };

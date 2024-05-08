@@ -229,4 +229,22 @@ export type ChartKitWidgetSeriesOptions = {
             inactive?: BasicInactiveState;
         };
     };
+    waterfall?: {
+        /** The maximum allowed pixel width for a column.
+         * This prevents the columns from becoming too wide when there is a small number of points in the chart.
+         *
+         * @default 50
+         */
+        barMaxWidth?: number;
+        /** Padding between each column or bar, in x axis units.
+         *
+         * @default 0.1
+         * */
+        barPadding?: number;
+        /** Options for the series states that provide additional styling information to the series. */
+        states?: {
+            hover?: BasicHoverState;
+            inactive?: BasicInactiveState;
+        };
+    };
 };

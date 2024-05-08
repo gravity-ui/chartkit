@@ -3,28 +3,30 @@ import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 
 import type {WaterfallSeriesData} from '../../../../../../types';
-import {LabelData} from '../../../types';
+import type {LabelData} from '../../../types';
 import {getLabelsSize} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedSeriesOptions, PreparedWaterfallSeries} from '../../useSeries/types';
-import {MIN_BAR_WIDTH} from '../constants';
+import {MIN_BAR_GAP, MIN_BAR_WIDTH} from '../constants';
 import {getXValue, getYValue} from '../utils';
 
-import {PreparedWaterfallData} from './types';
+import type {PreparedWaterfallData} from './types';
 
 function getLabelData(d: PreparedWaterfallData): LabelData | undefined {
     if (!d.series.dataLabels.enabled) {
         return undefined;
     }
 
-    const text = String(d.data.label || d.data.y);
+    const text = String(d.data.label || d.subTotal);
     const style = d.series.dataLabels.style;
     const {maxHeight: height, maxWidth: width} = getLabelsSize({labels: [text], style});
 
-    let y = Math.max(height, d.y - d.series.dataLabels.padding);
-    if (d.series.dataLabels.inside) {
-        y = d.y + d.height / 2;
+    let y: number;
+    if (d.data.y > 0 || d.data.total) {
+        y = Math.max(height, d.y - d.series.dataLabels.padding);
+    } else {
+        y = d.y + d.height + d.series.dataLabels.padding + height;
     }
 
     return {
@@ -80,7 +82,8 @@ export const prepareWaterfallData = (args: {
     const {series, seriesOptions, xAxis, xScale, yAxis, yScale} = args;
     const yLinearScale = yScale as ScaleLinear<number, number>;
     const plotHeight = yLinearScale(yLinearScale.domain()[0]);
-    const barMaxWidth = get(seriesOptions, 'bar-x.barMaxWidth');
+    const barMaxWidth = get(seriesOptions, 'waterfall.barMaxWidth');
+    const barPadding = get(seriesOptions, 'waterfall.barPadding');
 
     const data: {data: WaterfallSeriesData; series: PreparedWaterfallSeries}[] = sortBy(
         series.reduce((acc, s) => {
@@ -98,7 +101,8 @@ export const prepareWaterfallData = (args: {
         xAxis,
         xScale,
     });
-    const rectWidth = Math.max(MIN_BAR_WIDTH, Math.min(bandWidth, barMaxWidth));
+    const rectGap = Math.max(bandWidth * barPadding, MIN_BAR_GAP);
+    const rectWidth = Math.max(MIN_BAR_WIDTH, Math.min(bandWidth - rectGap, barMaxWidth));
 
     let totalValue = 0;
     const result: PreparedWaterfallData[] = [];
@@ -150,9 +154,10 @@ export const prepareWaterfallData = (args: {
             width: rectWidth,
             height,
             opacity: get(item.data, 'opacity', null),
-            data: item.data.total ? {...item.data, y: totalValue} : item.data,
+            data: item.data,
             series: item.series,
             total: item.data.total,
+            subTotal: totalValue,
         };
 
         preparedData.label = getLabelData(preparedData);

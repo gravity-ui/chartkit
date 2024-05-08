@@ -31,6 +31,7 @@ function prepareData() {
                         {total: true, x: 12},
                     ],
                     name: 'Profit',
+                    dataLabels: {enabled: true},
                 },
             ],
         },

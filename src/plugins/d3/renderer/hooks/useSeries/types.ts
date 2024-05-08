@@ -253,7 +253,6 @@ export type PreparedWaterfallSeries = {
     data: WaterfallSeriesData[];
     dataLabels: {
         enabled: boolean;
-        inside: boolean;
         style: BaseTextStyle;
         allowOverlap: boolean;
         padding: number;

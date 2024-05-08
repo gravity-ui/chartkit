@@ -7,7 +7,7 @@ import get from 'lodash/get';
 import {DashStyle} from '../../../../../../constants';
 import {block} from '../../../../../../utils/cn';
 import {LabelData} from '../../../types';
-import {filterOverlappingLabels} from '../../../utils';
+import {filterOverlappingLabels, getWaterfallPointColor} from '../../../utils';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
 import {getLineDashArray} from '../utils';
 
@@ -48,21 +48,7 @@ export const WaterfallSeriesShapes = (args: Args) => {
             .attr('y', (d) => d.y)
             .attr('height', (d) => d.height)
             .attr('width', (d) => d.width)
-            .attr('fill', (d) => {
-                if (typeof d.data?.color !== 'undefined') {
-                    return d.data.color;
-                }
-
-                if (d.total) {
-                    return d.series.color;
-                }
-
-                if (d.data?.y > 0) {
-                    return d.series.positiveColor;
-                }
-
-                return d.series.negativeColor;
-            })
+            .attr('fill', (d) => getWaterfallPointColor(d.data, d.series))
             .attr('opacity', (d) => d.opacity)
             .attr('cursor', (d) => d.series.cursor);
 
@@ -98,7 +84,7 @@ export const WaterfallSeriesShapes = (args: Args) => {
                     return null;
                 }
 
-                if (d.data?.y > 0 && !d.total) {
+                if (d.data?.y > 0 && !d.data.total) {
                     points = [
                         prev.data.y > 0 ? [prev.x, prev.y] : [prev.x, prev.y + prev.height],
                         [d.x + d.width, d.y + d.height],
@@ -121,7 +107,7 @@ export const WaterfallSeriesShapes = (args: Args) => {
 
             if (!data) {
                 if (hoverEnabled) {
-                    rectSelection.attr('fill', (d) => d.data.color || d.series.color);
+                    rectSelection.attr('fill', (d) => getWaterfallPointColor(d.data, d.series));
                 }
 
                 if (inactiveEnabled) {
@@ -135,7 +121,7 @@ export const WaterfallSeriesShapes = (args: Args) => {
             if (hoverEnabled) {
                 const hoveredValues = data.map((d) => d.data.x);
                 rectSelection.attr('fill', (d) => {
-                    const fillColor = d.data.color || d.series.color;
+                    const fillColor = getWaterfallPointColor(d.data, d.series);
 
                     if (hoveredValues.includes(d.data.x)) {
                         const brightness = hoverOptions?.brightness;

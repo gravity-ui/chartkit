@@ -10,8 +10,8 @@ import type {
 } from '../../../../../types';
 import {block} from '../../../../../utils/cn';
 import {formatNumber} from '../../../../shared';
-import type {PreparedAxis, PreparedPieSeries} from '../../hooks';
-import {getDataCategoryValue} from '../../utils';
+import type {PreparedAxis, PreparedPieSeries, PreparedWaterfallSeries} from '../../hooks';
+import {getDataCategoryValue, getWaterfallPointSubtotal} from '../../utils';
 
 const b = block('d3-tooltip');
 
@@ -90,21 +90,28 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                         );
                     }
                     case 'waterfall': {
-                        const value = get(data, 'y');
-                        let pointColor = get(series, 'color');
-                        if (!get(data, 'total')) {
-                            if (value > 0) {
-                                pointColor = get(series, 'positiveColor', pointColor);
-                            } else if (value < 0) {
-                                pointColor = get(series, 'negativeColor', pointColor);
-                            }
-                        }
+                        const isTotal = get(data, 'total', false);
+                        const subTotal = getWaterfallPointSubtotal(
+                            data,
+                            series as PreparedWaterfallSeries,
+                        );
 
                         return (
-                            <div key={id} className={b('content-row')}>
-                                <div className={b('color')} style={{backgroundColor: pointColor}} />
-                                <span>{getXRowData(xAxis, data)}&nbsp;</span>
-                                <span>{getYRowData(yAxis, data)}</span>
+                            <div key={`${id}_${data.x}`}>
+                                {!isTotal && (
+                                    <div key={id} className={b('content-row')}>
+                                        <b>{getXRowData(xAxis, data)}</b>
+                                    </div>
+                                )}
+                                {!isTotal && (
+                                    <div className={b('content-row')}>
+                                        <span>{series.name}&nbsp;</span>
+                                        <span>{getYRowData(yAxis, data)}</span>
+                                    </div>
+                                )}
+                                <div key={id} className={b('content-row')}>
+                                    {isTotal ? 'Total' : 'Subtotal'}: {subTotal}
+                                </div>
                             </div>
                         );
                     }
