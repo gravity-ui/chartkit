@@ -14,6 +14,7 @@ import {
     getHorisontalSvgTextHeight,
     getLabelsSize,
     getScaleTicks,
+    getWaterfallPointSubtotal,
 } from '../../utils';
 import {createYScale} from '../useAxisScales';
 import {PreparedSeries} from '../useSeries/types';
@@ -53,7 +54,20 @@ function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) 
     const seriesWithVolume = ['bar-x', 'area', 'waterfall'];
 
     if (typeof min === 'undefined' && series?.some((s) => seriesWithVolume.includes(s.type))) {
-        return 0;
+        return series.reduce((minValue, s) => {
+            switch (s.type) {
+                case 'waterfall': {
+                    const minSubTotal = s.data.reduce(
+                        (res, d) => Math.min(res, getWaterfallPointSubtotal(d, s) || 0),
+                        0,
+                    );
+                    return Math.min(minValue, minSubTotal);
+                }
+                default: {
+                    return minValue;
+                }
+            }
+        }, 0);
     }
 
     return min;

@@ -13,7 +13,7 @@ import {getXValue, getYValue} from '../utils';
 
 import type {PreparedWaterfallData} from './types';
 
-function getLabelData(d: PreparedWaterfallData): LabelData | undefined {
+function getLabelData(d: PreparedWaterfallData, plotHeight: number): LabelData | undefined {
     if (!d.series.dataLabels.enabled) {
         return undefined;
     }
@@ -26,7 +26,10 @@ function getLabelData(d: PreparedWaterfallData): LabelData | undefined {
     if (d.data.y > 0 || d.data.total) {
         y = Math.max(height, d.y - d.series.dataLabels.padding);
     } else {
-        y = d.y + d.height + d.series.dataLabels.padding + height;
+        y = Math.min(
+            plotHeight - d.series.dataLabels.padding,
+            d.y + d.height + d.series.dataLabels.padding + height,
+        );
     }
 
     return {
@@ -103,6 +106,11 @@ export const prepareWaterfallData = (args: {
     });
     const rectGap = Math.max(bandWidth * barPadding, MIN_BAR_GAP);
     const rectWidth = Math.max(MIN_BAR_WIDTH, Math.min(bandWidth - rectGap, barMaxWidth));
+    const yZero = getYValue({
+        point: {y: 0},
+        yScale,
+        yAxis,
+    });
 
     let totalValue = 0;
     const result: PreparedWaterfallData[] = [];
@@ -120,7 +128,7 @@ export const prepareWaterfallData = (args: {
         const x = xCenter - rectWidth / 2;
         const yValue = Number(item.data.total ? totalValue : item.data.y);
         const height =
-            plotHeight -
+            yZero -
             getYValue({
                 point: {y: Math.abs(yValue)},
                 yScale,
@@ -131,7 +139,7 @@ export const prepareWaterfallData = (args: {
         if (!prevPoint || item.data.total) {
             y = getYValue({
                 point: {
-                    y: yValue,
+                    y: yValue > 0 ? yValue : 0,
                 },
                 yScale,
                 yAxis,
@@ -150,7 +158,7 @@ export const prepareWaterfallData = (args: {
 
         const preparedData: PreparedWaterfallData = {
             x,
-            y: y,
+            y,
             width: rectWidth,
             height,
             opacity: get(item.data, 'opacity', null),
@@ -160,7 +168,7 @@ export const prepareWaterfallData = (args: {
             subTotal: totalValue,
         };
 
-        preparedData.label = getLabelData(preparedData);
+        preparedData.label = getLabelData(preparedData, plotHeight);
 
         result.push(preparedData);
     });
