@@ -100,15 +100,15 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                         return (
                             <div key={`${id}_${get(data, 'x')}`}>
                                 {!isTotal && (
-                                    <div key={id} className={b('content-row')}>
-                                        <b>{getXRowData(xAxis, data)}</b>
-                                    </div>
-                                )}
-                                {!isTotal && (
-                                    <div className={b('content-row')}>
-                                        <span>{series.name}&nbsp;</span>
-                                        <span>{getYRowData(yAxis, data)}</span>
-                                    </div>
+                                    <React.Fragment>
+                                        <div key={id} className={b('content-row')}>
+                                            <b>{getXRowData(xAxis, data)}</b>
+                                        </div>
+                                        <div className={b('content-row')}>
+                                            <span>{series.name}&nbsp;</span>
+                                            <span>{getYRowData(yAxis, data)}</span>
+                                        </div>
+                                    </React.Fragment>
                                 )}
                                 <div key={id} className={b('content-row')}>
                                     {isTotal ? 'Total' : 'Subtotal'}: {subTotal}

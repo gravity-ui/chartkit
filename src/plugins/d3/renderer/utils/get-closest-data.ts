@@ -83,9 +83,8 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                     y0: d.y,
                     y1: d.y + d.height,
                 }));
-                Array.prototype.push.apply(
-                    result,
-                    getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[],
+                result.push(
+                    ...(getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[]),
                 );
 
                 break;
@@ -98,9 +97,8 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                     y0: d.y,
                     y1: d.y + d.height,
                 }));
-                Array.prototype.push.apply(
-                    result,
-                    getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[],
+                result.push(
+                    ...(getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[]),
                 );
 
                 break;
@@ -119,17 +117,15 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                     );
                     return acc;
                 }, []);
-                Array.prototype.push.apply(
-                    result,
-                    getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[],
+                result.push(
+                    ...(getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[]),
                 );
                 break;
             }
             case 'line': {
                 const points = (list as PreparedLineData[]).reduce<ShapePoint[]>((acc, d) => {
-                    Array.prototype.push.apply(
-                        acc,
-                        d.points.map((p) => ({
+                    acc.push(
+                        ...d.points.map((p) => ({
                             data: p.data,
                             series: p.series as LineSeries,
                             x: p.x,
@@ -139,9 +135,8 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                     );
                     return acc;
                 }, []);
-                Array.prototype.push.apply(
-                    result,
-                    getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[],
+                result.push(
+                    ...(getClosestPointsByXValue(pointerX, pointerY, points) as TooltipDataChunk[]),
                 );
                 break;
             }
@@ -174,13 +169,12 @@ export function getClosestPoints(args: GetClosestPointsArgs): TooltipDataChunk[]
                     }
                 }
 
-                Array.prototype.push.apply(
-                    result,
-                    closestPoints.map((p, i) => ({
+                result.push(
+                    ...(closestPoints.map((p, i) => ({
                         data: p.data,
                         series: p.series,
                         closest: i === closestXIndex,
-                    })) as TooltipDataChunk[],
+                    })) as TooltipDataChunk[]),
                 );
                 break;
             }

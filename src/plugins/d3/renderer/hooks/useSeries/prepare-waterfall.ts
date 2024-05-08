@@ -17,7 +17,7 @@ type PrepareWaterfallSeriesArgs = {
 
 export function prepareWaterfallSeries(args: PrepareWaterfallSeriesArgs): PreparedSeries[] {
     const {colorScale, series: seriesList, legend} = args;
-    const [_totalsColor, negativeColor, positiveColor] = DEFAULT_PALETTE;
+    const [, negativeColor, positiveColor] = DEFAULT_PALETTE;
 
     return seriesList.map<PreparedWaterfallSeries>((series) => {
         const name = series.name || '';

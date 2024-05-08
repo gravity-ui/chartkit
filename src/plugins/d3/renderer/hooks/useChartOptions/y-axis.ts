@@ -17,7 +17,7 @@ import {
     getWaterfallPointSubtotal,
 } from '../../utils';
 import {createYScale} from '../useAxisScales';
-import {PreparedSeries, PreparedWaterfallSeries} from '../useSeries/types';
+import type {PreparedSeries, PreparedWaterfallSeries} from '../useSeries/types';
 
 import type {PreparedAxis} from './types';
 

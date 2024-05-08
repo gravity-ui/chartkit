@@ -97,13 +97,10 @@ export const prepareWaterfallData = (args: {
     const barMaxWidth = get(seriesOptions, 'waterfall.barMaxWidth');
     const barPadding = get(seriesOptions, 'waterfall.barPadding');
 
-    const flattenData = series.reduce((acc, s) => {
-        Array.prototype.push.apply(
-            acc,
-            s.data.map((d) => ({data: d, series: s})),
-        );
+    const flattenData = series.reduce<DataItem[]>((acc, s) => {
+        acc.push(...s.data.map((d) => ({data: d, series: s})));
         return acc;
-    }, [] as DataItem[]);
+    }, []);
     const data: DataItem[] = sortBy<DataItem>(flattenData, (d) => d.data.x);
 
     const bandWidth = getBandWidth({

@@ -1,8 +1,8 @@
-import {TooltipDataChunkWaterfall, WaterfallSeriesData} from '../../../../../../types';
+import {WaterfallSeriesData} from '../../../../../../types';
 import {LabelData} from '../../../types';
 import {PreparedWaterfallSeries} from '../../useSeries/types';
 
-export type PreparedWaterfallData = Omit<TooltipDataChunkWaterfall, 'series' | 'data'> & {
+export type PreparedWaterfallData = {
     x: number;
     y: number;
     width: number;

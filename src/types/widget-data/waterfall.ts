@@ -20,6 +20,7 @@ export type WaterfallSeriesData<T = any> = BaseSeriesData<T> & {
     label?: string | number;
     /** Individual opacity for the point. */
     opacity?: number;
+    /** When this property is true, the point display the total sum across the entire series. */
     total?: boolean;
 };
 
