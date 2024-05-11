@@ -11,7 +11,7 @@ import type {
 import {formatNumber} from '../../../shared';
 import {getNumberUnitRate} from '../../../shared/format-number/format-number';
 import {DEFAULT_AXIS_LABEL_FONT_SIZE} from '../constants';
-import {PreparedAxis, StackedSeries} from '../hooks';
+import {PreparedAxis, PreparedWaterfallSeries, StackedSeries} from '../hooks';
 import {getSeriesStackId} from '../hooks/useSeries/utils';
 
 import {getDefaultDateFormat} from './time';
@@ -22,6 +22,7 @@ export * from './time';
 export * from './axis';
 export * from './labels';
 export * from './symbol';
+export * from './series';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie', 'treemap'];
 
@@ -106,6 +107,16 @@ export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
                     acc.push(...Object.values(values));
                 });
 
+                break;
+            }
+            case 'waterfall': {
+                let yValue = 0;
+                (seriesList as PreparedWaterfallSeries[]).forEach((s) => {
+                    s.data.forEach((d) => {
+                        yValue += Number(d.y) || 0;
+                        acc.push(yValue);
+                    });
+                });
                 break;
             }
             default: {

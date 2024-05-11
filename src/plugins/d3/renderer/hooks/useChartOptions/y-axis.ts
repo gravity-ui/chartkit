@@ -14,9 +14,10 @@ import {
     getHorisontalSvgTextHeight,
     getLabelsSize,
     getScaleTicks,
+    getWaterfallPointSubtotal,
 } from '../../utils';
 import {createYScale} from '../useAxisScales';
-import {PreparedSeries} from '../useSeries/types';
+import type {PreparedSeries, PreparedWaterfallSeries} from '../useSeries/types';
 
 import type {PreparedAxis} from './types';
 
@@ -50,10 +51,27 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
 
 function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) {
     const min = axis?.min;
-    const seriesWithVolume = ['bar-x', 'area'];
+    const seriesWithVolume = ['bar-x', 'area', 'waterfall'];
 
     if (typeof min === 'undefined' && series?.some((s) => seriesWithVolume.includes(s.type))) {
-        return 0;
+        return series.reduce((minValue, s) => {
+            switch (s.type) {
+                case 'waterfall': {
+                    const minSubTotal = s.data.reduce(
+                        (res, d) =>
+                            Math.min(
+                                res,
+                                getWaterfallPointSubtotal(d, s as PreparedWaterfallSeries) || 0,
+                            ),
+                        0,
+                    );
+                    return Math.min(minValue, minSubTotal);
+                }
+                default: {
+                    return minValue;
+                }
+            }
+        }, 0);
     }
 
     return min;

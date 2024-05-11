@@ -8,9 +8,14 @@ type DefaultBarYSeriesOptions = Partial<ChartKitWidgetSeriesOptions['bar-x']> & 
     'bar-y': {barMaxWidth: number; barPadding: number; groupPadding: number};
 };
 
+type DefaultWaterfallSeriesOptions = Partial<ChartKitWidgetSeriesOptions['waterfall']> & {
+    waterfall: {barMaxWidth: number; barPadding: number};
+};
+
 export type SeriesOptionsDefaults = Partial<ChartKitWidgetSeriesOptions> &
     DefaultBarXSeriesOptions &
-    DefaultBarYSeriesOptions;
+    DefaultBarYSeriesOptions &
+    DefaultWaterfallSeriesOptions;
 
 export const seriesOptionsDefaults: SeriesOptionsDefaults = {
     'bar-x': {
@@ -92,6 +97,20 @@ export const seriesOptionsDefaults: SeriesOptionsDefaults = {
         },
     },
     treemap: {
+        states: {
+            hover: {
+                enabled: true,
+                brightness: 0.3,
+            },
+            inactive: {
+                enabled: false,
+                opacity: 0.5,
+            },
+        },
+    },
+    waterfall: {
+        barMaxWidth: 50,
+        barPadding: 0.1,
         states: {
             hover: {
                 enabled: true,

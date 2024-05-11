@@ -11,6 +11,7 @@ import type {PointMarkerOptions} from './marker';
 import type {PieSeries, PieSeriesData} from './pie';
 import type {ScatterSeries, ScatterSeriesData} from './scatter';
 import type {TreemapSeries, TreemapSeriesData} from './treemap';
+import type {WaterfallSeries, WaterfallSeriesData} from './waterfall';
 
 export type ChartKitWidgetSeries<T = any> =
     | ScatterSeries<T>
@@ -19,7 +20,8 @@ export type ChartKitWidgetSeries<T = any> =
     | BarYSeries<T>
     | LineSeries<T>
     | AreaSeries<T>
-    | TreemapSeries<T>;
+    | TreemapSeries<T>
+    | WaterfallSeries<T>;
 
 export type ChartKitWidgetSeriesData<T = any> =
     | ScatterSeriesData<T>
@@ -28,7 +30,8 @@ export type ChartKitWidgetSeriesData<T = any> =
     | BarYSeriesData<T>
     | LineSeriesData<T>
     | AreaSeriesData<T>
-    | TreemapSeriesData<T>;
+    | TreemapSeriesData<T>
+    | WaterfallSeriesData<T>;
 
 export type DataLabelRendererData<T = any> = {
     data: ChartKitWidgetSeriesData<T>;
@@ -220,6 +223,24 @@ export type ChartKitWidgetSeriesOptions = {
         marker?: PointMarkerOptions;
     };
     treemap?: {
+        /** Options for the series states that provide additional styling information to the series. */
+        states?: {
+            hover?: BasicHoverState;
+            inactive?: BasicInactiveState;
+        };
+    };
+    waterfall?: {
+        /** The maximum allowed pixel width for a column.
+         * This prevents the columns from becoming too wide when there is a small number of points in the chart.
+         *
+         * @default 50
+         */
+        barMaxWidth?: number;
+        /** Padding between each column or bar, in x axis units.
+         *
+         * @default 0.1
+         * */
+        barPadding?: number;
         /** Options for the series states that provide additional styling information to the series. */
         states?: {
             hover?: BasicHoverState;

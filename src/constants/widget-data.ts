@@ -6,6 +6,7 @@ export const SeriesType = {
     Pie: 'pie',
     Scatter: 'scatter',
     Treemap: 'treemap',
+    Waterfall: 'waterfall',
 } as const;
 
 export enum DashStyle {

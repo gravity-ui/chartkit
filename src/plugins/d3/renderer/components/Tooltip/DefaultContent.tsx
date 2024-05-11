@@ -7,11 +7,12 @@ import type {
     ChartKitWidgetSeriesData,
     TooltipDataChunk,
     TreemapSeriesData,
+    WaterfallSeriesData,
 } from '../../../../../types';
 import {block} from '../../../../../utils/cn';
 import {formatNumber} from '../../../../shared';
-import type {PreparedAxis, PreparedPieSeries} from '../../hooks';
-import {getDataCategoryValue} from '../../utils';
+import type {PreparedAxis, PreparedPieSeries, PreparedWaterfallSeries} from '../../hooks';
+import {getDataCategoryValue, getWaterfallPointSubtotal} from '../../utils';
 
 const b = block('d3-tooltip');
 
@@ -51,7 +52,7 @@ const getYRowData = (yAxis: PreparedAxis, data: ChartKitWidgetSeriesData) =>
     getRowData('y', yAxis, data);
 
 const getMeasureValue = (data: TooltipDataChunk[], xAxis: PreparedAxis, yAxis: PreparedAxis) => {
-    if (data.every((item) => item.series.type === 'pie' || item.series.type === 'treemap')) {
+    if (data.every((item) => ['pie', 'treemap', 'waterfall'].includes(item.series.type))) {
         return null;
     }
 
@@ -86,6 +87,32 @@ export const DefaultContent = ({hovered, xAxis, yAxis}: Props) => {
                             <div key={id} className={b('content-row')}>
                                 <div className={b('color')} style={{backgroundColor: color}} />
                                 <div>{closest ? <b>{value}</b> : <span>{value}</span>}</div>
+                            </div>
+                        );
+                    }
+                    case 'waterfall': {
+                        const isTotal = get(data, 'total', false);
+                        const subTotal = getWaterfallPointSubtotal(
+                            data as WaterfallSeriesData,
+                            series as PreparedWaterfallSeries,
+                        );
+
+                        return (
+                            <div key={`${id}_${get(data, 'x')}`}>
+                                {!isTotal && (
+                                    <React.Fragment>
+                                        <div key={id} className={b('content-row')}>
+                                            <b>{getXRowData(xAxis, data)}</b>
+                                        </div>
+                                        <div className={b('content-row')}>
+                                            <span>{series.name}&nbsp;</span>
+                                            <span>{getYRowData(yAxis, data)}</span>
+                                        </div>
+                                    </React.Fragment>
+                                )}
+                                <div key={id} className={b('content-row')}>
+                                    {isTotal ? 'Total' : 'Subtotal'}: {subTotal}
+                                </div>
                             </div>
                         );
                     }
