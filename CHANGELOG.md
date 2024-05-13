@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.5.0](https://github.com/gravity-ui/chartkit/compare/v5.4.0...v5.5.0) (2024-05-13)
+
+
+### Features
+
+* **D3 plugin:** basic waterfall chart ([#475](https://github.com/gravity-ui/chartkit/issues/475)) ([cff5a3a](https://github.com/gravity-ui/chartkit/commit/cff5a3a1bfc5cabf074ca1aa7f31f17a457f868f))
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** return old value for pie.slicedOffset ([#478](https://github.com/gravity-ui/chartkit/issues/478)) ([d8b61d9](https://github.com/gravity-ui/chartkit/commit/d8b61d96ccc7eae25efdbb4c621a45283cebb9b8))
+
 ## [5.4.0](https://github.com/gravity-ui/chartkit/compare/v5.3.3...v5.4.0) (2024-05-07)
 
 
