@@ -108,6 +108,7 @@ export type PreparedScatterSeries = {
             };
         };
     };
+    yAxis: number;
 } & BasePreparedSeries;
 
 export type PreparedBarXSeries = {
@@ -200,6 +201,7 @@ export type PreparedLineSeries = {
     dashStyle: DashStyle;
     linecap: LineCap;
     opacity: number | null;
+    yAxis: number;
 } & BasePreparedSeries;
 
 export type PreparedAreaSeries = {
@@ -233,6 +235,7 @@ export type PreparedAreaSeries = {
             };
         };
     };
+    yAxis: number;
 } & BasePreparedSeries;
 
 export type PreparedTreemapSeries = {

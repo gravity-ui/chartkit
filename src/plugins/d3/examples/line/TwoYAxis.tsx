@@ -9,29 +9,32 @@ import marsWeatherData from '../mars-weather';
 
 export const TwoYAxis = () => {
     const data = marsWeatherData.slice(-100);
-    const minTempData = data.map(d => ({
+    const minTempData = data.map((d) => ({
         x: dateTime({input: d.terrestrial_date, format: 'YYYY-MM-DD'}).valueOf(),
         y: d.min_temp,
     }));
 
-    const maxTempData = data.map(d => ({
+    const maxTempData = data.map((d) => ({
         x: dateTime({input: d.terrestrial_date, format: 'YYYY-MM-DD'}).valueOf(),
         y: d.max_temp,
     }));
 
     const widgetData: ChartKitWidgetData = {
         series: {
-            data: [{
-                type: 'line',
-                data: minTempData,
-                name: 'Min Temperature',
-                yAxisIndex: 0,
-            }, {
-                type: 'line',
-                data: maxTempData,
-                name: 'Max Temperature',
-                yAxisIndex: 1,
-            }],
+            data: [
+                {
+                    type: 'line',
+                    data: minTempData,
+                    name: 'Min Temperature',
+                    yAxis: 0,
+                },
+                {
+                    type: 'line',
+                    data: maxTempData,
+                    name: 'Max Temperature',
+                    yAxis: 1,
+                },
+            ],
         },
         yAxis: [
             {
@@ -54,7 +57,7 @@ export const TwoYAxis = () => {
         },
         title: {
             text: 'Mars weather',
-        }
+        },
     };
 
     return (

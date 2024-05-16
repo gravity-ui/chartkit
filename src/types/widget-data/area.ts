@@ -75,4 +75,6 @@ export type AreaSeries<T = any> = BaseSeries & {
     };
     /** Options for the point markers of line in area series */
     marker?: AreaMarkerOptions;
+    /** Y-axis index (when using two axes) */
+    yAxis?: number;
 };

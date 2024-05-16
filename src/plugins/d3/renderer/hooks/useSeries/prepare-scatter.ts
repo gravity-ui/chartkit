@@ -67,6 +67,7 @@ export function prepareScatterSeries(args: PrepareScatterSeriesArgs): PreparedSc
             data: s.data,
             marker: prepareMarker(s, seriesOptions, index),
             cursor: get(s, 'cursor', null),
+            yAxis: get(s, 'yAxis', 0),
         };
 
         return prepared;

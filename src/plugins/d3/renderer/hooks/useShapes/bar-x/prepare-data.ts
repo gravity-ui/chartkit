@@ -43,10 +43,10 @@ export const prepareBarXData = (args: {
     xAxis: PreparedAxis;
     xScale: ChartScale;
     yAxis: PreparedAxis[];
-    yScale: ChartScale;
+    yScale: ChartScale[];
 }): PreparedBarXData[] => {
     const {series, seriesOptions, xAxis, xScale, yScale} = args;
-    const yLinearScale = yScale as ScaleLinear<number, number>;
+    const yLinearScale = yScale[0] as ScaleLinear<number, number>;
     const plotHeight = yLinearScale(yLinearScale.domain()[0]);
     const categories = get(xAxis, 'categories', [] as string[]);
     const barMaxWidth = get(seriesOptions, 'bar-x.barMaxWidth');

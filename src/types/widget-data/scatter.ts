@@ -39,10 +39,10 @@ export type ScatterSeries<T = any> = BaseSeries & {
     color?: string;
     /** A predefined shape or symbol for the dot */
     symbolType?: `${SymbolType}`;
-    // yAxisIndex?: number;
-
     /** Individual series legend options. Has higher priority than legend options in widget data */
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;
     };
+    /** Y-axis index (when using two axes) */
+    yAxis?: number;
 };

@@ -54,6 +54,6 @@ export type LineSeries<T = any> = BaseSeries & {
     linecap?: `${LineCap}`;
     /** Individual opacity for the line. */
     opacity?: number;
-    /** TODO: add description */
-    yAxisIndex?: number;
+    /** Y-axis index (when using two axes) */
+    yAxis?: number;
 };

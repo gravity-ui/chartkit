@@ -82,7 +82,7 @@ export const prepareWaterfallData = (args: {
     xAxis: PreparedAxis;
     xScale: ChartScale;
     yAxis: PreparedAxis[];
-    yScale: ChartScale;
+    yScale: ChartScale[];
 }): PreparedWaterfallData[] => {
     const {
         series,

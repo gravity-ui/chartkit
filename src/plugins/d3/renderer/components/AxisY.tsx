@@ -21,9 +21,9 @@ const b = block('d3-axis');
 
 type Props = {
     axises: PreparedAxis[];
+    scale: ChartScale[];
     width: number;
     height: number;
-    scale: ChartScale;
 };
 
 function transformLabel(args: {node: Element; axis: PreparedAxis}) {
@@ -110,16 +110,17 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             .style('transform', (d, index) => (index === 0 ? '' : `translate(${width}px, 0)`));
 
         axisSelection.each((d, index, node) => {
+            const seriesScale = scale[index];
             const axisItem = select(node[index]);
             const yAxisGenerator = getAxisGenerator({
                 axisGenerator:
                     index === 0
-                        ? axisLeft(scale as AxisScale<AxisDomain>)
-                        : axisRight(scale as AxisScale<AxisDomain>),
+                        ? axisLeft(seriesScale as AxisScale<AxisDomain>)
+                        : axisRight(seriesScale as AxisScale<AxisDomain>),
                 preparedAxis: d,
                 height,
                 width,
-                scale,
+                scale: seriesScale,
             });
             yAxisGenerator(axisItem);
 

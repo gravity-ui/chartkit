@@ -144,7 +144,7 @@ export const Chart = (props: Props) => {
                     height={boundsHeight}
                     transform={`translate(${[boundsOffsetLeft, boundsOffsetTop].join(',')})`}
                 >
-                    {xScale && yScale && (
+                    {xScale && yScale?.length && (
                         <React.Fragment>
                             <AxisY
                                 axises={yAxis}
