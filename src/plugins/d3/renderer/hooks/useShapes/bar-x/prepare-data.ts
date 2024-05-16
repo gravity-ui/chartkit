@@ -44,10 +44,9 @@ export const prepareBarXData = (args: {
     xScale: ChartScale;
     yAxis: PreparedAxis[];
     yScale: ChartScale[];
+    boundsHeight: number;
 }): PreparedBarXData[] => {
-    const {series, seriesOptions, xAxis, xScale, yScale} = args;
-    const yLinearScale = yScale[0] as ScaleLinear<number, number>;
-    const plotHeight = yLinearScale(yLinearScale.domain()[0]);
+    const {series, seriesOptions, xAxis, xScale, yScale, boundsHeight: plotHeight} = args;
     const categories = get(xAxis, 'categories', [] as string[]);
     const barMaxWidth = get(seriesOptions, 'bar-x.barMaxWidth');
     const barPadding = get(seriesOptions, 'bar-x.barPadding');
@@ -139,6 +138,8 @@ export const prepareBarXData = (args: {
                 ? sort(yValues, (a, b) => comparator(get(a, sortKey), get(b, sortKey)))
                 : yValues;
             sortedData.forEach((yValue) => {
+                const yAxisIndex = yValue.series.yAxis;
+                const seriesYScale = yScale[yAxisIndex] as ScaleLinear<number, number>;
                 let xCenter;
 
                 if (xAxis.type === 'category') {
@@ -152,7 +153,7 @@ export const prepareBarXData = (args: {
                 }
 
                 const x = xCenter - currentGroupWidth / 2 + (rectWidth + rectGap) * groupItemIndex;
-                const y = yLinearScale(yValue.data.y as number);
+                const y = seriesYScale(yValue.data.y as number);
                 const height = plotHeight - y;
 
                 const barData: PreparedBarXData = {

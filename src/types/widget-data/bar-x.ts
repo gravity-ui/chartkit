@@ -64,4 +64,6 @@ export type BarXSeries<T = any> = BaseSeries & {
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;
     };
+    /** Y-axis index (when using two axes) */
+    yAxis?: number;
 };

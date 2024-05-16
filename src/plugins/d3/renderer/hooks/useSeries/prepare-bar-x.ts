@@ -45,6 +45,7 @@ export function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[]
                 padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
             },
             cursor: get(series, 'cursor', null),
+            yAxis: get(series, 'yAxis', 0),
         };
     }, []);
 }

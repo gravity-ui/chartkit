@@ -91,6 +91,7 @@ export const useShapes = (args: Args) => {
                             xScale,
                             yAxis,
                             yScale,
+                            boundsHeight,
                         });
                         acc.push(
                             <BarXSeriesShapes

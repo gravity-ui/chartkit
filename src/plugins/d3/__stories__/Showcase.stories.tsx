@@ -9,11 +9,13 @@ import {settings} from '../../../libs';
 import {Basic as BasicArea} from '../examples/area/Basic';
 import {PercentStackingArea} from '../examples/area/PercentStacking';
 import {StackedArea} from '../examples/area/StackedArea';
+import {TwoYAxis as AreaTwoYAxis} from '../examples/area/TwoYAxis';
 import {BasicBarXChart} from '../examples/bar-x/Basic';
 import {DataLabels as BarXDataLabels} from '../examples/bar-x/DataLabels';
 import {GroupedColumns} from '../examples/bar-x/GroupedColumns';
 import {PercentStackColumns} from '../examples/bar-x/PercentStack';
 import {StackedColumns} from '../examples/bar-x/StackedColumns';
+import {TwoYAxis as BarXTwoYAxis} from '../examples/bar-x/TwoYAxis';
 import {Basic as BasicBarY} from '../examples/bar-y/Basic';
 import {GroupedColumns as GroupedColumnsBarY} from '../examples/bar-y/GroupedColumns';
 import {PercentStackingBars} from '../examples/bar-y/PercentStacking';
@@ -27,6 +29,7 @@ import {TwoYAxis as LineTwoYAxis} from '../examples/line/TwoYAxis';
 import {BasicPie} from '../examples/pie/Basic';
 import {Donut} from '../examples/pie/Donut';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
+import {TwoYAxis as ScatterTwoYAxis} from '../examples/scatter/TwoYAxis';
 import {D3Plugin} from '../index';
 
 const ShowcaseStory = () => {
@@ -84,6 +87,10 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Stacked percentage areas</Text>
                             <PercentStackingArea />
                         </Col>
+                        <Col s={12} m={12}>
+                            <Text variant="subheader-1">Dual Y axis</Text>
+                            <AreaTwoYAxis />
+                        </Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>
@@ -108,6 +115,10 @@ const ShowcaseStory = () => {
                         <Col s={12} m={6}>
                             <Text variant="subheader-1">Bar-x chart with data labels</Text>
                             <BarXDataLabels />
+                        </Col>
+                        <Col s={12} m={12}>
+                            <Text variant="subheader-1">Dual Y axis</Text>
+                            <BarXTwoYAxis />
                         </Col>
                     </Row>
                     <Row space={1}>
@@ -148,9 +159,13 @@ const ShowcaseStory = () => {
                         <Text variant="header-2">Scatter charts</Text>
                     </Row>
                     <Row space={3}>
-                        <Col s={12}>
+                        <Col s={12} m={12} l={6}>
                             <Text variant="subheader-1">Basic scatter</Text>
                             <BasicScatter />
+                        </Col>
+                        <Col s={12} m={12} l={6}>
+                            <Text variant="subheader-1">Scatter chart with two Y axis</Text>
+                            <ScatterTwoYAxis />
                         </Col>
                     </Row>
                     <Row space={1}>

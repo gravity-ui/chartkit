@@ -123,6 +123,7 @@ export type PreparedBarXSeries = {
         allowOverlap: boolean;
         padding: number;
     };
+    yAxis: number;
 } & BasePreparedSeries;
 
 export type PreparedBarYSeries = {
