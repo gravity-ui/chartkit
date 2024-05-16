@@ -7,7 +7,7 @@ import type {ChartKitWidgetData} from '../../../../../types';
 import {legendDefaults} from '../../constants';
 import {getHorisontalSvgTextHeight} from '../../utils';
 import {getBoundsWidth} from '../useChartDimensions';
-import {getWidthOccupiedByYAxis} from '../useChartDimensions/utils';
+import {getYAxisWidth} from '../useChartDimensions/utils';
 import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
 
 import type {LegendConfig, LegendItem, PreparedLegend, PreparedSeries} from './types';
@@ -19,7 +19,9 @@ export const getPreparedLegend = (args: {
     series: ChartKitWidgetData['series']['data'];
 }): PreparedLegend => {
     const {legend, series} = args;
-    const enabled = typeof legend?.enabled === 'boolean' ? legend?.enabled : series.length > 1;
+    const enabled = Boolean(
+        typeof legend?.enabled === 'boolean' ? legend?.enabled : series.length > 1,
+    );
     const defaultItemStyle = clone(legendDefaults.itemStyle);
     const itemStyle = get(legend, 'itemStyle');
     const computedItemStyle = merge(defaultItemStyle, itemStyle);
@@ -128,7 +130,7 @@ export const getLegendComponents = (args: {
     preparedLegend.height = legendHeight;
     const top = chartHeight - chartMargin.bottom - preparedLegend.height;
     const offset: LegendConfig['offset'] = {
-        left: chartMargin.left + getWidthOccupiedByYAxis({preparedAxis: preparedYAxis}),
+        left: chartMargin.left + getYAxisWidth(preparedYAxis[0]),
         top,
     };
 

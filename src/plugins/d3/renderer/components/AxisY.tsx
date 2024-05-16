@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {axisLeft, select} from 'd3';
-import type {AxisDomain, AxisScale} from 'd3';
+import {Selection, axisLeft, axisRight, line, select} from 'd3';
+import type {Axis, AxisDomain, AxisScale} from 'd3';
 
 import {block} from '../../../../utils/cn';
 import type {ChartScale, PreparedAxis} from '../hooks';
@@ -26,9 +26,15 @@ type Props = {
     scale: ChartScale;
 };
 
-function transformLabel(node: Element, axis: PreparedAxis) {
+function transformLabel(args: {node: Element; axis: PreparedAxis}) {
+    const {node, axis} = args;
     let topOffset = axis.labels.lineHeight / 2;
-    let leftOffset = -axis.labels.margin;
+    let leftOffset = axis.labels.margin;
+
+    if (axis.position === 'left') {
+        leftOffset = leftOffset * -1;
+    }
+
     if (axis.labels.rotation) {
         if (axis.labels.rotation > 0) {
             leftOffset -= axis.labels.lineHeight * calculateSin(axis.labels.rotation);
@@ -51,107 +57,149 @@ function transformLabel(node: Element, axis: PreparedAxis) {
     return `translate(${leftOffset}px, ${topOffset}px)`;
 }
 
+function getAxisGenerator(args: {
+    preparedAxis: PreparedAxis;
+    axisGenerator: Axis<AxisDomain>;
+    width: number;
+    height: number;
+    scale: ChartScale;
+}) {
+    const {preparedAxis, axisGenerator: generator, width, height, scale} = args;
+    const tickSize = preparedAxis.grid.enabled ? width * -1 : 0;
+    const step = getClosestPointsRange(preparedAxis, getScaleTicks(scale as AxisScale<AxisDomain>));
+
+    let axisGenerator = generator
+        .tickSize(tickSize)
+        .tickPadding(preparedAxis.labels.margin)
+        .tickFormat((value) => {
+            if (!preparedAxis.labels.enabled) {
+                return '';
+            }
+
+            return formatAxisTickLabel({
+                axis: preparedAxis,
+                value,
+                step,
+            });
+        });
+
+    const ticksCount = getTicksCount({axis: preparedAxis, range: height});
+    if (ticksCount) {
+        axisGenerator = axisGenerator.ticks(ticksCount);
+    }
+
+    return axisGenerator;
+}
+
 export const AxisY = ({axises, width, height, scale}: Props) => {
-    const ref = React.useRef<SVGGElement>(null);
+    const ref = React.useRef<SVGGElement | null>(null);
 
     React.useEffect(() => {
         if (!ref.current) {
             return;
         }
 
-        const axis = axises[0];
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
-        const tickSize = axis.grid.enabled ? width * -1 : 0;
-        const step = getClosestPointsRange(axis, getScaleTicks(scale as AxisScale<AxisDomain>));
 
-        let yAxisGenerator = axisLeft(scale as AxisScale<AxisDomain>)
-            .tickSize(tickSize)
-            .tickPadding(axis.labels.margin)
-            .tickFormat((value) => {
-                if (!axis.labels.enabled) {
-                    return '';
-                }
+        const axisSelection = svgElement
+            .selectAll('axis')
+            .data(axises)
+            .join('g')
+            .attr('class', b())
+            .style('transform', (d, index) => (index === 0 ? '' : `translate(${width}px, 0)`));
 
-                return formatAxisTickLabel({
-                    axis,
-                    value,
-                    step,
-                });
+        axisSelection.each((d, index, node) => {
+            const axisItem = select(node[index]);
+            const yAxisGenerator = getAxisGenerator({
+                axisGenerator:
+                    index === 0
+                        ? axisLeft(scale as AxisScale<AxisDomain>)
+                        : axisRight(scale as AxisScale<AxisDomain>),
+                preparedAxis: d,
+                height,
+                width,
+                scale,
             });
+            yAxisGenerator(axisItem);
 
-        const ticksCount = getTicksCount({axis, range: height});
-        if (ticksCount) {
-            yAxisGenerator = yAxisGenerator.ticks(ticksCount);
-        }
+            if (d.labels.enabled) {
+                const tickTexts = axisItem
+                    .selectAll<SVGTextElement, string>('.tick text')
+                    // The offset must be applied before the labels are rotated.
+                    // Therefore, we reset the values and make an offset in transform  attribute.
+                    // FIXME: give up axisLeft(d3) and switch to our own generation method
+                    .attr('x', null)
+                    .attr('dy', null)
+                    .style('font-size', d.labels.style.fontSize)
+                    .style('transform', function () {
+                        return transformLabel({node: this, axis: d});
+                    });
+                const textMaxWidth =
+                    !d.labels.rotation || Math.abs(d.labels.rotation) % 360 !== 90
+                        ? d.labels.maxWidth
+                        : (height - d.labels.padding * (tickTexts.size() - 1)) / tickTexts.size();
+                tickTexts.call(setEllipsisForOverflowTexts, textMaxWidth);
+            }
 
-        svgElement.call(yAxisGenerator).attr('class', b());
-        svgElement
+            // remove overlapping ticks
+            // Note: this method do not prepared for rotated labels
+            if (!d.labels.rotation) {
+                let elementY = 0;
+                axisItem
+                    .selectAll('.tick')
+                    .filter(function (_d, tickIndex) {
+                        const tickNode = this as unknown as Element;
+                        const r = tickNode.getBoundingClientRect();
+
+                        if (r.bottom > elementY && tickIndex !== 0) {
+                            return true;
+                        }
+                        elementY = r.top - d.labels.padding;
+                        return false;
+                    })
+                    .remove();
+            }
+
+            return axisItem;
+        });
+
+        axisSelection
             .select('.domain')
-            .attr('d', `M0,${height}H0V0`)
-            .style('stroke', axis.lineColor || '');
+            .attr('d', () => {
+                const points = [
+                    [0, 0],
+                    [0, height],
+                ];
 
-        if (axis.labels.enabled) {
-            const tickTexts = svgElement
-                .selectAll<SVGTextElement, string>('.tick text')
-                // The offset must be applied before the labels are rotated.
-                // Therefore, we reset the values and make an offset in transform  attribute.
-                // FIXME: give up axisLeft(d3) and switch to our own generation method
-                .attr('x', null)
-                .attr('dy', null)
-                .style('font-size', axis.labels.style.fontSize)
-                .style('transform', function () {
-                    return transformLabel(this, axis);
-                });
-            const textMaxWidth =
-                !axis.labels.rotation || Math.abs(axis.labels.rotation) % 360 !== 90
-                    ? axis.labels.maxWidth
-                    : (height - axis.labels.padding * (tickTexts.size() - 1)) / tickTexts.size();
-            tickTexts.call(setEllipsisForOverflowTexts, textMaxWidth);
-        }
+                return line()(points);
+            })
+            .style('stroke', (d) => d.lineColor || '');
 
-        const transformStyle = svgElement.select('.tick').attr('transform');
-        const {y} = parseTransformStyle(transformStyle);
+        svgElement.selectAll('.tick').each((d, index, nodes) => {
+            const tickNode = select(nodes[index]);
+            if (parseTransformStyle(tickNode.attr('transform')).y === height) {
+                // Remove stroke from tick that has the same y coordinate like domain
+                tickNode.select('line').style('stroke', 'none');
+            }
+        });
 
-        if (y === height) {
-            // Remove stroke from tick that has the same y coordinate like domain
-            svgElement.select('.tick line').style('stroke', 'none');
-        }
-
-        // remove overlapping ticks
-        // Note: this method do not prepared for rotated labels
-        if (!axis.labels.rotation) {
-            let elementY = 0;
-            svgElement
-                .selectAll('.tick')
-                .filter(function (_d, index) {
-                    const node = this as unknown as Element;
-                    const r = node.getBoundingClientRect();
-
-                    if (r.bottom > elementY && index !== 0) {
-                        return true;
-                    }
-                    elementY = r.top - axis.labels.padding;
-                    return false;
-                })
-                .remove();
-        }
-
-        if (axis.title.text) {
-            const textY = axis.title.margin + axis.labels.margin + axis.labels.width;
-
-            svgElement
-                .append('text')
-                .attr('class', b('title'))
-                .attr('text-anchor', 'middle')
-                .attr('dy', -textY)
-                .attr('dx', -height / 2)
-                .attr('font-size', axis.title.style.fontSize)
-                .attr('transform', 'rotate(-90)')
-                .text(axis.title.text)
-                .call(setEllipsisForOverflowText, height);
-        }
+        axisSelection
+            .append('text')
+            .attr('class', b('title'))
+            .attr('text-anchor', 'middle')
+            .attr('dy', (d) => -(d.title.margin + d.labels.margin + d.labels.width))
+            .attr('dx', (_d, index) => (index === 0 ? -height / 2 : height / 2))
+            .attr('font-size', (d) => d.title.style.fontSize)
+            .attr('transform', (_d, index) => (index === 0 ? 'rotate(-90)' : 'rotate(90)'))
+            .text((d) => d.title.text)
+            .each((d, index, node) => {
+                return setEllipsisForOverflowText(
+                    select(node[index]) as Selection<SVGTextElement, T, null, unknown>,
+                    height,
+                );
+            });
     }, [axises, width, height, scale]);
 
-    return <g ref={ref} />;
+    return <g ref={ref} className={b('container')} />;
 };

@@ -23,6 +23,7 @@ import {Basic as BasicLine} from '../examples/line/Basic';
 import {DataLabels as LineWithDataLabels} from '../examples/line/DataLabels';
 import {LineWithMarkers} from '../examples/line/LineWithMarkers';
 import {LinesWithShapes} from '../examples/line/Shapes';
+import {TwoYAxis as LineTwoYAxis} from '../examples/line/TwoYAxis';
 import {BasicPie} from '../examples/pie/Basic';
 import {Donut} from '../examples/pie/Donut';
 import {Basic as BasicScatter} from '../examples/scatter/Basic';
@@ -61,6 +62,10 @@ const ShowcaseStory = () => {
                         <Col s={12} m={12} l={6}>
                             <Text variant="subheader-1">Lines with different shapes</Text>
                             <LinesWithShapes />
+                        </Col>
+                        <Col s={12} m={12} l={6}>
+                            <Text variant="subheader-1">Line with two Y axis</Text>
+                            <LineTwoYAxis />
                         </Col>
                     </Row>
                     <Row space={1}>
