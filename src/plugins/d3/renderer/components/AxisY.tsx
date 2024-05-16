@@ -107,11 +107,16 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             .data(axises)
             .join('g')
             .attr('class', b())
-            .style('transform', (d, index) => (index === 0 ? '' : `translate(${width}px, 0)`));
+            .style('transform', (_d, index) => (index === 0 ? '' : `translate(${width}px, 0)`));
 
         axisSelection.each((d, index, node) => {
             const seriesScale = scale[index];
-            const axisItem = select(node[index]);
+            const axisItem = select(node[index]) as Selection<
+                SVGGElement,
+                PreparedAxis,
+                any,
+                unknown
+            >;
             const yAxisGenerator = getAxisGenerator({
                 axisGenerator:
                     index === 0
@@ -168,7 +173,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
         axisSelection
             .select('.domain')
             .attr('d', () => {
-                const points = [
+                const points: [number, number][] = [
                     [0, 0],
                     [0, height],
                 ];
@@ -177,7 +182,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             })
             .style('stroke', (d) => d.lineColor || '');
 
-        svgElement.selectAll('.tick').each((d, index, nodes) => {
+        svgElement.selectAll('.tick').each((_d, index, nodes) => {
             const tickNode = select(nodes[index]);
             if (parseTransformStyle(tickNode.attr('transform')).y === height) {
                 // Remove stroke from tick that has the same y coordinate like domain
@@ -194,9 +199,9 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             .attr('font-size', (d) => d.title.style.fontSize)
             .attr('transform', (_d, index) => (index === 0 ? 'rotate(-90)' : 'rotate(90)'))
             .text((d) => d.title.text)
-            .each((d, index, node) => {
+            .each((_d, index, node) => {
                 return setEllipsisForOverflowText(
-                    select(node[index]) as Selection<SVGTextElement, T, null, unknown>,
+                    select(node[index]) as Selection<SVGTextElement, unknown, null, unknown>,
                     height,
                 );
             });

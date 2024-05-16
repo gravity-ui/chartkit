@@ -90,7 +90,7 @@ export const prepareWaterfallData = (args: {
         xAxis,
         xScale,
         yAxis: [yAxis],
-        yScale,
+        yScale: [yScale],
     } = args;
     const yLinearScale = yScale as ScaleLinear<number, number>;
     const plotHeight = yLinearScale(yLinearScale.domain()[0]);

@@ -58,8 +58,8 @@ type Args = {
     seriesOptions: PreparedSeriesOptions;
     xAxis: PreparedAxis;
     yAxis: PreparedAxis[];
-    xScale?: ChartScale[];
-    yScale?: ChartScale;
+    xScale?: ChartScale;
+    yScale?: ChartScale[];
 };
 
 export const useShapes = (args: Args) => {

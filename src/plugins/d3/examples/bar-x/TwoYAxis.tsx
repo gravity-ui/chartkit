@@ -8,7 +8,7 @@ import {ExampleWrapper} from '../ExampleWrapper';
 import marsWeatherData from '../mars-weather';
 
 export const TwoYAxis = () => {
-    const data = marsWeatherData.slice(-100);
+    const data = marsWeatherData.slice(-100) as any[];
     const pressureData = data.map((d) => ({
         x: dateTime({input: d.terrestrial_date, format: 'YYYY-MM-DD'}).valueOf(),
         y: d.pressure,
