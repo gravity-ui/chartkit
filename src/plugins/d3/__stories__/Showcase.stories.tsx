@@ -7,6 +7,7 @@ import {StoryObj} from '@storybook/react';
 import {Loader} from '../../../components/Loader/Loader';
 import {settings} from '../../../libs';
 import {Basic as BasicArea} from '../examples/area/Basic';
+import {NegativeValues as AreaNegativeValues} from '../examples/area/NegativeValues';
 import {PercentStackingArea} from '../examples/area/PercentStacking';
 import {StackedArea} from '../examples/area/StackedArea';
 import {TwoYAxis as AreaTwoYAxis} from '../examples/area/TwoYAxis';
@@ -19,6 +20,7 @@ import {StackedColumns} from '../examples/bar-x/StackedColumns';
 import {TwoYAxis as BarXTwoYAxis} from '../examples/bar-x/TwoYAxis';
 import {Basic as BasicBarY} from '../examples/bar-y/Basic';
 import {GroupedColumns as GroupedColumnsBarY} from '../examples/bar-y/GroupedColumns';
+import {NegativeValues as BarYNegativeValues} from '../examples/bar-y/NegativeValues';
 import {PercentStackingBars} from '../examples/bar-y/PercentStacking';
 import {StackedColumns as StackedColumnsBarY} from '../examples/bar-y/StackedColumns';
 import {LineAndBarXCombinedChart} from '../examples/combined/LineAndBarX';
@@ -92,6 +94,10 @@ const ShowcaseStory = () => {
                             <Text variant="subheader-1">Dual Y axis</Text>
                             <AreaTwoYAxis />
                         </Col>
+                        <Col s={12} m={6}>
+                            <Text variant="subheader-1">Area chart with negative values</Text>
+                            <AreaNegativeValues />
+                        </Col>
                     </Row>
                     <Row space={1}>
                         <Text variant="header-2">Bar-x charts</Text>
@@ -145,6 +151,10 @@ const ShowcaseStory = () => {
                         <Col s={12} m={6}>
                             <Text variant="subheader-1">Stacked percentage bars</Text>
                             <PercentStackingBars />
+                        </Col>
+                        <Col s={12} m={6}>
+                            <Text variant="subheader-1">Bar-y chart with negative values</Text>
+                            <BarYNegativeValues />
                         </Col>
                     </Row>
                     <Row space={1}>
