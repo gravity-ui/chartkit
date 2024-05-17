@@ -71,9 +71,15 @@ export function createYScale(axis: PreparedAxis, series: PreparedSeries[], bound
             const range = [boundsHeight, boundsHeight * axis.maxPadding];
 
             if (isNumericalArrayData(domain)) {
-                const [domainYMin, yMax] = extent(domain) as [number, number];
+                const [domainYMin, domainMax] = extent(domain) as [number, number];
                 const yMinValue = typeof yMin === 'number' ? yMin : domainYMin;
-                return scaleLinear().domain([yMinValue, yMax]).range(range).nice();
+                // FIXME: move to prepareAxis - setYmax based on series
+                let yMaxValue = domainMax;
+                if (series.some((s) => s.type === 'bar-x')) {
+                    yMaxValue = Math.max(yMaxValue, 0);
+                }
+
+                return scaleLinear().domain([yMinValue, yMaxValue]).range(range).nice();
             }
 
             break;

@@ -68,7 +68,8 @@ function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) 
                     return Math.min(minValue, minSubTotal);
                 }
                 default: {
-                    return minValue;
+                    const minYValue = s.data.reduce((res, d) => Math.min(res, d.y || 0), 0);
+                    return Math.min(minValue, minYValue);
                 }
             }
         }, 0);

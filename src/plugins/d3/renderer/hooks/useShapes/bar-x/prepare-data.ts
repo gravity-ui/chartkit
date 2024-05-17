@@ -153,12 +153,13 @@ export const prepareBarXData = (args: {
                 }
 
                 const x = xCenter - currentGroupWidth / 2 + (rectWidth + rectGap) * groupItemIndex;
-                const y = seriesYScale(yValue.data.y as number);
-                const height = plotHeight - y;
-
+                const yDataValue = yValue.data.y as number;
+                const y = seriesYScale(yDataValue);
+                const base = seriesYScale(0);
+                const height = yDataValue > 0 ? base - y : y - base;
                 const barData: PreparedBarXData = {
                     x,
-                    y: y - stackHeight,
+                    y: yDataValue > 0 ? y - stackHeight : seriesYScale(0),
                     width: rectWidth,
                     height,
                     opacity: get(yValue.data, 'opacity', null),
