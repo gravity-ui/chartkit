@@ -203,11 +203,16 @@ const createScales = (args: Args) => {
     return {
         xScale: createXScale(xAxis, visibleSeries, boundsWidth),
         yScale: yAxis.map((axis, index) => {
-            const axisSeries = visibleSeries.filter((s) => {
+            const axisSeries = series.filter((s) => {
                 const seriesAxisIndex = get(s, 'yAxis', 0);
                 return seriesAxisIndex === index;
             });
-            return createYScale(axis, axisSeries, boundsHeight);
+            const visibleAxisSeries = getOnlyVisibleSeries(axisSeries);
+            return createYScale(
+                axis,
+                visibleAxisSeries.length ? visibleAxisSeries : axisSeries,
+                boundsHeight,
+            );
         }),
     };
 };
