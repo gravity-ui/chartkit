@@ -1,5 +1,5 @@
 import type {Selection} from 'd3';
-import {select} from 'd3';
+import {select} from 'd3-selection';
 
 import {BaseTextStyle} from '../../../../types';
 

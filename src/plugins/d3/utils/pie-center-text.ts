@@ -1,4 +1,4 @@
-import {create} from 'd3';
+import {create} from 'd3-selection';
 import get from 'lodash/get';
 
 import {getLabelsSize} from '../renderer/utils';
