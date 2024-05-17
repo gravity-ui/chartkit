@@ -33,7 +33,7 @@ type Args = {
 
 type ReturnValue = {
     xScale?: ChartScale;
-    yScale?: ChartScale;
+    yScale?: ChartScale[];
 };
 
 const isNumericalArrayData = (data: unknown[]): data is number[] => {
@@ -202,7 +202,18 @@ const createScales = (args: Args) => {
 
     return {
         xScale: createXScale(xAxis, visibleSeries, boundsWidth),
-        yScale: createYScale(yAxis[0], visibleSeries, boundsHeight),
+        yScale: yAxis.map((axis, index) => {
+            const axisSeries = series.filter((s) => {
+                const seriesAxisIndex = get(s, 'yAxis', 0);
+                return seriesAxisIndex === index;
+            });
+            const visibleAxisSeries = getOnlyVisibleSeries(axisSeries);
+            return createYScale(
+                axis,
+                visibleAxisSeries.length ? visibleAxisSeries : axisSeries,
+                boundsHeight,
+            );
+        }),
     };
 };
 
@@ -213,7 +224,7 @@ export const useAxisScales = (args: Args): ReturnValue => {
     const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
     const scales = React.useMemo(() => {
         let xScale: ChartScale | undefined;
-        let yScale: ChartScale | undefined;
+        let yScale: ChartScale[] | undefined;
         const hasAxisRelatedSeries = series.some(isAxisRelatedSeries);
 
         if (hasAxisRelatedSeries) {

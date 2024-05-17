@@ -36,7 +36,8 @@
     "label_invalid-series-type": "It seems you haven't defined \"series.type\" property, or defined it incorrectly. Available values: [{{types}}].",
     "label_invalid-series-property": "It seems you are trying to use inappropriate value for \"{{key}}\", or defined it incorrectly. Available values: [{{values}}].",
     "label_invalid-treemap-redundant-value": "It seems you are trying to set \"value\" for container node. Check node with this properties: { id: \"{{id}}\", name: \"{{name}}\" }",
-    "label_invalid-treemap-missing-value": "It seems you are trying to use node without \"value\". Check node with this properties: { id: \"{{id}}\", name: \"{{name}}\" }"
+    "label_invalid-treemap-missing-value": "It seems you are trying to use node without \"value\". Check node with this properties: { id: \"{{id}}\", name: \"{{name}}\" }",
+    "label_invalid-y-axis-index": "It seems you are trying to use inappropriate index for Y axis: \"{{index}}\""
   },
   "highcharts": {
     "reset-zoom-title": "Reset zoom",

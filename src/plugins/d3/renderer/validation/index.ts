@@ -25,11 +25,23 @@ const AVAILABLE_SERIES_TYPES = Object.values(SeriesType);
 const validateXYSeries = (args: {
     series: XYSeries;
     xAxis?: ChartKitWidgetAxis;
-    yAxis?: ChartKitWidgetAxis;
+    yAxis?: ChartKitWidgetAxis[];
 }) => {
-    const {series, xAxis, yAxis} = args;
+    const {series, xAxis, yAxis = []} = args;
+
+    const yAxisIndex = get(series, 'yAxis', 0);
+    const seriesYAxis = yAxis[yAxisIndex];
+    if (yAxisIndex !== 0 && typeof seriesYAxis === 'undefined') {
+        throw new ChartKitError({
+            code: CHARTKIT_ERROR_CODE.INVALID_DATA,
+            message: i18n('error', 'label_invalid-y-axis-index', {
+                index: yAxisIndex,
+            }),
+        });
+    }
+
     const xType = get(xAxis, 'type', DEFAULT_AXIS_TYPE);
-    const yType = get(yAxis, 'type', DEFAULT_AXIS_TYPE);
+    const yType = get(seriesYAxis, 'type', DEFAULT_AXIS_TYPE);
     series.data.forEach(({x, y}) => {
         switch (xType) {
             case 'category': {
@@ -172,7 +184,7 @@ const validateTreemapSeries = ({series}: {series: TreemapSeries}) => {
 const validateSeries = (args: {
     series: ChartKitWidgetSeries;
     xAxis?: ChartKitWidgetAxis;
-    yAxis?: ChartKitWidgetAxis;
+    yAxis?: ChartKitWidgetAxis[];
 }) => {
     const {series, xAxis, yAxis} = args;
 
@@ -252,6 +264,6 @@ export const validateData = (data?: ChartKitWidgetData) => {
     }
 
     data.series.data.forEach((series) => {
-        validateSeries({series, yAxis: data.yAxis?.[0], xAxis: data.xAxis});
+        validateSeries({series, yAxis: data.yAxis, xAxis: data.xAxis});
     });
 };

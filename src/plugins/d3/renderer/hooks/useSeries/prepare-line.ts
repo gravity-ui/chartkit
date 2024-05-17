@@ -121,6 +121,7 @@ export function prepareLineSeries(args: PrepareLineSeriesArgs) {
             linecap: prepareLinecap(dashStyle as DashStyle, series, seriesOptions) as LineCap,
             opacity: get(series, 'opacity', null),
             cursor: get(series, 'cursor', null),
+            yAxis: get(series, 'yAxis', 0),
         };
 
         return prepared;

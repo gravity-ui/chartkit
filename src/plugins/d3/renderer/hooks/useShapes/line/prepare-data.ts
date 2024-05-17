@@ -41,7 +41,7 @@ export const prepareLineData = (args: {
     xAxis: PreparedAxis;
     xScale: ChartScale;
     yAxis: PreparedAxis[];
-    yScale: ChartScale;
+    yScale: ChartScale[];
 }): PreparedLineData[] => {
     const {series, xAxis, xScale, yScale} = args;
     const yAxis = args.yAxis[0];
@@ -49,9 +49,10 @@ export const prepareLineData = (args: {
     const xMax = xRangeMax / (1 - xAxis.maxPadding);
 
     return series.reduce<PreparedLineData[]>((acc, s) => {
+        const seriesYScale = yScale[s.yAxis];
         const points = s.data.map((d) => ({
             x: getXValue({point: d, xAxis, xScale}),
-            y: getYValue({point: d, yAxis, yScale}),
+            y: getYValue({point: d, yAxis, yScale: seriesYScale}),
             active: true,
             data: d,
             series: s,

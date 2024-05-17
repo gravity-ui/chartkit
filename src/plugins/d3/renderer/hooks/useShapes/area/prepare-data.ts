@@ -1,4 +1,3 @@
-import type {ScaleLinear} from 'd3';
 import {group, sort} from 'd3';
 
 import type {AreaSeriesData} from '../../../../../../types';
@@ -70,15 +69,12 @@ export const prepareAreaData = (args: {
     xAxis: PreparedAxis;
     xScale: ChartScale;
     yAxis: PreparedAxis[];
-    yScale: ChartScale;
+    yScale: ChartScale[];
+    boundsHeight: number;
 }): PreparedAreaData[] => {
-    const {series, xAxis, xScale, yScale} = args;
-    const yLinearScale = yScale as ScaleLinear<number, number>;
-    const plotHeight = yLinearScale(yLinearScale.domain()[0]);
-    const yAxis = args.yAxis[0];
+    const {series, xAxis, xScale, yAxis, yScale, boundsHeight: plotHeight} = args;
     const [_xMin, xRangeMax] = xScale.range();
     const xMax = xRangeMax / (1 - xAxis.maxPadding);
-    const [yMin, _yMax] = yScale.range();
 
     return Array.from(group(series, (s) => s.stackId)).reduce<PreparedAreaData[]>(
         (result, [_stackId, seriesStack]) => {
@@ -90,6 +86,10 @@ export const prepareAreaData = (args: {
             });
 
             const seriesStackData = seriesStack.reduce<PreparedAreaData[]>((acc, s) => {
+                const yAxisIndex = s.yAxis;
+                const seriesYAxis = yAxis[yAxisIndex];
+                const seriesYScale = yScale[yAxisIndex];
+                const [yMin, _yMax] = seriesYScale.range();
                 const seriesData = s.data.reduce<Map<string, AreaSeriesData>>((m, d) => {
                     return m.set(String(d.x), d);
                 }, new Map());
@@ -102,7 +102,9 @@ export const prepareAreaData = (args: {
                             // FIXME: think about how to break the series into separate areas(null Y values)
                             y: 0,
                         } as AreaSeriesData);
-                    const yValue = getYValue({point: d, yAxis, yScale}) - accumulatedYValue;
+                    const yValue =
+                        getYValue({point: d, yAxis: seriesYAxis, yScale: seriesYScale}) -
+                        accumulatedYValue;
                     accumulatedYValues.set(x, yMin - yValue);
 
                     pointsAcc.push({

@@ -59,7 +59,7 @@ type Args = {
     xAxis: PreparedAxis;
     yAxis: PreparedAxis[];
     xScale?: ChartScale;
-    yScale?: ChartScale;
+    yScale?: ChartScale[];
 };
 
 export const useShapes = (args: Args) => {
@@ -91,6 +91,7 @@ export const useShapes = (args: Args) => {
                             xScale,
                             yAxis,
                             yScale,
+                            boundsHeight,
                         });
                         acc.push(
                             <BarXSeriesShapes
@@ -177,6 +178,7 @@ export const useShapes = (args: Args) => {
                             xScale,
                             yAxis,
                             yScale,
+                            boundsHeight,
                         });
                         acc.push(
                             <AreaSeriesShapes
@@ -196,7 +198,7 @@ export const useShapes = (args: Args) => {
                             series: chartSeries as PreparedScatterSeries[],
                             xAxis,
                             xScale,
-                            yAxis: yAxis[0],
+                            yAxis,
                             yScale,
                         });
                         acc.push(

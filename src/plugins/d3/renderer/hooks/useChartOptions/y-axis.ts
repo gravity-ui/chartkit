@@ -84,57 +84,63 @@ export const getPreparedYAxis = ({
     series: ChartKitWidgetSeries[];
     yAxis: ChartKitWidgetData['yAxis'];
 }): PreparedAxis[] => {
-    // FIXME: add support for n axises
-    const yAxis1 = yAxis?.[0];
-    const labelsEnabled = get(yAxis1, 'labels.enabled', true);
+    return (yAxis || [{}]).map((axisItem, index) => {
+        const axisPosition = index === 0 ? 'left' : 'right';
+        const labelsEnabled = get(axisItem, 'labels.enabled', true);
 
-    const y1LabelsStyle: BaseTextStyle = {
-        fontSize: get(yAxis1, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE),
-    };
-    const y1TitleText = get(yAxis1, 'title.text', '');
-    const y1TitleStyle: BaseTextStyle = {
-        fontSize: get(yAxis1, 'title.style.fontSize', yAxisTitleDefaults.fontSize),
-    };
-    const axisType = get(yAxis1, 'type', 'linear');
-    const preparedY1Axis: PreparedAxis = {
-        type: axisType,
-        labels: {
-            enabled: labelsEnabled,
-            margin: labelsEnabled ? get(yAxis1, 'labels.margin', axisLabelsDefaults.margin) : 0,
-            padding: labelsEnabled ? get(yAxis1, 'labels.padding', axisLabelsDefaults.padding) : 0,
-            dateFormat: get(yAxis1, 'labels.dateFormat'),
-            numberFormat: get(yAxis1, 'labels.numberFormat'),
-            style: y1LabelsStyle,
-            rotation: get(yAxis1, 'labels.rotation', 0),
-            width: 0,
-            height: 0,
-            lineHeight: getHorisontalSvgTextHeight({text: 'TmpLabel', style: y1LabelsStyle}),
-            maxWidth: get(yAxis1, 'labels.maxWidth', axisLabelsDefaults.maxWidth),
-        },
-        lineColor: get(yAxis1, 'lineColor'),
-        categories: get(yAxis1, 'categories'),
-        timestamps: get(yAxis1, 'timestamps'),
-        title: {
-            text: y1TitleText,
-            margin: get(yAxis1, 'title.margin', yAxisTitleDefaults.margin),
-            style: y1TitleStyle,
-            height: y1TitleText
-                ? getHorisontalSvgTextHeight({text: y1TitleText, style: y1TitleStyle})
-                : 0,
-        },
-        min: getAxisMin(yAxis1, series),
-        maxPadding: get(yAxis1, 'maxPadding', 0.05),
-        grid: {
-            enabled: get(yAxis1, 'grid.enabled', true),
-        },
-        ticks: {
-            pixelInterval: get(yAxis1, 'ticks.pixelInterval'),
-        },
-    };
+        const labelsStyle: BaseTextStyle = {
+            fontSize: get(axisItem, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE),
+        };
+        const titleText = get(axisItem, 'title.text', '');
+        const titleStyle: BaseTextStyle = {
+            fontSize: get(axisItem, 'title.style.fontSize', yAxisTitleDefaults.fontSize),
+        };
+        const axisType = get(axisItem, 'type', 'linear');
+        const preparedAxis: PreparedAxis = {
+            type: axisType,
+            labels: {
+                enabled: labelsEnabled,
+                margin: labelsEnabled
+                    ? get(axisItem, 'labels.margin', axisLabelsDefaults.margin)
+                    : 0,
+                padding: labelsEnabled
+                    ? get(axisItem, 'labels.padding', axisLabelsDefaults.padding)
+                    : 0,
+                dateFormat: get(axisItem, 'labels.dateFormat'),
+                numberFormat: get(axisItem, 'labels.numberFormat'),
+                style: labelsStyle,
+                rotation: get(axisItem, 'labels.rotation', 0),
+                width: 0,
+                height: 0,
+                lineHeight: getHorisontalSvgTextHeight({text: 'TmpLabel', style: labelsStyle}),
+                maxWidth: get(axisItem, 'labels.maxWidth', axisLabelsDefaults.maxWidth),
+            },
+            lineColor: get(axisItem, 'lineColor'),
+            categories: get(axisItem, 'categories'),
+            timestamps: get(axisItem, 'timestamps'),
+            title: {
+                text: titleText,
+                margin: get(axisItem, 'title.margin', yAxisTitleDefaults.margin),
+                style: titleStyle,
+                height: titleText
+                    ? getHorisontalSvgTextHeight({text: titleText, style: titleStyle})
+                    : 0,
+            },
+            min: getAxisMin(axisItem, series),
+            maxPadding: get(axisItem, 'maxPadding', 0.05),
+            grid: {
+                enabled: get(axisItem, 'grid.enabled', index === 0),
+            },
+            ticks: {
+                pixelInterval: get(axisItem, 'ticks.pixelInterval'),
+            },
+            position: axisPosition,
+        };
 
-    if (labelsEnabled) {
-        preparedY1Axis.labels.width = getAxisLabelMaxWidth({axis: preparedY1Axis, series});
-    }
+        if (labelsEnabled) {
+            preparedAxis.labels.width = getAxisLabelMaxWidth({axis: preparedAxis, series});
+        }
 
-    return [preparedY1Axis];
+        return preparedAxis;
+    });
 };

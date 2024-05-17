@@ -86,6 +86,7 @@ export function prepareArea(args: PrepareAreaSeriesArgs) {
             },
             marker: prepareMarker(series, seriesOptions),
             cursor: get(series, 'cursor', null),
+            yAxis: get(series, 'yAxis', 0),
         };
 
         return prepared;

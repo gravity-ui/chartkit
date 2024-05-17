@@ -7,7 +7,7 @@ import type {ChartKitWidgetData} from '../../../../types';
 import {block} from '../../../../utils/cn';
 import {getD3Dispatcher} from '../d3-dispatcher';
 import {useAxisScales, useChartDimensions, useChartOptions, useSeries, useShapes} from '../hooks';
-import {getWidthOccupiedByYAxis} from '../hooks/useChartDimensions/utils';
+import {getYAxisWidth} from '../hooks/useChartDimensions/utils';
 import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
 import {getPreparedYAxis} from '../hooks/useChartOptions/y-axis';
 import {getClosestPoints} from '../utils/get-closest-data';
@@ -103,7 +103,8 @@ export const Chart = (props: Props) => {
     }, [dispatcher, clickHandler]);
 
     const boundsOffsetTop = chart.margin.top;
-    const boundsOffsetLeft = chart.margin.left + getWidthOccupiedByYAxis({preparedAxis: yAxis});
+    // We only need to consider the width of the first left axis
+    const boundsOffsetLeft = chart.margin.left + getYAxisWidth(yAxis[0]);
 
     const handleMouseMove: MouseEventHandler<SVGSVGElement> = (event) => {
         const [pointerX, pointerY] = pointer(event, svgRef.current);
@@ -143,7 +144,7 @@ export const Chart = (props: Props) => {
                     height={boundsHeight}
                     transform={`translate(${[boundsOffsetLeft, boundsOffsetTop].join(',')})`}
                 >
-                    {xScale && yScale && (
+                    {xScale && yScale?.length && (
                         <React.Fragment>
                             <AxisY
                                 axises={yAxis}
