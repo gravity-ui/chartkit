@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.6.0](https://github.com/gravity-ui/chartkit/compare/v5.5.0...v5.6.0) (2024-05-17)
+
+
+### Features
+
+* **D3 plugin:** add second Y axis support ([#480](https://github.com/gravity-ui/chartkit/issues/480)) ([7cadd8e](https://github.com/gravity-ui/chartkit/commit/7cadd8efec7a46665f55094651c7bdde3643a4d1))
+
+
+### Bug Fixes
+
+* **D3 plugin:** fix import in utils ([#482](https://github.com/gravity-ui/chartkit/issues/482)) ([8cb4624](https://github.com/gravity-ui/chartkit/commit/8cb4624ed17d68117295ab9105cf4f824e9e11a7))
+
 ## [5.5.0](https://github.com/gravity-ui/chartkit/compare/v5.4.0...v5.5.0) (2024-05-13)
 
 
