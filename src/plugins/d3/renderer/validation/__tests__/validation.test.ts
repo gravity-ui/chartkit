@@ -130,4 +130,17 @@ describe('plugins/d3/validation', () => {
             expect(error?.code).toEqual(CHARTKIT_ERROR_CODE.INVALID_DATA);
         },
     );
+
+    test('validateData should throw an error in case of invalid axis index', () => {
+        const data = {series: {data: [{type: 'line', yAxis: 5, data: [{x: 1, y: 1}]}]}};
+        let error: ChartKitError | null = null;
+
+        try {
+            validateData(data as ChartKitWidgetData);
+        } catch (e) {
+            error = e as ChartKitError;
+        }
+
+        expect(error?.code).toEqual(CHARTKIT_ERROR_CODE.INVALID_DATA);
+    });
 });
