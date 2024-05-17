@@ -87,7 +87,7 @@ export const prepareAreaData = (args: {
 
             const seriesStackData = seriesStack.reduce<PreparedAreaData[]>((acc, s) => {
                 const yAxisIndex = s.yAxis;
-                const seriesYAxis = yAxis[0];
+                const seriesYAxis = yAxis[yAxisIndex];
                 const seriesYScale = yScale[yAxisIndex];
                 const [yMin, _yMax] = seriesYScale.range();
                 const seriesData = s.data.reduce<Map<string, AreaSeriesData>>((m, d) => {

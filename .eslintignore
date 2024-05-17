@@ -4,4 +4,3 @@ src/i18n/keysets
 test-utils
 tests
 jest.config.js
-src/plugins/d3/examples/mars-weather.js

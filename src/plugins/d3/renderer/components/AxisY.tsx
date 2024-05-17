@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {Selection, axisLeft, axisRight, line, select} from 'd3';
-import type {Axis, AxisDomain, AxisScale} from 'd3';
+import {axisLeft, axisRight, line, select} from 'd3';
+import type {Axis, AxisDomain, AxisScale, Selection} from 'd3';
 
 import {block} from '../../../../utils/cn';
 import type {ChartScale, PreparedAxis} from '../hooks';
