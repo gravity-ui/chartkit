@@ -76,6 +76,14 @@ export const getDomainDataXBySeries = (series: UnknownSeries[]) => {
     }, []);
 };
 
+export function getDefaultMaxXAxisValue(series: UnknownSeries[]) {
+    if (series.some((s) => s.type === 'bar-y')) {
+        return 0;
+    }
+
+    return undefined;
+}
+
 export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
     const groupedSeries = group(series, (item) => item.type);
 

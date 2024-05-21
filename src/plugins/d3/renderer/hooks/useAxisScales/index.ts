@@ -9,6 +9,7 @@ import {DEFAULT_AXIS_TYPE} from '../../constants';
 import {
     CHART_SERIES_WITH_VOLUME,
     getDataCategoryValue,
+    getDefaultMaxXAxisValue,
     getDomainDataXBySeries,
     getDomainDataYBySeries,
     getOnlyVisibleSeries,
@@ -141,6 +142,7 @@ export function createXScale(
     boundsWidth: number,
 ) {
     const xMin = get(axis, 'min');
+    const xMax = getDefaultMaxXAxisValue(series);
     const xType = get(axis, 'type', DEFAULT_AXIS_TYPE);
     const xCategories = get(axis, 'categories');
     const xTimestamps = get(axis, 'timestamps');
@@ -154,9 +156,11 @@ export function createXScale(
             const domain = getDomainDataXBySeries(series);
 
             if (isNumericalArrayData(domain)) {
-                const [domainXMin, xMax] = extent(domain) as [number, number];
+                const [domainXMin, domainXMax] = extent(domain) as [number, number];
                 const xMinValue = typeof xMin === 'number' ? xMin : domainXMin;
-                return scaleLinear().domain([xMinValue, xMax]).range(xRange).nice();
+                const xMaxValue =
+                    typeof xMax === 'number' ? Math.max(xMax, domainXMax) : domainXMax;
+                return scaleLinear().domain([xMinValue, xMaxValue]).range(xRange).nice();
             }
 
             break;
