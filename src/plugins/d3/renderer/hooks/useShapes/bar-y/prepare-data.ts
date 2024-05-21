@@ -141,13 +141,12 @@ export const prepareBarYData = (args: {
                 }
 
                 const y = center - currentBarHeight / 2 + (barHeight + rectGap) * groupItemIndex;
+                const xValue = Number(data.x);
                 const width =
-                    data.x > 0
-                        ? xLinearScale(data.x as number) - base
-                        : base - xLinearScale(data.x as number);
+                    xValue > 0 ? xLinearScale(xValue) - base : base - xLinearScale(xValue);
 
                 stackItems.push({
-                    x: data.x > 0 ? stackSum : stackSum - width,
+                    x: xValue > 0 ? stackSum : stackSum - width,
                     y,
                     width,
                     height: barHeight,
