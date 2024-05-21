@@ -95,7 +95,7 @@ const ShowcaseStory = () => {
                             <AreaTwoYAxis />
                         </Col>
                         <Col s={12} m={6}>
-                            <Text variant="subheader-1">Area chart with negative values</Text>
+                            <Text variant="subheader-1">With negative values</Text>
                             <AreaNegativeValues />
                         </Col>
                     </Row>

@@ -25,6 +25,11 @@ export * from './symbol';
 export * from './series';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie', 'treemap'];
+export const CHART_SERIES_WITH_VOLUME: ChartKitWidgetSeries['type'][] = [
+    'bar-x',
+    'area',
+    'waterfall',
+];
 
 export type AxisDirection = 'x' | 'y';
 

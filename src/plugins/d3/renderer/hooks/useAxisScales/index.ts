@@ -7,6 +7,7 @@ import get from 'lodash/get';
 import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
 import {DEFAULT_AXIS_TYPE} from '../../constants';
 import {
+    CHART_SERIES_WITH_VOLUME,
     getDataCategoryValue,
     getDomainDataXBySeries,
     getDomainDataYBySeries,
@@ -73,9 +74,8 @@ export function createYScale(axis: PreparedAxis, series: PreparedSeries[], bound
             if (isNumericalArrayData(domain)) {
                 const [domainYMin, domainMax] = extent(domain) as [number, number];
                 const yMinValue = typeof yMin === 'number' ? yMin : domainYMin;
-                // FIXME: move to prepareAxis - setYmax based on series
                 let yMaxValue = domainMax;
-                if (series.some((s) => s.type === 'bar-x')) {
+                if (series.some((s) => CHART_SERIES_WITH_VOLUME.includes(s.type))) {
                     yMaxValue = Math.max(yMaxValue, 0);
                 }
 

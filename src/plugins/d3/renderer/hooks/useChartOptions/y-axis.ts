@@ -9,6 +9,7 @@ import {
     yAxisTitleDefaults,
 } from '../../constants';
 import {
+    CHART_SERIES_WITH_VOLUME,
     formatAxisTickLabel,
     getClosestPointsRange,
     getHorisontalSvgTextHeight,
@@ -51,9 +52,11 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
 
 function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) {
     const min = axis?.min;
-    const seriesWithVolume = ['bar-x', 'area', 'waterfall'];
 
-    if (typeof min === 'undefined' && series?.some((s) => seriesWithVolume.includes(s.type))) {
+    if (
+        typeof min === 'undefined' &&
+        series?.some((s) => CHART_SERIES_WITH_VOLUME.includes(s.type))
+    ) {
         return series.reduce((minValue, s) => {
             switch (s.type) {
                 case 'waterfall': {
