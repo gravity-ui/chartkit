@@ -25,6 +25,11 @@ export * from './symbol';
 export * from './series';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie', 'treemap'];
+export const CHART_SERIES_WITH_VOLUME: ChartKitWidgetSeries['type'][] = [
+    'bar-x',
+    'area',
+    'waterfall',
+];
 
 export type AxisDirection = 'x' | 'y';
 
@@ -70,6 +75,14 @@ export const getDomainDataXBySeries = (series: UnknownSeries[]) => {
         return acc;
     }, []);
 };
+
+export function getDefaultMaxXAxisValue(series: UnknownSeries[]) {
+    if (series.some((s) => s.type === 'bar-y')) {
+        return 0;
+    }
+
+    return undefined;
+}
 
 export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
     const groupedSeries = group(series, (item) => item.type);

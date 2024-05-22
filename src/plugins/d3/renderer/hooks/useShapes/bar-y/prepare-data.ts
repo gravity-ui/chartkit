@@ -122,7 +122,8 @@ export const prepareBarYData = (args: {
         const stacks = Object.values(val);
         const currentBarHeight = barHeight * stacks.length + rectGap * (stacks.length - 1);
         stacks.forEach((measureValues, groupItemIndex) => {
-            let stackSum = 0;
+            const base = xLinearScale(0);
+            let stackSum = base;
 
             const stackItems: PreparedBarYData[] = [];
             const sortedData = sortKey
@@ -140,10 +141,12 @@ export const prepareBarYData = (args: {
                 }
 
                 const y = center - currentBarHeight / 2 + (barHeight + rectGap) * groupItemIndex;
-                const width = xLinearScale(data.x as number);
+                const xValue = Number(data.x);
+                const width =
+                    xValue > 0 ? xLinearScale(xValue) - base : base - xLinearScale(xValue);
 
                 stackItems.push({
-                    x: stackSum,
+                    x: xValue > 0 ? stackSum : stackSum - width,
                     y,
                     width,
                     height: barHeight,

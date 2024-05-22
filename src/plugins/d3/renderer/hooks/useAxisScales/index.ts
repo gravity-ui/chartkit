@@ -7,7 +7,9 @@ import get from 'lodash/get';
 import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
 import {DEFAULT_AXIS_TYPE} from '../../constants';
 import {
+    CHART_SERIES_WITH_VOLUME,
     getDataCategoryValue,
+    getDefaultMaxXAxisValue,
     getDomainDataXBySeries,
     getDomainDataYBySeries,
     getOnlyVisibleSeries,
@@ -71,9 +73,14 @@ export function createYScale(axis: PreparedAxis, series: PreparedSeries[], bound
             const range = [boundsHeight, boundsHeight * axis.maxPadding];
 
             if (isNumericalArrayData(domain)) {
-                const [domainYMin, yMax] = extent(domain) as [number, number];
+                const [domainYMin, domainMax] = extent(domain) as [number, number];
                 const yMinValue = typeof yMin === 'number' ? yMin : domainYMin;
-                return scaleLinear().domain([yMinValue, yMax]).range(range).nice();
+                let yMaxValue = domainMax;
+                if (series.some((s) => CHART_SERIES_WITH_VOLUME.includes(s.type))) {
+                    yMaxValue = Math.max(yMaxValue, 0);
+                }
+
+                return scaleLinear().domain([yMinValue, yMaxValue]).range(range).nice();
             }
 
             break;
@@ -135,6 +142,7 @@ export function createXScale(
     boundsWidth: number,
 ) {
     const xMin = get(axis, 'min');
+    const xMax = getDefaultMaxXAxisValue(series);
     const xType = get(axis, 'type', DEFAULT_AXIS_TYPE);
     const xCategories = get(axis, 'categories');
     const xTimestamps = get(axis, 'timestamps');
@@ -148,9 +156,11 @@ export function createXScale(
             const domain = getDomainDataXBySeries(series);
 
             if (isNumericalArrayData(domain)) {
-                const [domainXMin, xMax] = extent(domain) as [number, number];
+                const [domainXMin, domainXMax] = extent(domain) as [number, number];
                 const xMinValue = typeof xMin === 'number' ? xMin : domainXMin;
-                return scaleLinear().domain([xMinValue, xMax]).range(xRange).nice();
+                const xMaxValue =
+                    typeof xMax === 'number' ? Math.max(xMax, domainXMax) : domainXMax;
+                return scaleLinear().domain([xMinValue, xMaxValue]).range(xRange).nice();
             }
 
             break;

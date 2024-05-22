@@ -32,7 +32,7 @@ type Args = {
 export const AreaSeriesShapes = (args: Args) => {
     const {dispatcher, preparedData, seriesOptions} = args;
 
-    const ref = React.useRef<SVGGElement>(null);
+    const ref = React.useRef<SVGGElement | null>(null);
 
     React.useEffect(() => {
         if (!ref.current) {

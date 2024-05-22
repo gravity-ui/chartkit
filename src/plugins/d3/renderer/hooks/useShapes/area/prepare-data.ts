@@ -2,7 +2,7 @@ import {group, sort} from 'd3';
 
 import type {AreaSeriesData} from '../../../../../../types';
 import type {LabelData} from '../../../types';
-import {getLabelsSize, getLeftPosition} from '../../../utils';
+import {getDataCategoryValue, getLabelsSize, getLeftPosition} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedAreaSeries} from '../../useSeries/types';
@@ -40,9 +40,14 @@ function getLabelData(point: PointData, series: PreparedAreaSeries, xMax: number
 }
 
 function getXValues(series: PreparedAreaSeries[], xAxis: PreparedAxis, xScale: ChartScale) {
+    const categories = xAxis.categories || [];
     const xValues = series.reduce<Map<string, number>>((acc, s) => {
         s.data.forEach((d) => {
-            const key = String(d.x);
+            const key = String(
+                xAxis.type === 'category'
+                    ? getDataCategoryValue({axisDirection: 'x', categories, data: d})
+                    : d.x,
+            );
             if (!acc.has(key)) {
                 acc.set(key, getXValue({point: d, xAxis, xScale}));
             }
@@ -51,7 +56,7 @@ function getXValues(series: PreparedAreaSeries[], xAxis: PreparedAxis, xScale: C
     }, new Map());
 
     if (xAxis.type === 'category') {
-        return (xAxis.categories || []).reduce<[string, number][]>((acc, category) => {
+        return categories.reduce<[string, number][]>((acc, category) => {
             const xValue = xValues.get(category);
             if (typeof xValue === 'number') {
                 acc.push([category, xValue]);
@@ -89,9 +94,18 @@ export const prepareAreaData = (args: {
                 const yAxisIndex = s.yAxis;
                 const seriesYAxis = yAxis[yAxisIndex];
                 const seriesYScale = yScale[yAxisIndex];
-                const [yMin, _yMax] = seriesYScale.range();
+                const yMin = getYValue({point: {y: 0}, yAxis: seriesYAxis, yScale: seriesYScale});
                 const seriesData = s.data.reduce<Map<string, AreaSeriesData>>((m, d) => {
-                    return m.set(String(d.x), d);
+                    const key = String(
+                        xAxis.type === 'category'
+                            ? getDataCategoryValue({
+                                  axisDirection: 'x',
+                                  categories: xAxis.categories || [],
+                                  data: d,
+                              })
+                            : d.x,
+                    );
+                    return m.set(key, d);
                 }, new Map());
                 const points = xValues.reduce<PointData[]>((pointsAcc, [x, xValue]) => {
                     const accumulatedYValue = accumulatedYValues.get(x) || 0;
