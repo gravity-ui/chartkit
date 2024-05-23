@@ -1757,7 +1757,7 @@ export function prepareConfig(data, options, isMobile, holidays) {
                     // Callback setExtremes used because of it obligatory invocation on every zoom event
                     // setTimeout used because of absence resetZoomButton node in dom on first zoom event
                     setTimeout(() => {
-                        const text = this.chart.resetZoomButton?.text;
+                        const text = this.chart?.resetZoomButton?.text;
 
                         if (text) {
                             text.translate(0, -6);
