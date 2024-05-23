@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.7.0](https://github.com/gravity-ui/chartkit/compare/v5.6.0...v5.7.0) (2024-05-23)
+
+
+### Features
+
+* **D3 plugin:** negative Y values for bar-x chart ([#483](https://github.com/gravity-ui/chartkit/issues/483)) ([7180e39](https://github.com/gravity-ui/chartkit/commit/7180e394c64ddcdbb09da7a39ce2f8d882d2880b))
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix resetZoomButton alignment ([#485](https://github.com/gravity-ui/chartkit/issues/485)) ([109d5c0](https://github.com/gravity-ui/chartkit/commit/109d5c031bc839df35eaa212186ca147387a99f0))
+
 ## [5.6.0](https://github.com/gravity-ui/chartkit/compare/v5.5.0...v5.6.0) (2024-05-17)
 
 
