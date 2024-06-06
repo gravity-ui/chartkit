@@ -1,5 +1,5 @@
 import type {AxisDomain, AxisScale, Selection} from 'd3';
-import {select} from 'd3';
+import {path, select} from 'd3';
 
 import {BaseTextStyle} from '../../../../../types';
 import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
@@ -17,7 +17,8 @@ type AxisBottomArgs = {
         labelsStyle?: BaseTextStyle;
         labelsMaxWidth?: number;
         labelsLineHeight: number;
-        size: number;
+        // size: number;
+        items: [number, number][];
         rotation: number;
     };
     domain: {
@@ -55,7 +56,8 @@ export function axisBottom(args: AxisBottomArgs) {
             labelsMaxWidth = Infinity,
             labelsStyle,
             labelsLineHeight,
-            size: tickSize,
+            // size: tickSize,
+            items: tickItems,
             count: ticksCount,
             maxTickCount,
             rotation,
@@ -84,13 +86,19 @@ export function axisBottom(args: AxisBottomArgs) {
             transform = `translate(${-labelsOffsetLeft}px, ${labelsOffsetTop}px) rotate(${rotation}deg)`;
         }
 
+        const tickPath = path();
+        tickItems.forEach(([start, end]) => {
+            tickPath.moveTo(0, start);
+            tickPath.lineTo(0, end);
+        });
+
         selection
             .selectAll('.tick')
             .data(values)
             .order()
             .join((el) => {
                 const tick = el.append('g').attr('class', 'tick');
-                tick.append('line').attr('stroke', 'currentColor').attr('y2', tickSize);
+                tick.append('path').attr('d', tickPath.toString()).attr('stroke', 'currentColor');
                 tick.append('text')
                     .text(labelFormat)
                     .attr('fill', 'currentColor')

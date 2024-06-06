@@ -44,8 +44,12 @@ export const Chart = (props: Props) => {
         [data, width],
     );
     const yAxis = React.useMemo(
-        () => getPreparedYAxis({series: data.series.data, yAxis: data.yAxis}),
-        [data, width],
+        () =>
+            getPreparedYAxis({
+                series: data.series.data,
+                yAxis: data.yAxis,
+            }),
+        [data],
     );
 
     const {
@@ -78,6 +82,7 @@ export const Chart = (props: Props) => {
         series: preparedSeries,
         xAxis,
         yAxis,
+        split: data.split,
     });
     const {shapes, shapesData} = useShapes({
         boundsWidth,
@@ -89,6 +94,7 @@ export const Chart = (props: Props) => {
         xScale,
         yAxis,
         yScale,
+        split: data.split,
     });
 
     const clickHandler = data.chart?.events?.click;
@@ -147,10 +153,11 @@ export const Chart = (props: Props) => {
                     {xScale && yScale?.length && (
                         <React.Fragment>
                             <AxisY
-                                axises={yAxis}
+                                axes={yAxis}
                                 width={boundsWidth}
                                 height={boundsHeight}
                                 scale={yScale}
+                                split={data.split}
                             />
                             <g transform={`translate(0, ${boundsHeight})`}>
                                 <AxisX
@@ -158,6 +165,7 @@ export const Chart = (props: Props) => {
                                     width={boundsWidth}
                                     height={boundsHeight}
                                     scale={xScale}
+                                    split={data.split}
                                 />
                             </g>
                         </React.Fragment>

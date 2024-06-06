@@ -12,7 +12,8 @@
         alignment-baseline: after-edge;
     }
 
-    & .tick line {
+    & .tick line,
+    & .tick path {
         stroke: var(--g-color-line-generic);
     }
 

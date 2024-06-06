@@ -3,12 +3,15 @@ import React from 'react';
 import {axisLeft, axisRight, line, select} from 'd3';
 import type {Axis, AxisDomain, AxisScale, Selection} from 'd3';
 
+import type {ChartKitWidgetSplit} from '../../../../types';
 import {block} from '../../../../utils/cn';
 import type {ChartScale, PreparedAxis} from '../hooks';
 import {
     calculateCos,
+    calculateNumericProperty,
     calculateSin,
     formatAxisTickLabel,
+    getAxisHeight,
     getClosestPointsRange,
     getScaleTicks,
     getTicksCount,
@@ -24,6 +27,7 @@ type Props = {
     scale: ChartScale[];
     width: number;
     height: number;
+    split?: ChartKitWidgetSplit;
 };
 
 function transformLabel(args: {node: Element; axis: PreparedAxis}) {
@@ -91,7 +95,10 @@ function getAxisGenerator(args: {
     return axisGenerator;
 }
 
-export const AxisY = ({axises, width, height, scale}: Props) => {
+export const AxisY = (props: Props) => {
+    const {axes, width, height: totalHeight, scale, split} = props;
+    const splitGap = calculateNumericProperty({value: split?.gap, base: totalHeight}) ?? 0;
+    const height = getAxisHeight({split, boundsHeight: totalHeight});
     const ref = React.useRef<SVGGElement | null>(null);
 
     React.useEffect(() => {
@@ -104,10 +111,17 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
 
         const axisSelection = svgElement
             .selectAll('axis')
-            .data(axises)
+            .data(axes)
             .join('g')
             .attr('class', b())
-            .style('transform', (_d, index) => (index === 0 ? '' : `translate(${width}px, 0)`));
+            .style('transform', (d) => {
+                const top = d.plotIndex * (height + splitGap);
+                if (d.position === 'left') {
+                    return `translate(0, ${top}px)`;
+                }
+
+                return `translate(${width}px, 0)`;
+            });
 
         axisSelection.each((d, index, node) => {
             const seriesScale = scale[index];
@@ -119,7 +133,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             >;
             const yAxisGenerator = getAxisGenerator({
                 axisGenerator:
-                    index === 0
+                    d.position === 'left'
                         ? axisLeft(seriesScale as AxisScale<AxisDomain>)
                         : axisRight(seriesScale as AxisScale<AxisDomain>),
                 preparedAxis: d,
@@ -195,9 +209,9 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
             .attr('class', b('title'))
             .attr('text-anchor', 'middle')
             .attr('dy', (d) => -(d.title.margin + d.labels.margin + d.labels.width))
-            .attr('dx', (_d, index) => (index === 0 ? -height / 2 : height / 2))
+            .attr('dx', (d) => (d.position === 'left' ? -height / 2 : height / 2))
             .attr('font-size', (d) => d.title.style.fontSize)
-            .attr('transform', (_d, index) => (index === 0 ? 'rotate(-90)' : 'rotate(90)'))
+            .attr('transform', (d) => (d.position === 'left' ? 'rotate(-90)' : 'rotate(90)'))
             .text((d) => d.title.text)
             .each((_d, index, node) => {
                 return setEllipsisForOverflowText(
@@ -205,7 +219,7 @@ export const AxisY = ({axises, width, height, scale}: Props) => {
                     height,
                 );
             });
-    }, [axises, width, height, scale]);
+    }, [axes, width, height, scale, splitGap]);
 
     return <g ref={ref} className={b('container')} />;
 };

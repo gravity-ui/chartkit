@@ -1,5 +1,11 @@
+import {ChartKitWidgetData} from '../../../../../../types';
 import type {LabelData} from '../../../types';
-import {getLabelsSize, getLeftPosition} from '../../../utils';
+import {
+    calculateNumericProperty,
+    getAxisHeight,
+    getLabelsSize,
+    getLeftPosition,
+} from '../../../utils';
 import {ChartScale} from '../../useAxisScales';
 import {PreparedAxis} from '../../useChartOptions/types';
 import {PreparedLineSeries} from '../../useSeries/types';
@@ -42,17 +48,23 @@ export const prepareLineData = (args: {
     xScale: ChartScale;
     yAxis: PreparedAxis[];
     yScale: ChartScale[];
+    split?: ChartKitWidgetData['split'];
+    boundsHeight: number;
 }): PreparedLineData[] => {
-    const {series, xAxis, xScale, yScale} = args;
-    const yAxis = args.yAxis[0];
+    const {series, xAxis, yAxis, xScale, yScale, split, boundsHeight} = args;
+    const splitGap = calculateNumericProperty({value: split?.gap, base: boundsHeight}) ?? 0;
     const [_xMin, xRangeMax] = xScale.range();
     const xMax = xRangeMax / (1 - xAxis.maxPadding);
 
     return series.reduce<PreparedLineData[]>((acc, s) => {
+        const yAxisIndex = s.yAxis;
+        const seriesYAxis = yAxis[yAxisIndex];
+        const yAxisHeight = getAxisHeight({split, boundsHeight});
+        const yAxisTop = seriesYAxis.plotIndex * (yAxisHeight + splitGap);
         const seriesYScale = yScale[s.yAxis];
         const points = s.data.map((d) => ({
             x: getXValue({point: d, xAxis, xScale}),
-            y: getYValue({point: d, yAxis, yScale: seriesYScale}),
+            y: yAxisTop + getYValue({point: d, yAxis: seriesYAxis, yScale: seriesYScale}),
             active: true,
             data: d,
             series: s,

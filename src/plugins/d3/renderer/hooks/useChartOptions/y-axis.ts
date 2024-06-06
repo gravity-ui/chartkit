@@ -88,8 +88,17 @@ export const getPreparedYAxis = ({
     series: ChartKitWidgetSeries[];
     yAxis: ChartKitWidgetData['yAxis'];
 }): PreparedAxis[] => {
-    return (yAxis || [{}]).map((axisItem, index) => {
-        const axisPosition = index === 0 ? 'left' : 'right';
+    const axisByPlot = {};
+    const axisItems = yAxis || [{}];
+    return axisItems.map((axisItem) => {
+        const plotIndex = get(axisItem, 'plotIndex', 0);
+        const firstPlotAxis = !axisByPlot[plotIndex];
+        if (firstPlotAxis) {
+            axisByPlot[plotIndex] = [];
+        }
+        axisByPlot[plotIndex].push(axisItem);
+        const defaultAxisPosition = firstPlotAxis ? 'left' : 'right';
+
         const labelsEnabled = get(axisItem, 'labels.enabled', true);
 
         const labelsStyle: BaseTextStyle = {
@@ -133,12 +142,13 @@ export const getPreparedYAxis = ({
             min: getAxisMin(axisItem, series),
             maxPadding: get(axisItem, 'maxPadding', 0.05),
             grid: {
-                enabled: get(axisItem, 'grid.enabled', index === 0),
+                enabled: get(axisItem, 'grid.enabled', firstPlotAxis),
             },
             ticks: {
                 pixelInterval: get(axisItem, 'ticks.pixelInterval'),
             },
-            position: axisPosition,
+            position: get(axisItem, 'position', defaultAxisPosition),
+            plotIndex: get(axisItem, 'plotIndex', 0),
         };
 
         if (labelsEnabled) {

@@ -14,6 +14,7 @@ import type {
     PreparedTreemapSeries,
     PreparedWaterfallSeries,
 } from '../';
+import {ChartKitWidgetData} from '../../../../../types';
 import {getOnlyVisibleSeries} from '../../utils';
 import type {ChartScale} from '../useAxisScales';
 import type {PreparedAxis} from '../useChartOptions/types';
@@ -60,6 +61,7 @@ type Args = {
     yAxis: PreparedAxis[];
     xScale?: ChartScale;
     yScale?: ChartScale[];
+    split?: ChartKitWidgetData['split'];
 };
 
 export const useShapes = (args: Args) => {
@@ -73,6 +75,7 @@ export const useShapes = (args: Args) => {
         xScale,
         yAxis,
         yScale,
+        split,
     } = args;
 
     const shapesComponents = React.useMemo(() => {
@@ -157,6 +160,8 @@ export const useShapes = (args: Args) => {
                             xScale,
                             yAxis,
                             yScale,
+                            split,
+                            boundsHeight,
                         });
                         acc.push(
                             <LineSeriesShapes

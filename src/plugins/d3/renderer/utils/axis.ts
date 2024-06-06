@@ -1,6 +1,9 @@
 import {AxisDomain, AxisScale, ScaleBand} from 'd3';
 
+import {ChartKitWidgetData} from '../../../../types';
 import {PreparedAxis} from '../hooks';
+
+import {calculateNumericProperty} from './math';
 
 export function getTicksCount({axis, range}: {axis: PreparedAxis; range: number}) {
     let ticksCount: number | undefined;
@@ -64,4 +67,16 @@ export function getXAxisItems({
 export function getMaxTickCount({axis, width}: {axis: PreparedAxis; width: number}) {
     const minTickWidth = parseInt(axis.labels.style.fontSize) + axis.labels.padding;
     return Math.floor(width / minTickWidth);
+}
+
+export function getAxisHeight(args: {split: ChartKitWidgetData['split']; boundsHeight: number}) {
+    const {split, boundsHeight} = args;
+    const plots = split?.plots || [];
+
+    if (plots.length > 1) {
+        const splitGap = calculateNumericProperty({value: split?.gap, base: boundsHeight}) ?? 0;
+        return (boundsHeight - splitGap * (plots.length - 1)) / plots.length;
+    }
+
+    return boundsHeight;
 }

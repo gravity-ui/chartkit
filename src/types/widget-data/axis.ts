@@ -68,4 +68,6 @@ export type ChartKitWidgetAxis = {
      * Defaults to 0.05 for Y axis and to 0.01 for X axis.
      * */
     maxPadding?: number;
+    position?: 'left' | 'right' | 'top' | 'bottom';
+    plotIndex?: number;
 };

@@ -2,6 +2,7 @@ import type {ChartKitWidgetAxis} from './axis';
 import type {ChartKitWidgetChart} from './chart';
 import type {ChartKitWidgetLegend} from './legend';
 import type {ChartKitWidgetSeries, ChartKitWidgetSeriesOptions} from './series';
+import type {ChartKitWidgetSplit} from './split';
 import type {ChartKitWidgetTitle} from './title';
 import type {ChartKitWidgetTooltip} from './tooltip';
 
@@ -16,6 +17,7 @@ export * from './bar-y';
 export * from './area';
 export * from './line';
 export * from './series';
+export * from './split';
 export * from './title';
 export * from './tooltip';
 export * from './halo';
@@ -33,4 +35,5 @@ export type ChartKitWidgetData<T = any> = {
     tooltip?: ChartKitWidgetTooltip<T>;
     xAxis?: ChartKitWidgetAxis;
     yAxis?: ChartKitWidgetAxis[];
+    split?: ChartKitWidgetSplit;
 };
