@@ -60,6 +60,9 @@ const ChartStory = () => {
     }, []);
 
     const widgetData: ChartKitWidgetData = {
+        title: {
+            text: 'Chart title',
+        },
         series: {
             data: prepareData(),
         },
@@ -67,7 +70,7 @@ const ChartStory = () => {
             enable: true,
             layout: 'vertical',
             gap: '40px',
-            plots: [{title: {text: 'First'}}, {title: {text: 'Second'}}],
+            plots: [{title: {text: 'Strategy'}}, {title: {text: 'Shooter & Puzzle'}}],
         },
         yAxis: [
             {

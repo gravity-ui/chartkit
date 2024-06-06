@@ -4,7 +4,7 @@ import {extent, scaleBand, scaleLinear, scaleUtc} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import {ChartKitWidgetAxis, ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types';
+import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
 import {DEFAULT_AXIS_TYPE} from '../../constants';
 import {
     CHART_SERIES_WITH_VOLUME,
@@ -20,6 +20,7 @@ import {
 import type {AxisDirection} from '../../utils';
 import type {PreparedAxis} from '../useChartOptions/types';
 import {PreparedSeries} from '../useSeries/types';
+import {PreparedSplit} from '../useSplit/types';
 
 export type ChartScale =
     | ScaleLinear<number, number>
@@ -32,7 +33,7 @@ type Args = {
     series: PreparedSeries[];
     xAxis: PreparedAxis;
     yAxis: PreparedAxis[];
-    split?: ChartKitWidgetData['split'];
+    split: PreparedSplit;
 };
 
 type ReturnValue = {

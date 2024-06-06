@@ -17,7 +17,6 @@ type AxisBottomArgs = {
         labelsStyle?: BaseTextStyle;
         labelsMaxWidth?: number;
         labelsLineHeight: number;
-        // size: number;
         items: [number, number][];
         rotation: number;
     };
@@ -56,7 +55,6 @@ export function axisBottom(args: AxisBottomArgs) {
             labelsMaxWidth = Infinity,
             labelsStyle,
             labelsLineHeight,
-            // size: tickSize,
             items: tickItems,
             count: ticksCount,
             maxTickCount,
@@ -75,10 +73,11 @@ export function axisBottom(args: AxisBottomArgs) {
     return function (selection: Selection<SVGGElement, unknown, null, undefined>) {
         const x = selection.node()?.getBoundingClientRect()?.x || 0;
         const right = x + domainSize;
+        const top = -tickItems[0][0] || 0;
 
-        let transform = `translate(0, ${labelHeight + labelsMargin}px)`;
+        let transform = `translate(0, ${labelHeight + labelsMargin - top}px)`;
         if (rotation) {
-            const labelsOffsetTop = labelHeight * calculateCos(rotation) + labelsMargin;
+            const labelsOffsetTop = labelHeight * calculateCos(rotation) + labelsMargin - top;
             let labelsOffsetLeft = calculateSin(rotation) * labelHeight;
             if (Math.abs(rotation) % 360 === 90) {
                 labelsOffsetLeft += ((rotation > 0 ? -1 : 1) * labelHeight) / 2;
@@ -114,7 +113,7 @@ export function axisBottom(args: AxisBottomArgs) {
                 return tick;
             })
             .attr('transform', function (d) {
-                return `translate(${position(d as AxisDomain) + offset},0)`;
+                return `translate(${position(d as AxisDomain) + offset}, ${top})`;
             });
 
         // Remove tick that has the same x coordinate like domain

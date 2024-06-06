@@ -87,6 +87,12 @@
     fill: var(--g-color-text-primary);
 }
 
+.chartkit-d3-plot-title {
+    font-size: var(--g-text-subheader-3-font-size);
+    font-weight: var(--g-text-subheader-font-weight);
+    fill: var(--g-color-text-secondary);
+}
+
 .chartkit-d3-tooltip {
     &[class] {
         --g-popup-border-width: 0;

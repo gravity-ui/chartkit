@@ -10,11 +10,13 @@ import {useAxisScales, useChartDimensions, useChartOptions, useSeries, useShapes
 import {getYAxisWidth} from '../hooks/useChartDimensions/utils';
 import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
 import {getPreparedYAxis} from '../hooks/useChartOptions/y-axis';
+import {useSplit} from '../hooks/useSplit';
 import {getClosestPoints} from '../utils/get-closest-data';
 
 import {AxisX} from './AxisX';
 import {AxisY} from './AxisY';
 import {Legend} from './Legend';
+import {PlotTitle} from './PlotTitle';
 import {Title} from './Title';
 import {Tooltip} from './Tooltip';
 
@@ -76,13 +78,14 @@ export const Chart = (props: Props) => {
         preparedYAxis: yAxis,
         preparedSeries: preparedSeries,
     });
+    const preparedSplit = useSplit({split: data.split, boundsHeight, chartWidth: width});
     const {xScale, yScale} = useAxisScales({
         boundsWidth,
         boundsHeight,
         series: preparedSeries,
         xAxis,
         yAxis,
-        split: data.split,
+        split: preparedSplit,
     });
     const {shapes, shapesData} = useShapes({
         boundsWidth,
@@ -94,7 +97,7 @@ export const Chart = (props: Props) => {
         xScale,
         yAxis,
         yScale,
-        split: data.split,
+        split: preparedSplit,
     });
 
     const clickHandler = data.chart?.events?.click;
@@ -145,6 +148,11 @@ export const Chart = (props: Props) => {
                 onMouseLeave={handleMouseLeave}
             >
                 {title && <Title {...title} chartWidth={width} />}
+                <g transform={`translate(0, ${boundsOffsetTop})`}>
+                    {preparedSplit.plots.map((plot, index) => {
+                        return <PlotTitle key={`plot-${index}`} title={plot.title} />;
+                    })}
+                </g>
                 <g
                     width={boundsWidth}
                     height={boundsHeight}
@@ -157,7 +165,7 @@ export const Chart = (props: Props) => {
                                 width={boundsWidth}
                                 height={boundsHeight}
                                 scale={yScale}
-                                split={data.split}
+                                split={preparedSplit}
                             />
                             <g transform={`translate(0, ${boundsHeight})`}>
                                 <AxisX
@@ -165,7 +173,7 @@ export const Chart = (props: Props) => {
                                     width={boundsWidth}
                                     height={boundsHeight}
                                     scale={xScale}
-                                    split={data.split}
+                                    split={preparedSplit}
                                 />
                             </g>
                         </React.Fragment>

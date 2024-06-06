@@ -29,6 +29,18 @@ export function getYAxisWidth(axis: PreparedAxis | undefined) {
 }
 
 export function getWidthOccupiedByYAxis(args: {preparedAxis: PreparedAxis[]}) {
-    const {preparedAxis = []} = args;
-    return preparedAxis.reduce((sum, axis) => sum + getYAxisWidth(axis), 0);
+    const {preparedAxis} = args;
+    let leftAxisWidth = 0;
+    let rightAxisWidth = 0;
+
+    preparedAxis?.forEach((axis) => {
+        const axisWidth = getYAxisWidth(axis);
+        if (axis.position === 'right') {
+            rightAxisWidth = Math.max(rightAxisWidth, axisWidth);
+        } else {
+            leftAxisWidth = Math.max(leftAxisWidth, axisWidth);
+        }
+    });
+
+    return leftAxisWidth + rightAxisWidth;
 }

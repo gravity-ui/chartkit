@@ -3,12 +3,10 @@ import React from 'react';
 import {axisLeft, axisRight, line, select} from 'd3';
 import type {Axis, AxisDomain, AxisScale, Selection} from 'd3';
 
-import type {ChartKitWidgetSplit} from '../../../../types';
 import {block} from '../../../../utils/cn';
-import type {ChartScale, PreparedAxis} from '../hooks';
+import type {ChartScale, PreparedAxis, PreparedSplit} from '../hooks';
 import {
     calculateCos,
-    calculateNumericProperty,
     calculateSin,
     formatAxisTickLabel,
     getAxisHeight,
@@ -27,7 +25,7 @@ type Props = {
     scale: ChartScale[];
     width: number;
     height: number;
-    split?: ChartKitWidgetSplit;
+    split: PreparedSplit;
 };
 
 function transformLabel(args: {node: Element; axis: PreparedAxis}) {
@@ -97,7 +95,6 @@ function getAxisGenerator(args: {
 
 export const AxisY = (props: Props) => {
     const {axes, width, height: totalHeight, scale, split} = props;
-    const splitGap = calculateNumericProperty({value: split?.gap, base: totalHeight}) ?? 0;
     const height = getAxisHeight({split, boundsHeight: totalHeight});
     const ref = React.useRef<SVGGElement | null>(null);
 
@@ -115,7 +112,7 @@ export const AxisY = (props: Props) => {
             .join('g')
             .attr('class', b())
             .style('transform', (d) => {
-                const top = d.plotIndex * (height + splitGap);
+                const top = split.plots[d.plotIndex]?.top || 0;
                 if (d.position === 'left') {
                     return `translate(0, ${top}px)`;
                 }
@@ -219,7 +216,7 @@ export const AxisY = (props: Props) => {
                     height,
                 );
             });
-    }, [axes, width, height, scale, splitGap]);
+    }, [axes, width, height, scale, split]);
 
     return <g ref={ref} className={b('container')} />;
 };

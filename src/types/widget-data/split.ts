@@ -1,5 +1,10 @@
-type PlotOptions = {
-    title?: {text: string};
+import type {BaseTextStyle} from './base';
+
+export type PlotOptions = {
+    title?: {
+        text: string;
+        style?: Partial<BaseTextStyle>;
+    };
 };
 
 export type ChartKitWidgetSplit = {

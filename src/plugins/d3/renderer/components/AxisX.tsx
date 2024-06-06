@@ -3,13 +3,10 @@ import React from 'react';
 import {select} from 'd3';
 import type {AxisDomain, AxisScale} from 'd3';
 
-import type {ChartKitWidgetSplit} from '../../../../types';
 import {block} from '../../../../utils/cn';
-import type {ChartScale, PreparedAxis} from '../hooks';
+import type {ChartScale, PreparedAxis, PreparedSplit} from '../hooks';
 import {
-    calculateNumericProperty,
     formatAxisTickLabel,
-    getAxisHeight,
     getClosestPointsRange,
     getMaxTickCount,
     getScaleTicks,
@@ -25,7 +22,7 @@ type Props = {
     width: number;
     height: number;
     scale: ChartScale;
-    split?: ChartKitWidgetSplit;
+    split: PreparedSplit;
 };
 
 function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale}) {
@@ -48,8 +45,6 @@ function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale
 export const AxisX = React.memo(function AxisX(props: Props) {
     const {axis, width, height: totalHeight, scale, split} = props;
     const ref = React.useRef<SVGGElement | null>(null);
-    const plotGap = calculateNumericProperty({value: split?.gap, base: totalHeight}) ?? 0;
-    const height = getAxisHeight({split, boundsHeight: totalHeight});
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -58,8 +53,10 @@ export const AxisX = React.memo(function AxisX(props: Props) {
 
         let tickItems: [number, number][] = [];
         if (axis.grid.enabled) {
-            tickItems = new Array(split?.plots?.length || 1).fill(null).map((_, index) => {
-                const top = index * (height + plotGap);
+            tickItems = new Array(split.plots.length || 1).fill(null).map((_, index) => {
+                const top = split.plots[index]?.top || 0;
+                const height = split.plots[index]?.height || totalHeight;
+
                 return [-top, -(top + height)];
             });
         }
@@ -104,7 +101,7 @@ export const AxisX = React.memo(function AxisX(props: Props) {
                 .text(axis.title.text)
                 .call(setEllipsisForOverflowText, width);
         }
-    }, [axis, width, height, scale]);
+    }, [axis, width, totalHeight, scale, split]);
 
     return <g ref={ref} />;
 });
