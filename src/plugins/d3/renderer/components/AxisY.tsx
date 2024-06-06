@@ -23,7 +23,7 @@ import {
 const b = block('d3-axis');
 
 type Props = {
-    axises: PreparedAxis[];
+    axes: PreparedAxis[];
     scale: ChartScale[];
     width: number;
     height: number;

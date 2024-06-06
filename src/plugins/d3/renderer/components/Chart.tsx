@@ -32,7 +32,7 @@ type Props = {
 
 export const Chart = (props: Props) => {
     const {width, height, data} = props;
-    const svgRef = React.useRef<SVGSVGElement>(null);
+    const svgRef = React.useRef<SVGSVGElement | null>(null);
     const dispatcher = React.useMemo(() => {
         return getD3Dispatcher();
     }, []);

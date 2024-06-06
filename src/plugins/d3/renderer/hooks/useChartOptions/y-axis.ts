@@ -1,7 +1,7 @@
 import type {AxisDomain, AxisScale} from 'd3';
 import get from 'lodash/get';
 
-import type {BaseTextStyle, ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types';
+import type {BaseTextStyle, ChartKitWidgetSeries} from '../../../../../types';
 import {ChartKitWidgetAxis} from '../../../../../types';
 import {
     DEFAULT_AXIS_LABEL_FONT_SIZE,
@@ -86,10 +86,10 @@ export const getPreparedYAxis = ({
     yAxis,
 }: {
     series: ChartKitWidgetSeries[];
-    yAxis: ChartKitWidgetData['yAxis'];
+    yAxis: ChartKitWidgetAxis[] | undefined;
 }): PreparedAxis[] => {
-    const axisByPlot = {};
-    const axisItems = yAxis || [{}];
+    const axisByPlot: ChartKitWidgetAxis[][] = [];
+    const axisItems = yAxis || [{} as ChartKitWidgetAxis];
     return axisItems.map((axisItem) => {
         const plotIndex = get(axisItem, 'plotIndex', 0);
         const firstPlotAxis = !axisByPlot[plotIndex];

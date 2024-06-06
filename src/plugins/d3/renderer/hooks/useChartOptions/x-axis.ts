@@ -121,6 +121,7 @@ export const getPreparedXAxis = ({
             pixelInterval: get(xAxis, 'ticks.pixelInterval'),
         },
         position: 'bottom',
+        plotIndex: 0,
     };
 
     const {height, rotation} = getLabelSettings({
