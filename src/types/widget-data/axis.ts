@@ -68,6 +68,11 @@ export type ChartKitWidgetAxis = {
      * Defaults to 0.05 for Y axis and to 0.01 for X axis.
      * */
     maxPadding?: number;
-    position?: 'left' | 'right' | 'top' | 'bottom';
+    /** Axis location.
+     * Possible values for the X axis - 'bottom', for Y axis - 'left' and 'right'.
+     * */
+    position?: 'left' | 'right' | 'bottom';
+    /** Property for splitting charts. Determines which area the axis is located in.
+     * */
     plotIndex?: number;
 };

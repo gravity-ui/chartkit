@@ -1,10 +1,9 @@
 import get from 'lodash/get';
 
-import {BaseTextStyle, ChartKitWidgetSplit, PlotOptions} from '../../../../../types';
+import type {BaseTextStyle, ChartKitWidgetSplit, PlotOptions} from '../../../../../types';
 import {calculateNumericProperty, getHorisontalSvgTextHeight} from '../../utils';
 
-import type {PreparedPlotTitle, PreparedSplit} from './types';
-import {PreparedPlot} from './types';
+import type {PreparedPlot, PreparedPlotTitle, PreparedSplit} from './types';
 
 type UseSplitArgs = {
     split?: ChartKitWidgetSplit;

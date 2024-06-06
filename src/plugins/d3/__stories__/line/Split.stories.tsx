@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {action} from '@storybook/addon-actions';
-import {StoryObj} from '@storybook/react';
+import type {StoryObj} from '@storybook/react';
 
 import {D3Plugin} from '../..';
 import {ChartKit} from '../../../../components/ChartKit';

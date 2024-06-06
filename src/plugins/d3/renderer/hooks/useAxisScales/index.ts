@@ -19,8 +19,8 @@ import {
 } from '../../utils';
 import type {AxisDirection} from '../../utils';
 import type {PreparedAxis} from '../useChartOptions/types';
-import {PreparedSeries} from '../useSeries/types';
-import {PreparedSplit} from '../useSplit/types';
+import type {PreparedSeries} from '../useSeries/types';
+import type {PreparedSplit} from '../useSplit/types';
 
 export type ChartScale =
     | ScaleLinear<number, number>

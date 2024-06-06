@@ -1,12 +1,12 @@
 import type {LabelData} from '../../../types';
 import {getLabelsSize, getLeftPosition} from '../../../utils';
-import {ChartScale} from '../../useAxisScales';
-import {PreparedAxis} from '../../useChartOptions/types';
-import {PreparedLineSeries} from '../../useSeries/types';
-import {PreparedSplit} from '../../useSplit/types';
+import type {ChartScale} from '../../useAxisScales';
+import type {PreparedAxis} from '../../useChartOptions/types';
+import type {PreparedLineSeries} from '../../useSeries/types';
+import type {PreparedSplit} from '../../useSplit/types';
 import {getXValue, getYValue} from '../utils';
 
-import {MarkerData, PointData, PreparedLineData} from './types';
+import type {MarkerData, PointData, PreparedLineData} from './types';
 
 function getLabelData(point: PointData, series: PreparedLineSeries, xMax: number) {
     const text = String(point.data.label || point.data.y);

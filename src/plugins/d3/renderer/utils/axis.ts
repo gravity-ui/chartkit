@@ -1,6 +1,6 @@
-import {AxisDomain, AxisScale, ScaleBand} from 'd3';
+import type {AxisDomain, AxisScale, ScaleBand} from 'd3';
 
-import {PreparedAxis, PreparedSplit} from '../hooks';
+import type {PreparedAxis, PreparedSplit} from '../hooks';
 
 export function getTicksCount({axis, range}: {axis: PreparedAxis; range: number}) {
     let ticksCount: number | undefined;
