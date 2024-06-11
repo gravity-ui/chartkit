@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 
-import type {BaseTextStyle, ChartKitWidgetSplit, PlotOptions} from '../../../../../types';
+import type {BaseTextStyle, ChartKitWidgetSplit, SplitPlotOptions} from '../../../../../types';
 import {calculateNumericProperty, getHorisontalSvgTextHeight} from '../../utils';
 
 import type {PreparedPlot, PreparedPlotTitle, PreparedSplit} from './types';
@@ -12,10 +12,10 @@ type UseSplitArgs = {
 };
 
 const DEFAULT_TITLE_FONT_SIZE = '15px';
-const TITLE_PADDINGS = 8 * 2;
+const TITLE_TOP_BOTTOM_PADDING = 8;
 
 function preparePlotTitle(args: {
-    title: PlotOptions['title'];
+    title: SplitPlotOptions['title'];
     plotIndex: number;
     plotHeight: number;
     chartWidth: number;
@@ -28,7 +28,8 @@ function preparePlotTitle(args: {
         fontWeight: get(title, 'style.fontWeight'),
     };
     const titleHeight = titleText
-        ? getHorisontalSvgTextHeight({text: titleText, style: titleStyle}) + TITLE_PADDINGS
+        ? getHorisontalSvgTextHeight({text: titleText, style: titleStyle}) +
+          TITLE_TOP_BOTTOM_PADDING * 2
         : 0;
     const top = plotIndex * (plotHeight + gap);
 

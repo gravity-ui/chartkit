@@ -19,8 +19,9 @@ function prepareData(): LineSeries[] {
         return games
             .filter((d) => d.genres.includes(genre))
             .map((d) => {
+                const releaseDate = new Date(d.date as number);
                 return {
-                    x: d.date,
+                    x: releaseDate.getFullYear(),
                     y: d.user_score,
                     label: `${d.title} (${d.user_score})`,
                     custom: d,
@@ -83,7 +84,12 @@ const ChartStory = () => {
             },
         ],
         xAxis: {
-            type: 'datetime',
+            type: 'linear',
+            labels: {
+                numberFormat: {
+                    showRankDelimiter: false,
+                },
+            },
         },
     };
 

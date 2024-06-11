@@ -1,8 +1,7 @@
 import type {AxisDomain, AxisScale} from 'd3';
 import get from 'lodash/get';
 
-import type {BaseTextStyle, ChartKitWidgetSeries} from '../../../../../types';
-import {ChartKitWidgetAxis} from '../../../../../types';
+import type {BaseTextStyle, ChartKitWidgetSeries, ChartKitWidgetYAxis} from '../../../../../types';
 import {
     DEFAULT_AXIS_LABEL_FONT_SIZE,
     axisLabelsDefaults,
@@ -50,7 +49,7 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
     }).maxWidth;
 };
 
-function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) {
+function getAxisMin(axis?: ChartKitWidgetYAxis, series?: ChartKitWidgetSeries[]) {
     const min = axis?.min;
 
     if (
@@ -86,10 +85,10 @@ export const getPreparedYAxis = ({
     yAxis,
 }: {
     series: ChartKitWidgetSeries[];
-    yAxis: ChartKitWidgetAxis[] | undefined;
+    yAxis: ChartKitWidgetYAxis[] | undefined;
 }): PreparedAxis[] => {
-    const axisByPlot: ChartKitWidgetAxis[][] = [];
-    const axisItems = yAxis || [{} as ChartKitWidgetAxis];
+    const axisByPlot: ChartKitWidgetYAxis[][] = [];
+    const axisItems = yAxis || [{} as ChartKitWidgetYAxis];
     return axisItems.map((axisItem) => {
         const plotIndex = get(axisItem, 'plotIndex', 0);
         const firstPlotAxis = !axisByPlot[plotIndex];
