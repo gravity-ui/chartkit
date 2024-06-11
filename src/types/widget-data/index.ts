@@ -1,7 +1,8 @@
-import type {ChartKitWidgetAxis} from './axis';
+import type {ChartKitWidgetXAxis, ChartKitWidgetYAxis} from './axis';
 import type {ChartKitWidgetChart} from './chart';
 import type {ChartKitWidgetLegend} from './legend';
 import type {ChartKitWidgetSeries, ChartKitWidgetSeriesOptions} from './series';
+import type {ChartKitWidgetSplit} from './split';
 import type {ChartKitWidgetTitle} from './title';
 import type {ChartKitWidgetTooltip} from './tooltip';
 
@@ -16,6 +17,7 @@ export * from './bar-y';
 export * from './area';
 export * from './line';
 export * from './series';
+export * from './split';
 export * from './title';
 export * from './tooltip';
 export * from './halo';
@@ -31,6 +33,9 @@ export type ChartKitWidgetData<T = any> = {
     };
     title?: ChartKitWidgetTitle;
     tooltip?: ChartKitWidgetTooltip<T>;
-    xAxis?: ChartKitWidgetAxis;
-    yAxis?: ChartKitWidgetAxis[];
+    xAxis?: ChartKitWidgetXAxis;
+    yAxis?: ChartKitWidgetYAxis[];
+    /** Setting for displaying charts on different plots.
+     * It can be used to visualize related information on multiple charts. */
+    split?: ChartKitWidgetSplit;
 };

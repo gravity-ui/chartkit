@@ -4,7 +4,7 @@ import {select} from 'd3';
 import type {AxisDomain, AxisScale} from 'd3';
 
 import {block} from '../../../../utils/cn';
-import type {ChartScale, PreparedAxis} from '../hooks';
+import type {ChartScale, PreparedAxis, PreparedSplit} from '../hooks';
 import {
     formatAxisTickLabel,
     getClosestPointsRange,
@@ -22,6 +22,7 @@ type Props = {
     width: number;
     height: number;
     scale: ChartScale;
+    split: PreparedSplit;
 };
 
 function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale}) {
@@ -41,18 +42,29 @@ function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale
     };
 }
 
-export const AxisX = React.memo(function AxisX({axis, width, height, scale}: Props) {
-    const ref = React.useRef<SVGGElement>(null);
+export const AxisX = React.memo(function AxisX(props: Props) {
+    const {axis, width, height: totalHeight, scale, split} = props;
+    const ref = React.useRef<SVGGElement | null>(null);
 
     React.useEffect(() => {
         if (!ref.current) {
             return;
         }
 
+        let tickItems: [number, number][] = [];
+        if (axis.grid.enabled) {
+            tickItems = new Array(split.plots.length || 1).fill(null).map((_, index) => {
+                const top = split.plots[index]?.top || 0;
+                const height = split.plots[index]?.height || totalHeight;
+
+                return [-top, -(top + height)];
+            });
+        }
+
         const xAxisGenerator = axisBottom({
             scale: scale as AxisScale<AxisDomain>,
             ticks: {
-                size: axis.grid.enabled ? height * -1 : 0,
+                items: tickItems,
                 labelFormat: getLabelFormatter({axis, scale}),
                 labelsPaddings: axis.labels.padding,
                 labelsMargin: axis.labels.margin,
@@ -89,7 +101,7 @@ export const AxisX = React.memo(function AxisX({axis, width, height, scale}: Pro
                 .text(axis.title.text)
                 .call(setEllipsisForOverflowText, width);
         }
-    }, [axis, width, height, scale]);
+    }, [axis, width, totalHeight, scale, split]);
 
     return <g ref={ref} />;
 });

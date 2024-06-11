@@ -42,6 +42,7 @@ export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
         pixelInterval?: number;
     };
     position: 'left' | 'right' | 'top' | 'bottom';
+    plotIndex: number;
 };
 
 export type PreparedTitle = ChartKitWidgetData['title'] & {

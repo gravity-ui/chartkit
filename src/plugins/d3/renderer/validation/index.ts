@@ -8,9 +8,10 @@ import {
     AreaSeries,
     BarXSeries,
     BarYSeries,
-    ChartKitWidgetAxis,
     ChartKitWidgetData,
     ChartKitWidgetSeries,
+    ChartKitWidgetXAxis,
+    ChartKitWidgetYAxis,
     LineSeries,
     PieSeries,
     ScatterSeries,
@@ -24,8 +25,8 @@ const AVAILABLE_SERIES_TYPES = Object.values(SeriesType);
 
 const validateXYSeries = (args: {
     series: XYSeries;
-    xAxis?: ChartKitWidgetAxis;
-    yAxis?: ChartKitWidgetAxis[];
+    xAxis?: ChartKitWidgetXAxis;
+    yAxis?: ChartKitWidgetYAxis[];
 }) => {
     const {series, xAxis, yAxis = []} = args;
 
@@ -183,8 +184,8 @@ const validateTreemapSeries = ({series}: {series: TreemapSeries}) => {
 
 const validateSeries = (args: {
     series: ChartKitWidgetSeries;
-    xAxis?: ChartKitWidgetAxis;
-    yAxis?: ChartKitWidgetAxis[];
+    xAxis?: ChartKitWidgetXAxis;
+    yAxis?: ChartKitWidgetYAxis[];
 }) => {
     const {series, xAxis, yAxis} = args;
 

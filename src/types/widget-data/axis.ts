@@ -69,3 +69,15 @@ export type ChartKitWidgetAxis = {
      * */
     maxPadding?: number;
 };
+
+export type ChartKitWidgetXAxis = ChartKitWidgetAxis;
+
+export type ChartKitWidgetYAxis = ChartKitWidgetAxis & {
+    /** Axis location.
+     * Possible values - 'left' and 'right'.
+     * */
+    position?: 'left' | 'right';
+    /** Property for splitting charts. Determines which area the axis is located in.
+     * */
+    plotIndex?: number;
+};

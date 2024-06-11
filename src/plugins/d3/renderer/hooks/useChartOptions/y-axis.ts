@@ -1,8 +1,7 @@
 import type {AxisDomain, AxisScale} from 'd3';
 import get from 'lodash/get';
 
-import type {BaseTextStyle, ChartKitWidgetData, ChartKitWidgetSeries} from '../../../../../types';
-import {ChartKitWidgetAxis} from '../../../../../types';
+import type {BaseTextStyle, ChartKitWidgetSeries, ChartKitWidgetYAxis} from '../../../../../types';
 import {
     DEFAULT_AXIS_LABEL_FONT_SIZE,
     axisLabelsDefaults,
@@ -50,7 +49,7 @@ const getAxisLabelMaxWidth = (args: {axis: PreparedAxis; series: ChartKitWidgetS
     }).maxWidth;
 };
 
-function getAxisMin(axis?: ChartKitWidgetAxis, series?: ChartKitWidgetSeries[]) {
+function getAxisMin(axis?: ChartKitWidgetYAxis, series?: ChartKitWidgetSeries[]) {
     const min = axis?.min;
 
     if (
@@ -86,10 +85,19 @@ export const getPreparedYAxis = ({
     yAxis,
 }: {
     series: ChartKitWidgetSeries[];
-    yAxis: ChartKitWidgetData['yAxis'];
+    yAxis: ChartKitWidgetYAxis[] | undefined;
 }): PreparedAxis[] => {
-    return (yAxis || [{}]).map((axisItem, index) => {
-        const axisPosition = index === 0 ? 'left' : 'right';
+    const axisByPlot: ChartKitWidgetYAxis[][] = [];
+    const axisItems = yAxis || [{} as ChartKitWidgetYAxis];
+    return axisItems.map((axisItem) => {
+        const plotIndex = get(axisItem, 'plotIndex', 0);
+        const firstPlotAxis = !axisByPlot[plotIndex];
+        if (firstPlotAxis) {
+            axisByPlot[plotIndex] = [];
+        }
+        axisByPlot[plotIndex].push(axisItem);
+        const defaultAxisPosition = firstPlotAxis ? 'left' : 'right';
+
         const labelsEnabled = get(axisItem, 'labels.enabled', true);
 
         const labelsStyle: BaseTextStyle = {
@@ -133,12 +141,13 @@ export const getPreparedYAxis = ({
             min: getAxisMin(axisItem, series),
             maxPadding: get(axisItem, 'maxPadding', 0.05),
             grid: {
-                enabled: get(axisItem, 'grid.enabled', index === 0),
+                enabled: get(axisItem, 'grid.enabled', firstPlotAxis),
             },
             ticks: {
                 pixelInterval: get(axisItem, 'ticks.pixelInterval'),
             },
-            position: axisPosition,
+            position: get(axisItem, 'position', defaultAxisPosition),
+            plotIndex: get(axisItem, 'plotIndex', 0),
         };
 
         if (labelsEnabled) {

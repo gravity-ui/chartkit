@@ -1,5 +1,5 @@
 import type {AxisDomain, AxisScale, Selection} from 'd3';
-import {select} from 'd3';
+import {path, select} from 'd3';
 
 import {BaseTextStyle} from '../../../../../types';
 import {getXAxisItems, getXAxisOffset, getXTickPosition} from '../axis';
@@ -17,7 +17,7 @@ type AxisBottomArgs = {
         labelsStyle?: BaseTextStyle;
         labelsMaxWidth?: number;
         labelsLineHeight: number;
-        size: number;
+        items: [number, number][];
         rotation: number;
     };
     domain: {
@@ -55,7 +55,7 @@ export function axisBottom(args: AxisBottomArgs) {
             labelsMaxWidth = Infinity,
             labelsStyle,
             labelsLineHeight,
-            size: tickSize,
+            items: tickItems,
             count: ticksCount,
             maxTickCount,
             rotation,
@@ -73,10 +73,11 @@ export function axisBottom(args: AxisBottomArgs) {
     return function (selection: Selection<SVGGElement, unknown, null, undefined>) {
         const x = selection.node()?.getBoundingClientRect()?.x || 0;
         const right = x + domainSize;
+        const top = -tickItems[0][0] || 0;
 
-        let transform = `translate(0, ${labelHeight + labelsMargin}px)`;
+        let transform = `translate(0, ${labelHeight + labelsMargin - top}px)`;
         if (rotation) {
-            const labelsOffsetTop = labelHeight * calculateCos(rotation) + labelsMargin;
+            const labelsOffsetTop = labelHeight * calculateCos(rotation) + labelsMargin - top;
             let labelsOffsetLeft = calculateSin(rotation) * labelHeight;
             if (Math.abs(rotation) % 360 === 90) {
                 labelsOffsetLeft += ((rotation > 0 ? -1 : 1) * labelHeight) / 2;
@@ -84,13 +85,19 @@ export function axisBottom(args: AxisBottomArgs) {
             transform = `translate(${-labelsOffsetLeft}px, ${labelsOffsetTop}px) rotate(${rotation}deg)`;
         }
 
+        const tickPath = path();
+        tickItems.forEach(([start, end]) => {
+            tickPath.moveTo(0, start);
+            tickPath.lineTo(0, end);
+        });
+
         selection
             .selectAll('.tick')
             .data(values)
             .order()
             .join((el) => {
                 const tick = el.append('g').attr('class', 'tick');
-                tick.append('line').attr('stroke', 'currentColor').attr('y2', tickSize);
+                tick.append('path').attr('d', tickPath.toString()).attr('stroke', 'currentColor');
                 tick.append('text')
                     .text(labelFormat)
                     .attr('fill', 'currentColor')
@@ -106,7 +113,7 @@ export function axisBottom(args: AxisBottomArgs) {
                 return tick;
             })
             .attr('transform', function (d) {
-                return `translate(${position(d as AxisDomain) + offset},0)`;
+                return `translate(${position(d as AxisDomain) + offset}, ${top})`;
             });
 
         // Remove tick that has the same x coordinate like domain

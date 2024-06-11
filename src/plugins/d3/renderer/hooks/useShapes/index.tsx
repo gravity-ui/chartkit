@@ -11,6 +11,7 @@ import type {
     PreparedScatterSeries,
     PreparedSeries,
     PreparedSeriesOptions,
+    PreparedSplit,
     PreparedTreemapSeries,
     PreparedWaterfallSeries,
 } from '../';
@@ -60,6 +61,7 @@ type Args = {
     yAxis: PreparedAxis[];
     xScale?: ChartScale;
     yScale?: ChartScale[];
+    split: PreparedSplit;
 };
 
 export const useShapes = (args: Args) => {
@@ -73,6 +75,7 @@ export const useShapes = (args: Args) => {
         xScale,
         yAxis,
         yScale,
+        split,
     } = args;
 
     const shapesComponents = React.useMemo(() => {
@@ -157,6 +160,7 @@ export const useShapes = (args: Args) => {
                             xScale,
                             yAxis,
                             yScale,
+                            split,
                         });
                         acc.push(
                             <LineSeriesShapes

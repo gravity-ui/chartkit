@@ -10,11 +10,13 @@ import {useAxisScales, useChartDimensions, useChartOptions, useSeries, useShapes
 import {getYAxisWidth} from '../hooks/useChartDimensions/utils';
 import {getPreparedXAxis} from '../hooks/useChartOptions/x-axis';
 import {getPreparedYAxis} from '../hooks/useChartOptions/y-axis';
+import {useSplit} from '../hooks/useSplit';
 import {getClosestPoints} from '../utils/get-closest-data';
 
 import {AxisX} from './AxisX';
 import {AxisY} from './AxisY';
 import {Legend} from './Legend';
+import {PlotTitle} from './PlotTitle';
 import {Title} from './Title';
 import {Tooltip} from './Tooltip';
 
@@ -32,7 +34,7 @@ type Props = {
 
 export const Chart = (props: Props) => {
     const {width, height, data} = props;
-    const svgRef = React.useRef<SVGSVGElement>(null);
+    const svgRef = React.useRef<SVGSVGElement | null>(null);
     const dispatcher = React.useMemo(() => {
         return getD3Dispatcher();
     }, []);
@@ -44,8 +46,12 @@ export const Chart = (props: Props) => {
         [data, width],
     );
     const yAxis = React.useMemo(
-        () => getPreparedYAxis({series: data.series.data, yAxis: data.yAxis}),
-        [data, width],
+        () =>
+            getPreparedYAxis({
+                series: data.series.data,
+                yAxis: data.yAxis,
+            }),
+        [data],
     );
 
     const {
@@ -72,12 +78,14 @@ export const Chart = (props: Props) => {
         preparedYAxis: yAxis,
         preparedSeries: preparedSeries,
     });
+    const preparedSplit = useSplit({split: data.split, boundsHeight, chartWidth: width});
     const {xScale, yScale} = useAxisScales({
         boundsWidth,
         boundsHeight,
         series: preparedSeries,
         xAxis,
         yAxis,
+        split: preparedSplit,
     });
     const {shapes, shapesData} = useShapes({
         boundsWidth,
@@ -89,6 +97,7 @@ export const Chart = (props: Props) => {
         xScale,
         yAxis,
         yScale,
+        split: preparedSplit,
     });
 
     const clickHandler = data.chart?.events?.click;
@@ -139,6 +148,11 @@ export const Chart = (props: Props) => {
                 onMouseLeave={handleMouseLeave}
             >
                 {title && <Title {...title} chartWidth={width} />}
+                <g transform={`translate(0, ${boundsOffsetTop})`}>
+                    {preparedSplit.plots.map((plot, index) => {
+                        return <PlotTitle key={`plot-${index}`} title={plot.title} />;
+                    })}
+                </g>
                 <g
                     width={boundsWidth}
                     height={boundsHeight}
@@ -147,10 +161,11 @@ export const Chart = (props: Props) => {
                     {xScale && yScale?.length && (
                         <React.Fragment>
                             <AxisY
-                                axises={yAxis}
+                                axes={yAxis}
                                 width={boundsWidth}
                                 height={boundsHeight}
                                 scale={yScale}
+                                split={preparedSplit}
                             />
                             <g transform={`translate(0, ${boundsHeight})`}>
                                 <AxisX
@@ -158,6 +173,7 @@ export const Chart = (props: Props) => {
                                     width={boundsWidth}
                                     height={boundsHeight}
                                     scale={xScale}
+                                    split={preparedSplit}
                                 />
                             </g>
                         </React.Fragment>

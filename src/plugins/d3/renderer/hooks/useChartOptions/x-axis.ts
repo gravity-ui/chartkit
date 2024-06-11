@@ -1,7 +1,7 @@
 import type {AxisDomain, AxisScale} from 'd3';
 import get from 'lodash/get';
 
-import type {BaseTextStyle, ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
+import type {BaseTextStyle, ChartKitWidgetSeries, ChartKitWidgetXAxis} from '../../../../../types';
 import {
     DEFAULT_AXIS_LABEL_FONT_SIZE,
     axisLabelsDefaults,
@@ -74,7 +74,7 @@ export const getPreparedXAxis = ({
     series,
     width,
 }: {
-    xAxis?: ChartKitWidgetAxis;
+    xAxis?: ChartKitWidgetXAxis;
     series: ChartKitWidgetSeries[];
     width: number;
 }): PreparedAxis => {
@@ -121,6 +121,7 @@ export const getPreparedXAxis = ({
             pixelInterval: get(xAxis, 'ticks.pixelInterval'),
         },
         position: 'bottom',
+        plotIndex: 0,
     };
 
     const {height, rotation} = getLabelSettings({

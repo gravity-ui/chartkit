@@ -1,6 +1,6 @@
-import {AxisDomain, AxisScale, ScaleBand} from 'd3';
+import type {AxisDomain, AxisScale, ScaleBand} from 'd3';
 
-import {PreparedAxis} from '../hooks';
+import type {PreparedAxis, PreparedSplit} from '../hooks';
 
 export function getTicksCount({axis, range}: {axis: PreparedAxis; range: number}) {
     let ticksCount: number | undefined;
@@ -64,4 +64,14 @@ export function getXAxisItems({
 export function getMaxTickCount({axis, width}: {axis: PreparedAxis; width: number}) {
     const minTickWidth = parseInt(axis.labels.style.fontSize) + axis.labels.padding;
     return Math.floor(width / minTickWidth);
+}
+
+export function getAxisHeight(args: {split: PreparedSplit; boundsHeight: number}) {
+    const {split, boundsHeight} = args;
+
+    if (split.plots.length > 1) {
+        return split.plots[0].height;
+    }
+
+    return boundsHeight;
 }

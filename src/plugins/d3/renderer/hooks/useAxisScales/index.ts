@@ -8,6 +8,7 @@ import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
 import {DEFAULT_AXIS_TYPE} from '../../constants';
 import {
     CHART_SERIES_WITH_VOLUME,
+    getAxisHeight,
     getDataCategoryValue,
     getDefaultMaxXAxisValue,
     getDomainDataXBySeries,
@@ -18,7 +19,8 @@ import {
 } from '../../utils';
 import type {AxisDirection} from '../../utils';
 import type {PreparedAxis} from '../useChartOptions/types';
-import {PreparedSeries} from '../useSeries/types';
+import type {PreparedSeries} from '../useSeries/types';
+import type {PreparedSplit} from '../useSplit/types';
 
 export type ChartScale =
     | ScaleLinear<number, number>
@@ -31,6 +33,7 @@ type Args = {
     series: PreparedSeries[];
     xAxis: PreparedAxis;
     yAxis: PreparedAxis[];
+    split: PreparedSplit;
 };
 
 type ReturnValue = {
@@ -204,7 +207,7 @@ export function createXScale(
 }
 
 const createScales = (args: Args) => {
-    const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
+    const {boundsWidth, boundsHeight, series, xAxis, yAxis, split} = args;
     let visibleSeries = getOnlyVisibleSeries(series);
     // Reassign to all series in case of all series unselected,
     // otherwise we will get an empty space without grid
@@ -218,10 +221,11 @@ const createScales = (args: Args) => {
                 return seriesAxisIndex === index;
             });
             const visibleAxisSeries = getOnlyVisibleSeries(axisSeries);
+            const axisHeight = getAxisHeight({boundsHeight, split});
             return createYScale(
                 axis,
                 visibleAxisSeries.length ? visibleAxisSeries : axisSeries,
-                boundsHeight,
+                axisHeight,
             );
         }),
     };
@@ -231,18 +235,23 @@ const createScales = (args: Args) => {
  * Uses to create scales for axis related series
  */
 export const useAxisScales = (args: Args): ReturnValue => {
-    const {boundsWidth, boundsHeight, series, xAxis, yAxis} = args;
-    const scales = React.useMemo(() => {
+    const {boundsWidth, boundsHeight, series, xAxis, yAxis, split} = args;
+    return React.useMemo(() => {
         let xScale: ChartScale | undefined;
         let yScale: ChartScale[] | undefined;
         const hasAxisRelatedSeries = series.some(isAxisRelatedSeries);
 
         if (hasAxisRelatedSeries) {
-            ({xScale, yScale} = createScales({boundsWidth, boundsHeight, series, xAxis, yAxis}));
+            ({xScale, yScale} = createScales({
+                boundsWidth,
+                boundsHeight,
+                series,
+                xAxis,
+                yAxis,
+                split,
+            }));
         }
 
         return {xScale, yScale};
-    }, [boundsWidth, boundsHeight, series, xAxis, yAxis]);
-
-    return scales;
+    }, [boundsWidth, boundsHeight, series, xAxis, yAxis, split]);
 };

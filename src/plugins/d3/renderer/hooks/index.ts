@@ -7,3 +7,4 @@ export * from './useSeries/types';
 export * from './useShapes';
 export * from './useTooltip';
 export * from './useTooltip/types';
+export * from './useSplit/types';

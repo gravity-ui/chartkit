@@ -1,11 +1,12 @@
 import type {LabelData} from '../../../types';
 import {getLabelsSize, getLeftPosition} from '../../../utils';
-import {ChartScale} from '../../useAxisScales';
-import {PreparedAxis} from '../../useChartOptions/types';
-import {PreparedLineSeries} from '../../useSeries/types';
+import type {ChartScale} from '../../useAxisScales';
+import type {PreparedAxis} from '../../useChartOptions/types';
+import type {PreparedLineSeries} from '../../useSeries/types';
+import type {PreparedSplit} from '../../useSplit/types';
 import {getXValue, getYValue} from '../utils';
 
-import {MarkerData, PointData, PreparedLineData} from './types';
+import type {MarkerData, PointData, PreparedLineData} from './types';
 
 function getLabelData(point: PointData, series: PreparedLineSeries, xMax: number) {
     const text = String(point.data.label || point.data.y);
@@ -42,17 +43,20 @@ export const prepareLineData = (args: {
     xScale: ChartScale;
     yAxis: PreparedAxis[];
     yScale: ChartScale[];
+    split: PreparedSplit;
 }): PreparedLineData[] => {
-    const {series, xAxis, xScale, yScale} = args;
-    const yAxis = args.yAxis[0];
+    const {series, xAxis, yAxis, xScale, yScale, split} = args;
     const [_xMin, xRangeMax] = xScale.range();
     const xMax = xRangeMax / (1 - xAxis.maxPadding);
 
     return series.reduce<PreparedLineData[]>((acc, s) => {
+        const yAxisIndex = s.yAxis;
+        const seriesYAxis = yAxis[yAxisIndex];
+        const yAxisTop = split.plots[seriesYAxis.plotIndex]?.top || 0;
         const seriesYScale = yScale[s.yAxis];
         const points = s.data.map((d) => ({
             x: getXValue({point: d, xAxis, xScale}),
-            y: getYValue({point: d, yAxis, yScale: seriesYScale}),
+            y: yAxisTop + getYValue({point: d, yAxis: seriesYAxis, yScale: seriesYScale}),
             active: true,
             data: d,
             series: s,
