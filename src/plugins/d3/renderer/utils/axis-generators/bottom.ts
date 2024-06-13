@@ -35,14 +35,17 @@ function addDomain(
 ) {
     const {size, color} = options;
 
-    selection
+    const domainPath = selection
         .selectAll('.domain')
         .data([null])
         .enter()
         .insert('path', '.tick')
         .attr('class', 'domain')
-        .attr('stroke', color || 'currentColor')
         .attr('d', `M0,0V0H${size}`);
+
+    if (color) {
+        domainPath.style('stroke', color);
+    }
 }
 
 export function axisBottom(args: AxisBottomArgs) {

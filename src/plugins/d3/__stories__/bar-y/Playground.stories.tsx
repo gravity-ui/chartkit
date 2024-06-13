@@ -36,6 +36,7 @@ function prepareData(): ChartKitWidgetData {
             labels: {
                 enabled: true,
             },
+            lineColor: 'transparent',
         },
         yAxis: [
             {

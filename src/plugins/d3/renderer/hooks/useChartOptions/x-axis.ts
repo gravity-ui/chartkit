@@ -8,6 +8,7 @@ import {
     xAxisTitleDefaults,
 } from '../../constants';
 import {
+    CHART_SERIES_WITH_VOLUME_ON_X_AXIS,
     calculateCos,
     formatAxisTickLabel,
     getClosestPointsRange,
@@ -69,6 +70,22 @@ function getLabelSettings({
     return {height: Math.min(maxHeight, labelsHeight), rotation};
 }
 
+function getAxisMin(axis?: ChartKitWidgetXAxis, series?: ChartKitWidgetSeries[]) {
+    const min = axis?.min;
+
+    if (
+        typeof min === 'undefined' &&
+        series?.some((s) => CHART_SERIES_WITH_VOLUME_ON_X_AXIS.includes(s.type))
+    ) {
+        return series.reduce((minValue, s) => {
+            const minYValue = s.data.reduce((res, d) => Math.min(res, get(d, 'x', 0)), 0);
+            return Math.min(minValue, minYValue);
+        }, 0);
+    }
+
+    return min;
+}
+
 export const getPreparedXAxis = ({
     xAxis,
     series,
@@ -112,7 +129,7 @@ export const getPreparedXAxis = ({
                 ? getHorisontalSvgTextHeight({text: titleText, style: titleStyle})
                 : 0,
         },
-        min: get(xAxis, 'min'),
+        min: getAxisMin(xAxis, series),
         maxPadding: get(xAxis, 'maxPadding', 0.01),
         grid: {
             enabled: get(xAxis, 'grid.enabled', true),

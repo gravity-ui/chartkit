@@ -8,7 +8,7 @@ import {
     yAxisTitleDefaults,
 } from '../../constants';
 import {
-    CHART_SERIES_WITH_VOLUME,
+    CHART_SERIES_WITH_VOLUME_ON_Y_AXIS,
     formatAxisTickLabel,
     getClosestPointsRange,
     getHorisontalSvgTextHeight,
@@ -54,7 +54,7 @@ function getAxisMin(axis?: ChartKitWidgetYAxis, series?: ChartKitWidgetSeries[])
 
     if (
         typeof min === 'undefined' &&
-        series?.some((s) => CHART_SERIES_WITH_VOLUME.includes(s.type))
+        series?.some((s) => CHART_SERIES_WITH_VOLUME_ON_Y_AXIS.includes(s.type))
     ) {
         return series.reduce((minValue, s) => {
             switch (s.type) {
