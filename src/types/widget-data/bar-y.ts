@@ -48,7 +48,8 @@ export type BarYSeries<T = any> = BaseSeries & {
     grouping?: boolean;
     dataLabels?: ChartKitWidgetSeriesOptions['dataLabels'] & {
         /**
-         * Whether to align the data label inside or outside the box
+         * Whether to align the data label inside or outside the box.
+         * For charts with a percentage stack, it is always true.
          *
          * @default false
          * */
