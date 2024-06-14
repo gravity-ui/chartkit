@@ -25,11 +25,13 @@ export * from './symbol';
 export * from './series';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie', 'treemap'];
-export const CHART_SERIES_WITH_VOLUME: ChartKitWidgetSeries['type'][] = [
+export const CHART_SERIES_WITH_VOLUME_ON_Y_AXIS: ChartKitWidgetSeries['type'][] = [
     'bar-x',
     'area',
     'waterfall',
 ];
+
+export const CHART_SERIES_WITH_VOLUME_ON_X_AXIS: ChartKitWidgetSeries['type'][] = ['bar-y'];
 
 export type AxisDirection = 'x' | 'y';
 
@@ -66,10 +68,58 @@ export function isSeriesWithCategoryValues(series: UnknownSeries): series is {
     return isAxisRelatedSeries(series);
 }
 
+function getDomainDataForStackedSeries(
+    seriesList: StackedSeries[],
+    keyAttr: 'x' | 'y' = 'x',
+    valueAttr: 'x' | 'y' = 'y',
+) {
+    const acc: number[] = [];
+    const stackedSeries = group(seriesList, getSeriesStackId);
+    Array.from(stackedSeries).forEach(([_stackId, seriesStack]) => {
+        const values: Record<string, number> = {};
+
+        seriesStack.forEach((singleSeries) => {
+            const data = new Map();
+            singleSeries.data.forEach((point) => {
+                const key = String(point[keyAttr]);
+                let value = 0;
+
+                if (valueAttr in point && typeof point[valueAttr] === 'number') {
+                    value = point[valueAttr] as number;
+                }
+
+                if (data.has(key)) {
+                    value = Math.max(value, data.get(key));
+                }
+
+                data.set(key, value);
+            });
+
+            Array.from(data).forEach(([key, value]) => {
+                values[key] = (values[key] || 0) + value;
+            });
+        });
+
+        acc.push(...Object.values(values));
+    });
+
+    return acc;
+}
+
 export const getDomainDataXBySeries = (series: UnknownSeries[]) => {
-    return series.reduce<number[]>((acc, s) => {
-        if (isSeriesWithNumericalXValues(s)) {
-            acc.push(...s.data.map((d) => d.x));
+    const groupedSeries = group(series, (item) => item.type);
+
+    return Array.from(groupedSeries).reduce<unknown[]>((acc, [type, seriesList]) => {
+        switch (type) {
+            case 'bar-y': {
+                acc.push(...getDomainDataForStackedSeries(seriesList as StackedSeries[], 'y', 'x'));
+                break;
+            }
+            default: {
+                seriesList.filter(isSeriesWithNumericalXValues).forEach((s) => {
+                    acc.push(...s.data.map((d) => d.x));
+                });
+            }
         }
 
         return acc;
@@ -91,34 +141,7 @@ export const getDomainDataYBySeries = (series: UnknownSeries[]) => {
         switch (type) {
             case 'area':
             case 'bar-x': {
-                const stackedSeries = group(seriesList as StackedSeries[], getSeriesStackId);
-                Array.from(stackedSeries).forEach(([_stackId, seriesStack]) => {
-                    const values: Record<string, number> = {};
-
-                    seriesStack.forEach((singleSeries) => {
-                        const data = new Map();
-                        singleSeries.data.forEach((point) => {
-                            const key = String(point.x);
-                            let value = 0;
-
-                            if (point.y && typeof point.y === 'number') {
-                                value = point.y;
-                            }
-
-                            if (data.has(key)) {
-                                value = Math.max(value, data.get(key));
-                            }
-
-                            data.set(key, value);
-                        });
-
-                        Array.from(data).forEach(([key, value]) => {
-                            values[key] = (values[key] || 0) + value;
-                        });
-                    });
-
-                    acc.push(...Object.values(values));
-                });
+                acc.push(...getDomainDataForStackedSeries(seriesList as StackedSeries[]));
 
                 break;
             }

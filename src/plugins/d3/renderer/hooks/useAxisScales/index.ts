@@ -7,7 +7,7 @@ import get from 'lodash/get';
 import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
 import {DEFAULT_AXIS_TYPE} from '../../constants';
 import {
-    CHART_SERIES_WITH_VOLUME,
+    CHART_SERIES_WITH_VOLUME_ON_Y_AXIS,
     getAxisHeight,
     getDataCategoryValue,
     getDefaultMaxXAxisValue,
@@ -79,7 +79,7 @@ export function createYScale(axis: PreparedAxis, series: PreparedSeries[], bound
                 const [domainYMin, domainMax] = extent(domain) as [number, number];
                 const yMinValue = typeof yMin === 'number' ? yMin : domainYMin;
                 let yMaxValue = domainMax;
-                if (series.some((s) => CHART_SERIES_WITH_VOLUME.includes(s.type))) {
+                if (series.some((s) => CHART_SERIES_WITH_VOLUME_ON_Y_AXIS.includes(s.type))) {
                     yMaxValue = Math.max(yMaxValue, 0);
                 }
 
@@ -129,8 +129,12 @@ function calculateXAxisPadding(series: (PreparedSeries | ChartKitWidgetSeries)[]
         switch (s.type) {
             case 'bar-y': {
                 // Since labels can be located to the right of the bar, need to add an additional space
-                const labelsMaxWidth = get(s, 'dataLabels.maxWidth', 0);
-                result = Math.max(result, labelsMaxWidth);
+                const inside = get(s, 'dataLabels.inside');
+                if (!inside) {
+                    const labelsMaxWidth = get(s, 'dataLabels.maxWidth', 0);
+                    result = Math.max(result, labelsMaxWidth);
+                }
+
                 break;
             }
         }

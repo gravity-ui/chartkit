@@ -24,10 +24,11 @@ function prepareDataLabels(series: BarYSeries) {
               style,
           })
         : {};
+    const inside = series.stacking === 'percent' ? true : get(series, 'dataLabels.inside', false);
 
     return {
         enabled,
-        inside: get(series, 'dataLabels.inside', false),
+        inside,
         style,
         maxHeight,
         maxWidth,

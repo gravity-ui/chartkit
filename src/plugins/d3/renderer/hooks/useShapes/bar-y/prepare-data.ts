@@ -83,6 +83,7 @@ export const prepareBarYData = (args: {
         xScale,
         yScale: [yScale],
     } = args;
+
     const xLinearScale = xScale as ScaleLinear<number, number>;
     const plotWidth = xLinearScale(xLinearScale.domain()[1]);
     const barMaxWidth = get(seriesOptions, 'bar-y.barMaxWidth');
