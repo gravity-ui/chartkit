@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.8.0](https://github.com/gravity-ui/chartkit/compare/v5.7.0...v5.8.0) (2024-06-14)
+
+
+### Features
+
+* **D3 plugin:** split charts with same X axis ([#486](https://github.com/gravity-ui/chartkit/issues/486)) ([3904443](https://github.com/gravity-ui/chartkit/commit/39044433796e71bf02a348ae30f982afd2c537c9))
+
+
+### Bug Fixes
+
+* **D3 plugin:** fix some errors in bar-y series ([#492](https://github.com/gravity-ui/chartkit/issues/492)) ([39138b3](https://github.com/gravity-ui/chartkit/commit/39138b38e2aaa5b9f4c41b9530578d7bf4cb6cc1))
+
 ## [5.7.0](https://github.com/gravity-ui/chartkit/compare/v5.6.0...v5.7.0) (2024-05-23)
 
 
