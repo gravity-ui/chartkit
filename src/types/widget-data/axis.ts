@@ -2,7 +2,7 @@ import type {FormatNumberOptions} from '../../plugins/shared';
 
 import type {BaseTextStyle} from './base';
 
-export type ChartKitWidgetAxisType = 'category' | 'datetime' | 'linear';
+export type ChartKitWidgetAxisType = 'category' | 'datetime' | 'linear' | 'logarithmic';
 
 export type ChartKitWidgetAxisLabels = {
     /** Enable or disable the axis labels. */
