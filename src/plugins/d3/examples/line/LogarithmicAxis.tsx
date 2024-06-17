@@ -23,8 +23,8 @@ export const LineWithLogarithmicAxis = () => {
             ],
         },
     };
-    const lineWidgetData = {...widgetData, title: {text: 'line'}};
-    const logarithmicWidgetData = {
+    const lineWidgetData: ChartKitWidgetData = {...widgetData, title: {text: 'line'}};
+    const logarithmicWidgetData: ChartKitWidgetData = {
         ...widgetData,
         title: {text: 'logarithmic'},
         yAxis: [
