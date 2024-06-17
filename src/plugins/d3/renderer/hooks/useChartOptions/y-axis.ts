@@ -4,6 +4,7 @@ import get from 'lodash/get';
 import type {BaseTextStyle, ChartKitWidgetSeries, ChartKitWidgetYAxis} from '../../../../../types';
 import {
     DEFAULT_AXIS_LABEL_FONT_SIZE,
+    DEFAULT_AXIS_TYPE,
     axisLabelsDefaults,
     yAxisTitleDefaults,
 } from '../../constants';
@@ -107,7 +108,7 @@ export const getPreparedYAxis = ({
         const titleStyle: BaseTextStyle = {
             fontSize: get(axisItem, 'title.style.fontSize', yAxisTitleDefaults.fontSize),
         };
-        const axisType = get(axisItem, 'type', 'linear');
+        const axisType = get(axisItem, 'type', DEFAULT_AXIS_TYPE);
         const preparedAxis: PreparedAxis = {
             type: axisType,
             labels: {

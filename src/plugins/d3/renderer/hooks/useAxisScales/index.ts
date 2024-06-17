@@ -1,10 +1,14 @@
 import React from 'react';
 
-import {extent, scaleBand, scaleLinear, scaleUtc} from 'd3';
+import {extent, scaleBand, scaleLinear, scaleLog, scaleUtc} from 'd3';
 import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
-import {ChartKitWidgetAxis, ChartKitWidgetSeries} from '../../../../../types';
+import {
+    ChartKitWidgetAxis,
+    ChartKitWidgetAxisType,
+    ChartKitWidgetSeries,
+} from '../../../../../types';
 import {DEFAULT_AXIS_TYPE} from '../../constants';
 import {
     CHART_SERIES_WITH_VOLUME_ON_Y_AXIS,
@@ -65,13 +69,14 @@ const filterCategoriesByVisibleSeries = (args: {
 };
 
 export function createYScale(axis: PreparedAxis, series: PreparedSeries[], boundsHeight: number) {
-    const yType = get(axis, 'type', DEFAULT_AXIS_TYPE);
+    const yType: ChartKitWidgetAxisType = get(axis, 'type', DEFAULT_AXIS_TYPE);
     const yMin = get(axis, 'min');
     const yCategories = get(axis, 'categories');
     const yTimestamps = get(axis, 'timestamps');
 
     switch (yType) {
-        case 'linear': {
+        case 'linear':
+        case 'logarithmic': {
             const domain = getDomainDataYBySeries(series);
             const range = [boundsHeight, boundsHeight * axis.maxPadding];
 
@@ -83,7 +88,8 @@ export function createYScale(axis: PreparedAxis, series: PreparedSeries[], bound
                     yMaxValue = Math.max(yMaxValue, 0);
                 }
 
-                return scaleLinear().domain([yMinValue, yMaxValue]).range(range).nice();
+                const scaleFn = yType === 'logarithmic' ? scaleLog : scaleLinear;
+                return scaleFn().domain([yMinValue, yMaxValue]).range(range).nice();
             }
 
             break;
@@ -150,7 +156,7 @@ export function createXScale(
 ) {
     const xMin = get(axis, 'min');
     const xMax = getDefaultMaxXAxisValue(series);
-    const xType = get(axis, 'type', DEFAULT_AXIS_TYPE);
+    const xType: ChartKitWidgetAxisType = get(axis, 'type', DEFAULT_AXIS_TYPE);
     const xCategories = get(axis, 'categories');
     const xTimestamps = get(axis, 'timestamps');
     const maxPadding = get(axis, 'maxPadding', 0);
@@ -159,7 +165,8 @@ export function createXScale(
     const xRange = [0, boundsWidth - xAxisMinPadding];
 
     switch (xType) {
-        case 'linear': {
+        case 'linear':
+        case 'logarithmic': {
             const domain = getDomainDataXBySeries(series);
 
             if (isNumericalArrayData(domain)) {
@@ -167,7 +174,9 @@ export function createXScale(
                 const xMinValue = typeof xMin === 'number' ? xMin : domainXMin;
                 const xMaxValue =
                     typeof xMax === 'number' ? Math.max(xMax, domainXMax) : domainXMax;
-                return scaleLinear().domain([xMinValue, xMaxValue]).range(xRange).nice();
+
+                const scaleFn = xType === 'logarithmic' ? scaleLog : scaleLinear;
+                return scaleFn().domain([xMinValue, xMaxValue]).range(xRange).nice();
             }
 
             break;
