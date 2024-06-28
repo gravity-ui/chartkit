@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.9.0](https://github.com/gravity-ui/chartkit/compare/v5.8.0...v5.9.0) (2024-06-28)
+
+
+### Features
+
+* **D3 plugin:** add logarithmic type for x and y axes ([#493](https://github.com/gravity-ui/chartkit/issues/493)) ([f633d91](https://github.com/gravity-ui/chartkit/commit/f633d9193a9b11500c8bd01bd7b05421a9f0809e))
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix `getTooltip` in case of tooltip fixation ([#496](https://github.com/gravity-ui/chartkit/issues/496)) ([3c40fd9](https://github.com/gravity-ui/chartkit/commit/3c40fd9e205d44b0ba8f9261a6c2aa60024f7028))
+
 ## [5.8.0](https://github.com/gravity-ui/chartkit/compare/v5.7.0...v5.8.0) (2024-06-14)
 
 
