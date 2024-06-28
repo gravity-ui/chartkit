@@ -485,8 +485,21 @@ function validateCellManipulationConfig(tooltipOptions, property, item) {
     }
 }
 
+function getSeriesTypeFromTooltipContext() {
+    if (this.series) {
+        return this.series.type;
+    }
+
+    if (Array.isArray(this.points)) {
+        return this.points[0]?.series?.type;
+    }
+
+    return '';
+}
+
 function getTooltip(tooltip, options, comments, holidays) {
-    const serieType = (this.series && this.series.type) || tooltip.chart.options.chart.type;
+    const serieType =
+        getSeriesTypeFromTooltipContext.call(this) || tooltip.chart.options.chart.type;
     const chart = tooltip.chart;
     const xAxis = chart.xAxis[0];
     const isDatetimeXAxis = xAxis.options.type === 'datetime';
