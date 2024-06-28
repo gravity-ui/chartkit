@@ -11,7 +11,6 @@
 ### Bug Fixes
 
 * **Highcharts plugin:** fix `getTooltip` in case of tooltip fixation ([#496](https://github.com/gravity-ui/chartkit/issues/496)) ([3c40fd9](https://github.com/gravity-ui/chartkit/commit/3c40fd9e205d44b0ba8f9261a6c2aa60024f7028))
-* **Highcharts plugin:** fix getTooltip in case of tooltip fixation ([3c40fd9](https://github.com/gravity-ui/chartkit/commit/3c40fd9e205d44b0ba8f9261a6c2aa60024f7028))
 
 ## [5.8.0](https://github.com/gravity-ui/chartkit/compare/v5.7.0...v5.8.0) (2024-06-14)
 
