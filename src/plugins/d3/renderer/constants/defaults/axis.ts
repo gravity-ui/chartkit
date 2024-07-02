@@ -1,4 +1,4 @@
-import type {ChartKitWidgetAxisTitleAlignment, ChartKitWidgetAxisType} from '../../../../../types';
+import type {BaseTextStyle, ChartKitWidgetAxis, ChartKitWidgetAxisType} from '../../../../../types';
 
 export const axisLabelsDefaults = {
     margin: 10,
@@ -7,17 +7,25 @@ export const axisLabelsDefaults = {
     maxWidth: 80,
 };
 
-const axisTitleDefaults = {
-    fontSize: '14px',
-    align: 'center' as ChartKitWidgetAxisTitleAlignment,
+type AxisTitleDefaults = Required<ChartKitWidgetAxis['title']> & {
+    style: BaseTextStyle;
 };
 
-export const xAxisTitleDefaults = {
+const axisTitleDefaults: AxisTitleDefaults = {
+    text: '',
+    margin: 0,
+    style: {
+        fontSize: '14px',
+    },
+    align: 'center',
+};
+
+export const xAxisTitleDefaults: AxisTitleDefaults = {
     ...axisTitleDefaults,
     margin: 4,
 };
 
-export const yAxisTitleDefaults = {
+export const yAxisTitleDefaults: AxisTitleDefaults = {
     ...axisTitleDefaults,
     margin: 8,
 };

@@ -97,7 +97,8 @@ export const getPreparedXAxis = ({
 }): PreparedAxis => {
     const titleText = get(xAxis, 'title.text', '');
     const titleStyle: BaseTextStyle = {
-        fontSize: get(xAxis, 'title.style.fontSize', xAxisTitleDefaults.fontSize),
+        ...xAxisTitleDefaults.style,
+        ...get(xAxis, 'title.style'),
     };
     const titleSize = getLabelsSize({labels: [titleText], style: titleStyle});
     const labelsStyle = {

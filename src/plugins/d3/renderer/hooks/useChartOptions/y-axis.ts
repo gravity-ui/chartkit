@@ -105,8 +105,9 @@ export const getPreparedYAxis = ({
             fontSize: get(axisItem, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE),
         };
         const titleText = get(axisItem, 'title.text', '');
-        const titleStyle: BaseTextStyle = {
-            fontSize: get(axisItem, 'title.style.fontSize', yAxisTitleDefaults.fontSize),
+        const titleStyle = {
+            ...yAxisTitleDefaults.style,
+            ...get(axisItem, 'title.style'),
         };
         const titleSize = getLabelsSize({labels: [titleText], style: titleStyle});
         const axisType = get(axisItem, 'type', DEFAULT_AXIS_TYPE);

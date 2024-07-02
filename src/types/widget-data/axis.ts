@@ -42,6 +42,8 @@ export type ChartKitWidgetAxis = {
     lineColor?: string;
     title?: {
         text?: string;
+        /** CSS styles for the title */
+        style?: Partial<BaseTextStyle>;
         /** The pixel distance between the axis labels or line and the title.
          *
          * Defaults to 4 for horizontal axes, 8 for vertical.
