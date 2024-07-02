@@ -3,7 +3,7 @@ import React from 'react';
 import {Col, Container, Row, Text} from '@gravity-ui/uikit';
 
 import {ChartKit} from '../../../../components/ChartKit';
-import {ChartKitWidgetAxis, ChartKitWidgetData} from '../../../../types';
+import type {ChartKitWidgetAxis, ChartKitWidgetData} from '../../../../types';
 import {ExampleWrapper} from '../ExampleWrapper';
 
 export const AxisTitle = () => {

@@ -2,6 +2,7 @@ import type {
     BaseTextStyle,
     ChartKitWidgetAxis,
     ChartKitWidgetAxisLabels,
+    ChartKitWidgetAxisTitleAlignment,
     ChartKitWidgetAxisType,
     ChartKitWidgetData,
     ChartMargin,
@@ -33,7 +34,7 @@ export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
         text: string;
         margin: number;
         style: BaseTextStyle;
-        align: 'left' | 'center' | 'right';
+        align: ChartKitWidgetAxisTitleAlignment;
     };
     min?: number;
     grid: {
