@@ -29,9 +29,11 @@ export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
     labels: PreparedAxisLabels;
     title: {
         height: number;
+        width: number;
         text: string;
         margin: number;
         style: BaseTextStyle;
+        align: 'left' | 'center' | 'right';
     };
     min?: number;
     grid: {

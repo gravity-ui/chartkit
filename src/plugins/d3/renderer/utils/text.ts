@@ -98,6 +98,10 @@ export function getLabelsSize({
     style?: BaseTextStyle;
     rotation?: number;
 }) {
+    if (!labels.filter(Boolean).length) {
+        return {maxHeight: 0, maxWidth: 0};
+    }
+
     const container = select(document.body)
         .append('div')
         .attr('class', 'chartkit chartkit-theme_common');

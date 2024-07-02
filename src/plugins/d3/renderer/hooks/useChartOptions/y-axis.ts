@@ -108,6 +108,7 @@ export const getPreparedYAxis = ({
         const titleStyle: BaseTextStyle = {
             fontSize: get(axisItem, 'title.style.fontSize', yAxisTitleDefaults.fontSize),
         };
+        const titleSize = getLabelsSize({labels: [titleText], style: titleStyle});
         const axisType = get(axisItem, 'type', DEFAULT_AXIS_TYPE);
         const preparedAxis: PreparedAxis = {
             type: axisType,
@@ -135,9 +136,9 @@ export const getPreparedYAxis = ({
                 text: titleText,
                 margin: get(axisItem, 'title.margin', yAxisTitleDefaults.margin),
                 style: titleStyle,
-                height: titleText
-                    ? getHorisontalSvgTextHeight({text: titleText, style: titleStyle})
-                    : 0,
+                width: titleSize.maxWidth,
+                height: titleSize.maxHeight,
+                align: get(axisItem, 'title.align', yAxisTitleDefaults.align),
             },
             min: getAxisMin(axisItem, series),
             maxPadding: get(axisItem, 'maxPadding', 0.05),

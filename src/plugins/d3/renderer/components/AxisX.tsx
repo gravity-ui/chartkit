@@ -42,6 +42,28 @@ function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale
     };
 }
 
+export function getTitlePosition(axis: PreparedAxis, axisSize: number) {
+    let x;
+    const y = axis.title.height + axis.title.margin + axis.labels.height + axis.labels.margin;
+
+    switch (axis.title.align) {
+        case 'left': {
+            x = axis.title.width / 2;
+            break;
+        }
+        case 'right': {
+            x = axisSize - axis.title.width / 2;
+            break;
+        }
+        case 'center': {
+            x = axisSize / 2;
+            break;
+        }
+    }
+
+    return {x, y};
+}
+
 export const AxisX = React.memo(function AxisX(props: Props) {
     const {axis, width, height: totalHeight, scale, split} = props;
     const ref = React.useRef<SVGGElement | null>(null);
@@ -88,15 +110,14 @@ export const AxisX = React.memo(function AxisX(props: Props) {
 
         // add an axis header if necessary
         if (axis.title.text) {
-            const y =
-                axis.title.height + axis.title.margin + axis.labels.height + axis.labels.margin;
-
             svgElement
                 .append('text')
                 .attr('class', b('title'))
                 .attr('text-anchor', 'middle')
-                .attr('x', width / 2)
-                .attr('y', y)
+                .attr('transform', () => {
+                    const {x, y} = getTitlePosition(axis, width);
+                    return `translate(${x}, ${y})`;
+                })
                 .attr('font-size', axis.title.style.fontSize)
                 .text(axis.title.text)
                 .call(setEllipsisForOverflowText, width);
