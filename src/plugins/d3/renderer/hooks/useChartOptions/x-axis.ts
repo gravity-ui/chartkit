@@ -18,6 +18,7 @@ import {
     getTicksCount,
     getXAxisItems,
     hasOverlappingLabels,
+    wrapText,
 } from '../../utils';
 import {createXScale} from '../useAxisScales';
 
@@ -100,7 +101,16 @@ export const getPreparedXAxis = ({
         ...xAxisTitleDefaults.style,
         ...get(xAxis, 'title.style'),
     };
-    const titleSize = getLabelsSize({labels: [titleText], style: titleStyle});
+    const titleMaxRowsCount = get(xAxis, 'title.maxRowCount', xAxisTitleDefaults.maxRowCount);
+    const estimatedTitleRows = wrapText({
+        text: titleText,
+        style: titleStyle,
+        width,
+    }).slice(0, titleMaxRowsCount);
+    const titleSize = getLabelsSize({
+        labels: [titleText],
+        style: titleStyle,
+    });
     const labelsStyle = {
         fontSize: get(xAxis, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE),
     };
@@ -127,9 +137,10 @@ export const getPreparedXAxis = ({
             text: titleText,
             style: titleStyle,
             margin: get(xAxis, 'title.margin', xAxisTitleDefaults.margin),
-            height: titleSize.maxHeight,
+            height: titleSize.maxHeight * estimatedTitleRows.length,
             width: titleSize.maxWidth,
             align: get(xAxis, 'title.align', xAxisTitleDefaults.align),
+            maxRowCount: get(xAxis, 'title.maxRowCount', xAxisTitleDefaults.maxRowCount),
         },
         min: getAxisMin(xAxis, series),
         maxPadding: get(xAxis, 'maxPadding', 0.01),

@@ -3,21 +3,44 @@ import {select} from 'd3-selection';
 
 import {BaseTextStyle} from '../../../../types';
 
+export function handleOverflowingText(tSpan: SVGTSpanElement | null, maxWidth: number) {
+    if (!tSpan) {
+        return;
+    }
+
+    const svg = tSpan.closest('svg');
+    if (!svg) {
+        return;
+    }
+
+    const textNode = tSpan.closest('text');
+    const angle =
+        Array.from(textNode?.transform.baseVal || []).find((item) => item.angle)?.angle || 0;
+
+    const revertRotation = svg.createSVGTransform();
+    revertRotation.setRotate(-angle, 0, 0);
+    textNode?.transform.baseVal.appendItem(revertRotation);
+
+    let text = tSpan.textContent || '';
+    let textLength = tSpan.getBoundingClientRect()?.width || 0;
+
+    while (textLength > maxWidth && text.length > 1) {
+        text = text.slice(0, -1);
+        tSpan.textContent = text + '…';
+        textLength = tSpan.getBoundingClientRect()?.width || 0;
+    }
+
+    textNode?.transform.baseVal.removeItem(textNode?.transform.baseVal.length - 1);
+}
+
 export function setEllipsisForOverflowText<T>(
     selection: Selection<SVGTextElement, T, null, unknown>,
     maxWidth: number,
 ) {
-    let text = selection.text();
+    const text = selection.text();
     selection.text(null).append('title').text(text);
     const tSpan = selection.append('tspan').text(text).style('alignment-baseline', 'inherit');
-
-    let textLength = tSpan.node()?.getBoundingClientRect()?.width || 0;
-
-    while (textLength > maxWidth && text.length > 1) {
-        text = text.slice(0, -1);
-        tSpan.text(text + '…');
-        textLength = tSpan.node()?.getBoundingClientRect()?.width || 0;
-    }
+    handleOverflowingText(tSpan.node(), maxWidth);
 }
 
 export function setEllipsisForOverflowTexts<T>(
@@ -118,4 +141,48 @@ export function getLabelsSize({
     container.remove();
 
     return {maxHeight: height, maxWidth: width};
+}
+
+export type TextRow = {text: string; y: number};
+
+export function wrapText(args: {text: string; style?: BaseTextStyle; width: number}): TextRow[] {
+    const {text, style, width} = args;
+
+    const height = getLabelsSize({
+        labels: [text],
+        style: style,
+    }).maxHeight;
+    // @ts-ignore
+    const segmenter = new Intl.Segmenter([], {granularity: 'word'});
+    const segments = Array.from(segmenter.segment(text));
+
+    return segments.reduce<TextRow[]>((acc, s) => {
+        const item = s as {isWordLike: boolean; segment: string};
+        if (!acc.length) {
+            acc.push({
+                text: '',
+                y: acc.length * height,
+            });
+        }
+
+        let lastRow = acc[acc.length - 1];
+
+        if (
+            item.isWordLike &&
+            getLabelsSize({
+                labels: [lastRow.text + item.segment],
+                style,
+            }).maxWidth > width
+        ) {
+            lastRow = {
+                text: '',
+                y: acc.length * height,
+            };
+            acc.push(lastRow);
+        }
+
+        lastRow.text += item.segment;
+
+        return acc;
+    }, []);
 }

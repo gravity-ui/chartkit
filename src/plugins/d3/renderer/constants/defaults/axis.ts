@@ -18,6 +18,7 @@ const axisTitleDefaults: AxisTitleDefaults = {
         fontSize: '14px',
     },
     align: 'center',
+    maxRowCount: 1,
 };
 
 export const xAxisTitleDefaults: AxisTitleDefaults = {
