@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.10.0](https://github.com/gravity-ui/chartkit/compare/v5.9.0...v5.10.0) (2024-07-02)
+
+
+### Features
+
+* **D3 plugin:** axis title alignment ([#497](https://github.com/gravity-ui/chartkit/issues/497)) ([1bc167f](https://github.com/gravity-ui/chartkit/commit/1bc167fda52e702a2d46ef62db22322e5f0b0f9c))
+
 ## [5.9.0](https://github.com/gravity-ui/chartkit/compare/v5.8.0...v5.9.0) (2024-06-28)
 
 
