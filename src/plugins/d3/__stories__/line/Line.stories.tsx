@@ -5,6 +5,7 @@ import {StoryObj} from '@storybook/react';
 import {D3Plugin} from '../..';
 import {Loader} from '../../../../components/Loader/Loader';
 import {settings} from '../../../../libs';
+import {AxisTitle} from '../../examples/line/AxisTitle';
 import {LineWithLogarithmicAxis} from '../../examples/line/LogarithmicAxis';
 
 const ChartStory = ({Chart}: {Chart: React.FC}) => {
@@ -35,6 +36,13 @@ export const LogarithmicAxis: StoryObj<typeof ChartStory> = {
     name: 'Logarithmic axis',
     args: {
         Chart: LineWithLogarithmicAxis,
+    },
+};
+
+export const AxisTitleStory: StoryObj<typeof ChartStory> = {
+    name: 'Axis title',
+    args: {
+        Chart: AxisTitle,
     },
 };
 

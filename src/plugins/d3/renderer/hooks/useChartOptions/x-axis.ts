@@ -97,8 +97,10 @@ export const getPreparedXAxis = ({
 }): PreparedAxis => {
     const titleText = get(xAxis, 'title.text', '');
     const titleStyle: BaseTextStyle = {
-        fontSize: get(xAxis, 'title.style.fontSize', xAxisTitleDefaults.fontSize),
+        ...xAxisTitleDefaults.style,
+        ...get(xAxis, 'title.style'),
     };
+    const titleSize = getLabelsSize({labels: [titleText], style: titleStyle});
     const labelsStyle = {
         fontSize: get(xAxis, 'labels.style.fontSize', DEFAULT_AXIS_LABEL_FONT_SIZE),
     };
@@ -125,9 +127,9 @@ export const getPreparedXAxis = ({
             text: titleText,
             style: titleStyle,
             margin: get(xAxis, 'title.margin', xAxisTitleDefaults.margin),
-            height: titleText
-                ? getHorisontalSvgTextHeight({text: titleText, style: titleStyle})
-                : 0,
+            height: titleSize.maxHeight,
+            width: titleSize.maxWidth,
+            align: get(xAxis, 'title.align', xAxisTitleDefaults.align),
         },
         min: getAxisMin(xAxis, series),
         maxPadding: get(xAxis, 'maxPadding', 0.01),

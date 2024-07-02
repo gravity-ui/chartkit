@@ -3,6 +3,7 @@ import type {FormatNumberOptions} from '../../plugins/shared';
 import type {BaseTextStyle} from './base';
 
 export type ChartKitWidgetAxisType = 'category' | 'datetime' | 'linear' | 'logarithmic';
+export type ChartKitWidgetAxisTitleAlignment = 'left' | 'center' | 'right';
 
 export type ChartKitWidgetAxisLabels = {
     /** Enable or disable the axis labels. */
@@ -41,11 +42,15 @@ export type ChartKitWidgetAxis = {
     lineColor?: string;
     title?: {
         text?: string;
+        /** CSS styles for the title */
+        style?: Partial<BaseTextStyle>;
         /** The pixel distance between the axis labels or line and the title.
          *
          * Defaults to 4 for horizontal axes, 8 for vertical.
          * */
         margin?: number;
+        /** Alignment of the title. */
+        align?: ChartKitWidgetAxisTitleAlignment;
     };
     /** The minimum value of the axis. If undefined the min value is automatically calculate. */
     min?: number;

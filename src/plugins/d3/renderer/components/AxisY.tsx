@@ -93,6 +93,28 @@ function getAxisGenerator(args: {
     return axisGenerator;
 }
 
+function getTitlePosition(axis: PreparedAxis, axisSize: number) {
+    const x = -(axis.title.margin + axis.labels.margin + axis.labels.width);
+    let y;
+
+    switch (axis.title.align) {
+        case 'left': {
+            y = axisSize - axis.title.width / 2;
+            break;
+        }
+        case 'right': {
+            y = axis.title.width / 2;
+            break;
+        }
+        case 'center': {
+            y = axisSize / 2;
+            break;
+        }
+    }
+
+    return {x, y};
+}
+
 export const AxisY = (props: Props) => {
     const {axes, width, height: totalHeight, scale, split} = props;
     const height = getAxisHeight({split, boundsHeight: totalHeight});
@@ -205,10 +227,12 @@ export const AxisY = (props: Props) => {
             .append('text')
             .attr('class', b('title'))
             .attr('text-anchor', 'middle')
-            .attr('dy', (d) => -(d.title.margin + d.labels.margin + d.labels.width))
-            .attr('dx', (d) => (d.position === 'left' ? -height / 2 : height / 2))
             .attr('font-size', (d) => d.title.style.fontSize)
-            .attr('transform', (d) => (d.position === 'left' ? 'rotate(-90)' : 'rotate(90)'))
+            .attr('transform', (d) => {
+                const {x, y} = getTitlePosition(d, height);
+                const angle = d.position === 'left' ? -90 : 90;
+                return `translate(${x}, ${y}) rotate(${angle})`;
+            })
             .text((d) => d.title.text)
             .each((_d, index, node) => {
                 return setEllipsisForOverflowText(
