@@ -10,6 +10,7 @@ import {
     calculateSin,
     formatAxisTickLabel,
     getAxisHeight,
+    getAxisTitleRows,
     getClosestPointsRange,
     getScaleTicks,
     getTicksCount,
@@ -18,7 +19,6 @@ import {
     setEllipsisForOverflowTexts,
     wrapText,
 } from '../utils';
-import type {TextRow} from '../utils';
 
 const b = block('d3-axis');
 
@@ -97,6 +97,10 @@ function getAxisGenerator(args: {
 
 function getTitlePosition(args: {axis: PreparedAxis; axisHeight: number; rowCount: number}) {
     const {axis, axisHeight, rowCount} = args;
+    if (rowCount < 1) {
+        return {x: 0, y: 0};
+    }
+
     const x = -(
         axis.title.height -
         axis.title.height / rowCount +
@@ -249,21 +253,7 @@ export const AxisY = (props: Props) => {
                 return `translate(${x}, ${y}) rotate(${angle})`;
             })
             .selectAll('tspan')
-            .data((d) => {
-                const textRows = wrapText({
-                    text: d.title.text,
-                    style: d.title.style,
-                    width: height,
-                });
-                return textRows.reduce<TextRow[]>((acc, row, index) => {
-                    if (index < d.title.maxRowCount) {
-                        acc.push(row);
-                    } else {
-                        acc[d.title.maxRowCount - 1].text += row.text;
-                    }
-                    return acc;
-                }, []);
-            })
+            .data((d) => getAxisTitleRows({axis: d, textMaxWidth: height}))
             .join('tspan')
             .attr('x', 0)
             .attr('y', (d) => d.y)

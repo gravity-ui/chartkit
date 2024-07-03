@@ -2,6 +2,9 @@ import type {AxisDomain, AxisScale, ScaleBand} from 'd3';
 
 import type {PreparedAxis, PreparedSplit} from '../hooks';
 
+import type {TextRow} from './text';
+import {wrapText} from './text';
+
 export function getTicksCount({axis, range}: {axis: PreparedAxis; range: number}) {
     let ticksCount: number | undefined;
 
@@ -74,4 +77,26 @@ export function getAxisHeight(args: {split: PreparedSplit; boundsHeight: number}
     }
 
     return boundsHeight;
+}
+
+export function getAxisTitleRows(args: {axis: PreparedAxis; textMaxWidth: number}) {
+    const {axis, textMaxWidth} = args;
+    if (axis.title.maxRowCount < 1) {
+        return [];
+    }
+
+    const textRows = wrapText({
+        text: axis.title.text,
+        style: axis.title.style,
+        width: textMaxWidth,
+    });
+
+    return textRows.reduce<TextRow[]>((acc, row, index) => {
+        if (index < axis.title.maxRowCount) {
+            acc.push(row);
+        } else {
+            acc[axis.title.maxRowCount - 1].text += row.text;
+        }
+        return acc;
+    }, []);
 }

@@ -1,12 +1,27 @@
 import React from 'react';
 
 import {Col, Container, Row, Text} from '@gravity-ui/uikit';
+import type {StoryObj} from '@storybook/react';
 
 import {ChartKit} from '../../../../components/ChartKit';
+import {Loader} from '../../../../components/Loader/Loader';
+import {settings} from '../../../../libs';
 import type {ChartKitWidgetAxis, ChartKitWidgetData} from '../../../../types';
-import {ExampleWrapper} from '../ExampleWrapper';
+import {ExampleWrapper} from '../../examples/ExampleWrapper';
+import {D3Plugin} from '../../index';
 
-export const AxisTitle = () => {
+const AxisTitle = () => {
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        settings.set({plugins: [D3Plugin]});
+        setLoading(false);
+    }, []);
+
+    if (loading) {
+        return <Loader />;
+    }
+
     const longText = `One dollar and eighty-seven cents. That was all.
     And sixty cents of it was in pennies. Pennies saved one and two at a time by bulldozing
     the grocer and the vegetable man and the butcher until one's cheeks burned with the silent
@@ -80,7 +95,7 @@ export const AxisTitle = () => {
                         <ChartKit
                             type="d3"
                             data={{
-                                ...getWidgetData({text: longText, maxRowCount: 3}),
+                                ...getWidgetData({text: longText, maxRowCount: 0}),
                                 title: {text: 'multiline'},
                             }}
                         />
@@ -89,4 +104,13 @@ export const AxisTitle = () => {
             </Row>
         </Container>
     );
+};
+
+export const AxisTitleStory: StoryObj<typeof AxisTitle> = {
+    name: 'Axis title',
+};
+
+export default {
+    title: 'Plugins/D3/other',
+    component: AxisTitle,
 };

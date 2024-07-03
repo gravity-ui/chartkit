@@ -7,14 +7,13 @@ import {block} from '../../../../utils/cn';
 import type {ChartScale, PreparedAxis, PreparedSplit} from '../hooks';
 import {
     formatAxisTickLabel,
+    getAxisTitleRows,
     getClosestPointsRange,
     getMaxTickCount,
     getScaleTicks,
     getTicksCount,
     handleOverflowingText,
-    wrapText,
 } from '../utils';
-import type {TextRow} from '../utils';
 import {axisBottom} from '../utils/axis-generators';
 
 const b = block('d3-axis');
@@ -46,6 +45,9 @@ function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale
 
 export function getTitlePosition(args: {axis: PreparedAxis; width: number; rowCount: number}) {
     const {axis, width, rowCount} = args;
+    if (rowCount < 1) {
+        return {x: 0, y: 0};
+    }
 
     let x;
     const y =
@@ -115,20 +117,7 @@ export const AxisX = React.memo(function AxisX(props: Props) {
 
         // add an axis header if necessary
         if (axis.title.text) {
-            const textRows = wrapText({
-                text: axis.title.text,
-                style: axis.title.style,
-                width,
-            });
-            const titleRows = textRows.reduce<TextRow[]>((acc, row, index) => {
-                if (index < axis.title.maxRowCount) {
-                    acc.push(row);
-                } else {
-                    acc[axis.title.maxRowCount - 1].text += row.text;
-                }
-                return acc;
-            }, []);
-
+            const titleRows = getAxisTitleRows({axis, textMaxWidth: width});
             svgElement
                 .append('text')
                 .attr('class', b('title'))
