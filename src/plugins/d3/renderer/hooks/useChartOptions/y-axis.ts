@@ -16,6 +16,7 @@ import {
     getLabelsSize,
     getScaleTicks,
     getWaterfallPointSubtotal,
+    wrapText,
 } from '../../utils';
 import {createYScale} from '../useAxisScales';
 import type {PreparedSeries, PreparedWaterfallSeries} from '../useSeries/types';
@@ -84,9 +85,11 @@ function getAxisMin(axis?: ChartKitWidgetYAxis, series?: ChartKitWidgetSeries[])
 export const getPreparedYAxis = ({
     series,
     yAxis,
+    height,
 }: {
     series: ChartKitWidgetSeries[];
     yAxis: ChartKitWidgetYAxis[] | undefined;
+    height: number;
 }): PreparedAxis[] => {
     const axisByPlot: ChartKitWidgetYAxis[][] = [];
     const axisItems = yAxis || [{} as ChartKitWidgetYAxis];
@@ -109,6 +112,16 @@ export const getPreparedYAxis = ({
             ...yAxisTitleDefaults.style,
             ...get(axisItem, 'title.style'),
         };
+        const titleMaxRowsCount = get(
+            axisItem,
+            'title.maxRowCount',
+            yAxisTitleDefaults.maxRowCount,
+        );
+        const estimatedTitleRows = wrapText({
+            text: titleText,
+            style: titleStyle,
+            width: height,
+        }).slice(0, titleMaxRowsCount);
         const titleSize = getLabelsSize({labels: [titleText], style: titleStyle});
         const axisType = get(axisItem, 'type', DEFAULT_AXIS_TYPE);
         const preparedAxis: PreparedAxis = {
@@ -138,8 +151,9 @@ export const getPreparedYAxis = ({
                 margin: get(axisItem, 'title.margin', yAxisTitleDefaults.margin),
                 style: titleStyle,
                 width: titleSize.maxWidth,
-                height: titleSize.maxHeight,
+                height: titleSize.maxHeight * estimatedTitleRows.length,
                 align: get(axisItem, 'title.align', yAxisTitleDefaults.align),
+                maxRowCount: titleMaxRowsCount,
             },
             min: getAxisMin(axisItem, series),
             maxPadding: get(axisItem, 'maxPadding', 0.05),

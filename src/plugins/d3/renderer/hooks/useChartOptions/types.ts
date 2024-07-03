@@ -35,6 +35,7 @@ export type PreparedAxis = Omit<ChartKitWidgetAxis, 'type' | 'labels'> & {
         margin: number;
         style: BaseTextStyle;
         align: ChartKitWidgetAxisTitleAlignment;
+        maxRowCount: number;
     };
     min?: number;
     grid: {

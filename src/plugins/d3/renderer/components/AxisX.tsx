@@ -7,11 +7,12 @@ import {block} from '../../../../utils/cn';
 import type {ChartScale, PreparedAxis, PreparedSplit} from '../hooks';
 import {
     formatAxisTickLabel,
+    getAxisTitleRows,
     getClosestPointsRange,
     getMaxTickCount,
     getScaleTicks,
     getTicksCount,
-    setEllipsisForOverflowText,
+    handleOverflowingText,
 } from '../utils';
 import {axisBottom} from '../utils/axis-generators';
 
@@ -42,9 +43,15 @@ function getLabelFormatter({axis, scale}: {axis: PreparedAxis; scale: ChartScale
     };
 }
 
-export function getTitlePosition(axis: PreparedAxis, axisSize: number) {
+export function getTitlePosition(args: {axis: PreparedAxis; width: number; rowCount: number}) {
+    const {axis, width, rowCount} = args;
+    if (rowCount < 1) {
+        return {x: 0, y: 0};
+    }
+
     let x;
-    const y = axis.title.height + axis.title.margin + axis.labels.height + axis.labels.margin;
+    const y =
+        axis.title.height / rowCount + axis.title.margin + axis.labels.height + axis.labels.margin;
 
     switch (axis.title.align) {
         case 'left': {
@@ -52,11 +59,11 @@ export function getTitlePosition(axis: PreparedAxis, axisSize: number) {
             break;
         }
         case 'right': {
-            x = axisSize - axis.title.width / 2;
+            x = width - axis.title.width / 2;
             break;
         }
         case 'center': {
-            x = axisSize / 2;
+            x = width / 2;
             break;
         }
     }
@@ -110,17 +117,27 @@ export const AxisX = React.memo(function AxisX(props: Props) {
 
         // add an axis header if necessary
         if (axis.title.text) {
+            const titleRows = getAxisTitleRows({axis, textMaxWidth: width});
             svgElement
                 .append('text')
                 .attr('class', b('title'))
-                .attr('text-anchor', 'middle')
                 .attr('transform', () => {
-                    const {x, y} = getTitlePosition(axis, width);
+                    const {x, y} = getTitlePosition({axis, width, rowCount: titleRows.length});
                     return `translate(${x}, ${y})`;
                 })
                 .attr('font-size', axis.title.style.fontSize)
-                .text(axis.title.text)
-                .call(setEllipsisForOverflowText, width);
+                .attr('text-anchor', 'middle')
+                .selectAll('tspan')
+                .data(titleRows)
+                .join('tspan')
+                .attr('x', 0)
+                .attr('y', (d) => d.y)
+                .text((d) => d.text)
+                .each((_d, index, nodes) => {
+                    if (index === axis.title.maxRowCount - 1) {
+                        handleOverflowingText(nodes[index] as SVGTSpanElement, width);
+                    }
+                });
         }
     }, [axis, width, totalHeight, scale, split]);
 

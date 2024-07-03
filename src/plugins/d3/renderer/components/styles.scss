@@ -21,6 +21,10 @@
         alignment-baseline: after-edge;
         fill: var(--g-color-text-secondary);
     }
+
+    &__title tspan {
+        alignment-baseline: after-edge;
+    }
 }
 
 .chartkit-d3-legend {

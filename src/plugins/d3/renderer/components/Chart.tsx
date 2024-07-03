@@ -50,8 +50,9 @@ export const Chart = (props: Props) => {
             getPreparedYAxis({
                 series: data.series.data,
                 yAxis: data.yAxis,
+                height,
             }),
-        [data],
+        [data, height],
     );
 
     const {

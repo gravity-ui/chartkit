@@ -10,12 +10,14 @@ import {
     calculateSin,
     formatAxisTickLabel,
     getAxisHeight,
+    getAxisTitleRows,
     getClosestPointsRange,
     getScaleTicks,
     getTicksCount,
+    handleOverflowingText,
     parseTransformStyle,
-    setEllipsisForOverflowText,
     setEllipsisForOverflowTexts,
+    wrapText,
 } from '../utils';
 
 const b = block('d3-axis');
@@ -93,13 +95,24 @@ function getAxisGenerator(args: {
     return axisGenerator;
 }
 
-function getTitlePosition(axis: PreparedAxis, axisSize: number) {
-    const x = -(axis.title.margin + axis.labels.margin + axis.labels.width);
+function getTitlePosition(args: {axis: PreparedAxis; axisHeight: number; rowCount: number}) {
+    const {axis, axisHeight, rowCount} = args;
+    if (rowCount < 1) {
+        return {x: 0, y: 0};
+    }
+
+    const x = -(
+        axis.title.height -
+        axis.title.height / rowCount +
+        axis.title.margin +
+        axis.labels.margin +
+        axis.labels.width
+    );
     let y;
 
     switch (axis.title.align) {
         case 'left': {
-            y = axisSize - axis.title.width / 2;
+            y = axisHeight - axis.title.width / 2;
             break;
         }
         case 'right': {
@@ -107,7 +120,7 @@ function getTitlePosition(axis: PreparedAxis, axisSize: number) {
             break;
         }
         case 'center': {
-            y = axisSize / 2;
+            y = axisHeight / 2;
             break;
         }
     }
@@ -229,16 +242,26 @@ export const AxisY = (props: Props) => {
             .attr('text-anchor', 'middle')
             .attr('font-size', (d) => d.title.style.fontSize)
             .attr('transform', (d) => {
-                const {x, y} = getTitlePosition(d, height);
+                const titleRows = wrapText({
+                    text: d.title.text,
+                    style: d.title.style,
+                    width: height,
+                });
+                const rowCount = Math.min(titleRows.length, d.title.maxRowCount);
+                const {x, y} = getTitlePosition({axis: d, axisHeight: height, rowCount});
                 const angle = d.position === 'left' ? -90 : 90;
                 return `translate(${x}, ${y}) rotate(${angle})`;
             })
-            .text((d) => d.title.text)
-            .each((_d, index, node) => {
-                return setEllipsisForOverflowText(
-                    select(node[index]) as Selection<SVGTextElement, unknown, null, unknown>,
-                    height,
-                );
+            .selectAll('tspan')
+            .data((d) => getAxisTitleRows({axis: d, textMaxWidth: height}))
+            .join('tspan')
+            .attr('x', 0)
+            .attr('y', (d) => d.y)
+            .text((d) => d.text)
+            .each((_d, index, nodes) => {
+                if (index === nodes.length - 1) {
+                    handleOverflowingText(nodes[index] as SVGTSpanElement, height);
+                }
             });
     }, [axes, width, height, scale, split]);
 

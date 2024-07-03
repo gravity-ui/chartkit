@@ -51,6 +51,9 @@ export type ChartKitWidgetAxis = {
         margin?: number;
         /** Alignment of the title. */
         align?: ChartKitWidgetAxisTitleAlignment;
+        /** Allows limiting of the contents of a title block to the specified number of lines.
+         *  Defaults to 1. */
+        maxRowCount?: number;
     };
     /** The minimum value of the axis. If undefined the min value is automatically calculate. */
     min?: number;
