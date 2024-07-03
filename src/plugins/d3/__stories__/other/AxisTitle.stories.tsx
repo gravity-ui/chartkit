@@ -95,7 +95,7 @@ const AxisTitle = () => {
                         <ChartKit
                             type="d3"
                             data={{
-                                ...getWidgetData({text: longText, maxRowCount: 0}),
+                                ...getWidgetData({text: longText, maxRowCount: 3}),
                                 title: {text: 'multiline'},
                             }}
                         />
