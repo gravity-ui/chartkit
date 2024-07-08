@@ -163,6 +163,7 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
                 options={options}
                 highcharts={Highcharts}
                 onSplitPaneMountCallback={this.state.callback || undefined}
+                paneSplitOrientation={this.props.paneSplitOrientation}
                 callback={this.extendChartInstance}
                 constructorType={options?.useHighStock ? 'stockChart' : 'chart'}
                 containerProps={{className: 'chartkit-graph'}}

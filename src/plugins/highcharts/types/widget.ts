@@ -1,8 +1,12 @@
+import type {Split} from 'react-split-pane';
+
 import type {TooltipData, TooltipLine} from '../renderer/helpers/tooltip/types';
 
 import type {HighchartsComment} from './comments';
 import type {Highcharts} from './lib';
 import type {DrillDownConfig, StringParams} from './misc';
+
+export type PaneSplit = Split;
 
 export type CkHighchartsSeriesOptionsType = Highcharts.SeriesOptionsType & {
     title?: string;
