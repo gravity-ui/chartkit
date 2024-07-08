@@ -109,6 +109,8 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
     type WrapperComponentProps = ComposedComponentProps & {
         onPaneChange?: () => void;
         onSplitPaneMountCallback?: (chart: Highcharts.Chart) => void;
+        paneSplitOrientation?: PaneSplits;
+        onSplitPaneOrientationChange?: (orientation?: PaneSplits) => void;
     };
 
     type WrapperComponentPropsWithForwardedRef = WrapperComponentProps & {
@@ -126,9 +128,10 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
             paneSize: undefined,
             maxPaneSize: undefined,
             paneSplit:
-                window.innerWidth > window.innerHeight
+                this.props.paneSplitOrientation ||
+                (window.innerWidth > window.innerHeight
                     ? PaneSplits.VERTICAL
-                    : PaneSplits.HORIZONTAL,
+                    : PaneSplits.HORIZONTAL),
             componentKey: getRandomCKId(),
         };
 
@@ -236,18 +239,19 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
             const handleResizeAfterOrientationChange = () => {
                 const deviceWidth = window.innerWidth;
                 const deviceHeight = window.innerHeight;
+                const aspectRatioOrientation =
+                    deviceWidth > deviceHeight ? PaneSplits.VERTICAL : PaneSplits.HORIZONTAL;
 
                 this.setState(
                     {
-                        paneSplit:
-                            deviceWidth > deviceHeight
-                                ? PaneSplits.VERTICAL
-                                : PaneSplits.HORIZONTAL,
+                        paneSplit: this.props.paneSplitOrientation || aspectRatioOrientation,
                     },
                     () => {
                         this.setInitialState(true);
                     },
                 );
+
+                this.props.onSplitPaneOrientationChange?.(aspectRatioOrientation);
 
                 window.removeEventListener('resize', handleResizeAfterOrientationChange);
             };

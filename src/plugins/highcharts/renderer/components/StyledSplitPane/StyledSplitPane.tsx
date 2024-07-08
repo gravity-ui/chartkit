@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SplitPane, {Pane, Split, SplitPaneProps} from 'react-split-pane';
+import SplitPane, {Pane, SplitPaneProps} from 'react-split-pane';
 
 import {cn} from '../../../../../utils/cn';
 
@@ -8,8 +8,6 @@ import './StyledSplitPane.scss';
 
 const b = cn('styled-split-pane');
 const resizerClassName = b('pane-resizer');
-
-export type PaneSplit = Split;
 
 type Props = SplitPaneProps & {
     paneOneRender: () => React.ReactNode;
