@@ -1,9 +1,6 @@
-import type {
-    Highcharts,
-    HighchartsWidgetData,
-    PaneSplit,
-    StringParams,
-} from '../plugins/highcharts/types';
+import type {Split} from 'react-split-pane';
+
+import type {Highcharts, HighchartsWidgetData, StringParams} from '../plugins/highcharts/types';
 import type {IndicatorWidgetData} from '../plugins/indicator/types';
 import type {CustomTooltipProps, Yagr, YagrWidgetData} from '../plugins/yagr/types';
 
@@ -26,8 +23,8 @@ export interface ChartKitWidget {
         hoistConfigError?: boolean;
         nonBodyScroll?: boolean;
         splitTooltip?: boolean;
-        paneSplitOrientation?: PaneSplit;
-        onSplitPaneOrientationChange?: (orientation: PaneSplit) => void;
+        paneSplitOrientation?: Split;
+        onSplitPaneOrientationChange?: (orientation: Split) => void;
         onChange?: (
             data: {type: 'PARAMS_CHANGED'; data: {params: StringParams}},
             state: {forceUpdate: boolean},
