@@ -27,6 +27,7 @@ export interface ChartKitWidget {
         nonBodyScroll?: boolean;
         splitTooltip?: boolean;
         paneSplitOrientation?: PaneSplit;
+        onSplitPaneOrientationChange?: (orientation: PaneSplit) => void;
         onChange?: (
             data: {type: 'PARAMS_CHANGED'; data: {params: StringParams}},
             state: {forceUpdate: boolean},

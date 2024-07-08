@@ -110,6 +110,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
         onPaneChange?: () => void;
         onSplitPaneMountCallback?: (chart: Highcharts.Chart) => void;
         paneSplitOrientation?: PaneSplits;
+        onSplitPaneOrientationChange?: (orientation?: PaneSplits) => void;
     };
 
     type WrapperComponentPropsWithForwardedRef = WrapperComponentProps & {
@@ -249,6 +250,8 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
                         this.setInitialState(true);
                     },
                 );
+
+                this.props.onSplitPaneOrientationChange?.(aspectRatioOrientation);
 
                 window.removeEventListener('resize', handleResizeAfterOrientationChange);
             };
