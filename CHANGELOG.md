@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.10.0](https://github.com/gravity-ui/chartkit/compare/v5.9.0...v5.10.0) (2024-07-08)
+
+
+### Features
+
+* **D3  plugin:** multiline axis title ([#499](https://github.com/gravity-ui/chartkit/issues/499)) ([025701e](https://github.com/gravity-ui/chartkit/commit/025701e12bf4df7b88a35c9440bbd913cc9c8205))
+* **D3 plugin:** axis title alignment ([#497](https://github.com/gravity-ui/chartkit/issues/497)) ([1bc167f](https://github.com/gravity-ui/chartkit/commit/1bc167fda52e702a2d46ef62db22322e5f0b0f9c))
+* **Highcharts plugin:** add props paneSplitOrientation ([#501](https://github.com/gravity-ui/chartkit/issues/501)) ([9011e92](https://github.com/gravity-ui/chartkit/commit/9011e927a3779d0dfe8058a2801407826ae89557))
+
 ## [5.9.0](https://github.com/gravity-ui/chartkit/compare/v5.8.0...v5.9.0) (2024-06-28)
 
 
