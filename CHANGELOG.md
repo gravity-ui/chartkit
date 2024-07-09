@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.10.1](https://github.com/gravity-ui/chartkit/compare/v5.10.0...v5.10.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix onRender trigger behaviour ([#502](https://github.com/gravity-ui/chartkit/issues/502)) ([f910063](https://github.com/gravity-ui/chartkit/commit/f910063dbe97bd0ec4a9e4dc292d3cabb63768c9))
+
 ## [5.10.0](https://github.com/gravity-ui/chartkit/compare/v5.9.0...v5.10.0) (2024-07-08)
 
 
