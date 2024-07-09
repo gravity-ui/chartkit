@@ -52,6 +52,7 @@ const Template: Story = () => {
                 type="highcharts"
                 data={widgetData}
                 onLoad={action('onLoad')}
+                onRender={action('onRender')}
             />
         </div>
     );

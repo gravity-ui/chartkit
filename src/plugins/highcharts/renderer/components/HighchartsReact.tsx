@@ -2,7 +2,13 @@
 
 import React from 'react';
 
+import afterFrame from 'afterframe';
 import Highcharts from 'highcharts';
+
+import type {ChartKitProps} from '../../../../types';
+import {measurePerformance} from '../../../../utils';
+
+import {useElementSize} from './useElementSize';
 
 interface HighchartsReactRefObject {
     chart: Highcharts.Chart | null | undefined;
@@ -16,6 +22,7 @@ interface HighchartsReactProps {
     highcharts?: typeof Highcharts;
     options: Highcharts.Options;
     callback?: Highcharts.ChartCallbackFunction;
+    onRender?: ChartKitProps<any>['onRender'];
 }
 
 const useIsomorphicLayoutEffect =
@@ -25,8 +32,13 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
     React.PropsWithoutRef<HighchartsReactProps> & React.RefAttributes<HighchartsReactRefObject>
 > = React.memo(
     React.forwardRef(function HighchartsReact(props: HighchartsReactProps, ref) {
+        const {onRender} = props;
         const containerRef = React.useRef<HTMLDivElement | null>(null);
         const chartRef = React.useRef<Highcharts.Chart | null>();
+        const {width, height} = useElementSize(containerRef);
+        const performanceMeasure = React.useRef<ReturnType<typeof measurePerformance> | null>(
+            measurePerformance(),
+        );
 
         useIsomorphicLayoutEffect(() => {
             function createChart() {
@@ -82,6 +94,22 @@ export const HighchartsReact: React.ForwardRefExoticComponent<
             }),
             [],
         );
+
+        React.useLayoutEffect(() => {
+            if (width && height) {
+                if (!performanceMeasure.current) {
+                    performanceMeasure.current = measurePerformance();
+                }
+
+                afterFrame(() => {
+                    const renderTime = performanceMeasure.current?.end();
+                    if (typeof renderTime === 'number') {
+                        onRender?.({renderTime});
+                    }
+                    performanceMeasure.current = null;
+                });
+            }
+        }, [width, height, onRender]);
 
         return <div {...props.containerProps} ref={containerRef} />;
     }),

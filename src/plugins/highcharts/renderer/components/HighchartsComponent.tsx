@@ -129,13 +129,7 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
     }
 
     componentDidUpdate() {
-        const needRenderCallback =
-            this.props.onRender && !this.state.isError && !this.props.splitTooltip;
-        if (needRenderCallback) {
-            this.props.onRender?.({
-                renderTime: getChartPerformanceDuration(this.getId()),
-            });
-
+        if (this.needRenderCallback()) {
             const widget = this.chartComponent.current ? this.chartComponent.current.chart : null;
 
             if (this.state.callback && widget) {
@@ -169,6 +163,7 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
                 constructorType={options?.useHighStock ? 'stockChart' : 'chart'}
                 containerProps={{className: 'chartkit-graph'}}
                 ref={this.chartComponent}
+                onRender={this.needRenderCallback() && this.props.onRender}
             />
         );
     }
@@ -225,5 +220,11 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
 
             window.requestAnimationFrame(this.reflow);
         }
+    }
+
+    private needRenderCallback() {
+        const {splitTooltip, onRender} = this.props;
+        const {isError} = this.state;
+        return !splitTooltip && onRender && !isError;
     }
 }
