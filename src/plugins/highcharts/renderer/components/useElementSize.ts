@@ -34,7 +34,8 @@ export function useElementSize<T extends HTMLElement = HTMLDivElement>(
             }
 
             const entry = entries[0];
-            if (entry.borderBoxSize) {
+
+            if (entry && entry.borderBoxSize) {
                 const borderBoxSize = entry.borderBoxSize[0]
                     ? entry.borderBoxSize[0]
                     : (entry.borderBoxSize as unknown as ResizeObserverSize);
@@ -45,7 +46,7 @@ export function useElementSize<T extends HTMLElement = HTMLDivElement>(
                     width: round(borderBoxSize.inlineSize, ROUND_PRESICION),
                     height: round(borderBoxSize.blockSize, ROUND_PRESICION),
                 });
-            } else {
+            } else if (entry) {
                 const target = entry.target as HTMLElement;
                 setSize({
                     width: round(target.offsetWidth, ROUND_PRESICION),
