@@ -546,7 +546,10 @@ function getTooltip(tooltip, options, comments, holidays) {
         };
 
         if (typeof options.manageTooltipConfig === 'function') {
-            json = callManageTooltipConfig(options, json, chart);
+            // manageTooltipConfig could accidently break json variable
+            // and because of it we create new object as an argument
+            const updatedJSON = callManageTooltipConfig(options, {...json}, chart);
+            merge(json, updatedJSON);
         }
 
         const usersPointFormat = get(options.highcharts, 'tooltip.pointFormat');
@@ -855,7 +858,10 @@ function getTooltip(tooltip, options, comments, holidays) {
 
     if (json.lines && json.lines.length > 0) {
         if (typeof options.manageTooltipConfig === 'function') {
-            json = callManageTooltipConfig(options, json, chart);
+            // manageTooltipConfig could accidently break json variable
+            // and because of it we create new object as an argument
+            const updatedJSON = callManageTooltipConfig(options, {...json}, chart);
+            merge(json, updatedJSON);
         }
 
         let hiddenRowsSum = 0;
