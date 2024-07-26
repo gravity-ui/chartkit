@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.10.2](https://github.com/gravity-ui/chartkit/compare/v5.10.1...v5.10.2) (2024-07-26)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix callManageTooltipConfig invocation ([#504](https://github.com/gravity-ui/chartkit/issues/504)) ([552156f](https://github.com/gravity-ui/chartkit/commit/552156f96f226049a47f99b318c11c5a1440b551))
+
 ## [5.10.1](https://github.com/gravity-ui/chartkit/compare/v5.10.0...v5.10.1) (2024-07-09)
 
 
