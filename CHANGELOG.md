@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.11.1](https://github.com/gravity-ui/chartkit/compare/v5.11.0...v5.11.1) (2024-08-23)
+
+
+### Bug Fixes
+
+* **D3 plugin:** support chart.event.click for all visualizations ([#510](https://github.com/gravity-ui/chartkit/issues/510)) ([b521380](https://github.com/gravity-ui/chartkit/commit/b521380c2c8c3e2b59ec8cef4bc7b1e317700f6c))
+
 ## [5.11.0](https://github.com/gravity-ui/chartkit/compare/v5.10.2...v5.11.0) (2024-08-16)
 
 
