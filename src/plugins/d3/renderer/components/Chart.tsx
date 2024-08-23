@@ -1,4 +1,4 @@
-import React, {MouseEventHandler} from 'react';
+import React from 'react';
 
 import {pointer} from 'd3';
 import throttle from 'lodash/throttle';
@@ -116,11 +116,18 @@ export const Chart = (props: Props) => {
     // We only need to consider the width of the first left axis
     const boundsOffsetLeft = chart.margin.left + getYAxisWidth(yAxis[0]);
 
-    const handleMouseMove: MouseEventHandler<SVGSVGElement> = (event) => {
+    const isOutsideBounds = React.useCallback(
+        (x: number, y: number) => {
+            return x < 0 || x > boundsWidth || y < 0 || y > boundsHeight;
+        },
+        [boundsHeight, boundsWidth],
+    );
+
+    const handleMouseMove: React.MouseEventHandler<SVGSVGElement> = (event) => {
         const [pointerX, pointerY] = pointer(event, svgRef.current);
         const x = pointerX - boundsOffsetLeft;
         const y = pointerY - boundsOffsetTop;
-        if (x < 0 || x > boundsWidth || y < 0 || y > boundsHeight) {
+        if (isOutsideBounds(x, y)) {
             dispatcher.call('hover-shape', {}, undefined);
             return;
         }
@@ -138,6 +145,34 @@ export const Chart = (props: Props) => {
         dispatcher.call('hover-shape', {}, undefined);
     };
 
+    const handleChartClick = React.useCallback(
+        (event: React.MouseEvent<SVGSVGElement>) => {
+            const [pointerX, pointerY] = pointer(event, svgRef.current);
+            const x = pointerX - boundsOffsetLeft;
+            const y = pointerY - boundsOffsetTop;
+            if (isOutsideBounds(x, y)) {
+                return;
+            }
+
+            const items = getClosestPoints({
+                position: [x, y],
+                shapesData,
+            });
+            const selected = items?.find((item) => item.closest);
+            if (!selected) {
+                return;
+            }
+
+            dispatcher.call(
+                'click-chart',
+                undefined,
+                {point: selected.data, series: selected.series},
+                event,
+            );
+        },
+        [boundsOffsetLeft, boundsOffsetTop, dispatcher, isOutsideBounds, shapesData],
+    );
+
     return (
         <React.Fragment>
             <svg
@@ -147,6 +182,7 @@ export const Chart = (props: Props) => {
                 height={height}
                 onMouseMove={throttledHandleMouseMove}
                 onMouseLeave={handleMouseLeave}
+                onClick={handleChartClick}
             >
                 {title && <Title {...title} chartWidth={width} />}
                 <g transform={`translate(0, ${boundsOffsetTop})`}>

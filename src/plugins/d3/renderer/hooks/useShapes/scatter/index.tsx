@@ -51,22 +51,6 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
             .attr('opacity', (d) => d.point.opacity)
             .attr('cursor', (d) => d.point.series.cursor);
 
-        const getSelectedPoint = (element: Element) => {
-            return select<BaseType, PreparedScatterData>(element).datum();
-        };
-
-        svgElement.on('click', (e) => {
-            const datum = getSelectedPoint(e.target);
-            if (datum) {
-                dispatcher.call(
-                    'click-chart',
-                    undefined,
-                    {point: datum.point.data, series: datum.point.series},
-                    e,
-                );
-            }
-        });
-
         const hoverEnabled = hoverOptions?.enabled;
         const inactiveEnabled = inactiveOptions?.enabled;
 
