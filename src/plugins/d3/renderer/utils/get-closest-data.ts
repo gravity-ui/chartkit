@@ -54,6 +54,14 @@ function getClosestPointsByXValue(x: number, y: number, points: ShapePoint[]) {
         closestYIndex = closestPoints.length - 1;
     } else {
         closestYIndex = closestPoints.findIndex((p) => y > p.y0 && y < p.y1);
+        if (closestYIndex === -1) {
+            const sortedY = sort(
+                closestPoints.map((p, index) => ({index, y: p.y1 + (p.y0 - p.y1) / 2})),
+                (p) => p.y,
+            );
+            const sortedYIndex = bisector<{y: number}, number>((p) => p.y).center(sortedY, y);
+            closestYIndex = sortedY[sortedYIndex]?.index ?? -1;
+        }
     }
 
     return closestPoints.map((p, i) => ({
