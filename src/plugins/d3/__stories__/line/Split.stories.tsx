@@ -91,6 +91,11 @@ const ChartStory = () => {
                 },
             },
         },
+        chart: {
+            events: {
+                click: action('chart.events.click'),
+            },
+        },
     };
 
     if (loading) {
