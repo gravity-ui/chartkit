@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.11.2](https://github.com/gravity-ui/chartkit/compare/v5.11.1...v5.11.2) (2024-08-26)
+
+
+### Bug Fixes
+
+* **D3 plugin:** fix the detection of the closest point for line chart ([#512](https://github.com/gravity-ui/chartkit/issues/512)) ([b11fa31](https://github.com/gravity-ui/chartkit/commit/b11fa310b6e214e48893023de79da01b794ea07a))
+
 ## [5.11.1](https://github.com/gravity-ui/chartkit/compare/v5.11.0...v5.11.1) (2024-08-23)
 
 
