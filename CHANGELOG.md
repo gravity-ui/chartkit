@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.12.0](https://github.com/gravity-ui/chartkit/compare/v5.11.2...v5.12.0) (2024-09-17)
+
+
+### Features
+
+* **Highcharts plugin:** add preventDefaultForPointClick option ([#515](https://github.com/gravity-ui/chartkit/issues/515)) ([dfc7ea7](https://github.com/gravity-ui/chartkit/commit/dfc7ea78fa3633561b0586e1e03445980e11b71a))
+
 ## [5.11.2](https://github.com/gravity-ui/chartkit/compare/v5.11.1...v5.11.2) (2024-08-26)
 
 
