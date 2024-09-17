@@ -1701,14 +1701,18 @@ export function prepareConfig(data, options, isMobile, holidays) {
                         }
                     },
                 },
-                point: {
-                    events: {
-                        click: function () {
-                            // Prevent slicing of pie segment after clicking it
-                            return false;
-                        },
-                    },
-                },
+                ...(options.preventDefaultForPointClick !== false
+                    ? {
+                          point: {
+                              events: {
+                                  click: function () {
+                                      // Prevent slicing of pie segment after clicking it
+                                      return false;
+                                  },
+                              },
+                          },
+                      }
+                    : {}),
                 marker: options.splitTooltip
                     ? {
                           states: {
