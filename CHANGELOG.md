@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.13.0](https://github.com/gravity-ui/chartkit/compare/v5.12.0...v5.13.0) (2024-09-19)
+
+
+### Features
+
+* yargs update ([a436a95](https://github.com/gravity-ui/chartkit/commit/a436a954f431a4f28ddf2147aea96e7e6ac7bffe))
+
+
+### Bug Fixes
+
+* update yarg to v4.3.2 ([#517](https://github.com/gravity-ui/chartkit/issues/517)) ([a436a95](https://github.com/gravity-ui/chartkit/commit/a436a954f431a4f28ddf2147aea96e7e6ac7bffe))
+
 ## [5.12.0](https://github.com/gravity-ui/chartkit/compare/v5.11.2...v5.12.0) (2024-09-17)
 
 
