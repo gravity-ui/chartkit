@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.14.0](https://github.com/gravity-ui/chartkit/compare/v5.13.0...v5.14.0) (2024-09-25)
+
+
+### Features
+
+* **Highcharts plugin:** set defaults for numeric letters ([#519](https://github.com/gravity-ui/chartkit/issues/519)) ([f9fbae6](https://github.com/gravity-ui/chartkit/commit/f9fbae6d097e2c6dd8ea195c47ab978565235a75))
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix tooltip hiding ([#521](https://github.com/gravity-ui/chartkit/issues/521)) ([db66222](https://github.com/gravity-ui/chartkit/commit/db6622229db514eb93ceb504d9aa226ea3796259))
+
 ## [5.13.0](https://github.com/gravity-ui/chartkit/compare/v5.12.0...v5.13.0) (2024-09-19)
 
 
