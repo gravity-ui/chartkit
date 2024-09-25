@@ -85,7 +85,8 @@ Highcharts.setOptions({
         borderRadius: '0px',
         borderWidth: 0,
         useHTML: true,
-        hideDelay: 0,
+        // Non-zero delay fixes tooltip hiding (set top: -9999px)
+        hideDelay: 1,
         animation: false,
         shadow: false,
     },
