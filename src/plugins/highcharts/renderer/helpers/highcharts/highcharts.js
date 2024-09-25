@@ -178,6 +178,8 @@ function initHighchartsLangOptions() {
 
             decimalPoint: i18n('highcharts', 'decimal-point'),
             thousandsSep: i18n('highcharts', 'thousands-sep'),
+
+            numericSymbols: ['K', 'M', 'B', 'T', 'P', 'E'],
         },
     });
 }
