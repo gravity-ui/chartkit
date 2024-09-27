@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.14.1](https://github.com/gravity-ui/chartkit/compare/v5.14.0...v5.14.1) (2024-09-27)
+
+
+### Bug Fixes
+
+* update yagr to v4.3.3 ([#522](https://github.com/gravity-ui/chartkit/issues/522)) ([263f0eb](https://github.com/gravity-ui/chartkit/commit/263f0ebb64fd5a225d18c6ccc7551107393ab6db))
+
 ## [5.14.0](https://github.com/gravity-ui/chartkit/compare/v5.13.0...v5.14.0) (2024-09-25)
 
 
