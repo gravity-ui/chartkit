@@ -161,6 +161,7 @@ export type PreparedPieSeries = {
         connectorShape: ConnectorShape;
         distance: number;
         connectorCurve: ConnectorCurve;
+        html: boolean;
     };
     states: {
         hover: {

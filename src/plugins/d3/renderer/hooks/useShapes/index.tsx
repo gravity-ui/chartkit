@@ -62,6 +62,7 @@ type Args = {
     xScale?: ChartScale;
     yScale?: ChartScale[];
     split: PreparedSplit;
+    htmlLayout: HTMLElement | null;
 };
 
 export const useShapes = (args: Args) => {
@@ -76,6 +77,7 @@ export const useShapes = (args: Args) => {
         yAxis,
         yScale,
         split,
+        htmlLayout,
     } = args;
 
     const shapesComponents = React.useMemo(() => {
@@ -229,6 +231,7 @@ export const useShapes = (args: Args) => {
                             dispatcher={dispatcher}
                             preparedData={preparedData}
                             seriesOptions={seriesOptions}
+                            htmlLayout={htmlLayout}
                         />,
                     );
                     shapesData.push(...preparedData);

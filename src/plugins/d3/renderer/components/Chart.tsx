@@ -35,6 +35,7 @@ type Props = {
 export const Chart = (props: Props) => {
     const {width, height, data} = props;
     const svgRef = React.useRef<SVGSVGElement | null>(null);
+    const htmlLayerRef = React.useRef<HTMLDivElement | null>(null);
     const dispatcher = React.useMemo(() => {
         return getD3Dispatcher();
     }, []);
@@ -99,6 +100,7 @@ export const Chart = (props: Props) => {
         yAxis,
         yScale,
         split: preparedSplit,
+        htmlLayout: htmlLayerRef.current,
     });
 
     const clickHandler = data.chart?.events?.click;
@@ -228,6 +230,13 @@ export const Chart = (props: Props) => {
                     />
                 )}
             </svg>
+            <div
+                className={b('html-layer')}
+                ref={htmlLayerRef}
+                style={{
+                    transform: `translate(${boundsOffsetLeft}px, ${boundsOffsetTop}px)`,
+                }}
+            />
             <Tooltip
                 dispatcher={dispatcher}
                 tooltip={tooltip}

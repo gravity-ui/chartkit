@@ -9,4 +9,11 @@ export type LabelData = {
     textAnchor: 'start' | 'end' | 'middle';
     series: {id: string};
     active?: boolean;
+    html?: boolean;
+};
+
+export type HtmlItem = {
+    x: number;
+    y: number;
+    content: string;
 };
