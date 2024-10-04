@@ -3,7 +3,11 @@
 
     &__html-layer {
         position: absolute;
-        pointer-events: none;
+        display: contents;
+
+        & > * {
+            transform: inherit;
+        }
     }
 }
 
