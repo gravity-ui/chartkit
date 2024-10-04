@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Col, Container, Row, Text} from '@gravity-ui/uikit';
+import {Col, Container, Row} from '@gravity-ui/uikit';
 import type {StoryObj} from '@storybook/react';
 
 import {ChartKit} from '../../../../components/ChartKit';
@@ -56,9 +56,6 @@ const PieWithHtmlLabels = () => {
 
     return (
         <Container spaceRow={5}>
-            <Row space={1}>
-                <Text variant="subheader-3">Text alignment</Text>
-            </Row>
             <Row space={1}>
                 <Col s={4}>
                     <ExampleWrapper>
