@@ -234,8 +234,6 @@ export const Chart = (props: Props) => {
                 className={b('html-layer')}
                 ref={htmlLayerRef}
                 style={{
-                    width,
-                    height,
                     transform: `translate(${boundsOffsetLeft}px, ${boundsOffsetTop}px)`,
                 }}
             />
