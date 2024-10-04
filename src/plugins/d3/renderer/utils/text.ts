@@ -116,10 +116,12 @@ export function getLabelsSize({
     labels,
     style,
     rotation,
+    html,
 }: {
     labels: string[];
     style?: BaseTextStyle;
     rotation?: number;
+    html?: boolean;
 }) {
     if (!labels.filter(Boolean).length) {
         return {maxHeight: 0, maxWidth: 0};
@@ -128,19 +130,35 @@ export function getLabelsSize({
     const container = select(document.body)
         .append('div')
         .attr('class', 'chartkit chartkit-theme_common');
-    const svg = container.append('svg');
-    const textSelection = renderLabels(svg, {labels, style});
-    if (rotation) {
-        textSelection
-            .attr('text-anchor', rotation > 0 ? 'start' : 'end')
-            .style('transform', `rotate(${rotation}deg)`);
+
+    const result = {maxHeight: 0, maxWidth: 0};
+    let labelWrapper: HTMLElement | null;
+    if (html) {
+        labelWrapper = container.append('div').style('position', 'absolute').node();
+        labels.forEach((l) => {
+            labelWrapper?.insertAdjacentHTML('beforeend', l);
+        });
+
+        const rect = labelWrapper?.getBoundingClientRect();
+        result.maxWidth = rect?.width ?? 0;
+        result.maxHeight = rect?.height ?? 0;
+    } else {
+        const svg = container.append('svg');
+        const textSelection = renderLabels(svg, {labels, style});
+        if (rotation) {
+            textSelection
+                .attr('text-anchor', rotation > 0 ? 'start' : 'end')
+                .style('transform', `rotate(${rotation}deg)`);
+        }
+
+        const rect = (svg.select('g').node() as Element)?.getBoundingClientRect();
+        result.maxWidth = rect?.width ?? 0;
+        result.maxHeight = rect?.height ?? 0;
     }
 
-    const {height = 0, width = 0} =
-        (svg.select('g').node() as Element)?.getBoundingClientRect() || {};
     container.remove();
 
-    return {maxHeight: height, maxWidth: width};
+    return result;
 }
 
 export type TextRow = {text: string; y: number};

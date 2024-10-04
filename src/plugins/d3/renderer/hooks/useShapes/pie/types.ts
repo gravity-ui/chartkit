@@ -1,7 +1,7 @@
 import type {PieArcDatum} from 'd3';
 
 import {ConnectorCurve} from '../../../../../../types';
-import {LabelData} from '../../../types';
+import {HtmlItem, LabelData} from '../../../types';
 import {PreparedPieSeries} from '../../useSeries/types';
 
 export type SegmentData = {
@@ -15,19 +15,21 @@ export type SegmentData = {
 };
 
 export type PieLabelData = LabelData & {
-    connector: {
-        points: [number, number][];
-        color: string;
-    };
     segment: SegmentData;
     angle: number;
     maxWidth: number;
+};
+
+export type PieConnectorData = {
+    path: string | null;
+    color: string;
 };
 
 export type PreparedPieData = {
     id: string;
     segments: PieArcDatum<SegmentData>[];
     labels: PieLabelData[];
+    connectors: PieConnectorData[];
     center: [number, number];
     radius: number;
     innerRadius: number;
@@ -41,4 +43,5 @@ export type PreparedPieData = {
         opacity: number;
         size: number;
     };
+    htmlElements: HtmlItem[];
 };

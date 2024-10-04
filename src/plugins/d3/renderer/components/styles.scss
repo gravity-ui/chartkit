@@ -1,5 +1,10 @@
 .chartkit-d3 {
     position: absolute;
+
+    &__html-layer {
+        position: absolute;
+        pointer-events: none;
+    }
 }
 
 .chartkit-d3-axis {

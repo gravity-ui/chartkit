@@ -1,18 +1,19 @@
 import React from 'react';
 
-import {arc, color, line as lineGenerator, select} from 'd3';
+import {Portal} from '@gravity-ui/uikit';
+import {arc, color, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum} from 'd3';
 import get from 'lodash/get';
 
 import {TooltipDataChunkPie} from '../../../../../../types';
 import {block} from '../../../../../../utils/cn';
+import {HtmlItem} from '../../../types';
 import {setEllipsisForOverflowTexts} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
 import {PreparedLineData} from '../line/types';
 import {setActiveState} from '../utils';
 
 import {PieLabelData, PreparedPieData, SegmentData} from './types';
-import {getCurveFactory} from './utils';
 
 const b = block('d3-pie');
 
@@ -20,6 +21,7 @@ type PreparePieSeriesArgs = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedPieData[];
     seriesOptions: PreparedSeriesOptions;
+    htmlLayout: HTMLElement | null;
 };
 
 export function getHaloVisibility(d: PieArcDatum<SegmentData>) {
@@ -28,8 +30,15 @@ export function getHaloVisibility(d: PieArcDatum<SegmentData>) {
 }
 
 export function PieSeriesShapes(args: PreparePieSeriesArgs) {
-    const {dispatcher, preparedData, seriesOptions} = args;
-    const ref = React.useRef<SVGGElement>(null);
+    const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
+    const ref = React.useRef<SVGGElement | null>(null);
+
+    const htmlItems = React.useMemo(() => {
+        return preparedData.reduce<HtmlItem[]>((result, d) => {
+            result.push(...d.htmlElements);
+            return result;
+        }, []);
+    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -94,6 +103,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
             .attr('fill', (d) => d.data.color)
             .attr('opacity', (d) => d.data.opacity);
 
+        // render Labels
         shapesSelection
             .selectAll<SVGTextElement, PieLabelData>('text')
             .data((pieData) => pieData.labels)
@@ -113,19 +123,12 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
         // Add the polyline between chart and labels
         shapesSelection
             .selectAll(connectorSelector)
-            .data((pieData) => pieData.labels)
+            .data((pieData) => pieData.connectors)
             .enter()
             .append('path')
             .attr('class', b('connector'))
-            .attr('d', (d) => {
-                let line = lineGenerator();
-                const curveFactory = getCurveFactory(d.segment.pie);
-                if (curveFactory) {
-                    line = line.curve(curveFactory);
-                }
-                return line(d.connector.points);
-            })
-            .attr('stroke', (d) => d.connector.color)
+            .attr('d', (d) => d.path)
+            .attr('stroke', (d) => d.color)
             .attr('stroke-width', 1)
             .attr('stroke-linejoin', 'round')
             .attr('stroke-linecap', 'round')
@@ -223,5 +226,22 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
         };
     }, [dispatcher, preparedData, seriesOptions]);
 
-    return <g ref={ref} className={b()} style={{zIndex: 9}} />;
+    return (
+        <React.Fragment>
+            <g ref={ref} className={b()} style={{zIndex: 9}} />
+            {htmlLayout && (
+                <Portal container={htmlLayout}>
+                    {htmlItems.map((item, index) => {
+                        return (
+                            <div
+                                key={index}
+                                dangerouslySetInnerHTML={{__html: item.content}}
+                                style={{position: 'absolute', left: item.x, top: item.y}}
+                            />
+                        );
+                    })}
+                </Portal>
+            )}
+        </React.Fragment>
+    );
 }

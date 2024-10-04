@@ -1,4 +1,4 @@
-import {PieArcDatum, arc, group} from 'd3';
+import {PieArcDatum, arc, group, line as lineGenerator} from 'd3';
 
 import {PieSeries} from '../../../../../../types';
 import {
@@ -10,7 +10,7 @@ import {
 import {PreparedPieSeries} from '../../useSeries/types';
 
 import {PieLabelData, PreparedPieData, SegmentData} from './types';
-import {pieGenerator} from './utils';
+import {getCurveFactory, pieGenerator} from './utils';
 
 const FULL_CIRCLE = Math.PI * 2;
 
@@ -65,6 +65,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
             radius,
             segments: [],
             labels: [],
+            connectors: [],
             borderColor,
             borderWidth,
             borderRadius,
@@ -75,6 +76,7 @@ export function preparePieData(args: Args): PreparedPieData[] {
                 opacity: series.states.hover.halo.opacity,
                 size: series.states.hover.halo.size,
             },
+            htmlElements: [],
         };
 
         const segments = items.map<SegmentData>((item) => {
@@ -89,6 +91,12 @@ export function preparePieData(args: Args): PreparedPieData[] {
             };
         });
         data.segments = pieGenerator(segments);
+
+        let line = lineGenerator();
+        const curveFactory = getCurveFactory(data);
+        if (curveFactory) {
+            line = line.curve(curveFactory);
+        }
 
         if (dataLabels.enabled) {
             const {style, connectorPadding, distance} = dataLabels;
@@ -119,7 +127,8 @@ export function preparePieData(args: Args): PreparedPieData[] {
             items.forEach((d, index) => {
                 const prevLabel = labels[labels.length - 1];
                 const text = String(d.data.label || d.data.value);
-                const labelSize = getLabelsSize({labels: [text], style});
+                const shouldUseHtml = dataLabels.html;
+                const labelSize = getLabelsSize({labels: [text], style, html: shouldUseHtml});
                 const labelWidth = labelSize.maxWidth;
                 const relatedSegment = data.segments[index];
 
@@ -129,10 +138,14 @@ export function preparePieData(args: Args): PreparedPieData[] {
                         startAngle: angle,
                         endAngle: angle,
                     });
-                    x = Math.max(-boundsWidth / 2, x);
-                    if (y < 0) {
-                        y -= labelHeight;
+
+                    y = y < 0 ? y - labelHeight : y;
+
+                    if (shouldUseHtml) {
+                        x = x < 0 ? x - labelWidth : x;
                     }
+
+                    x = Math.max(-boundsWidth / 2, x);
 
                     return [x, y];
                 };
@@ -170,12 +183,9 @@ export function preparePieData(args: Args): PreparedPieData[] {
                     textAnchor: midAngle < Math.PI ? 'start' : 'end',
                     series: {id: d.id},
                     active: true,
-                    connector: {
-                        points: getConnectorPoints(midAngle),
-                        color: relatedSegment.data.color,
-                    },
                     segment: relatedSegment.data,
                     angle: midAngle,
+                    html: shouldUseHtml,
                 };
 
                 let overlap = false;
@@ -199,7 +209,6 @@ export function preparePieData(args: Args): PreparedPieData[] {
 
                                 label.x = newX;
                                 label.y = newY;
-                                label.connector.points = getConnectorPoints(newAngle);
 
                                 if (!isLabelsOverlapping(prevLabel, label, dataLabels.padding)) {
                                     shouldAdjustAngle = false;
@@ -222,7 +231,21 @@ export function preparePieData(args: Args): PreparedPieData[] {
                         }
                     }
 
-                    labels.push(label);
+                    if (shouldUseHtml) {
+                        data.htmlElements.push({
+                            x: boundsWidth / 2 + label.x,
+                            y: boundsHeight / 2 + label.y,
+                            content: label.text,
+                        });
+                    } else {
+                        labels.push(label);
+                    }
+
+                    const connector = {
+                        path: line(getConnectorPoints(midAngle)),
+                        color: relatedSegment.data.color,
+                    };
+                    data.connectors.push(connector);
                 }
             });
 
