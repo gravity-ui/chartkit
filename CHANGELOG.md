@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.15.0](https://github.com/gravity-ui/chartkit/compare/v5.14.1...v5.15.0) (2024-10-07)
+
+
+### Features
+
+* **D3 plugin:** add the option to use html to display labels ([#524](https://github.com/gravity-ui/chartkit/issues/524)) ([43dcd43](https://github.com/gravity-ui/chartkit/commit/43dcd4380b4dcab8dcdad672eefa58729e6203d5))
+
+
+### Bug Fixes
+
+* update yagr to v4.3.4 ([#526](https://github.com/gravity-ui/chartkit/issues/526)) ([d1fa756](https://github.com/gravity-ui/chartkit/commit/d1fa756619e311bfea0ff181b7a637b622a8cc92))
+
 ## [5.14.1](https://github.com/gravity-ui/chartkit/compare/v5.14.0...v5.14.1) (2024-09-27)
 
 
