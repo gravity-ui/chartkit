@@ -169,6 +169,7 @@ export const prepareWaterfallData = (args: {
             data: item.data,
             series: item.series,
             subTotal: totalValue,
+            htmlElements: [],
         };
 
         preparedData.label = getLabelData(preparedData, plotHeight);

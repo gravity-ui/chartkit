@@ -1,6 +1,6 @@
 import {DashStyle, LineCap} from '../../../../../../constants';
 import {LineSeriesData} from '../../../../../../types';
-import {LabelData} from '../../../types';
+import {HtmlItem, LabelData} from '../../../types';
 import {PreparedLineSeries} from '../../useSeries/types';
 
 export type PointData = {
@@ -29,4 +29,5 @@ export type PreparedLineData = {
     dashStyle: DashStyle;
     linecap: LineCap;
     opacity: number | null;
+    htmlElements: HtmlItem[];
 };

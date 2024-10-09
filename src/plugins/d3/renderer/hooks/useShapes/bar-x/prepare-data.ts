@@ -19,17 +19,23 @@ function getLabelData(d: PreparedBarXData): LabelData | undefined {
 
     const text = String(d.data.label || d.data.y);
     const style = d.series.dataLabels.style;
-    const {maxHeight: height, maxWidth: width} = getLabelsSize({labels: [text], style});
+    const html = d.series.dataLabels.html;
+    const {maxHeight: height, maxWidth: width} = getLabelsSize({
+        labels: [text],
+        style,
+        html,
+    });
 
     let y = Math.max(height, d.y - d.series.dataLabels.padding);
     if (d.series.dataLabels.inside) {
         y = d.y + d.height / 2;
     }
 
+    const x = d.x + d.width / 2;
     return {
         text,
-        x: d.x + d.width / 2,
-        y,
+        x: html ? x - width / 2 : x,
+        y: html ? y - height : y,
         style,
         size: {width, height},
         textAnchor: 'middle',
@@ -165,9 +171,19 @@ export const prepareBarXData = (args: {
                     opacity: get(yValue.data, 'opacity', null),
                     data: yValue.data,
                     series: yValue.series,
+                    htmlElements: [],
                 };
 
-                barData.label = getLabelData(barData);
+                const label = getLabelData(barData);
+                if (yValue.series.dataLabels.html && label) {
+                    barData.htmlElements.push({
+                        x: label.x,
+                        y: label.y,
+                        content: label.text,
+                    });
+                } else {
+                    barData.label = getLabelData(barData);
+                }
 
                 stackItems.push(barData);
 

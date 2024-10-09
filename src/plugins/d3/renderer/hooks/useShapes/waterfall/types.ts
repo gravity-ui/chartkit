@@ -1,5 +1,5 @@
 import {WaterfallSeriesData} from '../../../../../../types';
-import {LabelData} from '../../../types';
+import {HtmlItem, LabelData} from '../../../types';
 import {PreparedWaterfallSeries} from '../../useSeries/types';
 
 export type PreparedWaterfallData = {
@@ -12,4 +12,5 @@ export type PreparedWaterfallData = {
     data: WaterfallSeriesData;
     label?: LabelData;
     subTotal: number;
+    htmlElements: HtmlItem[];
 };

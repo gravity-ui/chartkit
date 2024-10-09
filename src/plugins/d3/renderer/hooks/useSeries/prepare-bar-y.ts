@@ -18,13 +18,16 @@ type PrepareBarYSeriesArgs = {
 function prepareDataLabels(series: BarYSeries) {
     const enabled = get(series, 'dataLabels.enabled', false);
     const style = Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style);
-    const {maxHeight = 0, maxWidth = 0} = enabled
-        ? getLabelsSize({
-              labels: series.data.map((d) => String(d.label || d.x)),
-              style,
-          })
-        : {};
+    const html = get(series, 'dataLabels.html', false);
+    const labels = enabled ? series.data.map((d) => String(d.label || d.x)) : [];
+    const {maxHeight = 0, maxWidth = 0} = getLabelsSize({
+        labels,
+        style,
+        html,
+    });
     const inside = series.stacking === 'percent' ? true : get(series, 'dataLabels.inside', false);
+
+    console.log('prepareDataLabels', {maxWidth});
 
     return {
         enabled,
@@ -32,6 +35,7 @@ function prepareDataLabels(series: BarYSeries) {
         style,
         maxHeight,
         maxWidth,
+        html,
     };
 }
 

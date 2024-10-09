@@ -5,9 +5,10 @@ import type {Dispatch} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
-import {LabelData} from '../../../types';
+import {HtmlItem, LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
+import {HtmlLayer} from '../HtmlLayer';
 
 import type {PreparedBarXData} from './types';
 
@@ -20,12 +21,20 @@ type Args = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedBarXData[];
     seriesOptions: PreparedSeriesOptions;
+    htmlLayout: HTMLElement | null;
 };
 
 export const BarXSeriesShapes = (args: Args) => {
-    const {dispatcher, preparedData, seriesOptions} = args;
+    const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
 
     const ref = React.useRef<SVGGElement>(null);
+
+    const htmlItems = React.useMemo(() => {
+        return preparedData.reduce<HtmlItem[]>((result, d) => {
+            result.push(...d.htmlElements);
+            return result;
+        }, []);
+    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -120,5 +129,10 @@ export const BarXSeriesShapes = (args: Args) => {
         };
     }, [dispatcher, preparedData, seriesOptions]);
 
-    return <g ref={ref} className={b()} />;
+    return (
+        <React.Fragment>
+            <g ref={ref} className={b()} />
+            <HtmlLayer items={htmlItems} htmlLayout={htmlLayout} />
+        </React.Fragment>
+    );
 };

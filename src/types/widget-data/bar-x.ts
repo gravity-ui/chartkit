@@ -52,14 +52,15 @@ export type BarXSeries<T = any> = BaseSeries & {
      * @default true
      * */
     grouping?: boolean;
-    dataLabels?: ChartKitWidgetSeriesOptions['dataLabels'] & {
-        /**
-         * Whether to align the data label inside or outside the box
-         *
-         * @default false
-         * */
-        inside?: boolean;
-    };
+    dataLabels?: BaseSeries['dataLabels'] &
+        ChartKitWidgetSeriesOptions['dataLabels'] & {
+            /**
+             * Whether to align the data label inside or outside the box
+             *
+             * @default false
+             * */
+            inside?: boolean;
+        };
     /** Individual series legend options. Has higher priority than legend options in widget data */
     legend?: ChartKitWidgetLegend & {
         symbol?: RectLegendSymbolOptions;

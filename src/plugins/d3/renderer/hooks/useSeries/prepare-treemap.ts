@@ -32,6 +32,7 @@ export function prepareTreemap(args: PrepareTreemapSeriesArgs) {
                 style: Object.assign({}, DEFAULT_DATALABELS_STYLE, s.dataLabels?.style),
                 padding: get(s, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
                 allowOverlap: get(s, 'dataLabels.allowOverlap', false),
+                html: get(series, 'dataLabels.html', false),
             },
             id,
             type: s.type,

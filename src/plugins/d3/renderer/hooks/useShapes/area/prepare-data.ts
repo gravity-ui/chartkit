@@ -1,7 +1,7 @@
 import {group, sort} from 'd3';
 
 import type {AreaSeriesData} from '../../../../../../types';
-import type {LabelData} from '../../../types';
+import type {HtmlItem, LabelData} from '../../../types';
 import {getDataCategoryValue, getLabelsSize, getLeftPosition} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
@@ -13,7 +13,7 @@ import type {MarkerData, PointData, PreparedAreaData} from './types';
 function getLabelData(point: PointData, series: PreparedAreaSeries, xMax: number) {
     const text = String(point.data.label || point.data.y);
     const style = series.dataLabels.style;
-    const size = getLabelsSize({labels: [text], style});
+    const size = getLabelsSize({labels: [text], style, html: series.dataLabels.html});
 
     const labelData: LabelData = {
         text,
@@ -32,7 +32,7 @@ function getLabelData(point: PointData, series: PreparedAreaSeries, xMax: number
     } else {
         const right = left + labelData.size.width;
         if (right > xMax) {
-            labelData.x = labelData.x - xMax - right;
+            labelData.x = labelData.x - (right - xMax);
         }
     }
 
@@ -132,8 +132,22 @@ export const prepareAreaData = (args: {
                 }, []);
 
                 let labels: LabelData[] = [];
+                const htmlElements: HtmlItem[] = [];
+
                 if (s.dataLabels.enabled) {
-                    labels = points.map<LabelData>((p) => getLabelData(p, s, xMax));
+                    const labelItems = points.map<LabelData>((p) => getLabelData(p, s, xMax));
+                    if (s.dataLabels.html) {
+                        const htmlLabels = labelItems.map((l) => {
+                            return {
+                                x: l.x - l.size.width / 2,
+                                y: l.y,
+                                content: l.text,
+                            };
+                        });
+                        htmlElements.push(...htmlLabels);
+                    } else {
+                        labels = labelItems;
+                    }
                 }
 
                 let markers: MarkerData[] = [];
@@ -156,6 +170,7 @@ export const prepareAreaData = (args: {
                     hovered: false,
                     active: true,
                     id: s.id,
+                    htmlElements,
                 });
 
                 return acc;

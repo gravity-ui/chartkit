@@ -3,13 +3,16 @@ import type {ScaleBand, ScaleLinear, ScaleTime} from 'd3';
 import get from 'lodash/get';
 
 import type {BarYSeriesData} from '../../../../../../types';
-import {getDataCategoryValue} from '../../../utils';
+import {LabelData} from '../../../types';
+import {getDataCategoryValue, getLabelsSize} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
 import type {PreparedBarYSeries, PreparedSeriesOptions} from '../../useSeries/types';
 import {MIN_BAR_GAP, MIN_BAR_GROUP_GAP, MIN_BAR_WIDTH} from '../constants';
 
 import type {PreparedBarYData} from './types';
+
+const DEFAULT_LABEL_PADDING = 7;
 
 function groupByYValue(series: PreparedBarYSeries[], yAxis: PreparedAxis[]) {
     const data: Record<
@@ -66,6 +69,43 @@ function getBandWidth(series: PreparedBarYSeries[], yAxis: PreparedAxis[], yScal
     }
 
     return bandWidth;
+}
+
+function setLabel(prepared: PreparedBarYData) {
+    const dataLabels = prepared.series.dataLabels;
+    if (!dataLabels.enabled) {
+        return;
+    }
+
+    const data = prepared.data;
+    const content = String(data.label || data.x);
+    const {maxHeight: height, maxWidth: width} = getLabelsSize({
+        labels: [content],
+        style: dataLabels.style,
+        html: dataLabels.html,
+    });
+    const x = dataLabels.inside
+        ? prepared.x + prepared.width / 2
+        : prepared.x + prepared.width + DEFAULT_LABEL_PADDING;
+    const y = prepared.y + prepared.height / 2;
+
+    if (dataLabels.html) {
+        prepared.htmlElements.push({
+            x,
+            y: y - height / 2,
+            content,
+        });
+    } else {
+        prepared.label = {
+            x,
+            y: y + height / 2,
+            text: content,
+            textAnchor: dataLabels.inside ? 'middle' : 'right',
+            style: dataLabels.style,
+            series: prepared.series,
+            size: {width, height},
+        } as LabelData;
+    }
 }
 
 export const prepareBarYData = (args: {
@@ -146,7 +186,7 @@ export const prepareBarYData = (args: {
                 const width =
                     xValue > 0 ? xLinearScale(xValue) - base : base - xLinearScale(xValue);
 
-                stackItems.push({
+                const item: PreparedBarYData = {
                     x: xValue > 0 ? stackSum : stackSum - width,
                     y,
                     width,
@@ -155,8 +195,10 @@ export const prepareBarYData = (args: {
                     opacity: get(data, 'opacity', null),
                     data,
                     series: s,
-                });
+                    htmlElements: [],
+                };
 
+                stackItems.push(item);
                 stackSum += width + 1;
             });
 
@@ -173,6 +215,10 @@ export const prepareBarYData = (args: {
 
             result.push(...stackItems);
         });
+    });
+
+    result.forEach((d) => {
+        setLabel(d);
     });
 
     return result;

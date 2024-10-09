@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {Portal} from '@gravity-ui/uikit';
 import {arc, color, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum} from 'd3';
 import get from 'lodash/get';
@@ -10,6 +9,7 @@ import {block} from '../../../../../../utils/cn';
 import {HtmlItem} from '../../../types';
 import {setEllipsisForOverflowTexts} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
+import {HtmlLayer} from '../HtmlLayer';
 import {PreparedLineData} from '../line/types';
 import {setActiveState} from '../utils';
 
@@ -229,19 +229,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
     return (
         <React.Fragment>
             <g ref={ref} className={b()} style={{zIndex: 9}} />
-            {htmlLayout && (
-                <Portal container={htmlLayout}>
-                    {htmlItems.map((item, index) => {
-                        return (
-                            <div
-                                key={index}
-                                dangerouslySetInnerHTML={{__html: item.content}}
-                                style={{position: 'absolute', left: item.x, top: item.y}}
-                            />
-                        );
-                    })}
-                </Portal>
-            )}
+            <HtmlLayer items={htmlItems} htmlLayout={htmlLayout} />
         </React.Fragment>
     );
 }

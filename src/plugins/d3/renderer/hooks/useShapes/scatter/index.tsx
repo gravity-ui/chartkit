@@ -6,7 +6,9 @@ import get from 'lodash/get';
 
 import {TooltipDataChunkScatter} from '../../../../../../types';
 import {block} from '../../../../../../utils/cn';
+import {HtmlItem} from '../../../types';
 import {PreparedSeriesOptions} from '../../useSeries/types';
+import {HtmlLayer} from '../HtmlLayer';
 import {
     getMarkerHaloVisibility,
     renderMarker,
@@ -23,13 +25,20 @@ type ScatterSeriesShapeProps = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedScatterData[];
     seriesOptions: PreparedSeriesOptions;
+    htmlLayout: HTMLElement | null;
 };
 
 const b = block('d3-scatter');
 
 export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
-    const {dispatcher, preparedData, seriesOptions} = props;
+    const {dispatcher, preparedData, seriesOptions, htmlLayout} = props;
     const ref = React.useRef<SVGGElement>(null);
+    const htmlItems = React.useMemo(() => {
+        return preparedData.reduce<HtmlItem[]>((result, d) => {
+            result.push(...d.htmlElements);
+            return result;
+        }, []);
+    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -99,5 +108,10 @@ export function ScatterSeriesShape(props: ScatterSeriesShapeProps) {
         };
     }, [dispatcher, preparedData, seriesOptions]);
 
-    return <g ref={ref} className={b()} />;
+    return (
+        <React.Fragment>
+            <g ref={ref} className={b()} />
+            <HtmlLayer items={htmlItems} htmlLayout={htmlLayout} />
+        </React.Fragment>
+    );
 }

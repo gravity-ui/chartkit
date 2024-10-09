@@ -83,6 +83,7 @@ export function prepareArea(args: PrepareAreaSeriesArgs) {
                 style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),
                 padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
                 allowOverlap: get(series, 'dataLabels.allowOverlap', false),
+                html: get(series, 'dataLabels.html', false),
             },
             marker: prepareMarker(series, seriesOptions),
             cursor: get(series, 'cursor', null),

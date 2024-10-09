@@ -74,7 +74,7 @@ export function prepareTreemapData(args: {
     const leaves = root.leaves();
     const labelData: TreemapLabelData[] = series.dataLabels?.enabled ? getLabelData(leaves) : [];
 
-    return {labelData, leaves, series};
+    return {labelData, leaves, series, htmlElements: []};
 }
 
 function getSeriesDataWithRootNode(series: PreparedTreemapSeries) {

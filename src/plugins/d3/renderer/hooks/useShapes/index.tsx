@@ -104,6 +104,7 @@ export const useShapes = (args: Args) => {
                                 dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
                                 preparedData={preparedData}
+                                htmlLayout={htmlLayout}
                             />,
                         );
                         shapesData.push(...preparedData);
@@ -126,6 +127,7 @@ export const useShapes = (args: Args) => {
                                 dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
                                 preparedData={preparedData}
+                                htmlLayout={htmlLayout}
                             />,
                         );
                         shapesData.push(...preparedData);
@@ -148,6 +150,7 @@ export const useShapes = (args: Args) => {
                                 dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
                                 preparedData={preparedData}
+                                htmlLayout={htmlLayout}
                             />,
                         );
                         shapesData.push(...preparedData);
@@ -170,6 +173,7 @@ export const useShapes = (args: Args) => {
                                 dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
                                 preparedData={preparedData}
+                                htmlLayout={htmlLayout}
                             />,
                         );
                         shapesData.push(...preparedData);
@@ -192,6 +196,7 @@ export const useShapes = (args: Args) => {
                                 dispatcher={dispatcher}
                                 seriesOptions={seriesOptions}
                                 preparedData={preparedData}
+                                htmlLayout={htmlLayout}
                             />,
                         );
                         shapesData.push(...preparedData);
@@ -213,6 +218,7 @@ export const useShapes = (args: Args) => {
                                 dispatcher={dispatcher}
                                 preparedData={preparedData}
                                 seriesOptions={seriesOptions}
+                                htmlLayout={htmlLayout}
                             />,
                         );
                         shapesData.push(...preparedData);
@@ -251,6 +257,7 @@ export const useShapes = (args: Args) => {
                             dispatcher={dispatcher}
                             preparedData={preparedData}
                             seriesOptions={seriesOptions}
+                            htmlLayout={htmlLayout}
                         />,
                     );
                     shapesData.push(preparedData as unknown as ShapeData);

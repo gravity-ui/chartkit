@@ -1,5 +1,5 @@
 import {TooltipDataChunkBarX} from '../../../../../../types';
-import {LabelData} from '../../../types';
+import {HtmlItem, LabelData} from '../../../types';
 import {PreparedBarXSeries} from '../../useSeries/types';
 
 export type PreparedBarXData = Omit<TooltipDataChunkBarX, 'series'> & {
@@ -10,4 +10,5 @@ export type PreparedBarXData = Omit<TooltipDataChunkBarX, 'series'> & {
     opacity: number | null;
     series: PreparedBarXSeries;
     label?: LabelData;
+    htmlElements: HtmlItem[];
 };
