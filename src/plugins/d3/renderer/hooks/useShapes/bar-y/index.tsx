@@ -5,7 +5,7 @@ import type {Dispatch} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
-import {HtmlItem, LabelData} from '../../../types';
+import {LabelData} from '../../../types';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
 import {HtmlLayer} from '../HtmlLayer';
 
@@ -24,13 +24,6 @@ type Args = {
 export const BarYSeriesShapes = (args: Args) => {
     const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
     const ref = React.useRef<SVGGElement>(null);
-
-    const htmlItems = React.useMemo(() => {
-        return preparedData.reduce<HtmlItem[]>((result, d) => {
-            result.push(...d.htmlElements);
-            return result;
-        }, []);
-    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -117,7 +110,7 @@ export const BarYSeriesShapes = (args: Args) => {
     return (
         <React.Fragment>
             <g ref={ref} className={b()} />
-            <HtmlLayer items={htmlItems} htmlLayout={htmlLayout} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
         </React.Fragment>
     );
 };

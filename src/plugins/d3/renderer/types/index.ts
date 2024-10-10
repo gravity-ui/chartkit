@@ -16,3 +16,7 @@ export type HtmlItem = {
     y: number;
     content: string;
 };
+
+export type ShapeDataWithHtmlItems = {
+    htmlElements: HtmlItem[];
+};

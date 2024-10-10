@@ -2,15 +2,26 @@ import React from 'react';
 
 import {Portal} from '@gravity-ui/uikit';
 
-import {HtmlItem} from '../../types';
+import {HtmlItem, ShapeDataWithHtmlItems} from '../../types';
 
 type Props = {
     htmlLayout: HTMLElement | null;
-    items: HtmlItem[];
+    preparedData: ShapeDataWithHtmlItems | ShapeDataWithHtmlItems[];
 };
 
 export const HtmlLayer = (props: Props) => {
-    const {items, htmlLayout} = props;
+    const {htmlLayout, preparedData} = props;
+
+    const items = React.useMemo(() => {
+        if (Array.isArray(preparedData)) {
+            return preparedData.reduce<HtmlItem[]>((result, d) => {
+                result.push(...d.htmlElements);
+                return result;
+            }, []);
+        } else {
+            return preparedData.htmlElements;
+        }
+    }, [preparedData]);
 
     if (!htmlLayout) {
         return null;

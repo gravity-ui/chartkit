@@ -7,7 +7,6 @@ import get from 'lodash/get';
 import {DashStyle} from '../../../../../../constants';
 import {block} from '../../../../../../utils/cn';
 import type {LabelData} from '../../../types';
-import {HtmlItem} from '../../../types';
 import {filterOverlappingLabels, getWaterfallPointColor} from '../../../utils';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
 import {HtmlLayer} from '../HtmlLayer';
@@ -32,12 +31,6 @@ export const WaterfallSeriesShapes = (args: Args) => {
 
     const ref = React.useRef<SVGGElement | null>(null);
     const connectorSelector = `.${b('connector')}`;
-    const htmlItems = React.useMemo(() => {
-        return preparedData.reduce<HtmlItem[]>((result, d) => {
-            result.push(...d.htmlElements);
-            return result;
-        }, []);
-    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -165,7 +158,7 @@ export const WaterfallSeriesShapes = (args: Args) => {
     return (
         <React.Fragment>
             <g ref={ref} className={b()} />
-            <HtmlLayer items={htmlItems} htmlLayout={htmlLayout} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
         </React.Fragment>
     );
 };

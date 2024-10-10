@@ -27,8 +27,6 @@ function prepareDataLabels(series: BarYSeries) {
     });
     const inside = series.stacking === 'percent' ? true : get(series, 'dataLabels.inside', false);
 
-    console.log('prepareDataLabels', {maxWidth});
-
     return {
         enabled,
         inside,

@@ -24,9 +24,6 @@ type ShapeProps = {
 export const TreemapSeriesShape = (props: ShapeProps) => {
     const {dispatcher, preparedData, seriesOptions, htmlLayout} = props;
     const ref = React.useRef<SVGGElement>(null);
-    const htmlItems = React.useMemo(() => {
-        return preparedData.htmlElements ?? [];
-    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -126,7 +123,7 @@ export const TreemapSeriesShape = (props: ShapeProps) => {
     return (
         <React.Fragment>
             <g ref={ref} className={b()} />
-            <HtmlLayer items={htmlItems} htmlLayout={htmlLayout} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
         </React.Fragment>
     );
 };

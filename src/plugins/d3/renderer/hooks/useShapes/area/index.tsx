@@ -7,7 +7,6 @@ import get from 'lodash/get';
 import type {TooltipDataChunkArea} from '../../../../../../types';
 import {block} from '../../../../../../utils/cn';
 import type {LabelData} from '../../../types';
-import {HtmlItem} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
 import {HtmlLayer} from '../HtmlLayer';
@@ -36,13 +35,6 @@ export const AreaSeriesShapes = (args: Args) => {
     const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
 
     const ref = React.useRef<SVGGElement | null>(null);
-
-    const htmlItems = React.useMemo(() => {
-        return preparedData.reduce<HtmlItem[]>((result, d) => {
-            result.push(...d.htmlElements);
-            return result;
-        }, []);
-    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -205,7 +197,7 @@ export const AreaSeriesShapes = (args: Args) => {
     return (
         <React.Fragment>
             <g ref={ref} className={b()} />
-            <HtmlLayer items={htmlItems} htmlLayout={htmlLayout} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
         </React.Fragment>
     );
 };

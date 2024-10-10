@@ -6,7 +6,6 @@ import get from 'lodash/get';
 
 import {TooltipDataChunkPie} from '../../../../../../types';
 import {block} from '../../../../../../utils/cn';
-import {HtmlItem} from '../../../types';
 import {setEllipsisForOverflowTexts} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
 import {HtmlLayer} from '../HtmlLayer';
@@ -32,13 +31,6 @@ export function getHaloVisibility(d: PieArcDatum<SegmentData>) {
 export function PieSeriesShapes(args: PreparePieSeriesArgs) {
     const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
     const ref = React.useRef<SVGGElement | null>(null);
-
-    const htmlItems = React.useMemo(() => {
-        return preparedData.reduce<HtmlItem[]>((result, d) => {
-            result.push(...d.htmlElements);
-            return result;
-        }, []);
-    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -229,7 +221,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
     return (
         <React.Fragment>
             <g ref={ref} className={b()} style={{zIndex: 9}} />
-            <HtmlLayer items={htmlItems} htmlLayout={htmlLayout} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
         </React.Fragment>
     );
 }
