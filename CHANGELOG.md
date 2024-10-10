@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.16.0](https://github.com/gravity-ui/chartkit/compare/v5.15.0...v5.16.0) (2024-10-10)
+
+
+### Features
+
+* **D3 plugin:** html labels for most of series ([#527](https://github.com/gravity-ui/chartkit/issues/527)) ([9bddfef](https://github.com/gravity-ui/chartkit/commit/9bddfefe23983fb9a336317ff73acd2c6fab9ab3))
+
 ## [5.15.0](https://github.com/gravity-ui/chartkit/compare/v5.14.1...v5.15.0) (2024-10-07)
 
 
