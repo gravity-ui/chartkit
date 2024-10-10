@@ -122,6 +122,7 @@ export type PreparedBarXSeries = {
         style: BaseTextStyle;
         allowOverlap: boolean;
         padding: number;
+        html: boolean;
     };
     yAxis: number;
 } & BasePreparedSeries;
@@ -137,6 +138,7 @@ export type PreparedBarYSeries = {
         style: BaseTextStyle;
         maxHeight: number;
         maxWidth: number;
+        html: boolean;
     };
 } & BasePreparedSeries;
 
@@ -181,6 +183,7 @@ export type PreparedLineSeries = {
         style: BaseTextStyle;
         padding: number;
         allowOverlap: boolean;
+        html: boolean;
     };
     marker: {
         states: {
@@ -218,6 +221,7 @@ export type PreparedAreaSeries = {
         style: BaseTextStyle;
         padding: number;
         allowOverlap: boolean;
+        html: boolean;
     };
     marker: {
         states: {
@@ -248,6 +252,7 @@ export type PreparedTreemapSeries = {
         style: BaseTextStyle;
         padding: number;
         allowOverlap: boolean;
+        html: boolean;
     };
     layoutAlgorithm: `${LayoutAlgorithm}`;
 } & BasePreparedSeries &
@@ -261,6 +266,7 @@ export type PreparedWaterfallSeries = {
         style: BaseTextStyle;
         allowOverlap: boolean;
         padding: number;
+        html: boolean;
     };
     positiveColor: string;
     negativeColor: string;

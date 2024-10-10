@@ -41,6 +41,7 @@ export const prepareScatterData = (args: {
                 },
                 hovered: false,
                 active: true,
+                htmlElements: [],
             });
         });
 

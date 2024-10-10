@@ -8,6 +8,7 @@ import {block} from '../../../../../../utils/cn';
 import {LabelData} from '../../../types';
 import {filterOverlappingLabels} from '../../../utils';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
+import {HtmlLayer} from '../HtmlLayer';
 
 import type {PreparedBarXData} from './types';
 
@@ -20,10 +21,11 @@ type Args = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedBarXData[];
     seriesOptions: PreparedSeriesOptions;
+    htmlLayout: HTMLElement | null;
 };
 
 export const BarXSeriesShapes = (args: Args) => {
-    const {dispatcher, preparedData, seriesOptions} = args;
+    const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
 
     const ref = React.useRef<SVGGElement>(null);
 
@@ -120,5 +122,10 @@ export const BarXSeriesShapes = (args: Args) => {
         };
     }, [dispatcher, preparedData, seriesOptions]);
 
-    return <g ref={ref} className={b()} />;
+    return (
+        <React.Fragment>
+            <g ref={ref} className={b()} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
+        </React.Fragment>
+    );
 };

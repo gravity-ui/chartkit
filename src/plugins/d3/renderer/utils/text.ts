@@ -135,13 +135,22 @@ export function getLabelsSize({
     let labelWrapper: HTMLElement | null;
     if (html) {
         labelWrapper = container.append('div').style('position', 'absolute').node();
-        labels.forEach((l) => {
-            labelWrapper?.insertAdjacentHTML('beforeend', l);
-        });
+        const {height, width} = labels.reduce(
+            (acc, l) => {
+                if (labelWrapper) {
+                    labelWrapper.innerHTML = l;
+                }
+                const rect = labelWrapper?.getBoundingClientRect();
+                return {
+                    width: Math.max(acc.width, rect?.width ?? 0),
+                    height: Math.max(acc.height, rect?.height ?? 0),
+                };
+            },
+            {height: 0, width: 0},
+        );
 
-        const rect = labelWrapper?.getBoundingClientRect();
-        result.maxWidth = rect?.width ?? 0;
-        result.maxHeight = rect?.height ?? 0;
+        result.maxWidth = width;
+        result.maxHeight = height;
     } else {
         const svg = container.append('svg');
         const textSelection = renderLabels(svg, {labels, style});

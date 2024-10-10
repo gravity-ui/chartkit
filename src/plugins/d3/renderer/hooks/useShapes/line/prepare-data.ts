@@ -1,4 +1,4 @@
-import type {LabelData} from '../../../types';
+import type {HtmlItem, LabelData} from '../../../types';
 import {getLabelsSize, getLeftPosition} from '../../../utils';
 import type {ChartScale} from '../../useAxisScales';
 import type {PreparedAxis} from '../../useChartOptions/types';
@@ -37,6 +37,17 @@ function getLabelData(point: PointData, series: PreparedLineSeries, xMax: number
     return labelData;
 }
 
+function getHtmlLabel(point: PointData, series: PreparedLineSeries, xMax: number): HtmlItem {
+    const content = String(point.data.label || point.data.y);
+    const size = getLabelsSize({labels: [content], html: true});
+
+    return {
+        x: Math.min(xMax - size.maxWidth, Math.max(0, point.x)),
+        y: Math.max(0, point.y - series.dataLabels.padding - size.maxHeight),
+        content,
+    };
+}
+
 export const prepareLineData = (args: {
     series: PreparedLineSeries[];
     xAxis: PreparedAxis;
@@ -62,9 +73,14 @@ export const prepareLineData = (args: {
             series: s,
         }));
 
+        const htmlElements: HtmlItem[] = [];
         let labels: LabelData[] = [];
         if (s.dataLabels.enabled) {
-            labels = points.map<LabelData>((p) => getLabelData(p, s, xMax));
+            if (s.dataLabels.html) {
+                htmlElements.push(...points.map((p) => getHtmlLabel(p, s, xMax)));
+            } else {
+                labels = points.map<LabelData>((p) => getLabelData(p, s, xMax));
+            }
         }
 
         let markers: MarkerData[] = [];
@@ -89,6 +105,7 @@ export const prepareLineData = (args: {
             dashStyle: s.dashStyle,
             linecap: s.linecap,
             opacity: s.opacity,
+            htmlElements,
         };
 
         acc.push(result);

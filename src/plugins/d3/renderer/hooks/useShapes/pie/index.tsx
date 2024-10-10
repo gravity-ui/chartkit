@@ -1,15 +1,14 @@
 import React from 'react';
 
-import {Portal} from '@gravity-ui/uikit';
 import {arc, color, select} from 'd3';
 import type {BaseType, Dispatch, PieArcDatum} from 'd3';
 import get from 'lodash/get';
 
 import {TooltipDataChunkPie} from '../../../../../../types';
 import {block} from '../../../../../../utils/cn';
-import {HtmlItem} from '../../../types';
 import {setEllipsisForOverflowTexts} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
+import {HtmlLayer} from '../HtmlLayer';
 import {PreparedLineData} from '../line/types';
 import {setActiveState} from '../utils';
 
@@ -32,13 +31,6 @@ export function getHaloVisibility(d: PieArcDatum<SegmentData>) {
 export function PieSeriesShapes(args: PreparePieSeriesArgs) {
     const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
     const ref = React.useRef<SVGGElement | null>(null);
-
-    const htmlItems = React.useMemo(() => {
-        return preparedData.reduce<HtmlItem[]>((result, d) => {
-            result.push(...d.htmlElements);
-            return result;
-        }, []);
-    }, [preparedData]);
 
     React.useEffect(() => {
         if (!ref.current) {
@@ -229,19 +221,7 @@ export function PieSeriesShapes(args: PreparePieSeriesArgs) {
     return (
         <React.Fragment>
             <g ref={ref} className={b()} style={{zIndex: 9}} />
-            {htmlLayout && (
-                <Portal container={htmlLayout}>
-                    {htmlItems.map((item, index) => {
-                        return (
-                            <div
-                                key={index}
-                                dangerouslySetInnerHTML={{__html: item.content}}
-                                style={{position: 'absolute', left: item.x, top: item.y}}
-                            />
-                        );
-                    })}
-                </Portal>
-            )}
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
         </React.Fragment>
     );
 }

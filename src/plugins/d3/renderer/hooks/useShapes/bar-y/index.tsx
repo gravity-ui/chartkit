@@ -5,12 +5,12 @@ import type {Dispatch} from 'd3';
 import get from 'lodash/get';
 
 import {block} from '../../../../../../utils/cn';
+import {LabelData} from '../../../types';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
+import {HtmlLayer} from '../HtmlLayer';
 
 import type {PreparedBarYData} from './types';
 export {prepareBarYData} from './prepare-data';
-
-const DEFAULT_LABEL_PADDING = 7;
 
 const b = block('d3-bar-y');
 
@@ -18,10 +18,11 @@ type Args = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedBarYData[];
     seriesOptions: PreparedSeriesOptions;
+    htmlLayout: HTMLElement | null;
 };
 
 export const BarYSeriesShapes = (args: Args) => {
-    const {dispatcher, preparedData, seriesOptions} = args;
+    const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -44,33 +45,24 @@ export const BarYSeriesShapes = (args: Args) => {
             .attr('opacity', (d) => d.data.opacity || null)
             .attr('cursor', (d) => d.series.cursor);
 
-        const dataLabels = preparedData.filter((d) => d.series.dataLabels.enabled);
+        const dataLabels = preparedData.reduce<LabelData[]>((acc, d) => {
+            if (d.label) {
+                acc.push(d.label);
+            }
+            return acc;
+        }, []);
         const labelSelection = svgElement
             .selectAll('text')
             .data(dataLabels)
             .join('text')
-            .text((d) => String(d.data.label || d.data.x))
+            .text((d) => d.text)
             .attr('class', b('label'))
-            .attr('x', (d) => {
-                if (d.series.dataLabels.inside) {
-                    return d.x + d.width / 2;
-                }
-
-                return d.x + d.width + DEFAULT_LABEL_PADDING;
-            })
-            .attr('y', (d) => {
-                return d.y + d.height / 2 + d.series.dataLabels.maxHeight / 2;
-            })
-            .attr('text-anchor', (d) => {
-                if (d.series.dataLabels.inside) {
-                    return 'middle';
-                }
-
-                return 'right';
-            })
-            .style('font-size', (d) => d.series.dataLabels.style.fontSize)
-            .style('font-weight', (d) => d.series.dataLabels.style.fontWeight || null)
-            .style('fill', (d) => d.series.dataLabels.style.fontColor || null);
+            .attr('x', (d) => d.x)
+            .attr('y', (d) => d.y)
+            .attr('text-anchor', (d) => d.textAnchor)
+            .style('font-size', (d) => d.style.fontSize)
+            .style('font-weight', (d) => d.style.fontWeight || null)
+            .style('fill', (d) => d.style.fontColor || null);
 
         const hoverOptions = get(seriesOptions, 'bar-y.states.hover');
         const inactiveOptions = get(seriesOptions, 'bar-y.states.inactive');
@@ -98,7 +90,7 @@ export const BarYSeriesShapes = (args: Args) => {
 
             if (inactiveOptions?.enabled) {
                 const hoveredSeries = data?.map((d) => d.series.id);
-                const newOpacity = (d: PreparedBarYData) => {
+                const newOpacity = (d: PreparedBarYData | LabelData) => {
                     if (hoveredSeries?.length && !hoveredSeries.includes(d.series.id)) {
                         return inactiveOptions.opacity || null;
                     }
@@ -115,5 +107,10 @@ export const BarYSeriesShapes = (args: Args) => {
         };
     }, [dispatcher, preparedData, seriesOptions]);
 
-    return <g ref={ref} className={b()} />;
+    return (
+        <React.Fragment>
+            <g ref={ref} className={b()} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
+        </React.Fragment>
+    );
 };

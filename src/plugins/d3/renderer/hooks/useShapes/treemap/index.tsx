@@ -8,6 +8,7 @@ import type {TooltipDataChunkTreemap, TreemapSeriesData} from '../../../../../..
 import {block} from '../../../../../../utils/cn';
 import {setEllipsisForOverflowTexts} from '../../../utils';
 import {PreparedSeriesOptions} from '../../useSeries/types';
+import {HtmlLayer} from '../HtmlLayer';
 
 import type {PreparedTreemapData, TreemapLabelData} from './types';
 
@@ -17,10 +18,11 @@ type ShapeProps = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedTreemapData;
     seriesOptions: PreparedSeriesOptions;
+    htmlLayout: HTMLElement | null;
 };
 
 export const TreemapSeriesShape = (props: ShapeProps) => {
-    const {dispatcher, preparedData, seriesOptions} = props;
+    const {dispatcher, preparedData, seriesOptions, htmlLayout} = props;
     const ref = React.useRef<SVGGElement>(null);
 
     React.useEffect(() => {
@@ -118,5 +120,10 @@ export const TreemapSeriesShape = (props: ShapeProps) => {
         };
     }, [dispatcher, preparedData, seriesOptions]);
 
-    return <g ref={ref} className={b()} />;
+    return (
+        <React.Fragment>
+            <g ref={ref} className={b()} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
+        </React.Fragment>
+    );
 };

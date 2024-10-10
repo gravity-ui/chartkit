@@ -6,7 +6,8 @@
         "@gravity-ui/eslint-config/import-order"
     ],
     "rules": {
-        "valid-jsdoc": 0
+        "valid-jsdoc": 0,
+        "no-console": ["error", {"allow": ["warn", "error"]}]
     },
     "root": true,
     "overrides": [{

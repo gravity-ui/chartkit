@@ -9,6 +9,7 @@ import {block} from '../../../../../../utils/cn';
 import type {LabelData} from '../../../types';
 import {filterOverlappingLabels, getWaterfallPointColor} from '../../../utils';
 import type {PreparedSeriesOptions} from '../../useSeries/types';
+import {HtmlLayer} from '../HtmlLayer';
 import {getLineDashArray} from '../utils';
 
 import type {PreparedWaterfallData} from './types';
@@ -22,10 +23,11 @@ type Args = {
     dispatcher: Dispatch<object>;
     preparedData: PreparedWaterfallData[];
     seriesOptions: PreparedSeriesOptions;
+    htmlLayout: HTMLElement | null;
 };
 
 export const WaterfallSeriesShapes = (args: Args) => {
-    const {dispatcher, preparedData, seriesOptions} = args;
+    const {dispatcher, preparedData, seriesOptions, htmlLayout} = args;
 
     const ref = React.useRef<SVGGElement | null>(null);
     const connectorSelector = `.${b('connector')}`;
@@ -153,5 +155,10 @@ export const WaterfallSeriesShapes = (args: Args) => {
         };
     }, [dispatcher, preparedData, seriesOptions]);
 
-    return <g ref={ref} className={b()} />;
+    return (
+        <React.Fragment>
+            <g ref={ref} className={b()} />
+            <HtmlLayer preparedData={preparedData} htmlLayout={htmlLayout} />
+        </React.Fragment>
+    );
 };

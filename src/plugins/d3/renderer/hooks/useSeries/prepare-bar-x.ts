@@ -43,6 +43,7 @@ export function prepareBarXSeries(args: PrepareBarXSeriesArgs): PreparedSeries[]
                 style: Object.assign({}, DEFAULT_DATALABELS_STYLE, series.dataLabels?.style),
                 allowOverlap: series.dataLabels?.allowOverlap || false,
                 padding: get(series, 'dataLabels.padding', DEFAULT_DATALABELS_PADDING),
+                html: get(series, 'dataLabels.html', false),
             },
             cursor: get(series, 'cursor', null),
             yAxis: get(series, 'yAxis', 0),

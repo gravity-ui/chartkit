@@ -185,7 +185,6 @@ export function preparePieData(args: Args): PreparedPieData[] {
                     active: true,
                     segment: relatedSegment.data,
                     angle: midAngle,
-                    html: shouldUseHtml,
                 };
 
                 let overlap = false;

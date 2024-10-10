@@ -1,5 +1,5 @@
 import {AreaSeriesData} from '../../../../../../types';
-import {LabelData} from '../../../types';
+import {HtmlItem, LabelData} from '../../../types';
 import {PreparedAreaSeries} from '../../useSeries/types';
 
 export type PointData = {
@@ -27,4 +27,5 @@ export type PreparedAreaData = {
     hovered: boolean;
     active: boolean;
     labels: LabelData[];
+    htmlElements: HtmlItem[];
 };
