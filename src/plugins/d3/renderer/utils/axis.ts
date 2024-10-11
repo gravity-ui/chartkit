@@ -52,11 +52,11 @@ export function getXAxisItems({
 }: {
     scale: AxisScale<AxisDomain>;
     count?: number;
-    maxCount: number;
+    maxCount?: number;
 }) {
     let values = getScaleTicks(scale, count);
 
-    if (values.length > maxCount) {
+    if (maxCount && values.length > maxCount) {
         const step = Math.ceil(values.length / maxCount);
         values = values.filter((_: AxisDomain, i: number) => i % step === 0);
     }

@@ -11,3 +11,8 @@ export const legendDefaults: LegendDefaults = {
         fontSize: '12px',
     },
 };
+
+export const GRADIENT_LEGEND_SIZE = {
+    height: 12,
+    width: 200,
+};

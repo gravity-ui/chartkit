@@ -1,9 +1,10 @@
 import React from 'react';
 
-import {BaseType, line as lineGenerator, select, symbol} from 'd3';
+import {BaseType, line as lineGenerator, scaleLinear, select, symbol} from 'd3';
 import type {Selection} from 'd3';
 
 import {block} from '../../../../utils/cn';
+import {GRADIENT_LEGEND_SIZE} from '../constants';
 import type {
     LegendConfig,
     LegendItem,
@@ -13,7 +14,8 @@ import type {
     SymbolLegendSymbol,
 } from '../hooks';
 import {getLineDashArray} from '../hooks/useShapes/utils';
-import {getSymbol} from '../utils';
+import {createGradientRect, getContinuesColorFn, getLabelsSize, getSymbol} from '../utils';
+import {axisBottom} from '../utils/axis-generators';
 
 const b = block('d3-legend');
 
@@ -208,81 +210,140 @@ export const Legend = (props: Props) => {
 
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
-        const limit = config.pagination?.limit;
-        const pageItems =
-            typeof limit === 'number'
-                ? items.slice(paginationOffset * limit, paginationOffset * limit + limit)
-                : items;
-        pageItems.forEach((line, lineIndex) => {
-            const legendLine = svgElement.append('g').attr('class', b('line'));
-            const legendItemTemplate = legendLine
-                .selectAll('legend-history')
-                .data(line)
-                .enter()
-                .append('g')
-                .attr('class', b('item'))
-                .on('click', function (e, d) {
-                    onItemClick({name: d.name, metaKey: e.metaKey});
+
+        if (legend.type === 'discrete') {
+            const limit = config.pagination?.limit;
+            const pageItems =
+                typeof limit === 'number'
+                    ? items.slice(paginationOffset * limit, paginationOffset * limit + limit)
+                    : items;
+            pageItems.forEach((line, lineIndex) => {
+                const legendLine = svgElement.append('g').attr('class', b('line'));
+                const legendItemTemplate = legendLine
+                    .selectAll('legend-history')
+                    .data(line)
+                    .enter()
+                    .append('g')
+                    .attr('class', b('item'))
+                    .on('click', function (e, d) {
+                        onItemClick({name: d.name, metaKey: e.metaKey});
+                    });
+
+                const getXPosition = (i: number) => {
+                    return line.slice(0, i).reduce((acc, legendItem) => {
+                        return (
+                            acc +
+                            legendItem.symbol.width +
+                            legendItem.symbol.padding +
+                            legendItem.textWidth +
+                            legend.itemDistance
+                        );
+                    }, 0);
+                };
+
+                renderLegendSymbol({selection: legendItemTemplate, legend});
+
+                legendItemTemplate
+                    .append('text')
+                    .attr('x', function (legendItem, i) {
+                        return (
+                            getXPosition(i) + legendItem.symbol.width + legendItem.symbol.padding
+                        );
+                    })
+                    .attr('height', legend.lineHeight)
+                    .attr('class', function (d) {
+                        const mods = {selected: d.visible, unselected: !d.visible};
+                        return b('item-text', mods);
+                    })
+                    .text(function (d) {
+                        return ('name' in d && d.name) as string;
+                    })
+                    .style('font-size', legend.itemStyle.fontSize);
+
+                const contentWidth = legendLine.node()?.getBoundingClientRect().width || 0;
+                const {left} = getLegendPosition({
+                    align: legend.align,
+                    width: boundsWidth,
+                    offsetWidth: 0,
+                    contentWidth,
                 });
+                const top = legend.lineHeight * lineIndex;
 
-            const getXPosition = (i: number) => {
-                return line.slice(0, i).reduce((acc, legendItem) => {
-                    return (
-                        acc +
-                        legendItem.symbol.width +
-                        legendItem.symbol.padding +
-                        legendItem.textWidth +
-                        legend.itemDistance
-                    );
-                }, 0);
-            };
-
-            renderLegendSymbol({selection: legendItemTemplate, legend});
-
-            legendItemTemplate
-                .append('text')
-                .attr('x', function (legendItem, i) {
-                    return getXPosition(i) + legendItem.symbol.width + legendItem.symbol.padding;
-                })
-                .attr('height', legend.lineHeight)
-                .attr('class', function (d) {
-                    const mods = {selected: d.visible, unselected: !d.visible};
-                    return b('item-text', mods);
-                })
-                .text(function (d) {
-                    return ('name' in d && d.name) as string;
-                })
-                .style('font-size', legend.itemStyle.fontSize);
-
-            const contentWidth = legendLine.node()?.getBoundingClientRect().width || 0;
-            const {left} = getLegendPosition({
-                align: legend.align,
-                width: boundsWidth,
-                offsetWidth: config.offset.left,
-                contentWidth,
+                legendLine.attr('transform', `translate(${[left, top].join(',')})`);
             });
-            const top = config.offset.top + legend.lineHeight * lineIndex;
 
-            legendLine.attr('transform', `translate(${[left, top].join(',')})`);
-        });
-
-        if (config.pagination) {
-            const transform = `translate(${[
-                config.offset.left,
-                config.offset.top +
-                    legend.lineHeight * config.pagination.limit +
-                    legend.lineHeight / 2,
-            ].join(',')})`;
-            appendPaginator({
-                container: svgElement,
-                offset: paginationOffset,
-                maxPage: config.pagination.maxPage,
-                legend,
-                transform,
-                onArrowClick: setPaginationOffset,
+            if (config.pagination) {
+                const transform = `translate(${[
+                    0,
+                    legend.lineHeight * config.pagination.limit + legend.lineHeight / 2,
+                ].join(',')})`;
+                appendPaginator({
+                    container: svgElement,
+                    offset: paginationOffset,
+                    maxPage: config.pagination.maxPage,
+                    legend,
+                    transform,
+                    onArrowClick: setPaginationOffset,
+                });
+            }
+        } else {
+            // gradient rect
+            const domain = legend.colorScale.domain ?? [];
+            const rectHeight = GRADIENT_LEGEND_SIZE.height;
+            svgElement.call(createGradientRect, {
+                y: legend.title.height + legend.title.margin,
+                height: rectHeight,
+                width: legend.width,
+                interpolator: getContinuesColorFn({
+                    values: [0, 1],
+                    colors: legend.colorScale.colors,
+                    stops: legend.colorScale.stops,
+                }),
             });
+
+            // ticks
+            const xAxisGenerator = axisBottom({
+                scale: scaleLinear(domain, [0, legend.width]),
+                ticks: {
+                    items: [[0, -rectHeight]],
+                    labelsMargin: legend.ticks.labelsMargin,
+                    labelsLineHeight: legend.ticks.labelsLineHeight,
+                    maxTickCount: 4,
+                    tickColor: '#fff',
+                },
+            });
+            const tickTop = legend.title.height + legend.title.margin + rectHeight;
+            svgElement
+                .append('g')
+                .attr('transform', `translate(0, ${tickTop})`)
+                .call(xAxisGenerator);
         }
+
+        if (legend.title.enable) {
+            const {maxWidth: labelWidth} = getLabelsSize({
+                labels: [legend.title.text],
+                style: legend.title.style,
+            });
+            svgElement
+                .append('g')
+                .attr('class', b('title'))
+                .append('text')
+                .attr('dx', legend.width / 2 - labelWidth / 2)
+                .attr('font-weight', legend.title.style.fontWeight ?? null)
+                .attr('font-size', legend.title.style.fontSize ?? null)
+                .attr('fill', legend.title.style.fontColor ?? null)
+                .style('alignment-baseline', 'before-edge')
+                .text(legend.title.text);
+        }
+
+        const {left} = getLegendPosition({
+            align: legend.align,
+            width: boundsWidth,
+            offsetWidth: config.offset.left,
+            contentWidth: svgElement.node()?.getBoundingClientRect().width || 0,
+        });
+        svgElement.attr('transform', `translate(${[left, config.offset.top].join(',')})`);
     }, [boundsWidth, chartSeries, onItemClick, legend, items, config, paginationOffset]);
 
-    return <g ref={ref} width={boundsWidth} height={legend.height} />;
+    return <g className={b()} ref={ref} width={boundsWidth} height={legend.height} />;
 };

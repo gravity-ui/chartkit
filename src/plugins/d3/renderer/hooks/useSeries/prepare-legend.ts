@@ -1,11 +1,15 @@
-import {select} from 'd3';
+import {range, select} from 'd3';
 import clone from 'lodash/clone';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 
-import type {ChartKitWidgetData} from '../../../../../types';
-import {legendDefaults} from '../../constants';
-import {getHorisontalSvgTextHeight} from '../../utils';
+import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types';
+import {GRADIENT_LEGEND_SIZE, legendDefaults} from '../../constants';
+import {
+    getDomainForContinuousColorScale,
+    getHorisontalSvgTextHeight,
+    getLabelsSize,
+} from '../../utils';
 import {getBoundsWidth} from '../useChartDimensions';
 import {getYAxisWidth} from '../useChartDimensions/utils';
 import type {PreparedAxis, PreparedChart} from '../useChartOptions/types';
@@ -27,7 +31,48 @@ export const getPreparedLegend = (args: {
     const computedItemStyle = merge(defaultItemStyle, itemStyle);
     const lineHeight = getHorisontalSvgTextHeight({text: 'Tmp', style: computedItemStyle});
 
-    const height = enabled ? lineHeight : 0;
+    const legendType = get(legend, 'type', 'discrete');
+    const isTitleEnabled = Boolean(legend?.title?.text);
+    const titleMargin = isTitleEnabled ? get(legend, 'title.margin', 4) : 0;
+    const titleStyle: BaseTextStyle = {
+        fontSize: '12px',
+        fontWeight: 'bold',
+        ...get(legend, 'title.style', {}),
+    };
+    const titleText = isTitleEnabled ? get(legend, 'title.text', '') : '';
+    const titleHeight = isTitleEnabled
+        ? getLabelsSize({labels: [titleText], style: titleStyle}).maxHeight
+        : 0;
+
+    const ticks = {
+        labelsMargin: 4,
+        labelsLineHeight: 12,
+    };
+
+    const colorScale: PreparedLegend['colorScale'] = {
+        colors: [],
+        domain: [],
+        stops: [],
+    };
+
+    let height = 0;
+    if (enabled) {
+        height += titleHeight + titleMargin;
+        if (legendType === 'continuous') {
+            height += GRADIENT_LEGEND_SIZE.height;
+            height += ticks.labelsLineHeight + ticks.labelsMargin;
+
+            colorScale.colors = legend?.colorScale?.colors ?? [];
+            colorScale.stops =
+                legend?.colorScale?.stops ??
+                range(colorScale.colors.length).map((d, i, list) => d / list.length);
+            colorScale.domain = getDomainForContinuousColorScale({series});
+        } else {
+            height += lineHeight;
+        }
+    }
+
+    const legendWidth = get(legend, 'width', GRADIENT_LEGEND_SIZE.width);
 
     return {
         align: get(legend, 'align', legendDefaults.align),
@@ -37,6 +82,17 @@ export const getPreparedLegend = (args: {
         itemStyle: computedItemStyle,
         lineHeight,
         margin: get(legend, 'margin', legendDefaults.margin),
+        type: legendType,
+        title: {
+            enable: isTitleEnabled,
+            text: titleText,
+            margin: titleMargin,
+            style: titleStyle,
+            height: titleHeight,
+        },
+        width: legendWidth,
+        ticks,
+        colorScale,
     };
 };
 
@@ -116,18 +172,23 @@ export const getLegendComponents = (args: {
         items: flattenLegendItems,
         preparedLegend,
     });
-    let legendHeight = preparedLegend.lineHeight * items.length;
+
     let pagination: LegendConfig['pagination'] | undefined;
 
-    if (maxLegendHeight < legendHeight) {
-        // extra line for paginator
-        const limit = Math.floor(maxLegendHeight / preparedLegend.lineHeight) - 1;
-        const maxPage = Math.ceil(items.length / limit);
-        pagination = {limit, maxPage};
-        legendHeight = maxLegendHeight;
+    if (preparedLegend.type === 'discrete') {
+        let legendHeight = preparedLegend.lineHeight * items.length;
+
+        if (maxLegendHeight < legendHeight) {
+            // extra line for paginator
+            const limit = Math.floor(maxLegendHeight / preparedLegend.lineHeight) - 1;
+            const maxPage = Math.ceil(items.length / limit);
+            pagination = {limit, maxPage};
+            legendHeight = maxLegendHeight;
+        }
+
+        preparedLegend.height = legendHeight;
     }
 
-    preparedLegend.height = legendHeight;
     const top = chartHeight - chartMargin.bottom - preparedLegend.height;
     const offset: LegendConfig['offset'] = {
         left: chartMargin.left + getYAxisWidth(preparedYAxis[0]),

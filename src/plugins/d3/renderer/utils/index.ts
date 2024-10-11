@@ -21,8 +21,10 @@ export * from './text';
 export * from './time';
 export * from './axis';
 export * from './labels';
+export * from './legend';
 export * from './symbol';
 export * from './series';
+export * from './color';
 
 const CHARTS_WITHOUT_AXIS: ChartKitWidgetSeries['type'][] = ['pie', 'treemap'];
 export const CHART_SERIES_WITH_VOLUME_ON_Y_AXIS: ChartKitWidgetSeries['type'][] = [
