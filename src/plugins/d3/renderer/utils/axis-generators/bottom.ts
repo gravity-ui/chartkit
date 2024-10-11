@@ -21,7 +21,7 @@ type AxisBottomArgs = {
         rotation?: number;
         tickColor?: string;
     };
-    domain?: {
+    domain: {
         size: number;
         color?: string;
     };
@@ -76,9 +76,11 @@ export function axisBottom(args: AxisBottomArgs) {
     }).maxHeight;
 
     return function (selection: Selection<SVGGElement, unknown, null, undefined>) {
-        const x = selection.node()?.getBoundingClientRect()?.x || 0;
-        const right = x + domain?.size ?? 0;
-        const top = -tickItems?.[0]?.[0] || 0;
+        const rect = selection.node()?.getBoundingClientRect();
+        const x = rect?.x || 0;
+
+        const right = x + domain.size;
+        const top = -(tickItems?.[0]?.[0] ?? 0);
 
         let transform = `translate(0, ${labelHeight + labelsMargin - top}px)`;
         if (rotation) {
@@ -185,11 +187,9 @@ export function axisBottom(args: AxisBottomArgs) {
             });
         }
 
-        if (domain) {
-            const {size: domainSize, color: domainColor} = domain;
-            selection
-                .call(addDomain, {size: domainSize, color: domainColor})
-                .style('font-size', labelsStyle?.fontSize || '');
-        }
+        const {size: domainSize, color: domainColor} = domain;
+        selection
+            .call(addDomain, {size: domainSize, color: domainColor})
+            .style('font-size', labelsStyle?.fontSize || '');
     };
 }

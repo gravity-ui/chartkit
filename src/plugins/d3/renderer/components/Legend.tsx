@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {BaseType, line as lineGenerator, scaleLinear, select, symbol} from 'd3';
-import type {Selection} from 'd3';
+import {line as lineGenerator, scaleLinear, select, symbol} from 'd3';
+import type {AxisDomain, AxisScale, BaseType, Selection} from 'd3';
 
 import {block} from '../../../../utils/cn';
 import {GRADIENT_LEGEND_SIZE} from '../constants';
@@ -211,6 +211,7 @@ export const Legend = (props: Props) => {
         const svgElement = select(ref.current);
         svgElement.selectAll('*').remove();
 
+        let legendWidth = 0;
         if (legend.type === 'discrete') {
             const limit = config.pagination?.limit;
             const pageItems =
@@ -264,13 +265,15 @@ export const Legend = (props: Props) => {
                 const {left} = getLegendPosition({
                     align: legend.align,
                     width: boundsWidth,
-                    offsetWidth: 0,
+                    offsetWidth: 0, //config.offset.left,
                     contentWidth,
                 });
+                // const left = 0;
                 const top = legend.lineHeight * lineIndex;
 
                 legendLine.attr('transform', `translate(${[left, top].join(',')})`);
             });
+            legendWidth = boundsWidth;
 
             if (config.pagination) {
                 const transform = `translate(${[
@@ -303,7 +306,7 @@ export const Legend = (props: Props) => {
 
             // ticks
             const xAxisGenerator = axisBottom({
-                scale: scaleLinear(domain, [0, legend.width]),
+                scale: scaleLinear(domain, [0, legend.width]) as AxisScale<AxisDomain>,
                 ticks: {
                     items: [[0, -rectHeight]],
                     labelsMargin: legend.ticks.labelsMargin,
@@ -311,12 +314,17 @@ export const Legend = (props: Props) => {
                     maxTickCount: 4,
                     tickColor: '#fff',
                 },
+                domain: {
+                    size: legend.width,
+                    color: 'transparent',
+                },
             });
             const tickTop = legend.title.height + legend.title.margin + rectHeight;
             svgElement
                 .append('g')
                 .attr('transform', `translate(0, ${tickTop})`)
                 .call(xAxisGenerator);
+            legendWidth = legend.width;
         }
 
         if (legend.title.enable) {
@@ -340,7 +348,7 @@ export const Legend = (props: Props) => {
             align: legend.align,
             width: boundsWidth,
             offsetWidth: config.offset.left,
-            contentWidth: svgElement.node()?.getBoundingClientRect().width || 0,
+            contentWidth: legendWidth,
         });
         svgElement.attr('transform', `translate(${[left, config.offset.top].join(',')})`);
     }, [boundsWidth, chartSeries, onItemClick, legend, items, config, paginationOffset]);

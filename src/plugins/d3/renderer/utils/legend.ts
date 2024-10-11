@@ -16,10 +16,14 @@ export function createGradientRect(
     const canvas = document.createElement('canvas');
     canvas.width = n;
     canvas.height = 1;
-    const context2 = canvas.getContext('2d');
+    const context = canvas.getContext('2d');
+    if (!context) {
+        throw Error("Couldn't get canvas context");
+    }
+
     for (let i = 0, j = n - 1; i < n; ++i) {
-        context2.fillStyle = interpolator(i / j);
-        context2.fillRect(i, 0, 1, height);
+        context.fillStyle = interpolator(i / j);
+        context.fillRect(i, 0, 1, height);
     }
 
     return container

@@ -1,4 +1,4 @@
-import {range, select} from 'd3';
+import {select} from 'd3';
 import clone from 'lodash/clone';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
@@ -6,6 +6,7 @@ import merge from 'lodash/merge';
 import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types';
 import {GRADIENT_LEGEND_SIZE, legendDefaults} from '../../constants';
 import {
+    getDefaultColorStops,
     getDomainForContinuousColorScale,
     getHorisontalSvgTextHeight,
     getLabelsSize,
@@ -64,8 +65,7 @@ export const getPreparedLegend = (args: {
 
             colorScale.colors = legend?.colorScale?.colors ?? [];
             colorScale.stops =
-                legend?.colorScale?.stops ??
-                range(colorScale.colors.length).map((d, i, list) => d / list.length);
+                legend?.colorScale?.stops ?? getDefaultColorStops(colorScale.colors.length);
             colorScale.domain = getDomainForContinuousColorScale({series});
         } else {
             height += lineHeight;

@@ -1,10 +1,7 @@
 import type {ChartKitWidgetLegend} from '../../../../../types';
 
-type LegendDefaults = Required<Omit<ChartKitWidgetLegend, 'enabled'>> &
-    Pick<ChartKitWidgetLegend, 'enabled'>;
-
-export const legendDefaults: LegendDefaults = {
-    align: 'center',
+export const legendDefaults = {
+    align: 'center' as Required<ChartKitWidgetLegend>['align'],
     itemDistance: 20,
     margin: 15,
     itemStyle: {

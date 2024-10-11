@@ -9,7 +9,7 @@ export type ChartKitWidgetLegend = {
      *
      * @default 'discrete'
      */
-    type: 'discrete' | 'continuous';
+    type?: 'discrete' | 'continuous';
     /**
      * The horizontal alignment of the legend box within the chart area.
      *
