@@ -49,6 +49,11 @@ export type ChartKitWidgetLegend = {
         stops?: number[];
         /* The colors that form the gradient */
         colors: string[];
+        /* Data that is displayed as ticks.
+         * It can be useful when the points are colored according to additional dimensions that are not involved in the chart display.
+         * By default, it is formed depending on the type of series ("y" for bar-x or "value" for pie series, for example).
+         **/
+        domain?: number[];
     };
     /* Width of the legend */
     width?: number;

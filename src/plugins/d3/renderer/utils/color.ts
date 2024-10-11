@@ -10,6 +10,19 @@ export function getDomainForContinuousColorScale(args: {
         switch (s.type) {
             case 'pie': {
                 acc.push(...s.data.map((d) => d.value));
+                break;
+            }
+            case 'bar-y': {
+                acc.push(...s.data.map((d) => Number(d.x)));
+                break;
+            }
+            case 'scatter':
+            case 'bar-x':
+            case 'waterfall':
+            case 'line':
+            case 'area': {
+                acc.push(...s.data.map((d) => Number(d.y)));
+                break;
             }
         }
 

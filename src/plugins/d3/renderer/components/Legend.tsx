@@ -265,10 +265,9 @@ export const Legend = (props: Props) => {
                 const {left} = getLegendPosition({
                     align: legend.align,
                     width: boundsWidth,
-                    offsetWidth: 0, //config.offset.left,
+                    offsetWidth: 0,
                     contentWidth,
                 });
-                // const left = 0;
                 const top = legend.lineHeight * lineIndex;
 
                 legendLine.attr('transform', `translate(${[left, top].join(',')})`);

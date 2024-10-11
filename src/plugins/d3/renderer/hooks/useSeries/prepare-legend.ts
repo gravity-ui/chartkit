@@ -66,7 +66,8 @@ export const getPreparedLegend = (args: {
             colorScale.colors = legend?.colorScale?.colors ?? [];
             colorScale.stops =
                 legend?.colorScale?.stops ?? getDefaultColorStops(colorScale.colors.length);
-            colorScale.domain = getDomainForContinuousColorScale({series});
+            colorScale.domain =
+                legend?.colorScale?.domain ?? getDomainForContinuousColorScale({series});
         } else {
             height += lineHeight;
         }
