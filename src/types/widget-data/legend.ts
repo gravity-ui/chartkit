@@ -2,7 +2,14 @@ import type {BaseTextStyle} from './base';
 
 export type ChartKitWidgetLegend = {
     enabled?: boolean;
-
+    /**
+     * Different types for different color schemes.
+     * If the color scheme is continuous, a gradient legend will be drawn.
+     * Otherwise, samples for different point values
+     *
+     * @default 'discrete'
+     */
+    type?: 'discrete' | 'continuous';
     /**
      * The horizontal alignment of the legend box within the chart area.
      *
@@ -24,6 +31,33 @@ export type ChartKitWidgetLegend = {
      * @default 15
      */
     margin?: number;
+    /* The title that will be added on top of the legend. */
+    title?: {
+        text?: string;
+        /** CSS styles for the title */
+        style?: Partial<BaseTextStyle>;
+        /** The distance(in pixels) between the main content of the legend and its title
+         *
+         * Defaults to 4 for horizontal axes, 8 for vertical.
+         * */
+        margin?: number;
+    };
+    /* Gradient color settings for continuous legend type */
+    colorScale?: {
+        /* Color stops for the gradient.
+         * If not defined, it is distributed evenly according to the number of specified colors
+         *  */
+        stops?: number[];
+        /* The colors that form the gradient */
+        colors: string[];
+        /* Data that is displayed as ticks.
+         * It can be useful when the points are colored according to additional dimensions that are not involved in the chart display.
+         * By default, it is formed depending on the type of series ("y" for bar-x or "value" for pie series, for example).
+         **/
+        domain?: number[];
+    };
+    /* Width of the legend */
+    width?: number;
 };
 
 export type BaseLegendSymbol = {

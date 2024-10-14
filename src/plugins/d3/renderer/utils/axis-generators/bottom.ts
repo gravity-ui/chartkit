@@ -10,15 +10,16 @@ type AxisBottomArgs = {
     scale: AxisScale<AxisDomain>;
     ticks: {
         count?: number;
-        maxTickCount: number;
-        labelFormat: (value: any) => string;
+        maxTickCount?: number;
+        labelFormat?: (value: any) => string;
         labelsPaddings?: number;
         labelsMargin?: number;
         labelsStyle?: BaseTextStyle;
         labelsMaxWidth?: number;
         labelsLineHeight: number;
-        items: [number, number][];
-        rotation: number;
+        items?: [number, number][];
+        rotation?: number;
+        tickColor?: string;
     };
     domain: {
         size: number;
@@ -52,7 +53,7 @@ export function axisBottom(args: AxisBottomArgs) {
     const {
         scale,
         ticks: {
-            labelFormat,
+            labelFormat = (value: unknown) => String(value),
             labelsPaddings = 0,
             labelsMargin = 0,
             labelsMaxWidth = Infinity,
@@ -61,9 +62,10 @@ export function axisBottom(args: AxisBottomArgs) {
             items: tickItems,
             count: ticksCount,
             maxTickCount,
-            rotation,
+            rotation = 0,
+            tickColor,
         },
-        domain: {size: domainSize, color: domainColor},
+        domain,
     } = args;
     const offset = getXAxisOffset();
     const position = getXTickPosition({scale, offset});
@@ -74,9 +76,11 @@ export function axisBottom(args: AxisBottomArgs) {
     }).maxHeight;
 
     return function (selection: Selection<SVGGElement, unknown, null, undefined>) {
-        const x = selection.node()?.getBoundingClientRect()?.x || 0;
-        const right = x + domainSize;
-        const top = -tickItems[0][0] || 0;
+        const rect = selection.node()?.getBoundingClientRect();
+        const x = rect?.x || 0;
+
+        const right = x + domain.size;
+        const top = -(tickItems?.[0]?.[0] ?? 0);
 
         let transform = `translate(0, ${labelHeight + labelsMargin - top}px)`;
         if (rotation) {
@@ -89,7 +93,7 @@ export function axisBottom(args: AxisBottomArgs) {
         }
 
         const tickPath = path();
-        tickItems.forEach(([start, end]) => {
+        tickItems?.forEach(([start, end]) => {
             tickPath.moveTo(0, start);
             tickPath.lineTo(0, end);
         });
@@ -100,7 +104,9 @@ export function axisBottom(args: AxisBottomArgs) {
             .order()
             .join((el) => {
                 const tick = el.append('g').attr('class', 'tick');
-                tick.append('path').attr('d', tickPath.toString()).attr('stroke', 'currentColor');
+                tick.append('path')
+                    .attr('d', tickPath.toString())
+                    .attr('stroke', tickColor ?? 'currentColor');
                 tick.append('text')
                     .text(labelFormat)
                     .attr('fill', 'currentColor')
@@ -181,6 +187,7 @@ export function axisBottom(args: AxisBottomArgs) {
             });
         }
 
+        const {size: domainSize, color: domainColor} = domain;
         selection
             .call(addDomain, {size: domainSize, color: domainColor})
             .style('font-size', labelsStyle?.fontSize || '');

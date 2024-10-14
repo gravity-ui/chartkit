@@ -42,9 +42,25 @@ export type SymbolLegendSymbol = {
 
 export type PreparedLegendSymbol = RectLegendSymbol | PathLegendSymbol | SymbolLegendSymbol;
 
-export type PreparedLegend = Required<ChartKitWidgetLegend> & {
+export type PreparedLegend = Required<Omit<ChartKitWidgetLegend, 'title' | 'colorScale'>> & {
     height: number;
     lineHeight: number;
+    title: {
+        enable: boolean;
+        text: string;
+        margin: number;
+        style: BaseTextStyle;
+        height: number;
+    };
+    ticks: {
+        labelsMargin: number;
+        labelsLineHeight: number;
+    };
+    colorScale: {
+        colors: string[];
+        domain: number[];
+        stops: number[];
+    };
 };
 
 export type OnLegendItemClick = (data: {name: string; metaKey: boolean}) => void;
