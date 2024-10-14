@@ -24,6 +24,11 @@ export function getDomainForContinuousColorScale(args: {
                 acc.push(...s.data.map((d) => Number(d.y)));
                 break;
             }
+            default: {
+                throw Error(
+                    `The method for calculation a domain for a continuous color scale for the "${s.type}" series is not defined`,
+                );
+            }
         }
 
         return acc;

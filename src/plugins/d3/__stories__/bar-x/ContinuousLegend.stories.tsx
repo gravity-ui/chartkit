@@ -6,13 +6,13 @@ import {groups} from 'd3';
 import {ChartKit} from '../../../../components/ChartKit';
 import {Loader} from '../../../../components/Loader/Loader';
 import {settings} from '../../../../libs';
-import type {ChartKitWidgetData, PieSeriesData} from '../../../../types';
+import type {BarXSeriesData, ChartKitWidgetData} from '../../../../types';
 import {ExampleWrapper} from '../../examples/ExampleWrapper';
 import nintendoGames from '../../examples/nintendoGames';
 import {D3Plugin} from '../../index';
 import {getContinuesColorFn} from '../../renderer/utils';
 
-const PieWithGradientLegend = () => {
+const BarXWithContinuousLegend = () => {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
@@ -28,26 +28,32 @@ const PieWithGradientLegend = () => {
     const stops = [0, 0.5, 1];
 
     const gamesByPlatform = groups(nintendoGames, (item) => item.platform);
-    const data: PieSeriesData[] = gamesByPlatform.map(([platform, games]) => ({
-        name: platform,
-        value: games.length,
+    const categories = gamesByPlatform.map(([platform, _games]) => platform);
+    const data: BarXSeriesData[] = gamesByPlatform.map(([platform, games], index) => ({
+        x: index,
+        y: games.length,
         label: `${platform}(${games.length})`,
     }));
-    const getColor = getContinuesColorFn({colors, stops, values: data.map((d) => d.value)});
+    const getColor = getContinuesColorFn({colors, stops, values: data.map((d) => Number(d.y))});
     data.forEach((d) => {
-        d.color = getColor(d.value);
+        d.color = getColor(Number(d.y));
     });
 
     const widgetData: ChartKitWidgetData = {
         series: {
             data: [
                 {
-                    type: 'pie',
+                    type: 'bar-x',
+                    name: 'Series 1',
                     data,
                 },
             ],
         },
-        title: {text: 'Pie with gradient legend'},
+        xAxis: {
+            type: 'category',
+            categories,
+        },
+        title: {text: 'Bar-x with continues color'},
         legend: {
             enabled: true,
             type: 'continuous',
@@ -66,11 +72,11 @@ const PieWithGradientLegend = () => {
     );
 };
 
-export const PieWithGradientLegendStory: StoryObj<typeof PieWithGradientLegend> = {
-    name: 'Gradient colored pie',
+export const BarXWithContinuousLegendStory: StoryObj<typeof BarXWithContinuousLegend> = {
+    name: 'Continuous legend',
 };
 
 export default {
-    title: 'Plugins/D3/Pie',
-    component: PieWithGradientLegend,
+    title: 'Plugins/D3/Bar-x',
+    component: BarXWithContinuousLegend,
 };

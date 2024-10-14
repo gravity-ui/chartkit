@@ -9,7 +9,7 @@ export const legendDefaults = {
     },
 };
 
-export const GRADIENT_LEGEND_SIZE = {
+export const CONTINUOUS_LEGEND_SIZE = {
     height: 12,
     width: 200,
 };

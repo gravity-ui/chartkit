@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import merge from 'lodash/merge';
 
 import type {BaseTextStyle, ChartKitWidgetData} from '../../../../../types';
-import {GRADIENT_LEGEND_SIZE, legendDefaults} from '../../constants';
+import {CONTINUOUS_LEGEND_SIZE, legendDefaults} from '../../constants';
 import {
     getDefaultColorStops,
     getDomainForContinuousColorScale,
@@ -38,7 +38,7 @@ export const getPreparedLegend = (args: {
     const titleStyle: BaseTextStyle = {
         fontSize: '12px',
         fontWeight: 'bold',
-        ...get(legend, 'title.style', {}),
+        ...get(legend, 'title.style'),
     };
     const titleText = isTitleEnabled ? get(legend, 'title.text', '') : '';
     const titleHeight = isTitleEnabled
@@ -60,7 +60,7 @@ export const getPreparedLegend = (args: {
     if (enabled) {
         height += titleHeight + titleMargin;
         if (legendType === 'continuous') {
-            height += GRADIENT_LEGEND_SIZE.height;
+            height += CONTINUOUS_LEGEND_SIZE.height;
             height += ticks.labelsLineHeight + ticks.labelsMargin;
 
             colorScale.colors = legend?.colorScale?.colors ?? [];
@@ -73,7 +73,7 @@ export const getPreparedLegend = (args: {
         }
     }
 
-    const legendWidth = get(legend, 'width', GRADIENT_LEGEND_SIZE.width);
+    const legendWidth = get(legend, 'width', CONTINUOUS_LEGEND_SIZE.width);
 
     return {
         align: get(legend, 'align', legendDefaults.align),

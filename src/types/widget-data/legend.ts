@@ -31,6 +31,7 @@ export type ChartKitWidgetLegend = {
      * @default 15
      */
     margin?: number;
+    /* The title that will be added on top of the legend. */
     title?: {
         text?: string;
         /** CSS styles for the title */

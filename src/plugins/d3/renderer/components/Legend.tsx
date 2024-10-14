@@ -4,7 +4,7 @@ import {line as lineGenerator, scaleLinear, select, symbol} from 'd3';
 import type {AxisDomain, AxisScale, BaseType, Selection} from 'd3';
 
 import {block} from '../../../../utils/cn';
-import {GRADIENT_LEGEND_SIZE} from '../constants';
+import {CONTINUOUS_LEGEND_SIZE} from '../constants';
 import type {
     LegendConfig,
     LegendItem,
@@ -291,7 +291,7 @@ export const Legend = (props: Props) => {
         } else {
             // gradient rect
             const domain = legend.colorScale.domain ?? [];
-            const rectHeight = GRADIENT_LEGEND_SIZE.height;
+            const rectHeight = CONTINUOUS_LEGEND_SIZE.height;
             svgElement.call(createGradientRect, {
                 y: legend.title.height + legend.title.margin,
                 height: rectHeight,
