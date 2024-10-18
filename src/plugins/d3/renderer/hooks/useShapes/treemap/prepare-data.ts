@@ -11,24 +11,70 @@ import type {HierarchyRectangularNode} from 'd3';
 
 import {LayoutAlgorithm} from '../../../../../../constants';
 import type {TreemapSeriesData} from '../../../../../../types';
+import {HtmlItem} from '../../../types';
+import {getLabelsSize} from '../../../utils';
 import type {PreparedTreemapSeries} from '../../useSeries/types';
 
 import type {PreparedTreemapData, TreemapLabelData} from './types';
 
 const DEFAULT_PADDING = 1;
 
-function getLabelData(data: HierarchyRectangularNode<TreemapSeriesData>[]): TreemapLabelData[] {
-    return data.map((d) => {
-        const text = d.data.name;
+type LabelItem = HtmlItem | TreemapLabelData;
 
-        return {
-            text,
-            x: d.x0,
-            y: d.y0,
-            width: d.x1 - d.x0,
-            nodeData: d.data,
-        };
-    });
+function getLabels(args: {
+    data: HierarchyRectangularNode<TreemapSeriesData>[];
+    html: boolean;
+    padding: number;
+    align: PreparedTreemapSeries['dataLabels']['align'];
+}) {
+    const {data, html, padding, align} = args;
+
+    return data.reduce<LabelItem[]>((acc, d) => {
+        const texts = Array.isArray(d.data.name) ? d.data.name : [d.data.name];
+
+        texts.forEach((text, index) => {
+            const {maxHeight: lineHeight, maxWidth: labelWidth} =
+                getLabelsSize({labels: [text], html}) ?? {};
+            const left = d.x0 + padding;
+            const right = d.x1 - padding;
+            const width = Math.max(0, right - left);
+            let x = left;
+            const y = index * lineHeight + d.y0 + padding;
+
+            switch (align) {
+                case 'left': {
+                    x = left;
+                    break;
+                }
+                case 'center': {
+                    x = Math.max(left, left + (width - labelWidth) / 2);
+                    break;
+                }
+                case 'right': {
+                    x = Math.max(left, right - labelWidth);
+                    break;
+                }
+            }
+
+            const item: LabelItem = html
+                ? {
+                      content: text,
+                      x,
+                      y,
+                  }
+                : {
+                      text,
+                      x,
+                      y,
+                      width,
+                      nodeData: d.data,
+                  };
+
+            acc.push(item);
+        });
+
+        return acc;
+    }, []);
 }
 
 export function prepareTreemapData(args: {
@@ -39,7 +85,13 @@ export function prepareTreemapData(args: {
     const {series, width, height} = args;
     const dataWithRootNode = getSeriesDataWithRootNode(series);
     const hierarchy = stratify<TreemapSeriesData>()
-        .id((d) => d.id || d.name)
+        .id((d) => {
+            if (d.id) {
+                return d.id;
+            }
+
+            return Array.isArray(d.name) ? d.name.join() : d.name;
+        })
         .parentId((d) => d.parentId)(dataWithRootNode)
         .sum((d) => d.value || 0);
     const treemapInstance = treemap<TreemapSeriesData>();
@@ -72,9 +124,20 @@ export function prepareTreemapData(args: {
         return levelOptions?.padding ?? DEFAULT_PADDING;
     })(hierarchy);
     const leaves = root.leaves();
-    const labelData: TreemapLabelData[] = series.dataLabels?.enabled ? getLabelData(leaves) : [];
+    let labelData: TreemapLabelData[] = [];
+    const htmlElements: HtmlItem[] = [];
 
-    return {labelData, leaves, series, htmlElements: []};
+    if (series.dataLabels?.enabled) {
+        const {html, padding, align} = series.dataLabels;
+        const labels = getLabels({html, padding, align, data: leaves});
+        if (html) {
+            htmlElements.push(...(labels as HtmlItem[]));
+        } else {
+            labelData = labels as TreemapLabelData[];
+        }
+    }
+
+    return {labelData, leaves, series, htmlElements};
 }
 
 function getSeriesDataWithRootNode(series: PreparedTreemapSeries) {

@@ -269,6 +269,7 @@ export type PreparedTreemapSeries = {
         padding: number;
         allowOverlap: boolean;
         html: boolean;
+        align: 'left' | 'center' | 'right';
     };
     layoutAlgorithm: `${LayoutAlgorithm}`;
 } & BasePreparedSeries &
