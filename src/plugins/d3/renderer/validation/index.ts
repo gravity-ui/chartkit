@@ -158,7 +158,10 @@ const validateTreemapSeries = ({series}: {series: TreemapSeries}) => {
         }
     });
     series.data.forEach((d) => {
-        const idOrName = d.id || d.name;
+        let idOrName = d.id;
+        if (!idOrName) {
+            idOrName = Array.isArray(d.name) ? d.name.join() : d.name;
+        }
 
         if (parentIds[idOrName] && typeof d.value === 'number') {
             throw new ChartKitError({

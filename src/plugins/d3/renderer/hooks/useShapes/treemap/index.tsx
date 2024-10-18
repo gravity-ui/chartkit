@@ -23,7 +23,7 @@ type ShapeProps = {
 
 export const TreemapSeriesShape = (props: ShapeProps) => {
     const {dispatcher, preparedData, seriesOptions, htmlLayout} = props;
-    const ref = React.useRef<SVGGElement>(null);
+    const ref = React.useRef<SVGGElement | null>(null);
 
     React.useEffect(() => {
         if (!ref.current) {

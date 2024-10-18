@@ -5,7 +5,7 @@ import {ChartKitWidgetLegend, RectLegendSymbolOptions} from './legend';
 
 export type TreemapSeriesData<T = any> = BaseSeriesData<T> & {
     /** The name of the node (used in legend, tooltip etc). */
-    name: string;
+    name: string | string[];
     /** The value of the node. All nodes should have this property except nodes that have children. */
     value?: number;
     /** An id for the node. Used to group children. */
@@ -38,4 +38,11 @@ export type TreemapSeries<T = any> = BaseSeries & {
         color?: string;
     }[];
     layoutAlgorithm?: `${LayoutAlgorithm}`;
+    /**
+     * Options for the series data labels, appearing next to each data point.
+     * */
+    dataLabels?: BaseSeries['dataLabels'] & {
+        /** Horizontal alignment of the data label inside the tile. */
+        align?: 'left' | 'center' | 'right';
+    };
 };
