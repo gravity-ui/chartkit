@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.17.0](https://github.com/gravity-ui/chartkit/compare/v5.16.0...v5.17.0) (2024-10-21)
+
+
+### Features
+
+* **D3 plugin:** improve treemap labels ([#530](https://github.com/gravity-ui/chartkit/issues/530)) ([f4ce403](https://github.com/gravity-ui/chartkit/commit/f4ce4034820170cbbf1df7f6382e00ceee35524d))
+
 ## [5.16.0](https://github.com/gravity-ui/chartkit/compare/v5.15.0...v5.16.0) (2024-10-14)
 
 
