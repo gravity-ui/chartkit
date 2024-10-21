@@ -3,8 +3,6 @@ export type BaseSeries = {
     visible?: boolean;
     /**
      * Options for the series data labels, appearing next to each data point.
-     *
-     * Note: now this option is supported only for `pie` charts.
      * */
     dataLabels?: {
         /**
