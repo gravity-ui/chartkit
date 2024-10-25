@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.17.1](https://github.com/gravity-ui/chartkit/compare/v5.17.0...v5.17.1) (2024-10-25)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix onRender invocation in case of splitted tooltip ([#533](https://github.com/gravity-ui/chartkit/issues/533)) ([e81492f](https://github.com/gravity-ui/chartkit/commit/e81492f3b53fdb57cc9435391fca11787eb5077b))
+
 ## [5.17.0](https://github.com/gravity-ui/chartkit/compare/v5.16.0...v5.17.0) (2024-10-21)
 
 
