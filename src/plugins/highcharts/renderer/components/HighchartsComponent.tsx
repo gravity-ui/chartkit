@@ -163,7 +163,7 @@ export class HighchartsComponent extends React.PureComponent<Props, State> {
                 constructorType={options?.useHighStock ? 'stockChart' : 'chart'}
                 containerProps={{className: 'chartkit-graph'}}
                 ref={this.chartComponent}
-                onRender={this.needRenderCallback() && this.props.onRender}
+                onRender={this.needRenderCallback() ? this.props.onRender : undefined}
             />
         );
     }
