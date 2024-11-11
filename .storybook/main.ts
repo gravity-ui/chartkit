@@ -15,6 +15,12 @@ const config: StorybookConfig = {
         {name: '@storybook/addon-essentials', options: {backgrounds: false}},
         './theme-addon/register.tsx',
     ],
+    refs: {
+        'gravity-charts': {
+            title: 'Gravity Charts',
+            url: 'https://preview.gravity-ui.com/uikit',
+        },
+    },
 };
 
 export default config;
