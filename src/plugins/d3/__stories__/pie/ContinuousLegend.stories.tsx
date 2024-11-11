@@ -10,7 +10,7 @@ import type {ChartKitWidgetData, PieSeriesData} from '../../../../types';
 import {ExampleWrapper} from '../../examples/ExampleWrapper';
 import nintendoGames from '../../examples/nintendoGames';
 import {D3Plugin} from '../../index';
-import {getContinuesColorFn} from '../../renderer/utils';
+import {getContinuesColorFn} from '../utils/get-continues-color-fn';
 
 const PieWithContinuousLegend = () => {
     const [loading, setLoading] = React.useState(true);

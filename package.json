@@ -47,11 +47,11 @@
   ],
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
+    "@gravity-ui/charts": "^0.2.0",
     "@gravity-ui/date-utils": "^2.1.0",
     "@gravity-ui/i18n": "^1.0.0",
     "@gravity-ui/yagr": "^4.3.4",
     "afterframe": "^1.0.2",
-    "d3": "^7.8.5",
     "lodash": "^4.17.21",
     "react-split-pane": "^0.1.92",
     "tslib": "^2.6.2"
@@ -84,6 +84,7 @@
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.7",
+    "d3": "^7.9.0",
     "eslint": "^8.56.0",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",

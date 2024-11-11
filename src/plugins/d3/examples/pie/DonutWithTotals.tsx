@@ -1,10 +1,10 @@
 import React from 'react';
 
+import {CustomShapeRenderer} from '@gravity-ui/charts';
 import {groups} from 'd3';
 
 import {ChartKit} from '../../../../components/ChartKit';
 import type {ChartKitWidgetData} from '../../../../types';
-import {CustomShapeRenderer} from '../../utils';
 import {ExampleWrapper} from '../ExampleWrapper';
 import nintendoGames from '../nintendoGames';
 

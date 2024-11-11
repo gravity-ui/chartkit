@@ -5,6 +5,7 @@ import {ChartKitError} from '../libs';
 import type {ChartKitWidget} from './widget';
 
 export type {ChartKitHolidays} from './misc';
+// TODO: remove in the next major. This types should be consumed directly from '@gravity-ui/charts'
 export * from './widget-data';
 
 export type ChartKitLang = 'ru' | 'en';
