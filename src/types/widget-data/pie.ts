@@ -1,4 +1,4 @@
-import {BaseType} from 'd3';
+import type {BaseType} from 'd3';
 
 import {SeriesType} from '../../constants';
 

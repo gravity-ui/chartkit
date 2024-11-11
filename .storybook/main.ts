@@ -18,7 +18,7 @@ const config: StorybookConfig = {
     refs: {
         'gravity-charts': {
             title: 'Gravity Charts',
-            url: 'https://preview.gravity-ui.com/uikit',
+            url: 'https://preview.gravity-ui.com/charts',
         },
     },
 };
