@@ -51,7 +51,6 @@ export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) =>
                 type="highcharts"
                 data={data}
                 renderError={props.renderError}
-                splitTooltip={true}
             />
         </div>
     );
