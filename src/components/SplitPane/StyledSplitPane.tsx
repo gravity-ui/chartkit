@@ -1,8 +1,10 @@
 import React from 'react';
 
-import SplitPane, {Pane, SplitPaneProps} from 'react-split-pane';
+import {cn} from '../../utils/cn';
 
-import {cn} from '../../../../../utils/cn';
+import {Pane} from './Pane';
+import {SplitPane} from './SplitPane';
+import type {SplitPaneProps} from './SplitPane';
 
 import './StyledSplitPane.scss';
 
@@ -15,7 +17,6 @@ type Props = SplitPaneProps & {
 };
 
 export const StyledSplitPane = ({paneOneRender, paneTwoRender, ...splitPaneProps}: Props) => {
-    // https://github.com/tomkp/react-split-pane/blob/master/src/SplitPane.js#L307
     const splitPaneRef = React.useRef<SplitPane & {splitPane?: HTMLDivElement | null}>(null);
 
     React.useEffect(() => {

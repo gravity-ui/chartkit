@@ -47,13 +47,12 @@
   ],
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
-    "@gravity-ui/charts": "^0.2.0",
+    "@gravity-ui/charts": "^0.4.0",
     "@gravity-ui/date-utils": "^2.1.0",
     "@gravity-ui/i18n": "^1.0.0",
     "@gravity-ui/yagr": "^4.3.4",
     "afterframe": "^1.0.2",
     "lodash": "^4.17.21",
-    "react-split-pane": "^0.1.92",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
@@ -64,7 +63,7 @@
     "@gravity-ui/prettier-config": "^1.1.0",
     "@gravity-ui/stylelint-config": "^4.0.1",
     "@gravity-ui/tsconfig": "^1.0.0",
-    "@gravity-ui/uikit": "^6.0.0",
+    "@gravity-ui/uikit": "^6.35.2",
     "@jest/types": "^29.6.3",
     "@playwright/experimental-ct-react17": "^1.41.1",
     "@storybook/addon-actions": "^7.6.14",
