@@ -1,5 +1,6 @@
-import type {Split} from 'react-split-pane';
+import type {ChartTooltipContentProps} from '@gravity-ui/charts';
 
+import type {SplitLayoutType} from '../components/SplitPane/types';
 import type {Highcharts, HighchartsWidgetData, StringParams} from '../plugins/highcharts/types';
 import type {IndicatorWidgetData} from '../plugins/indicator/types';
 import type {CustomTooltipProps, Yagr, YagrWidgetData} from '../plugins/yagr/types';
@@ -23,8 +24,8 @@ export interface ChartKitWidget {
         hoistConfigError?: boolean;
         nonBodyScroll?: boolean;
         splitTooltip?: boolean;
-        paneSplitOrientation?: Split;
-        onSplitPaneOrientationChange?: (orientation: Split) => void;
+        paneSplitOrientation?: SplitLayoutType;
+        onSplitPaneOrientationChange?: (orientation: SplitLayoutType) => void;
         onChange?: (
             data: {type: 'PARAMS_CHANGED'; data: {params: StringParams}},
             state: {forceUpdate: boolean},
@@ -34,5 +35,9 @@ export interface ChartKitWidget {
     d3: {
         data: ChartKitWidgetData;
         widget: never;
+        splitTooltip?: {
+            enabled?: boolean;
+            initialContent?: Omit<ChartTooltipContentProps, 'renderer'>;
+        };
     };
 }

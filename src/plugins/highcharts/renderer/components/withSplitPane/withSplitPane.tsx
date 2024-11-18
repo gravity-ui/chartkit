@@ -5,11 +5,11 @@ import React from 'react';
 import debounce from 'lodash/debounce';
 import get from 'lodash/get';
 
+import {StyledSplitPane} from '../../../../../components/SplitPane';
 import {getRandomCKId} from '../../../../../utils';
 import {cn} from '../../../../../utils/cn';
 import type {Highcharts} from '../../../types';
 import {chartTypesWithoutCrosshair} from '../../helpers/config/config';
-import {StyledSplitPane} from '../StyledSplitPane/StyledSplitPane';
 
 import './WithSplitPane.scss';
 
