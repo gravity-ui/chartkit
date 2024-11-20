@@ -15,11 +15,17 @@ const config: StorybookConfig = {
         {name: '@storybook/addon-essentials', options: {backgrounds: false}},
         './theme-addon/register.tsx',
     ],
-    refs: {
-        'gravity-charts': {
-            title: 'Gravity Charts',
-            url: 'https://preview.gravity-ui.com/charts',
-        },
+    refs: (_config, {configType}) => {
+        if (configType !== 'PRODUCTION') {
+            return {} as Record<string, {title: string; url: string}>;
+        }
+
+        return {
+            'gravity-charts': {
+                title: 'Gravity Charts',
+                url: 'https://preview.gravity-ui.com/charts',
+            },
+        };
     },
 };
 
