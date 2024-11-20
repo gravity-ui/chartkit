@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.18.0](https://github.com/gravity-ui/chartkit/compare/v5.17.1...v5.18.0) (2024-11-20)
+
+
+### Features
+
+* **D3 plugin:** add `splitTooltip` property ([#539](https://github.com/gravity-ui/chartkit/issues/539)) ([d5f970a](https://github.com/gravity-ui/chartkit/commit/d5f970a77531400e1adb5d07e83805a26de22870))
+* move d3 plugin to @gravity-ui/charts ([#537](https://github.com/gravity-ui/chartkit/issues/537)) ([4412abf](https://github.com/gravity-ui/chartkit/commit/4412abf6b057f466226f7122454aec1f456c8989))
+
 ## [5.17.1](https://github.com/gravity-ui/chartkit/compare/v5.17.0...v5.17.1) (2024-10-25)
 
 
