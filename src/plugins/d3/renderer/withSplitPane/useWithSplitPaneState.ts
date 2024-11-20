@@ -36,7 +36,7 @@ export function getVerticalSize() {
 }
 
 function getInitialSize(split: SplitLayoutType) {
-    const defaultSize = '50%';
+    const defaultSize = `calc(100% - ${RESIZER_HEIGHT}px)`;
 
     if (!IS_WINDOW_AVAILABLE) {
         return defaultSize;
@@ -49,7 +49,7 @@ export function useWithSplitPaneState(props: UseWithSplitPaneProps): WithSplitPa
     const {container} = props;
     const [tooltipHeight, setTooltipHeight] = React.useState(0);
     const [split, setSplit] = React.useState<SplitLayoutType>(getInitialSplit());
-    const [size, setSize] = React.useState(getInitialSize(split));
+    const [size, setSize] = React.useState<number | string>(getInitialSize(split));
     const allowResize = split === SplitLayout.HORIZONTAL;
     let maxSize: number | undefined;
     let minSize: number | undefined;

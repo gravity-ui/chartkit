@@ -1,3 +1,6 @@
+// Copyright 2015 tomkp
+// Copyright 2022 YANDEX LLC
+
 import React from 'react';
 
 import type {SplitLayoutType} from './types';

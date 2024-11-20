@@ -1,5 +1,3 @@
-import type {ChartTooltipContentProps} from '@gravity-ui/charts';
-
 import type {SplitLayoutType} from '../components/SplitPane/types';
 import type {Highcharts, HighchartsWidgetData, StringParams} from '../plugins/highcharts/types';
 import type {IndicatorWidgetData} from '../plugins/indicator/types';
@@ -35,9 +33,8 @@ export interface ChartKitWidget {
     d3: {
         data: ChartKitWidgetData;
         widget: never;
-        splitTooltip?: {
-            enabled?: boolean;
-            initialContent?: Omit<ChartTooltipContentProps, 'renderer'>;
+        tooltip?: {
+            splitted?: boolean;
         };
     };
 }

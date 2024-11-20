@@ -1,3 +1,6 @@
+// Copyright 2015 tomkp
+// Copyright 2022 YANDEX LLC
+
 /* eslint-disable radix */
 /* eslint-disable complexity */
 
@@ -96,6 +99,7 @@ function removeNullChildren(children: React.ReactNode) {
     return React.Children.toArray(children).filter((c) => c);
 }
 
+// TODO: https://github.com/gravity-ui/charts/issues/14
 export class SplitPane extends React.Component<Props, State> {
     static defaultProps: DefaultProps = {
         allowResize: true,

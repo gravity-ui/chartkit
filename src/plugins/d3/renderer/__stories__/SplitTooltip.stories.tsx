@@ -41,7 +41,7 @@ export const SplitTooltipBasic: StoryObj = {
                             ],
                         },
                     }}
-                    splitTooltip={{enabled: true}}
+                    tooltip={{splitted: true}}
                 />
             </StoryWrapper>
         );

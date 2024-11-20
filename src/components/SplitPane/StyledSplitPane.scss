@@ -1,3 +1,6 @@
+// Copyright 2015 tomkp
+// Copyright 2022 YANDEX LLC
+
 .styled-split-pane {
     &__pane-resizer {
         background: var(--g-color-base-generic);
@@ -46,7 +49,6 @@
     }
 
     .Pane {
-        // overflow: auto;
         height: 100%;
     }
 }

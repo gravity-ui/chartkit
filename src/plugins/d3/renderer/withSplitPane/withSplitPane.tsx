@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Chart} from '@gravity-ui/charts';
-import type {ChartData, ChartProps, ChartRef, ChartTooltipContentProps} from '@gravity-ui/charts';
+import type {ChartData, ChartProps, ChartRef} from '@gravity-ui/charts';
 import {getComponentName, useResizeObserver} from '@gravity-ui/uikit';
 
 import {
@@ -17,9 +17,7 @@ import {TooltipContent} from './TooltipContent';
 import type {TooltipContentRef} from './TooltipContent';
 import {RESIZER_HEIGHT, getVerticalSize, useWithSplitPaneState} from './useWithSplitPaneState';
 
-type WithSplitPaneProps = {
-    initialContent?: Omit<ChartTooltipContentProps, 'renderer'>;
-};
+type WithSplitPaneProps = {};
 
 type PointerMoveHandler = NonNullable<
     NonNullable<NonNullable<ChartData['chart']>['events']>['pointermove']
@@ -29,7 +27,7 @@ export function withSplitPane(ChartComponent: typeof Chart) {
     const componentName = getComponentName(ChartComponent);
     const component = React.forwardRef<ChartRef, ChartProps & WithSplitPaneProps>(
         function WithSplitPaneComponent(props, _ref) {
-            const {data, initialContent, ...restProps} = props;
+            const {data, ...restProps} = props;
             const containerRef = React.useRef<HTMLDivElement | null>(null);
             const tooltipContainerRef = React.useRef<HTMLDivElement | null>(null);
             const chartRef = React.useRef<ChartRef>(null);
@@ -171,9 +169,6 @@ export function withSplitPane(ChartComponent: typeof Chart) {
                             <div ref={tooltipContainerRef}>
                                 <TooltipContent
                                     ref={tooltipRef}
-                                    hovered={initialContent?.hovered}
-                                    xAxis={initialContent?.xAxis}
-                                    yAxis={initialContent?.yAxis}
                                     renderer={resultData.tooltip.renderer}
                                 />
                             </div>
