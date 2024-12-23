@@ -14,7 +14,7 @@ import './tooltip.scss';
 export const SERIES_NAME_DATA_ATTRIBUTE = 'data-series-name';
 export const SERIES_IDX_DATA_ATTRIBUTE = 'data-series-idx';
 export const TOOLTIP_CONTAINER_CLASS_NAME = '_tooltip';
-export const TOOLTIP_ROW_NAME_CLASS_NANE = '_tooltip-rows__name-td';
+export const TOOLTIP_ROW_NAME_CLASS_NAME = '_tooltip-rows__name-td';
 export const TOOLTIP_ROW_CLASS_NAME = '_tooltip-row';
 export const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
 export const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
@@ -35,10 +35,19 @@ const renderLineShapeCell = (line: TooltipLine) =>
         </div>
     </td>`;
 
-const renderNameCell = (line: TooltipLine) =>
-    `<td class="${TOOLTIP_ROW_NAME_CLASS_NANE}">
-        ${line.hideSeriesName ? '' : escapeHTML(line.seriesName)}
+const renderNameCell = (line: TooltipLine, options?: {unsafe?: boolean}) => {
+    let value = '';
+    if (!line.hideSeriesName) {
+        value = line.seriesName;
+
+        if (!options?.unsafe) {
+            value = escapeHTML(value);
+        }
+    }
+    return `<td class="${TOOLTIP_ROW_NAME_CLASS_NAME}">
+        ${value}
     </td>`;
+};
 
 const renderPercentCell = (line: TooltipLine) =>
     `<td class="_tooltip-rows__percent-td">
@@ -229,7 +238,7 @@ export const formatTooltip = (
     }
 
     if (data.shared) {
-        cellsRenderers.push(renderNameCell);
+        cellsRenderers.push(renderNameCell, {unsafe});
     }
 
     if (data.withPercent) {
