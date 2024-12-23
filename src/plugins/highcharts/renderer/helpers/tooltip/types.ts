@@ -80,10 +80,11 @@ export type TooltipLine = {
 };
 
 export type RowRenderingConfig = {
-    cellsRenderers: Array<(line: TooltipLine) => string>;
+    cellsRenderers: Array<(line: TooltipLine, options?: {unsafe?: boolean}) => string>;
     isSelectedLine?: boolean;
     allowComment?: boolean;
     withDarkBackground?: boolean;
     isSingleLine?: boolean;
     rowIndex?: number;
+    unsafe?: boolean;
 };

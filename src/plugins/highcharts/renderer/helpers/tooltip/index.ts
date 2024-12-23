@@ -118,6 +118,7 @@ const renderRow = (
         allowComment,
         withDarkBackground,
         rowIndex,
+        unsafe,
     }: RowRenderingConfig,
 ) => {
     const hasComment = line.commentText || line.xyCommentText;
@@ -188,7 +189,7 @@ const renderRow = (
                             ? line.insertCellAt[index]
                             : line.insertCellAt[index](line);
                     } else {
-                        return render(line);
+                        return render(line, {unsafe});
                     }
                 })
                 .join('')}
@@ -238,7 +239,7 @@ export const formatTooltip = (
     }
 
     if (data.shared) {
-        cellsRenderers.push(renderNameCell, {unsafe});
+        cellsRenderers.push(renderNameCell);
     }
 
     if (data.withPercent) {
@@ -254,6 +255,7 @@ export const formatTooltip = (
     const rowRenderingConfig = {
         isSingleLine: lines.length === 1,
         cellsRenderers,
+        unsafe,
     };
 
     const rowRenderingConfigForSelectedLine = {
