@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.19.1](https://github.com/gravity-ui/chartkit/compare/v5.19.0...v5.19.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** use unsafe option for tooltip cell renderer ([#545](https://github.com/gravity-ui/chartkit/issues/545)) ([4103eff](https://github.com/gravity-ui/chartkit/commit/4103eff042f1eb09fc3e415a13c9061603ce4e6b))
+
 ## [5.19.0](https://github.com/gravity-ui/chartkit/compare/v5.18.1...v5.19.0) (2024-12-05)
 
 
