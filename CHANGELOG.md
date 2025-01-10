@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.19.2](https://github.com/gravity-ui/chartkit/compare/v5.19.1...v5.19.2) (2025-01-10)
+
+
+### Bug Fixes
+
+* **Highcharts plugin:** fix inner var name TOOLTIP_ROW_NAME_CLASS_NANE -&gt; TOOLTIP_ROW_NAME_CLASS_NAME ([#553](https://github.com/gravity-ui/chartkit/issues/553)) ([1dfd792](https://github.com/gravity-ui/chartkit/commit/1dfd79246b54bc51e2b1406a88331d2ad22428d0))
+* **Yagr plotline plugin:** update version to 4.4.0 ([b89fd2d](https://github.com/gravity-ui/chartkit/commit/b89fd2de785e14f9e85a5b06fc570327b727f514))
+* **Yagr plugin:** update version to 4.4.0 ([#550](https://github.com/gravity-ui/chartkit/issues/550)) ([b89fd2d](https://github.com/gravity-ui/chartkit/commit/b89fd2de785e14f9e85a5b06fc570327b727f514))
+
 ## [5.19.1](https://github.com/gravity-ui/chartkit/compare/v5.19.0...v5.19.1) (2024-12-24)
 
 
