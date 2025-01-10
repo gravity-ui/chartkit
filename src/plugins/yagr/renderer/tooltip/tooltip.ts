@@ -10,7 +10,7 @@ import './tooltip.scss';
 const SERIES_NAME_DATA_ATTRIBUTE = 'data-series-name';
 const SERIES_IDX_DATA_ATTRIBUTE = 'data-series-idx';
 const TOOLTIP_CONTAINER_CLASS_NAME = '_tooltip';
-const TOOLTIP_ROW_NAME_CLASS_NANE = '_tooltip-rows__name-td';
+const TOOLTIP_ROW_NAME_CLASS_NAME = '_tooltip-rows__name-td';
 const TOOLTIP_ROW_CLASS_NAME = '_tooltip-row';
 const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
 const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
@@ -24,7 +24,7 @@ const renderColorCell = (line: TooltipLine) =>
     </td>`;
 
 const renderNameCell = (line: TooltipLine) =>
-    `<td class="${TOOLTIP_ROW_NAME_CLASS_NANE}">
+    `<td class="${TOOLTIP_ROW_NAME_CLASS_NAME}">
         ${line.hideSeriesName ? '' : escapeHTML(line.seriesName)}
     </td>`;
 

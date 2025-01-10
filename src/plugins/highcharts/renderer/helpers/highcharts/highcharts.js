@@ -15,7 +15,7 @@ import {
     TOOLTIP_FOOTER_CLASS_NAME,
     TOOLTIP_LIST_CLASS_NAME,
     TOOLTIP_ROW_CLASS_NAME,
-    TOOLTIP_ROW_NAME_CLASS_NANE,
+    TOOLTIP_ROW_NAME_CLASS_NAME,
 } from '../tooltip';
 
 import colors from './colors';
@@ -334,7 +334,7 @@ function initHighcharts({isMobile}) {
             }
 
             if (isFixation) {
-                const rowNames = this.container.querySelectorAll(`.${TOOLTIP_ROW_NAME_CLASS_NANE}`);
+                const rowNames = this.container.querySelectorAll(`.${TOOLTIP_ROW_NAME_CLASS_NAME}`);
 
                 for (let i = 0; i < rowNames.length; i++) {
                     const rowNameNode = rowNames[i];
