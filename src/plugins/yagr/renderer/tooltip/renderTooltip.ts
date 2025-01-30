@@ -13,31 +13,9 @@ const calcOption = <T>(d: T | {[key in string]: T} | undefined) => {
         : d;
 };
 
-const getSeriesColorProperty = (args: {
-    data: TooltipRenderOptions;
-    userData: YagrWidgetData['data'];
-    row: TooltipRow;
-    rowIndex: number;
-}) => {
-    const {data, userData, row, rowIndex} = args;
-    const userSeries = userData.graphs[rowIndex];
-    const lineColor = data.yagr.getSeriesById(row.id)?.lineColor;
-    let seriesColor = row.color;
-
-    switch (userSeries?.legendColorKey) {
-        case 'lineColor': {
-            if (lineColor) {
-                seriesColor = lineColor;
-            }
-            break;
-        }
-        case 'color':
-        default: {
-            seriesColor = row.color;
-        }
-    }
-
-    return seriesColor;
+const getSeriesColorProperty = ({data, rowId}: {data: TooltipRenderOptions; rowId: string}) => {
+    const series = data.yagr.getSeriesById(rowId);
+    return data.yagr.getSerieLegendColor(series);
 };
 
 /*
@@ -88,7 +66,7 @@ export const getRenderTooltip =
                     ({
                         ...row,
                         seriesName: row.name || 'Serie ' + (i + 1),
-                        seriesColor: getSeriesColorProperty({data, userData, row, rowIndex: i}),
+                        seriesColor: getSeriesColorProperty({data, rowId: row.id}),
                         selectedSeries: row.active,
                         seriesIdx: row.seriesIdx,
                         percentValue:

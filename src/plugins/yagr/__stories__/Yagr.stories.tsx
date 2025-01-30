@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
 import placement from '@gravity-ui/yagr/dist/YagrCore/plugins/tooltip/placement';
-import {Meta, Story} from '@storybook/react';
+import {Meta, StoryFn} from '@storybook/react';
 
 import {CustomTooltipProps, TooltipHandlerData, YagrPlugin} from '../';
 import {ChartKit} from '../../../components/ChartKit';
@@ -19,7 +19,7 @@ export default {
     component: ChartKit,
 } as Meta;
 
-const LineTemplate: Story<any> = () => {
+const LineTemplate: StoryFn = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
 
@@ -35,7 +35,7 @@ const LineTemplate: Story<any> = () => {
     );
 };
 
-const UpdatesTemplate: Story<any> = () => {
+const UpdatesTemplate: StoryFn = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
 
@@ -107,7 +107,7 @@ function Tooltip({yagr}: CustomTooltipProps) {
     );
 }
 
-const CustomTooltipImpl: Story<any> = () => {
+const CustomTooltipImpl: StoryFn = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
 
@@ -132,7 +132,7 @@ const CustomTooltipImpl: Story<any> = () => {
     );
 };
 
-const AreaTemplate: Story<any> = () => {
+const AreaTemplate: StoryFn = () => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
 
