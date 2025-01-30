@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.20.0](https://github.com/gravity-ui/chartkit/compare/v5.19.2...v5.20.0) (2025-01-30)
+
+
+### Features
+
+* **Yagr plugin:** update lib, use legendColorKey from yagr lib ([#554](https://github.com/gravity-ui/chartkit/issues/554)) ([99fcfb1](https://github.com/gravity-ui/chartkit/commit/99fcfb1a3a15d3dcce62f30c03aa1cd38146bcb5))
+
 ## [5.19.2](https://github.com/gravity-ui/chartkit/compare/v5.19.1...v5.19.2) (2025-01-10)
 
 
