@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.21.0](https://github.com/gravity-ui/chartkit/compare/v5.20.0...v5.21.0) (2025-02-06)
+
+
+### Features
+
+* added uplot bands ([#557](https://github.com/gravity-ui/chartkit/issues/557)) ([6449f7c](https://github.com/gravity-ui/chartkit/commit/6449f7c78593cf9db3109be14ff5247dbebf5293))
+
 ## [5.20.0](https://github.com/gravity-ui/chartkit/compare/v5.19.2...v5.20.0) (2025-01-30)
 
 
