@@ -1,8 +1,7 @@
 import React from 'react';
 
+import type {ChartData} from '@gravity-ui/charts';
 import {expect, test} from '@playwright/experimental-ct-react17';
-
-import {ChartKitWidgetData} from '../../../../types';
 
 import {TestStory} from './TestStory.visual';
 
@@ -19,7 +18,7 @@ const VALID_CHART_DATA = {
         type: 'category',
         categories: ['A'],
     },
-} as ChartKitWidgetData;
+} as ChartData;
 
 test('Validation should work when updating chart data (empty series)', async ({mount}) => {
     const component = await mount(<TestStory data={VALID_CHART_DATA} />);
