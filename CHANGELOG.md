@@ -5,13 +5,8 @@
 
 ### ⚠ BREAKING CHANGES
 
-* remove depricated ChartkitWidgetData type
-* update to uikit 7
-
-### Features
-
-* remove depricated ChartkitWidgetData type ([0ee7f9c](https://github.com/gravity-ui/chartkit/commit/0ee7f9cbfb63bff5efc2806e93310d5a3af0f4af))
 * update to uikit 7 ([7f9d94c](https://github.com/gravity-ui/chartkit/commit/7f9d94cb458a5cb07b44d52ccd7fde758215e74d))
+* remove depricated ChartkitWidgetData type ([0ee7f9c](https://github.com/gravity-ui/chartkit/commit/0ee7f9cbfb63bff5efc2806e93310d5a3af0f4af)), use types from [@gravity-ui/charts](https://github.com/gravity-ui/charts/blob/945137337fccfb5c2cf2b29f28bacaa6cfd1da57/src/types/index.ts#L1) instead
 
 ## [5.21.0](https://github.com/gravity-ui/chartkit/compare/v5.20.0...v5.21.0) (2025-02-06)
 
