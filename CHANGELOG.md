@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.22.1](https://github.com/gravity-ui/chartkit/compare/v5.22.0...v5.22.1) (2025-04-03)
+
+
+### Bug Fixes
+
+* remove depricated ChartkitWidgetData type ([#573](https://github.com/gravity-ui/chartkit/issues/573)) ([276b858](https://github.com/gravity-ui/chartkit/commit/276b85802929d8544c8672cb244d68465e7bc290))
+
 ## [5.22.0](https://github.com/gravity-ui/chartkit/compare/v5.21.0...v5.22.0) (2025-04-01)
 
 
