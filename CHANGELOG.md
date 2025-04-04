@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.22.2](https://github.com/gravity-ui/chartkit/compare/v5.22.1...v5.22.2) (2025-04-04)
+
+
+### Bug Fixes
+
+* export d3 plugin types ([#575](https://github.com/gravity-ui/chartkit/issues/575)) ([b71aa05](https://github.com/gravity-ui/chartkit/commit/b71aa05a0f24c7e35c7830d6170956035f252314))
+
 ## [5.22.1](https://github.com/gravity-ui/chartkit/compare/v5.22.0...v5.22.1) (2025-04-03)
 
 
