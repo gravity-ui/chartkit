@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.22.3](https://github.com/gravity-ui/chartkit/compare/v5.22.2...v5.22.3) (2025-04-10)
+
+
+### Bug Fixes
+
+* fix scroll in SplitPane ([#585](https://github.com/gravity-ui/chartkit/issues/585)) ([4a3ccf8](https://github.com/gravity-ui/chartkit/commit/4a3ccf896959a2ee73d5b8ceb12c8bc5870545a5))
+
 ## [5.22.2](https://github.com/gravity-ui/chartkit/compare/v5.22.1...v5.22.2) (2025-04-04)
 
 
