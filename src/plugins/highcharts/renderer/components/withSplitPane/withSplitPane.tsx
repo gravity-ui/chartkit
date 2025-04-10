@@ -20,6 +20,7 @@ const CHART_SECTION_PERCENTAGE = 0.6;
 const MIN_TOOLTIP_SECTION_HEIGHT = 62;
 const seriesTypesNeedsOnlyHoverState = ['line', 'area', 'arearange', 'bubble', 'map'];
 const deviceWithNavBarHeight = window.innerHeight;
+const tooltipPaneStyles = {overflow: 'auto'};
 
 function getPointsForInitialRefresh(chart: Highcharts.Chart) {
     let minX = Infinity;
@@ -312,6 +313,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
                         />
                     )}
                     paneTwoRender={() => <div ref={this.tooltipContainerRef} />}
+                    pane2Style={tooltipPaneStyles}
                 />
             );
         }
@@ -334,6 +336,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
                         />
                     )}
                     paneTwoRender={() => <div ref={this.tooltipContainerRef} />}
+                    pane2Style={tooltipPaneStyles}
                 />
             );
         }
