@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {settings} from '../../../../libs';
-import {D3Plugin} from '../../index';
+import {GravityChartsPlugin} from '../../index';
 
-settings.set({plugins: [D3Plugin]});
+settings.set({plugins: [GravityChartsPlugin]});
 
 type Props = {
     children?: React.ReactNode;

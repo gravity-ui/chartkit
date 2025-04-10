@@ -9,8 +9,7 @@ export * from './types';
  *
  * DO NOT USE IT IN YOUR PRODUCTION
  * */
-export const D3Plugin: ChartKitPlugin = {
-    // TODO: rename to 'gravity-chart' in the next major
-    type: 'd3',
-    renderer: React.lazy(() => import('./renderer/D3Widget')),
+export const GravityChartsPlugin: ChartKitPlugin = {
+    type: 'gravity-charts',
+    renderer: React.lazy(() => import('./renderer/GravityChartsWidget')),
 };

@@ -21,7 +21,7 @@ export const SplitTooltipBasic: StoryObj = {
         return (
             <StoryWrapper>
                 <ChartKit
-                    type="d3"
+                    type="gravity-charts"
                     data={{
                         series: {
                             data: [
