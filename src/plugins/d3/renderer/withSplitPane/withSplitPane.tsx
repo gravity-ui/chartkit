@@ -17,6 +17,8 @@ import {TooltipContent} from './TooltipContent';
 import type {TooltipContentRef} from './TooltipContent';
 import {RESIZER_HEIGHT, getVerticalSize, useWithSplitPaneState} from './useWithSplitPaneState';
 
+const tooltipPaneStyles = {overflow: 'auto'};
+
 type WithSplitPaneProps = {};
 
 type PointerMoveHandler = NonNullable<
@@ -173,6 +175,7 @@ export function withSplitPane(ChartComponent: typeof Chart) {
                                 />
                             </div>
                         )}
+                        pane2Style={tooltipPaneStyles}
                     />
                 </div>
             );
