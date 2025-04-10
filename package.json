@@ -8,7 +8,7 @@
   "types": "build/index.d.ts",
   "exports": {
     ".": "./build/index.js",
-    "./d3": "./build/plugins/d3/index.js",
+    "./gravity-charts": "./build/plugins/gravity-charts/index.js",
     "./highcharts": "./build/plugins/highcharts/index.js",
     "./indicator": "./build/plugins/indicator/index.js",
     "./yagr": "./build/plugins/yagr/index.js"

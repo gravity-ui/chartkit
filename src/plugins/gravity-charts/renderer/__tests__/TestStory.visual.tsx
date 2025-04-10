@@ -2,14 +2,14 @@ import React, {ChangeEventHandler} from 'react';
 
 import {ChartKit} from '../../../../components/ChartKit';
 import {settings} from '../../../../libs';
-import {D3Plugin} from '../../index';
+import {GravityChartsPlugin} from '../../index';
 
 export const TestStory = (props: any) => {
     const [chartData, setChartData] = React.useState(props.data);
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        settings.set({plugins: [D3Plugin]});
+        settings.set({plugins: [GravityChartsPlugin]});
         setLoading(false);
     }, []);
 
@@ -30,7 +30,7 @@ export const TestStory = (props: any) => {
             }}
         >
             <input value={JSON.stringify(chartData)} onChange={updateData} />
-            <ChartKit id="chart" data={chartData} type="d3" />
+            <ChartKit id="chart" data={chartData} type="gravity-charts" />
         </div>
     );
 };

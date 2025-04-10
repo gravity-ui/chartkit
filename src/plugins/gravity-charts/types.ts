@@ -1,7 +1,5 @@
 import type {ChartData} from '@gravity-ui/charts';
 
-export type * from '@gravity-ui/charts';
-
-export type D3WidgetData = {
+export type GravityChartsWidgetData = {
     data: ChartData;
 };

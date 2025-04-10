@@ -30,7 +30,7 @@ export interface ChartKitWidget {
             callExternalOnChange?: boolean,
         ) => void;
     };
-    d3: {
+    'gravity-charts': {
         data: ChartData;
         widget: never;
         tooltip?: {
