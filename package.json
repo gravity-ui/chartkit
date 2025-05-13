@@ -18,8 +18,8 @@
       "index.d.ts": [
         "./build/index.d.ts"
       ],
-      "d3": [
-        "./build/plugins/d3/index.d.ts"
+      "gravity-charts": [
+        "./build/plugins/gravity-charts/index.d.ts"
       ],
       "highcharts": [
         "./build/plugins/highcharts/index.d.ts"
@@ -47,7 +47,7 @@
   ],
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
-    "@gravity-ui/charts": "^0.8.0",
+    "@gravity-ui/charts": "^0.11.0",
     "@gravity-ui/date-utils": "^2.1.0",
     "@gravity-ui/i18n": "^1.0.0",
     "@gravity-ui/yagr": "^4.7.1",
