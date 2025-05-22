@@ -5,7 +5,6 @@
 
 ### Bug Fixes
 
-* **D3 plugin:** types export ([eaf66d3](https://github.com/gravity-ui/chartkit/commit/eaf66d369e2fd4e58cc7c63f59cd7aa3efcaac19))
 * fix scroll in SplitPane ([#583](https://github.com/gravity-ui/chartkit/issues/583)) ([e0c090a](https://github.com/gravity-ui/chartkit/commit/e0c090ae03ae490a8b21acea714aac0a21d1c8e9))
 * **Gravity charts:** types export ([#588](https://github.com/gravity-ui/chartkit/issues/588)) ([eaf66d3](https://github.com/gravity-ui/chartkit/commit/eaf66d369e2fd4e58cc7c63f59cd7aa3efcaac19))
 
