@@ -1,5 +1,22 @@
 # Changelog
 
+## [7.0.0](https://github.com/gravity-ui/chartkit/compare/v6.1.2...v7.0.0) (2025-05-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* release v7 ([#592](https://github.com/gravity-ui/chartkit/issues/592))
+
+### Features
+
+* release v7 ([#592](https://github.com/gravity-ui/chartkit/issues/592)) ([f67ff75](https://github.com/gravity-ui/chartkit/commit/f67ff751af9dcd31a40ccd466f75fca735b1f96f))
+* update @gravity-ui/charts to v1 ([#589](https://github.com/gravity-ui/chartkit/issues/589)) ([fc9120f](https://github.com/gravity-ui/chartkit/commit/fc9120fb059c25a97080717844f606552a5d67d1))
+
+
+### Bug Fixes
+
+* update @gravity-ui/charts version ([#587](https://github.com/gravity-ui/chartkit/issues/587)) ([d2900bb](https://github.com/gravity-ui/chartkit/commit/d2900bb5adaeeaf564d0c3e50380eeef1a4b2171))
+
 ## [6.1.2](https://github.com/gravity-ui/chartkit/compare/v6.1.1...v6.1.2) (2025-05-22)
 
 
