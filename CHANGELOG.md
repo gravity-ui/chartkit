@@ -5,12 +5,9 @@
 
 ### ⚠ BREAKING CHANGES
 
-* release v7 ([#592](https://github.com/gravity-ui/chartkit/issues/592))
-
-### Features
-
-* release v7 ([#592](https://github.com/gravity-ui/chartkit/issues/592)) ([f67ff75](https://github.com/gravity-ui/chartkit/commit/f67ff751af9dcd31a40ccd466f75fca735b1f96f))
-* update @gravity-ui/charts to v1 ([#589](https://github.com/gravity-ui/chartkit/issues/589)) ([fc9120f](https://github.com/gravity-ui/chartkit/commit/fc9120fb059c25a97080717844f606552a5d67d1))
+* rename `d3` plugin to `gravity-charts`
+* rename `D3Plugin` to `GravityChartsPlugin`
+* rename `D3WidgetData` to `GravityChartsWidgetData`
 
 
 ### Bug Fixes
