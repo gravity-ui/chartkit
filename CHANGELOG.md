@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.0.1](https://github.com/gravity-ui/chartkit/compare/v7.0.0...v7.0.1) (2025-05-29)
+
+
+### Bug Fixes
+
+* **GravityCharts plugin:** @gravity-ui/charts types reexport ([#593](https://github.com/gravity-ui/chartkit/issues/593)) ([6f9b971](https://github.com/gravity-ui/chartkit/commit/6f9b971e928a6b0776e56ba09ac6faa1c5ec953c))
+
 ## [7.0.0](https://github.com/gravity-ui/chartkit/compare/v6.1.2...v7.0.0) (2025-05-28)
 
 
