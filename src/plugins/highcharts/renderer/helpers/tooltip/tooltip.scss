@@ -196,6 +196,10 @@ $monospaceFontFamily: 'Consolas', 'Menlo', 'Ubuntu Mono', monospace;
                     ._tooltip-row-dark-bg {
                         background-color: var(--highcharts-tooltip-alternate-bg);
                     }
+
+                    ._tooltip-selected-row {
+                        background-color: var(--highcharts-tooltip-selected-bg);
+                    }
                 }
 
                 ._hidden-rows-sum {

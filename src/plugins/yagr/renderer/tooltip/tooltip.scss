@@ -175,6 +175,10 @@
                     padding-bottom: 6px;
                     border-bottom: 1px solid var(--g-color-line-generic);
                 }
+
+                &._tooltip-header ._tooltip-selected-row {
+                    background-color: var(--g-color-base-info-medium);
+                }
             }
 
             tbody {
