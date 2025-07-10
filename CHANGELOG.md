@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.0.2](https://github.com/gravity-ui/chartkit/compare/v7.0.1...v7.0.2) (2025-07-10)
+
+
+### Bug Fixes
+
+* yagr tooltip after state update ([#595](https://github.com/gravity-ui/chartkit/issues/595)) ([62be6c2](https://github.com/gravity-ui/chartkit/commit/62be6c2bedc885c4d2034e31e48969a8d9dad9ad))
+* yagr tooltip after update ([62be6c2](https://github.com/gravity-ui/chartkit/commit/62be6c2bedc885c4d2034e31e48969a8d9dad9ad))
+
 ## [7.0.1](https://github.com/gravity-ui/chartkit/compare/v7.0.0...v7.0.1) (2025-05-29)
 
 
