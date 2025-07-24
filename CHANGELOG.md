@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.1.0](https://github.com/gravity-ui/chartkit/compare/v7.0.2...v7.1.0) (2025-07-24)
+
+
+### Features
+
+* **tooltip:** make background of hovered series more visible ([#597](https://github.com/gravity-ui/chartkit/issues/597)) ([6bb5281](https://github.com/gravity-ui/chartkit/commit/6bb52812688896b4be5f547eda1e901f3f23c4e7))
+* update @gravity-ui/charts to 1.1.0 ([#598](https://github.com/gravity-ui/chartkit/issues/598)) ([b95907e](https://github.com/gravity-ui/chartkit/commit/b95907e2416e166ac39423aa3e52b74ec264d664))
+
 ## [7.0.2](https://github.com/gravity-ui/chartkit/compare/v7.0.1...v7.0.2) (2025-07-10)
 
 
