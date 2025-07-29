@@ -35,7 +35,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
     componentDidUpdate(prevProps: Readonly<Props>) {
         if (prevProps.data !== this.props.data) {
             const {error} = this.state;
-            if (error && 'code' in error && error.code === CHARTKIT_ERROR_CODE.NO_DATA) {
+            if (
+                error &&
+                'code' in error &&
+                [CHARTKIT_ERROR_CODE.NO_DATA, CHARTKIT_ERROR_CODE.INVALID_DATA].includes(
+                    String(error.code),
+                )
+            ) {
                 this.resetError();
             }
         }
