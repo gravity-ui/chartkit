@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.2.0](https://github.com/gravity-ui/chartkit/compare/v7.1.0...v7.2.0) (2025-07-30)
+
+
+### Features
+
+* update @gravity-ui/charts to 1.2.0 ([#603](https://github.com/gravity-ui/chartkit/issues/603)) ([ddaf7f5](https://github.com/gravity-ui/chartkit/commit/ddaf7f5d063487b31c60401e1c28e613d1c543ec))
+
+
+### Bug Fixes
+
+* rerender on invalid data error ([#601](https://github.com/gravity-ui/chartkit/issues/601)) ([4389c6d](https://github.com/gravity-ui/chartkit/commit/4389c6d2f393f34624071693907fd68edd55ff71))
+
 ## [7.1.0](https://github.com/gravity-ui/chartkit/compare/v7.0.2...v7.1.0) (2025-07-24)
 
 
