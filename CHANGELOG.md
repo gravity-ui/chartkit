@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.22.4](https://github.com/gravity-ui/chartkit/compare/v5.22.3...v5.22.4) (2025-08-01)
+
+
+### Bug Fixes
+
+* **D3 plugin:** types export ([b0a9e3a](https://github.com/gravity-ui/chartkit/commit/b0a9e3ad933ace0a4ae3f1f523960afdba8392ac))
+* rerender on invalid data error ([#601](https://github.com/gravity-ui/chartkit/issues/601)) ([#607](https://github.com/gravity-ui/chartkit/issues/607)) ([b0a9e3a](https://github.com/gravity-ui/chartkit/commit/b0a9e3ad933ace0a4ae3f1f523960afdba8392ac))
+
 ## [5.22.3](https://github.com/gravity-ui/chartkit/compare/v5.22.2...v5.22.3) (2025-04-10)
 
 
