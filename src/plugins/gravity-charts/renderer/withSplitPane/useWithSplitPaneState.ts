@@ -28,15 +28,15 @@ function getInitialSplit(): SplitLayoutType {
 }
 
 type UseWithSplitPaneProps = {
-    container: HTMLDivElement | null;
+    containerHeight: number;
 };
 
 export function getVerticalSize() {
     return window.innerWidth * CHART_SECTION_PERCENTAGE;
 }
 
-function getInitialSize(split: SplitLayoutType) {
-    const defaultSize = `calc(100% - ${RESIZER_HEIGHT}px)`;
+function getInitialSize(split: SplitLayoutType, containerHeight: number) {
+    const defaultSize = containerHeight - RESIZER_HEIGHT;
 
     if (!IS_WINDOW_AVAILABLE) {
         return defaultSize;
@@ -46,16 +46,15 @@ function getInitialSize(split: SplitLayoutType) {
 }
 
 export function useWithSplitPaneState(props: UseWithSplitPaneProps): WithSplitPaneState {
-    const {container} = props;
+    const {containerHeight} = props;
     const [tooltipHeight, setTooltipHeight] = React.useState(0);
     const [split, setSplit] = React.useState<SplitLayoutType>(getInitialSplit());
-    const [size, setSize] = React.useState<number | string>(getInitialSize(split));
+    const [size, setSize] = React.useState<number | string>(getInitialSize(split, containerHeight));
     const allowResize = split === SplitLayout.HORIZONTAL;
     let maxSize: number | undefined;
     let minSize: number | undefined;
 
-    if (IS_WINDOW_AVAILABLE && container && split === SplitLayout.HORIZONTAL) {
-        const containerHeight = container.getBoundingClientRect().height;
+    if (IS_WINDOW_AVAILABLE && split === SplitLayout.HORIZONTAL) {
         maxSize = containerHeight - RESIZER_HEIGHT - tooltipHeight;
         minSize = containerHeight / 3;
     }
