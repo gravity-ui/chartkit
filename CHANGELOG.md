@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.3.1](https://github.com/gravity-ui/chartkit/compare/v7.3.0...v7.3.1) (2025-08-04)
+
+
+### Bug Fixes
+
+* split tooltip ([#609](https://github.com/gravity-ui/chartkit/issues/609)) ([7850d28](https://github.com/gravity-ui/chartkit/commit/7850d280c0c66f0be253a54d59291eaf1255a364))
+
 ## [7.3.0](https://github.com/gravity-ui/chartkit/compare/v7.2.0...v7.3.0) (2025-07-31)
 
 
