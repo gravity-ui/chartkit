@@ -3,6 +3,7 @@ import React from 'react';
 import {Chart} from '@gravity-ui/charts';
 import type {ChartData, ChartProps, ChartRef} from '@gravity-ui/charts';
 import {getComponentName, useResizeObserver} from '@gravity-ui/uikit';
+import isEmpty from 'lodash/isEmpty';
 
 import {
     SplitLayout,
@@ -35,6 +36,7 @@ const SplitPaneContent = (
     const tooltipContainerRef = React.useRef<HTMLDivElement | null>(null);
     const chartRef = React.useRef<ChartRef>(null);
     const tooltipRef = React.useRef<TooltipContentRef>(null);
+    const shouldShowTooltip = React.useRef<boolean>(false);
     const {
         allowResize,
         minSize,
@@ -82,6 +84,7 @@ const SplitPaneContent = (
     const resultData = React.useMemo(() => {
         const userPointerMoveHandler = data.chart?.events?.pointermove;
         const pointerMoveHandler: PointerMoveHandler = (pointerMoveData, event) => {
+            shouldShowTooltip.current = !isEmpty(pointerMoveData?.hovered);
             tooltipRef.current?.redraw(pointerMoveData);
             userPointerMoveHandler?.(pointerMoveData, event);
         };
@@ -158,6 +161,7 @@ const SplitPaneContent = (
             size={size}
             split={split}
             onChange={handleSizeChange}
+            resizerStyle={shouldShowTooltip.current ? undefined : {display: 'none'}}
             paneOneRender={() => <ChartComponent {...restProps} ref={chartRef} data={resultData} />}
             paneTwoRender={() => (
                 <div ref={tooltipContainerRef}>
