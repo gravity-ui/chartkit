@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.5.2](https://github.com/gravity-ui/chartkit/compare/v7.5.1...v7.5.2) (2025-08-15)
+
+
+### Bug Fixes
+
+* add a css variable for the background of the split pane ([#620](https://github.com/gravity-ui/chartkit/issues/620)) ([b825f6e](https://github.com/gravity-ui/chartkit/commit/b825f6e31159749083fec8f7b94faffaf995a9eb))
+
 ## [7.5.1](https://github.com/gravity-ui/chartkit/compare/v7.5.0...v7.5.1) (2025-08-15)
 
 
