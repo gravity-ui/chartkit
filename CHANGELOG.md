@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.5.1](https://github.com/gravity-ui/chartkit/compare/v7.5.0...v7.5.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* **GravityCharts plugin:** hide split pane resizer when tooltip is empty ([#617](https://github.com/gravity-ui/chartkit/issues/617)) ([d197e56](https://github.com/gravity-ui/chartkit/commit/d197e56514d7febe46740aa947aa42abda34a4d7))
+* update @gravity-ui/charts to 1.5.1 ([#619](https://github.com/gravity-ui/chartkit/issues/619)) ([a90b486](https://github.com/gravity-ui/chartkit/commit/a90b48696fbbaa0667a7b7457ae2da114d9a5044))
+
 ## [7.5.0](https://github.com/gravity-ui/chartkit/compare/v7.4.0...v7.5.0) (2025-08-11)
 
 
