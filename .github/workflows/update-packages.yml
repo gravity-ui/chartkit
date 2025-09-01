@@ -1,0 +1,105 @@
+name: Update Gravity UI Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'Type of change for PR title (fix or feat)'
+        type: choice
+        options:
+          - fix
+          - feat
+        default: 'fix'
+        required: true
+      charts:
+        description: 'Update @gravity-ui/charts'
+        type: boolean
+        required: true
+        default: false
+      yagr:
+        description: 'Update @gravity-ui/yagr'
+        type: boolean
+        required: true
+        default: false
+
+jobs:
+  update:
+    name: Update packages
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.charts || github.event.inputs.yagr }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Get packages to update
+        id: packages
+        run: |
+          PACKAGES_TO_UPDATE=""
+
+          if [ "${{ github.event.inputs.charts }}" == "true" ]; then
+            PACKAGES_TO_UPDATE="$PACKAGES_TO_UPDATE @gravity-ui/charts"
+          fi
+
+          if [ "${{ github.event.inputs.yagr }}" == "true" ]; then
+            PACKAGES_TO_UPDATE="$PACKAGES_TO_UPDATE @gravity-ui/yagr"
+          fi
+
+          echo "list=$(echo $PACKAGES_TO_UPDATE | xargs)" >> $GITHUB_OUTPUT
+      - name: Update packages
+        run: npm update ${{ steps.packages.outputs.list }}
+
+      - name: Prepare PR data
+        id: pr
+        run: |
+          BODY="This PR updates the following packages to their latest minor versions:"
+          BRANCH_SUFFIX=""
+          declare -a UPDATED_PACKAGES
+
+          if [ "${{ github.event.inputs.charts }}" == "true" ]; then
+            CHARTS_VERSION=$(node -p "require('./package.json').dependencies['@gravity-ui/charts']" | sed 's/\^//')
+            BODY="${BODY}\n- \`@gravity-ui/charts\` to \`${CHARTS_VERSION}\`"
+            BRANCH_SUFFIX="charts"
+            UPDATED_PACKAGES+=("@gravity-ui/charts@${CHARTS_VERSION}")
+          fi
+
+          if [ "${{ github.event.inputs.yagr }}" == "true" ]; then
+            YAGR_VERSION=$(node -p "require('./package.json').dependencies['@gravity-ui/yagr']" | sed 's/\^//')
+            BODY="${BODY}\n- \`@gravity-ui/yagr\` to \`${YAGR_VERSION}\`"
+
+            if [ -n "$BRANCH_SUFFIX" ]; then
+              BRANCH_SUFFIX="${BRANCH_SUFFIX}-and-yagr"
+            else
+              BRANCH_SUFFIX="yagr"
+            fi
+
+            UPDATED_PACKAGES+=("@gravity-ui/yagr@${YAGR_VERSION}")
+          fi
+
+          TITLE_SUFFIX=""
+
+          if [ ${#UPDATED_PACKAGES[@]} -gt 0 ]; then
+            TITLE_SUFFIX=$(printf ", %s" "${UPDATED_PACKAGES[@]}")
+            TITLE_SUFFIX=" ${TITLE_SUFFIX:2}"
+          fi
+
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$BODY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "branch_suffix=$BRANCH_SUFFIX" >> $GITHUB_OUTPUT
+          echo "title_suffix=${TITLE_SUFFIX}" >> $GITHUB_OUTPUT
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
+          commit-message: '${{ github.event.inputs.type }}(deps): update gravity-ui packages'
+          branch: 'chore/update-gravity-${{ steps.pr.outputs.branch_suffix }}-${{ github.run_number }}'
+          delete-branch: true
+          title: '${{ github.event.inputs.type }}(deps): Update Gravity UI packages${{ steps.pr.outputs.title_suffix }}'
+          body: ${{ steps.pr.outputs.body }}
+          labels: dependencies
