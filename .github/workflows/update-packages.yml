@@ -3,14 +3,6 @@ name: Update Gravity UI Packages
 on:
   workflow_dispatch:
     inputs:
-      type:
-        description: 'Type of change for PR title (fix or feat)'
-        type: choice
-        options:
-          - fix
-          - feat
-        default: 'fix'
-        required: true
       charts:
         description: 'Update @gravity-ui/charts'
         type: boolean
@@ -37,6 +29,22 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+
+      - name: Get original versions
+        id: original_versions
+        run: |
+          CHARTS_VERSION=""
+
+          if node -e "require('./package-lock.json').packages['node_modules/@gravity-ui/charts']"; then
+            CHARTS_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/@gravity-ui/charts'].version")
+          fi
+          echo "charts_version=${CHARTS_VERSION}" >> $GITHUB_OUTPUT
+
+          YAGR_VERSION=""
+          if node -e "require('./package-lock.json').packages['node_modules/@gravity-ui/yagr']"; then
+            YAGR_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/@gravity-ui/yagr'].version")
+          fi
+          echo "yagr_version=${YAGR_VERSION}" >> $GITHUB_OUTPUT
       - name: Get packages to update
         id: packages
         run: |
@@ -49,28 +57,53 @@ jobs:
           if [ "${{ github.event.inputs.yagr }}" == "true" ]; then
             PACKAGES_TO_UPDATE="$PACKAGES_TO_UPDATE @gravity-ui/yagr"
           fi
-
           echo "list=$(echo $PACKAGES_TO_UPDATE | xargs)" >> $GITHUB_OUTPUT
+
       - name: Update packages
         run: npm update ${{ steps.packages.outputs.list }}
 
       - name: Prepare PR data
         id: pr
         run: |
+          PR_TYPE="fix"
           BODY="This PR updates the following packages to their latest minor versions:"
           BRANCH_SUFFIX=""
           declare -a UPDATED_PACKAGES
 
           if [ "${{ github.event.inputs.charts }}" == "true" ]; then
-            CHARTS_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/@gravity-ui/charts'].version")
-            BODY="${BODY}\n- \`@gravity-ui/charts\` to \`${CHARTS_VERSION}\`"
+            OLD_VERSION="${{ steps.original_versions.outputs.charts_version }}"
+            NEW_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/@gravity-ui/charts'].version")
+            
+            OLD_MAJOR=$(echo $OLD_VERSION | cut -d'.' -f1)
+            NEW_MAJOR=$(echo $NEW_VERSION | cut -d'.' -f1)
+            OLD_MINOR=$(echo $OLD_VERSION | cut -d'.' -f2)
+            NEW_MINOR=$(echo $NEW_VERSION | cut -d'.' -f2)
+
+            if [[ "$NEW_MAJOR" -gt "$OLD_MAJOR" ]] || ([[ "$NEW_MAJOR" -eq "$OLD_MAJOR" ]] && [[ "$NEW_MINOR" -gt "$OLD_MINOR" ]]); then
+              PR_TYPE="feat"
+            fi
+            
+            BODY="${BODY}\n- \`@gravity-ui/charts\` from \`${OLD_VERSION}\` to \`${NEW_VERSION}\`"
             BRANCH_SUFFIX="charts"
-            UPDATED_PACKAGES+=("@gravity-ui/charts@${CHARTS_VERSION}")
+            UPDATED_PACKAGES+=("@gravity-ui/charts@${NEW_VERSION}")
           fi
 
           if [ "${{ github.event.inputs.yagr }}" == "true" ]; then
-            YAGR_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/@gravity-ui/yagr'].version")
-            BODY="${BODY}\n- \`@gravity-ui/yagr\` to \`${YAGR_VERSION}\`"
+            OLD_VERSION="${{ steps.original_versions.outputs.yagr_version }}"
+            NEW_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/@gravity-ui/yagr'].version")
+
+            if [ "$PR_TYPE" != "feat" ]; then
+              OLD_MAJOR=$(echo $OLD_VERSION | cut -d'.' -f1)
+              NEW_MAJOR=$(echo $NEW_VERSION | cut -d'.' -f1)
+              OLD_MINOR=$(echo $OLD_VERSION | cut -d'.' -f2)
+              NEW_MINOR=$(echo $NEW_VERSION | cut -d'.' -f2)
+
+              if [[ "$NEW_MAJOR" -gt "$OLD_MAJOR" ]] || ([[ "$NEW_MAJOR" -eq "$OLD_MAJOR" ]] && [[ "$NEW_MINOR" -gt "$OLD_MINOR" ]]); then
+                PR_TYPE="feat"
+              fi
+            fi
+
+            BODY="${BODY}\n- \`@gravity-ui/yagr\` from \`${OLD_VERSION}\` to \`${NEW_VERSION}\`"
 
             if [ -n "$BRANCH_SUFFIX" ]; then
               BRANCH_SUFFIX="${BRANCH_SUFFIX}-and-yagr"
@@ -78,7 +111,7 @@ jobs:
               BRANCH_SUFFIX="yagr"
             fi
 
-            UPDATED_PACKAGES+=("@gravity-ui/yagr@${YAGR_VERSION}")
+            UPDATED_PACKAGES+=("@gravity-ui/yagr@${NEW_VERSION}")
           fi
 
           TITLE_SUFFIX=""
@@ -93,13 +126,14 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
           echo "branch_suffix=$BRANCH_SUFFIX" >> $GITHUB_OUTPUT
           echo "title_suffix=${TITLE_SUFFIX}" >> $GITHUB_OUTPUT
+          echo "pr_type=${PR_TYPE}" >> $GITHUB_OUTPUT
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
-          commit-message: '${{ github.event.inputs.type }}(deps): update gravity-ui packages'
+          commit-message: '${{ steps.pr.outputs.pr_type }}(deps): update gravity-ui packages'
           branch: 'chore/update-gravity-${{ steps.pr.outputs.branch_suffix }}-${{ github.run_number }}'
           delete-branch: true
-          title: '${{ github.event.inputs.type }}(deps): Update Gravity UI packages${{ steps.pr.outputs.title_suffix }}'
+          title: '${{ steps.pr.outputs.pr_type }}(deps): Update Gravity UI packages${{ steps.pr.outputs.title_suffix }}'
           body: ${{ steps.pr.outputs.body }}
           labels: dependencies
