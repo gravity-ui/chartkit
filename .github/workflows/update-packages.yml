@@ -62,14 +62,14 @@ jobs:
           declare -a UPDATED_PACKAGES
 
           if [ "${{ github.event.inputs.charts }}" == "true" ]; then
-            CHARTS_VERSION=$(node -p "require('./package.json').dependencies['@gravity-ui/charts']" | sed 's/\^//')
+            CHARTS_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/@gravity-ui/charts'].version")
             BODY="${BODY}\n- \`@gravity-ui/charts\` to \`${CHARTS_VERSION}\`"
             BRANCH_SUFFIX="charts"
             UPDATED_PACKAGES+=("@gravity-ui/charts@${CHARTS_VERSION}")
           fi
 
           if [ "${{ github.event.inputs.yagr }}" == "true" ]; then
-            YAGR_VERSION=$(node -p "require('./package.json').dependencies['@gravity-ui/yagr']" | sed 's/\^//')
+            YAGR_VERSION=$(node -p "require('./package-lock.json').packages['node_modules/@gravity-ui/yagr'].version")
             BODY="${BODY}\n- \`@gravity-ui/yagr\` to \`${YAGR_VERSION}\`"
 
             if [ -n "$BRANCH_SUFFIX" ]; then
