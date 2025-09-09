@@ -63,7 +63,7 @@ jobs:
           echo "list=$(echo $PACKAGES_TO_UPDATE | xargs)" >> $GITHUB_OUTPUT
 
       - name: Update packages
-        run: npm update ${{ steps.packages.outputs.list }}
+        run: npm install ${{ steps.packages.outputs.list }}
 
       - name: Prepare PR data
         id: pr
