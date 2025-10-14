@@ -8,7 +8,6 @@ import {CHARTKIT_ERROR_CODE, settings} from '../../../../libs';
 import {RenderError} from '../../../../types';
 import {HighchartsPlugin} from '../../index';
 import {filledData, noData} from '../../mocks/custom-error-render';
-import holidays from '../../mocks/holidays';
 import {ChartStory} from '../components/ChartStory';
 
 export default {
@@ -30,7 +29,7 @@ const Template: Story = () => {
                     return (
                         <Button
                             onClick={() => {
-                                settings.set({plugins: [HighchartsPlugin], extra: {holidays}});
+                                settings.set({plugins: [HighchartsPlugin]});
                                 resetError();
                             }}
                         >
