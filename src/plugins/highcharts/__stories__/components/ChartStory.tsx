@@ -6,7 +6,6 @@ import {ChartKit} from '../../../../components/ChartKit';
 import {settings} from '../../../../libs';
 import {ChartKitRef, RenderError} from '../../../../types';
 import {HighchartsPlugin} from '../../index';
-import holidays from '../../mocks/holidays';
 import {HighchartsWidgetData} from '../../types';
 
 const DEFAULT_STORY_HEIGHT = '300px';
@@ -31,7 +30,7 @@ export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) =>
 
     if (!initRef.current) {
         if (!props.withoutPlugin) {
-            settings.set({plugins: [HighchartsPlugin], extra: {holidays}});
+            settings.set({plugins: [HighchartsPlugin]});
         }
         initRef.current = true;
     }
