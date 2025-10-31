@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.21.0](https://github.com/gravity-ui/chartkit/compare/v7.20.0...v7.21.0) (2025-10-31)
+
+
+### Features
+
+* add ChartKitRef.yagrSubscribe() method ([#689](https://github.com/gravity-ui/chartkit/issues/689)) ([ac2ac68](https://github.com/gravity-ui/chartkit/commit/ac2ac68e69084610db53f69d08aa22692f813128))
+
 ## [7.20.0](https://github.com/gravity-ui/chartkit/compare/v7.19.0...v7.20.0) (2025-10-30)
 
 
