@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.23.0](https://github.com/gravity-ui/chartkit/compare/v5.22.4...v5.23.0) (2025-10-31)
+
+
+### Features
+
+* add ChartKitRef.yagrSubscribe() method ([#688](https://github.com/gravity-ui/chartkit/issues/688)) ([26da342](https://github.com/gravity-ui/chartkit/commit/26da342197535037fc631795420b2828c3b04511))
+
 ## [5.22.4](https://github.com/gravity-ui/chartkit/compare/v5.22.3...v5.22.4) (2025-08-01)
 
 
