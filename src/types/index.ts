@@ -12,11 +12,10 @@ export type ChartKitType = keyof ChartKitWidget;
 
 export type ChartKitRef = {
     reflow: (details?: unknown) => void;
+    yagrSubscribe: () => void;
 };
 
-export type ChartKitWidgetRef = {
-    reflow?: ChartKitRef['reflow'];
-};
+export type ChartKitWidgetRef = Partial<ChartKitRef>;
 
 export type ChartKitOnLoadData<T extends ChartKitType> = {
     widget?: ChartKitWidget[T]['widget'];
