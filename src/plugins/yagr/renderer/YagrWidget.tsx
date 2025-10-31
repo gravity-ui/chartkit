@@ -61,12 +61,6 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
                 reflow() {
                     onWindowResize();
                 },
-                yagrSubscribe() {
-                    const impl = yagrRef.current?.yagr();
-                    if (impl) {
-                        impl.subscribe();
-                    }
-                },
             }),
             [onWindowResize],
         );
