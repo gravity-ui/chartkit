@@ -45,11 +45,6 @@ const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps
                     widgetRef.current.reflow(details);
                 }
             },
-            yagrSubscribe() {
-                if (widgetRef.current?.yagrSubscribe) {
-                    widgetRef.current.yagrSubscribe();
-                }
-            },
         }),
         [],
     );
