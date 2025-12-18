@@ -23,13 +23,13 @@ describe('plugins/gravity-charts/utils', () => {
         });
         it('should not throw an error with sufficient series count limit', () => {
             const result = merge(cloneDeep(BASIC_PROPS), {
-                dataOptions: {seriesCountLimit: 3},
+                validation: {seriesCountLimit: 3},
             });
             expect(() => vaildateData(result)).not.toThrowError();
         });
         it('should throw an error with insufficient series count limit', () => {
             const result = merge(cloneDeep(BASIC_PROPS), {
-                dataOptions: {seriesCountLimit: 1},
+                validation: {seriesCountLimit: 1},
             });
             expect(() => vaildateData(result)).toThrowError();
         });

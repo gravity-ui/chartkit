@@ -17,8 +17,8 @@ function validateSeriesCountLimit(
 }
 
 export function vaildateData(props: ChartKitProps<'gravity-charts'>) {
-    const {data, dataOptions} = props;
-    const seriesCountLimit = dataOptions?.seriesCountLimit;
+    const {data, validation} = props;
+    const seriesCountLimit = validation?.seriesCountLimit;
     const series = data?.series?.data;
     validateSeriesCountLimit(series, seriesCountLimit);
 }
