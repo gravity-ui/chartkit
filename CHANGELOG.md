@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.30.0](https://github.com/gravity-ui/chartkit/compare/v7.29.3...v7.30.0) (2025-12-18)
+
+
+### Features
+
+* add `ChartKitProps.validation` setting ([#725](https://github.com/gravity-ui/chartkit/issues/725)) ([7a96b89](https://github.com/gravity-ui/chartkit/commit/7a96b8991c41d8711c7b6aecaef3e5488145daee))
+
 ## [7.29.3](https://github.com/gravity-ui/chartkit/compare/v7.29.2...v7.29.3) (2025-12-17)
 
 
