@@ -51,6 +51,17 @@ export type ChartKitProps<T extends ChartKitType> = {
     renderError?: RenderError;
     /** Used to render user's plugin loader component */
     renderPluginLoader?: ChartKitRenderPluginLoader;
+    validation?: {
+        /**
+         * Series count limit.
+         *
+         * If you have series more than limit, your chart will throw an error `'ERR.CK.TOO_MANY_LINES'`.
+         *
+         * - This setting applies only when provided
+         * - Supported only for the `gravity-charts` plugin
+         */
+        seriesCountLimit?: number;
+    };
 } & {
     [key in keyof Omit<ChartKitWidget[T], 'data' | 'widget'>]: ChartKitWidget[T][key];
 };

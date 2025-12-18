@@ -8,6 +8,7 @@ import {settings} from '../../../libs';
 import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {measurePerformance} from '../../../utils';
 
+import {vaildateData} from './utils';
 import {withSplitPane} from './withSplitPane/withSplitPane';
 
 const ChartWithSplitPane = withSplitPane(Chart);
@@ -17,6 +18,7 @@ export const GravityChartsWidget = React.forwardRef<
     ChartKitProps<'gravity-charts'>
 >(function GravityChartsWidget(props, forwardedRef) {
     const {data, tooltip, onLoad, onRender, onChartLoad} = props;
+    vaildateData(props);
     const lang = settings.get('lang');
     const performanceMeasure = React.useRef<ReturnType<typeof measurePerformance> | null>(
         measurePerformance(),
