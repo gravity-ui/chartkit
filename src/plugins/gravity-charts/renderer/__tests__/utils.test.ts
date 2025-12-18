@@ -4,7 +4,7 @@ import merge from 'lodash/merge';
 import type {ChartKitProps} from '../../../../types';
 import {vaildateData} from '../utils';
 
-const DATA_WITH_TWO_SERIES: ChartKitProps<'gravity-charts'> = {
+const BASIC_PROPS: ChartKitProps<'gravity-charts'> = {
     data: {
         series: {
             data: [
@@ -19,16 +19,16 @@ const DATA_WITH_TWO_SERIES: ChartKitProps<'gravity-charts'> = {
 describe('plugins/gravity-charts/utils', () => {
     describe('validateData', () => {
         it('should not throw an error without series count limit', () => {
-            expect(() => vaildateData(DATA_WITH_TWO_SERIES)).not.toThrowError();
+            expect(() => vaildateData(BASIC_PROPS)).not.toThrowError();
         });
         it('should not throw an error with sufficient series count limit', () => {
-            const result = merge(cloneDeep(DATA_WITH_TWO_SERIES), {
+            const result = merge(cloneDeep(BASIC_PROPS), {
                 dataOptions: {seriesCountLimit: 3},
             });
             expect(() => vaildateData(result)).not.toThrowError();
         });
         it('should throw an error with insufficient series count limit', () => {
-            const result = merge(cloneDeep(DATA_WITH_TWO_SERIES), {
+            const result = merge(cloneDeep(BASIC_PROPS), {
                 dataOptions: {seriesCountLimit: 1},
             });
             expect(() => vaildateData(result)).toThrowError();
