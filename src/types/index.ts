@@ -38,6 +38,17 @@ export type ChartKitRenderPluginLoader = () => React.ReactNode;
 export type ChartKitProps<T extends ChartKitType> = {
     type: T;
     data: ChartKitWidget[T]['data'];
+    dataOptions?: {
+        /**
+         * Series count limit.
+         *
+         * If you have series more than limit, your chart will throw an error `'ERR.CK.TOO_MANY_LINES'`.
+         *
+         * - This setting applies only when provided
+         * - Supported only for the `gravity-charts` plugin
+         */
+        seriesCountLimit?: number;
+    };
     id?: string;
     isMobile?: boolean;
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
