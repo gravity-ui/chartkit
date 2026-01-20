@@ -26,29 +26,22 @@ export const GravityChartsWidget = React.forwardRef<
     const chartRef = React.useRef<ChartRef>(null);
     const ChartComponent = tooltip?.splitted ? ChartWithSplitPane : Chart;
 
-    const handleResize: NonNullable<ChartProps['onResize']> = React.useCallback(
-        ({dimensions}) => {
-            if (!dimensions) {
-                return;
-            }
+    const handleChartReady: NonNullable<ChartProps['onReady']> = React.useCallback(() => {
+        if (!performanceMeasure.current) {
+            performanceMeasure.current = measurePerformance();
+        }
 
-            if (!performanceMeasure.current) {
-                performanceMeasure.current = measurePerformance();
-            }
-
-            afterFrame(() => {
-                const renderTime = performanceMeasure.current?.end();
-                onRender?.({
-                    renderTime,
-                });
-                onLoad?.({
-                    widgetRendering: renderTime,
-                });
-                performanceMeasure.current = null;
+        afterFrame(() => {
+            const renderTime = performanceMeasure.current?.end();
+            onRender?.({
+                renderTime,
             });
-        },
-        [onRender, onLoad],
-    );
+            onLoad?.({
+                widgetRendering: renderTime,
+            });
+            performanceMeasure.current = null;
+        });
+    }, [onRender, onLoad]);
 
     React.useImperativeHandle(
         forwardedRef,
@@ -66,7 +59,7 @@ export const GravityChartsWidget = React.forwardRef<
         }
     }, [onChartLoad]);
 
-    return <ChartComponent ref={chartRef} data={data} lang={lang} onResize={handleResize} />;
+    return <ChartComponent ref={chartRef} data={data} lang={lang} onReady={handleChartReady} />;
 });
 
 export default GravityChartsWidget;
