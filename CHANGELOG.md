@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.35.0](https://github.com/gravity-ui/chartkit/compare/v7.34.0...v7.35.0) (2026-01-20)
+
+
+### Features
+
+* **deps:** Update `@gravity-ui/charts` `1.31.0` -&gt; `1.32.0` ([#743](https://github.com/gravity-ui/chartkit/issues/743)) ([4a05411](https://github.com/gravity-ui/chartkit/commit/4a054110c9776362b11bac8af9ae69f7d2c42670))
+
+
+### Bug Fixes
+
+* use onReady instead of onResize for the gravityCharts widget ([#745](https://github.com/gravity-ui/chartkit/issues/745)) ([c897d76](https://github.com/gravity-ui/chartkit/commit/c897d76e1492c2e910f2a961de3ea4428a8dbc74))
+
 ## [7.34.0](https://github.com/gravity-ui/chartkit/compare/v7.33.1...v7.34.0) (2026-01-19)
 
 
