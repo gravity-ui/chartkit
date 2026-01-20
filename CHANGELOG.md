@@ -11,7 +11,6 @@
 ### Bug Fixes
 
 * use onReady instead of onResize for the gravityCharts widget ([#745](https://github.com/gravity-ui/chartkit/issues/745)) ([c897d76](https://github.com/gravity-ui/chartkit/commit/c897d76e1492c2e910f2a961de3ea4428a8dbc74))
-* use onReady instead of onResize for the gravityCharts widget readiness indicator ([c897d76](https://github.com/gravity-ui/chartkit/commit/c897d76e1492c2e910f2a961de3ea4428a8dbc74))
 
 ## [7.34.0](https://github.com/gravity-ui/chartkit/compare/v7.33.1...v7.34.0) (2026-01-19)
 
