@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.40.0](https://github.com/gravity-ui/chartkit/compare/v7.39.0...v7.40.0) (2026-03-04)
+
+
+### Features
+
+* **deps:** Update `@gravity-ui/charts` `1.36.0` -&gt; `1.37.1` ([#780](https://github.com/gravity-ui/chartkit/issues/780)) ([425a398](https://github.com/gravity-ui/chartkit/commit/425a39865fe52e0687fcf99e4118906318ac0524))
+* **GravityCharts plugin:** add ChartTooltipContent re-export ([#778](https://github.com/gravity-ui/chartkit/issues/778)) ([4590e00](https://github.com/gravity-ui/chartkit/commit/4590e007b502248122d7f3251d62f8295c501da5))
+
 ## [7.39.0](https://github.com/gravity-ui/chartkit/compare/v7.38.2...v7.39.0) (2026-03-04)
 
 
