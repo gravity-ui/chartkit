@@ -2,7 +2,7 @@ import React from 'react';
 
 import {ChartKitPlugin} from '../../types';
 
-export {CustomShapeRenderer} from '@gravity-ui/charts';
+export {ChartTooltipContent, CustomShapeRenderer} from '@gravity-ui/charts';
 export * from './types';
 
 export const GravityChartsPlugin: ChartKitPlugin = {
