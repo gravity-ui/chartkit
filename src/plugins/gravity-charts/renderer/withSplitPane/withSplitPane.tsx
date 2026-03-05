@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Chart} from '@gravity-ui/charts';
+import {Chart, getDefaultTooltipHeaderFormat} from '@gravity-ui/charts';
 import type {ChartData, ChartProps, ChartRef} from '@gravity-ui/charts';
 import {getComponentName, useResizeObserver} from '@gravity-ui/uikit';
 import isEmpty from 'lodash/isEmpty';
@@ -68,24 +68,38 @@ const SplitPaneContent = (
     }
 
     const handleTooltipContentResize = React.useCallback(() => {
-        if (!tooltipContainerRef.current) {
+        if (!tooltipContainerRef.current || split !== SplitLayout.HORIZONTAL) {
             return;
         }
 
         const nextTooltipHeight = tooltipContainerRef.current.getBoundingClientRect().height;
         setTooltipHeight(nextTooltipHeight);
-    }, [setTooltipHeight]);
+    }, [setTooltipHeight, split]);
 
     useResizeObserver({
         ref: tooltipContainerRef,
         onResize: handleTooltipContentResize,
     });
 
+    const headerFormat = React.useMemo(() => {
+        return (
+            data.tooltip?.headerFormat ??
+            getDefaultTooltipHeaderFormat({
+                seriesData: data.series.data,
+                yAxes: data.yAxis,
+                xAxis: data.xAxis,
+            })
+        );
+    }, [data.tooltip?.headerFormat, data.series.data, data.yAxis, data.xAxis]);
+
     const resultData = React.useMemo(() => {
         const userPointerMoveHandler = data.chart?.events?.pointermove;
         const pointerMoveHandler: PointerMoveHandler = (pointerMoveData, event) => {
-            shouldShowTooltip.current = !isEmpty(pointerMoveData?.hovered);
-            tooltipRef.current?.redraw(pointerMoveData);
+            if (!isEmpty(pointerMoveData?.hovered)) {
+                shouldShowTooltip.current = true;
+                tooltipRef.current?.redraw(pointerMoveData);
+            }
+
             userPointerMoveHandler?.(pointerMoveData, event);
         };
 
@@ -165,7 +179,14 @@ const SplitPaneContent = (
             paneOneRender={() => <ChartComponent {...restProps} ref={chartRef} data={resultData} />}
             paneTwoRender={() => (
                 <div ref={tooltipContainerRef}>
-                    <TooltipContent ref={tooltipRef} renderer={resultData.tooltip.renderer} />
+                    <TooltipContent
+                        ref={tooltipRef}
+                        renderer={resultData.tooltip.renderer}
+                        headerFormat={headerFormat}
+                        valueFormat={resultData.tooltip.valueFormat}
+                        rowRenderer={resultData.tooltip.rowRenderer}
+                        totals={resultData.tooltip.totals}
+                    />
                 </div>
             )}
             pane2Style={tooltipPaneStyles}
