@@ -1,5 +1,18 @@
 # Changelog
 
+## [7.41.0](https://github.com/gravity-ui/chartkit/compare/v7.40.1...v7.41.0) (2026-03-06)
+
+
+### Features
+
+* **deps:** Update `@gravity-ui/charts` `1.37.2` -&gt; `1.38.0` ([#784](https://github.com/gravity-ui/chartkit/issues/784)) ([11f401d](https://github.com/gravity-ui/chartkit/commit/11f401db75a54a8d6d6979d069e7ab5d90b84de4))
+
+
+### Bug Fixes
+
+* **deps:** Update `@gravity-ui/charts` `1.38.0` -&gt; `1.38.2` ([#787](https://github.com/gravity-ui/chartkit/issues/787)) ([9b64385](https://github.com/gravity-ui/chartkit/commit/9b643850ff90285d00c1b1a16764bb6adbd871e3))
+* **GravityCharts plugin:** fix split tooltip header formatting and preserve tooltip on mouse leave ([#786](https://github.com/gravity-ui/chartkit/issues/786)) ([ed771c9](https://github.com/gravity-ui/chartkit/commit/ed771c908bf6a98c2faa2bf0cacd523a553c134d))
+
 ## [7.40.1](https://github.com/gravity-ui/chartkit/compare/v7.40.0...v7.40.1) (2026-03-05)
 
 
