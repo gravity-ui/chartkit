@@ -7,11 +7,14 @@ export type TooltipContentRef = {
     redraw: (updates?: Omit<ChartTooltipContentProps, 'renderer'>) => void;
 };
 
-type TooltipContentProps = Pick<ChartTooltipContentProps, 'renderer'>;
+type TooltipContentProps = Pick<
+    ChartTooltipContentProps,
+    'renderer' | 'headerFormat' | 'valueFormat' | 'rowRenderer' | 'totals'
+>;
 
 export const TooltipContent = React.forwardRef<TooltipContentRef, TooltipContentProps>(
     function TooltipContent(props, forwardedRef) {
-        const {renderer} = props;
+        const {renderer, ...tooltipConfigProps} = props;
         const [tooltipProps, setTooltipProps] = React.useState<
             Omit<ChartTooltipContentProps, 'renderer'> | undefined
         >();
@@ -26,6 +29,8 @@ export const TooltipContent = React.forwardRef<TooltipContentRef, TooltipContent
             [],
         );
 
-        return <ChartTooltipContent {...tooltipProps} renderer={renderer} />;
+        return (
+            <ChartTooltipContent {...tooltipConfigProps} {...tooltipProps} renderer={renderer} />
+        );
     },
 );
