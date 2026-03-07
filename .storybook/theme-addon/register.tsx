@@ -1,7 +1,9 @@
 import * as React from 'react';
-import {addons, types, useGlobals, API} from 'storybook/manager-api';
-import {FORCE_RE_RENDER} from 'storybook/internal/core-events';
+
 import {getThemeType} from '@gravity-ui/uikit';
+import {FORCE_RE_RENDER} from 'storybook/internal/core-events';
+import {API, addons, types, useGlobals} from 'storybook/manager-api';
+
 import {themes} from '../theme';
 
 const ADDON_ID = 'yc-theme-addon';

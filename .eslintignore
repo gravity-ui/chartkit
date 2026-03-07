@@ -1,6 +1,0 @@
-build
-node_modules
-src/i18n/keysets
-test-utils
-tests
-jest.config.js

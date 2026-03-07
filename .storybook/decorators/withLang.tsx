@@ -1,7 +1,9 @@
 import React from 'react';
-import type {Decorator} from '@storybook/react';
-import {Lang, configure} from '@gravity-ui/uikit';
+
 import {settings as dateUtilsSettings} from '@gravity-ui/date-utils';
+import {Lang, configure} from '@gravity-ui/uikit';
+import type {Decorator} from '@storybook/react';
+
 import {settings as chartkitSettings} from '../../src/libs';
 
 const setDateUtilsLocale = async (lang: string) => {

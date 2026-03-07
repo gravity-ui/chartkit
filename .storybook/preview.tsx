@@ -1,11 +1,13 @@
 import React from 'react';
-import {MINIMAL_VIEWPORTS} from 'storybook/viewport';
+
+import {Lang, MobileProvider, ThemeProvider, configure} from '@gravity-ui/uikit';
 import type {Decorator} from '@storybook/react';
-import {themes} from './theme';
-import {withMobile} from './decorators/withMobile';
-import {withLang} from './decorators/withLang';
+import {MINIMAL_VIEWPORTS} from 'storybook/viewport';
+
 import {DocsDecorator} from './decorators/DocsDecorator/DocsDecorator';
-import {ThemeProvider, MobileProvider, configure, Lang} from '@gravity-ui/uikit';
+import {withLang} from './decorators/withLang';
+import {withMobile} from './decorators/withMobile';
+import {themes} from './theme';
 
 import '@gravity-ui/uikit/styles/styles.scss';
 
