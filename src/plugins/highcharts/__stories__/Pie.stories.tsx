@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Meta, Story} from '@storybook/react';
+import {Meta, StoryFn as Story} from '@storybook/react';
 
 import {ChartKit} from '../../../components/ChartKit';
 import {data} from '../mocks/pie';

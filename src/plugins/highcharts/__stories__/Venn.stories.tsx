@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Meta, Story} from '@storybook/react';
+import {Meta, StoryFn as Story} from '@storybook/react';
 import Highcharts from 'highcharts';
 import venn from 'highcharts/modules/venn';
 
@@ -20,4 +20,4 @@ const Template: Story<any> = () => {
     return <ChartStory data={data} />;
 };
 
-export const UnsafeTooltip = Template.bind({});
+export const Venn = Template.bind({});

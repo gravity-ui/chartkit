@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {addons, types} from '@storybook/addons';
-import {useGlobals} from '@storybook/api';
-import {FORCE_RE_RENDER} from '@storybook/core-events';
+import {addons, types, useGlobals, API} from 'storybook/manager-api';
+import {FORCE_RE_RENDER} from 'storybook/internal/core-events';
 import {getThemeType} from '@gravity-ui/uikit';
 import {themes} from '../theme';
 
@@ -13,16 +12,16 @@ addons.register(ADDON_ID, (api) => {
         type: types.TOOL,
         title: 'Theme',
         render: () => {
-            return <Tool api={api} />;
+            return React.createElement(Tool, {api});
         },
     });
 });
 
-function Tool({api}) {
+function Tool({api}: {api: API}) {
     const [{theme}] = useGlobals();
     React.useEffect(() => {
         api.setOptions({theme: themes[getThemeType(theme)]});
         addons.getChannel().emit(FORCE_RE_RENDER);
-    }, [theme]);
+    }, [theme, api]);
     return null;
 }

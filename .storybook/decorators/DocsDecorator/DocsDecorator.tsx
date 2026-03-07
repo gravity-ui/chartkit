@@ -1,5 +1,5 @@
 import React from 'react';
-import {DocsContainer, DocsContainerProps} from '@storybook/addon-docs';
+import {DocsContainer, DocsContainerProps} from '@storybook/addon-docs/blocks';
 import {ThemeProvider, MobileProvider, getThemeType} from '@gravity-ui/uikit';
 import {themes} from '../../../.storybook/theme';
 import {cn} from '../../../src/utils/cn';
@@ -11,7 +11,7 @@ export interface DocsDecoratorProps extends React.PropsWithChildren<DocsContaine
 const b = cn('docs-decorator');
 
 export function DocsDecorator({children, context}: DocsDecoratorProps) {
-    const storyContext = context.getStoryContext(context.storyById(context.id));
+    const storyContext = context.getStoryContext(context.storyById());
     const theme = storyContext.globals.theme;
     return (
         <div className={b()}>

@@ -1,6 +1,6 @@
 import React from 'react';
-import {MINIMAL_VIEWPORTS} from '@storybook/addon-viewport';
-import type {DecoratorFn} from '@storybook/react';
+import {MINIMAL_VIEWPORTS} from 'storybook/viewport';
+import type {Decorator} from '@storybook/react';
 import {themes} from './theme';
 import {withMobile} from './decorators/withMobile';
 import {withLang} from './decorators/withLang';
@@ -13,7 +13,7 @@ configure({
     lang: Lang.En,
 });
 
-const withContextProvider: DecoratorFn = (Story, context) => {
+const withContextProvider: Decorator = (Story, context) => {
     return (
         <React.StrictMode>
             <ThemeProvider theme={context.globals.theme}>
@@ -28,6 +28,7 @@ const withContextProvider: DecoratorFn = (Story, context) => {
 export const decorators = [withMobile, withLang, withContextProvider];
 
 export const parameters = {
+    backgrounds: {disable: true},
     docs: {
         theme: themes.light,
         container: DocsDecorator,
