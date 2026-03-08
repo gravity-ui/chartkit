@@ -14,7 +14,7 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
     transform: {
-        '^.+\\.(js|ts)?$': 'ts-jest',
+        '^.+\\.(js|ts)?$': ['ts-jest', {tsconfig: 'tsconfig.jest.json'}],
     },
     modulePathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/node_modules/'],
     transformIgnorePatterns: [`<rootDir>/node_modules/(?!${esModules})`],

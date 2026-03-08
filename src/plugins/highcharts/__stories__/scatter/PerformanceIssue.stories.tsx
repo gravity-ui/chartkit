@@ -1,9 +1,9 @@
 import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
-import {action} from '@storybook/addon-actions';
-import {Meta, Story} from '@storybook/react';
+import {Meta, StoryFn as Story} from '@storybook/react';
 import {randomNormal} from 'd3';
+import {action} from 'storybook/actions';
 
 import {HighchartsPlugin, HighchartsWidgetData} from '../..';
 import {ChartKit} from '../../../../components/ChartKit';

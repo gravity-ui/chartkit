@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
-import {Meta, Story} from '@storybook/react';
+import {Meta, StoryFn as Story} from '@storybook/react';
 
 import {ChartKit} from '../../../../components/ChartKit';
 import {CHARTKIT_ERROR_CODE, settings} from '../../../../libs';

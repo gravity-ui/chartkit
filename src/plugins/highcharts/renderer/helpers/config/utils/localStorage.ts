@@ -6,7 +6,7 @@ class LocalStorage {
                 return null;
             }
             return JSON.parse(data);
-        } catch (err) {
+        } catch (_err) {
             return null;
         }
     }

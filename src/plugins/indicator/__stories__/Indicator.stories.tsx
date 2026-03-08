@@ -1,10 +1,9 @@
 import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
-import {action} from '@storybook/addon-actions';
-import {boolean, color as colorKnob, radios, text, withKnobs} from '@storybook/addon-knobs';
-import {Meta, Story} from '@storybook/react';
+import {Meta, StoryObj} from '@storybook/react';
 import cloneDeep from 'lodash/cloneDeep';
+import {action} from 'storybook/actions';
 
 import {IndicatorPlugin} from '../';
 import {ChartKit} from '../../../components/ChartKit';
@@ -24,17 +23,16 @@ const data: IndicatorWidgetData = {
     ],
 };
 
-const Template: Story = () => {
+interface ChartStoryProps {
+    color: string;
+    size: IndicatorWidgetDataItem['size'];
+    title: string;
+    nowrap: boolean;
+}
+
+const ChartStory = ({color, size, title, nowrap}: ChartStoryProps) => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef>();
-    const color = colorKnob('color', '#4da2f1');
-    const size = radios<IndicatorWidgetDataItem['size']>(
-        'size',
-        {s: 's', m: 'm', l: 'l', xl: 'xl'},
-        'm',
-    );
-    const title = text('title', 'Value title');
-    const nowrap = boolean('nowrap', false);
     const resultData = cloneDeep(data);
 
     if (resultData.data) {
@@ -62,11 +60,24 @@ const Template: Story = () => {
     );
 };
 
-export const Showcase = Template.bind({});
-
-const meta: Meta = {
+const meta: Meta<typeof ChartStory> = {
     title: 'Plugins/Indicator',
-    decorators: [withKnobs],
+    component: ChartStory,
 };
 
 export default meta;
+
+export const Showcase: StoryObj<typeof ChartStory> = {
+    args: {
+        color: '#4da2f1',
+        size: 'm',
+        title: 'Value title',
+        nowrap: false,
+    },
+    argTypes: {
+        color: {control: 'color'},
+        size: {control: 'radio', options: ['s', 'm', 'l', 'xl']},
+        title: {control: 'text'},
+        nowrap: {control: 'boolean'},
+    },
+};
