@@ -2,27 +2,27 @@
 
 ## Scripts
 
-| Script | Description |
-|---|---|
-| `npm test` | Run unit tests once |
-| `npm run test:watch` | Run unit tests in watch mode |
-| `npm run test:unit` | Alias for `npm test` |
-| `npm run test:coverage` | Unit tests with coverage report (saved to `reports/coverage/`) |
-| `npm run test:storybook` | Run all Storybook stories as tests |
-| `npm run test:docker` | Run visual tests in Docker (Linux) — use this for visual testing |
-| `npm run test:docker:update` | Update baseline screenshots via Docker |
-| `npm run test:docker:clear-cache` | Clear Docker image cache |
-| `npm run test:visual` | Run visual tests locally (macOS) — used internally by Docker scripts, not for regular use |
+| Script                            | Description                                                                               |
+| --------------------------------- | ----------------------------------------------------------------------------------------- |
+| `npm test`                        | Run unit tests once                                                                       |
+| `npm run test:watch`              | Run unit tests in watch mode                                                              |
+| `npm run test:unit`               | Alias for `npm test`                                                                      |
+| `npm run test:coverage`           | Unit tests with coverage report (saved to `reports/coverage/`)                            |
+| `npm run test:storybook`          | Run all Storybook stories as tests                                                        |
+| `npm run test:docker`             | Run visual tests in Docker (Linux) — use this for visual testing                          |
+| `npm run test:docker:update`      | Update baseline screenshots via Docker                                                    |
+| `npm run test:docker:clear-cache` | Clear Docker image cache                                                                  |
+| `npm run test:visual`             | Run visual tests locally (macOS) — used internally by Docker scripts, not for regular use |
 
 ## Test Projects
 
 The project uses [Vitest](https://vitest.dev/) with three test projects:
 
-| Project | Environment | Pattern |
-|---|---|---|
-| `unit` | Node | `src/**/*.test.ts?(x)` |
-| `storybook` | Browser (Chromium) | Storybook stories |
-| `visual` | Browser (Chromium) | `src/**/*.visual.test.ts?(x)` |
+| Project     | Environment        | Pattern                       |
+| ----------- | ------------------ | ----------------------------- |
+| `unit`      | Node               | `src/**/*.test.ts?(x)`        |
+| `storybook` | Browser (Chromium) | Storybook stories             |
+| `visual`    | Browser (Chromium) | `src/**/*.visual.test.ts?(x)` |
 
 ## Unit Tests
 
@@ -64,18 +64,18 @@ import {settings} from '../../../libs/index.js';
 import {MyPlugin} from '../index.js';
 
 describe('MyPlugin visual tests', () => {
-    const options = {providers: {theme: 'light'}};
+  const options = {providers: {theme: 'light'}};
 
-    test('default state', async () => {
-        settings.set({plugins: [MyPlugin]});
-        const screen = await render(
-            <div style={{height: 300, width: '100%'}}>
-                <ChartKit id="my-chart" type="my-type" data={data} />
-            </div>,
-            options,
-        );
-        await expect(screen.getByRole('img')).toMatchScreenshot();
-    });
+  test('default state', async () => {
+    settings.set({plugins: [MyPlugin]});
+    const screen = await render(
+      <div style={{height: 300, width: '100%'}}>
+        <ChartKit id="my-chart" type="my-type" data={data} />
+      </div>,
+      options,
+    );
+    await expect(screen.getByRole('img')).toMatchScreenshot();
+  });
 });
 ```
 
@@ -93,8 +93,8 @@ Not every visual test needs a screenshot. Use `expect.element().toBeVisible()` f
 
 ```tsx
 test('no data state', async () => {
-    const screen = await render(<ChartKit id="empty" type="my-type" data={emptyData} />, options);
-    await expect.element(screen.getByText('No data')).toBeVisible();
+  const screen = await render(<ChartKit id="empty" type="my-type" data={emptyData} />, options);
+  await expect.element(screen.getByText('No data')).toBeVisible();
 });
 ```
 
@@ -103,6 +103,7 @@ test('no data state', async () => {
 If a visual change is intentional, update the baselines:
 
 **Locally (via Docker):**
+
 ```bash
 npm run test:docker:update
 ```
@@ -120,15 +121,18 @@ npm run test:storybook
 ## CI
 
 The CI pipeline (`.github/workflows/ci.yml`) runs:
+
 - Lint + typecheck (`verify_files` job)
 - Unit tests with coverage (`tests` job — runs `npm run test:unit -- --coverage`)
 
 Visual tests are **not** run on every CI push. Instead:
+
 - Baselines are committed to the repository
 - Screenshots are updated on demand via the `/update-screenshots` bot command
 
 ### Test reports
 
 After CI completes, test and coverage reports are uploaded to S3 and linked in a PR comment:
+
 - Tests report: HTML Vitest report
 - Coverage report: LCOV coverage report
