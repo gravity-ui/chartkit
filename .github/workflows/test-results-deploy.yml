@@ -1,0 +1,64 @@
+name: Test Results Deploy
+
+on:
+  workflow_run:
+    workflows: ['CI']
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+      - name: Report Coverage
+        if: github.event.workflow_run.event == 'pull_request'
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          json-summary-path: ./reports/coverage/coverage-summary.json
+          json-final-path: ./reports/coverage/coverage-final.json
+      - name: Extract id
+        id: id
+        run: echo "id=$(<id/id.txt)" >> $GITHUB_OUTPUT
+        shell: bash
+      - name: Upload tests reports to S3
+        uses: gravity-ui/upload-to-s3-action@v1
+        with:
+          src-path: reports
+          dest-path: /chartkit/pulls/${{ steps.id.outputs.id }}/
+          bucket: playwright-reports
+          endpoint-url: https://storage.yandexcloud.net
+          s3-key-id: ${{ secrets.STORYBOOK_S3_KEY_ID }}
+          s3-secret-key: ${{ secrets.STORYBOOK_S3_SECRET_KEY }}
+          region: ru-central1
+      - name: Update tests meta content type
+        run: |
+          aws s3 cp s3://playwright-reports/chartkit/pulls/${{ steps.id.outputs.id }}/html/html.meta.json.gz s3://playwright-reports/chartkit/pulls/${{ steps.id.outputs.id }}/html/html.meta.json.gz --content-type="application/gzip" --metadata-directive=REPLACE --endpoint-url=https://storage.yandexcloud.net
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.STORYBOOK_S3_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.STORYBOOK_S3_SECRET_KEY }}
+          AWS_DEFAULT_REGION: ru-central1
+          AWS_EC2_METADATA_DISABLED: true
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+      - name: Create Comment
+        if: github.event.workflow_run.event == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GRAVITY_UI_BOT_GITHUB_TOKEN }}
+          header: component-tests-report
+          number: ${{ steps.id.outputs.id }}
+          message: |
+            🎭 [Tests Report](https://storage.yandexcloud.net/playwright-reports/chartkit/pulls/${{ steps.id.outputs.id }}/html/index.html) is ready.
+            🎭 [Coverage Report](https://storage.yandexcloud.net/playwright-reports/chartkit/pulls/${{ steps.id.outputs.id }}/coverage/lcov-report/index.html) is ready.

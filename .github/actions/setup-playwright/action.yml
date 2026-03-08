@@ -1,0 +1,27 @@
+name: Setup Playwright
+description: Setup and cache Playwright browser binaries
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve package versions
+      id: resolve-package-versions
+      shell: bash
+      run: |
+        echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/playwright-bin" >> $GITHUB_ENV
+        PLAYWRIGHT_VERSION="$(cat package-lock.json | jq --raw-output '.packages."node_modules/playwright".version')"
+        echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+
+    - name: Cache Playwright v${{ steps.resolve-package-versions.outputs.PLAYWRIGHT_VERSION }}
+      uses: actions/cache@v4
+      id: playwright-cache
+      with:
+        key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+        path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+
+    - name: Install Playwright Dependencies
+      shell: bash
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
+      run: npx playwright install chromium --with-deps --only-shell

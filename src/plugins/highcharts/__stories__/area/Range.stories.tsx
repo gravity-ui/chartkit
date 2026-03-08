@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Meta, StoryFn as Story} from '@storybook/react';
+import type {Meta, StoryObj} from '@storybook/react';
 import Highcharts from 'highcharts';
 import highchartsMore from 'highcharts/highcharts-more';
 
@@ -10,13 +10,15 @@ import {ChartStory} from '../components/ChartStory';
 
 highchartsMore(Highcharts);
 
-export default {
+const meta: Meta = {
     title: 'Plugins/Highcharts/Area',
     component: ChartKit,
-} as Meta;
-
-const Template: Story<any> = () => {
-    return <ChartStory data={data} />;
 };
 
-export const AreaRange = Template.bind({});
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const AreaRange: Story = {
+    render: () => <ChartStory data={data} />,
+};

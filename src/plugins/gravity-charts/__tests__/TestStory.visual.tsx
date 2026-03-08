@@ -1,8 +1,8 @@
 import React, {ChangeEventHandler} from 'react';
 
-import {ChartKit} from '../../../../components/ChartKit';
-import {settings} from '../../../../libs';
-import {GravityChartsPlugin} from '../../index';
+import {ChartKit} from '../../../components/ChartKit';
+import {settings} from '../../../libs';
+import {GravityChartsPlugin} from '../index';
 
 export const TestStory = (props: any) => {
     const [chartData, setChartData] = React.useState(props.data);

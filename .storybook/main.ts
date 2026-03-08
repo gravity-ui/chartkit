@@ -6,7 +6,7 @@ const config: StorybookConfig = {
         options: {},
     },
     stories: ['../src/**/*.mdx', '../src/**/*.stories.@(ts|tsx)'],
-    addons: ['@storybook/addon-docs'],
+    addons: ['@storybook/addon-docs', '@storybook/addon-vitest'],
     refs: (_config, {configType}) => {
         if (configType !== 'PRODUCTION') {
             return {} as Record<string, {title: string; url: string}>;

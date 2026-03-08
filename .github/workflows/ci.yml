@@ -5,13 +5,17 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   verify_files:
     name: Verify Files
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup Node
@@ -31,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup Node
@@ -41,5 +45,19 @@ jobs:
           cache: 'npm'
       - name: Install Packages
         run: npm ci
-      - name: Unit Tests
-        run: npm run test
+      - uses: ./.github/actions/setup-playwright
+      - name: Tests
+        run: npm run test:unit -- --coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: ./reports
+      - name: Save PR ID or ref
+        run: |
+          id="${{ github.event.pull_request.number || github.ref_name}}"
+          echo $id > ./id.txt
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        with:
+          name: id
+          path: ./id.txt

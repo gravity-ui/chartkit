@@ -1,9 +1,10 @@
 import React from 'react';
 
 import type {ChartData} from '@gravity-ui/charts';
-import {expect, test} from '@playwright/experimental-ct-react17';
 
-import {TestStory} from './TestStory.visual';
+import {render} from '../../../../test-utils/utils.js';
+
+import {TestStory} from './TestStory.visual.js';
 
 const VALID_CHART_DATA = {
     series: {
@@ -20,8 +21,8 @@ const VALID_CHART_DATA = {
     },
 } as ChartData;
 
-test('Validation should work when updating chart data (empty series)', async ({mount}) => {
-    const component = await mount(<TestStory data={VALID_CHART_DATA} />);
+test('Validation should work when updating chart data (empty series)', async () => {
+    const screen = await render(<TestStory data={VALID_CHART_DATA} />);
 
     const emptyData = {
         series: {
@@ -31,6 +32,7 @@ test('Validation should work when updating chart data (empty series)', async ({m
             type: 'category',
         },
     };
-    await component.locator('input').fill(JSON.stringify(emptyData));
-    await expect(component).toHaveText('No data');
+
+    await screen.getByRole('textbox').fill(JSON.stringify(emptyData));
+    await expect.element(screen.getByText('No data')).toBeVisible();
 });
