@@ -344,7 +344,7 @@ export const withSplitPane = <ComposedComponentProps extends {}>(
 
     return React.forwardRef<ComposedComponentProps, WrapperComponentPropsWithForwardedRef>(
         (props, ref) => {
-            return <WithSplitPane {...props} forwardedRef={ref} />;
+            return <WithSplitPane {...(props as any)} forwardedRef={ref} />;
         },
     );
 };

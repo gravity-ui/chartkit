@@ -10,7 +10,7 @@ declare global {
 
 const annotations = setProjectAnnotations([
     INTERNAL_DEFAULT_PROJECT_ANNOTATIONS,
-    projectAnnotations,
+    projectAnnotations as any,
 ]);
 
 beforeAll(async () => {

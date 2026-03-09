@@ -6,6 +6,7 @@ import type {ChartKitOnError, ChartKitType, ChartKitWidget, RenderError} from '.
 import {getErrorMessage} from '../../utils/getErrorMessage';
 
 type Props = {
+    children: React.ReactNode;
     onError?: ChartKitOnError;
     data: ChartKitWidget[ChartKitType]['data'];
     renderError?: RenderError;
@@ -24,14 +25,6 @@ export class ErrorBoundary extends React.Component<Props, State> {
         error: undefined,
     };
 
-    componentDidCatch() {
-        const {error} = this.state;
-
-        if (error) {
-            this.props.onError?.({error});
-        }
-    }
-
     componentDidUpdate(prevProps: Readonly<Props>) {
         if (prevProps.data !== this.props.data) {
             const {error} = this.state;
@@ -44,6 +37,14 @@ export class ErrorBoundary extends React.Component<Props, State> {
             ) {
                 this.resetError();
             }
+        }
+    }
+
+    componentDidCatch() {
+        const {error} = this.state;
+
+        if (error) {
+            this.props.onError?.({error});
         }
     }
 
