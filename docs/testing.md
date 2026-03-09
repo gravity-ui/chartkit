@@ -124,11 +124,9 @@ The CI pipeline (`.github/workflows/ci.yml`) runs:
 
 - Lint + typecheck (`verify_files` job)
 - Unit tests with coverage (`tests` job — runs `npm run test:unit -- --coverage`)
+- Visual tests (`visual_tests` job — runs `npm run test:visual` on Ubuntu, matching the committed Linux baselines)
 
-Visual tests are **not** run on every CI push. Instead:
-
-- Baselines are committed to the repository
-- Screenshots are updated on demand via the `/update-screenshots` bot command
+To update baselines after an intentional visual change, comment `/update-screenshots` on the PR.
 
 ### Test reports
 
