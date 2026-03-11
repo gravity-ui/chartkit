@@ -84,7 +84,7 @@ export default defineConfig({
                         enabled: false,
                     },
                     environment: 'node',
-                    setupFiles: [path.join(import.meta.dirname, './test-utils/setup-unit.ts')],
+
                     server: {
                         deps: {
                             inline: [/@gravity-ui\//, /@floating-ui\//],
