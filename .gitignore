@@ -10,6 +10,8 @@ build
 compiled
 .awcache
 .rpt2_cache
+/reports/
+/.vitest-attachments/
 /test-results/
 /playwright-report/
 /blob-report/

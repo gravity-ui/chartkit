@@ -1,15 +1,19 @@
 import React from 'react';
 
-import {Meta, StoryFn as Story} from '@storybook/react';
+import type {Meta, StoryObj} from '@storybook/react';
 
 import {ChartKit} from '../../../../components/ChartKit';
 import type {HighchartsWidgetData} from '../../types';
 import {ChartStory} from '../components/ChartStory';
 
-export default {
+const meta: Meta = {
     title: 'Plugins/Highcharts/Combined Charts',
     component: ChartKit,
-} as Meta;
+};
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
 
 const data = {
     data: {
@@ -77,8 +81,6 @@ const data = {
     },
 } as HighchartsWidgetData;
 
-const Template: Story<any> = () => {
-    return <ChartStory data={data} />;
+export const AreaLine: Story = {
+    render: () => <ChartStory data={data} />,
 };
-
-export const AreaLine = Template.bind({});

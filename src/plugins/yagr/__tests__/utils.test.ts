@@ -8,10 +8,10 @@ const DATA: YagrWidgetData['data'] = {
     graphs: [{data: [45]}],
 };
 
-jest.mock('@gravity-ui/date-utils', () => {
-    const originalModule = jest.requireActual('@gravity-ui/date-utils');
+vi.mock('@gravity-ui/date-utils', async () => {
+    const originalModule =
+        await vi.importActual<typeof import('@gravity-ui/date-utils')>('@gravity-ui/date-utils');
     return {
-        __esModule: true,
         ...originalModule,
         dateTime: ({input, timeZone}: {input: number; timeZone?: string}) => {
             const browserMockedTimezone = 'Europe/Moscow';

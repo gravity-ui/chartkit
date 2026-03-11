@@ -1,18 +1,20 @@
 import React from 'react';
 
-import {Meta, StoryFn as Story} from '@storybook/react';
+import type {Meta, StoryObj} from '@storybook/react';
 
 import {ChartKit} from '../../../../components/ChartKit';
 import {data} from '../../mocks/column-ver-stacked';
 import {ChartStory} from '../components/ChartStory';
 
-export default {
+const meta: Meta = {
     title: 'Plugins/Highcharts/Column',
     component: ChartKit,
-} as Meta;
-
-const Template: Story<any> = () => {
-    return <ChartStory data={data} />;
 };
 
-export const VerticalStacked = Template.bind({});
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const VerticalStacked: Story = {
+    render: () => <ChartStory data={data} />,
+};

@@ -68,7 +68,7 @@ export type ChartKitProps<T extends ChartKitType> = {
 
 export type ChartKitPlugin = {
     type: ChartKitType;
-    renderer: React.LazyExoticComponent<any>;
+    renderer: React.LazyExoticComponent<React.ComponentType<any>>;
 };
 
 export type RenderErrorOpts = {

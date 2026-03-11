@@ -1,18 +1,20 @@
 import React from 'react';
 
-import {Meta, StoryFn as Story} from '@storybook/react';
+import type {Meta, StoryObj} from '@storybook/react';
 
 import {ChartKit} from '../../../../components/ChartKit';
 import {data} from '../../mocks/complex';
 import {ChartStory} from '../components/ChartStory';
 
-export default {
+const meta: Meta = {
     title: 'Plugins/Highcharts/TwoAxis',
     component: ChartKit,
-} as Meta;
-
-const Template: Story = () => {
-    return <ChartStory data={data} height="500px" />;
 };
 
-export const TwoAxis = Template.bind({});
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const TwoAxis: Story = {
+    render: () => <ChartStory data={data} height="500px" />,
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Meta, StoryFn as Story} from '@storybook/react';
+import type {Meta, StoryObj} from '@storybook/react';
 import Highcharts from 'highcharts';
 import venn from 'highcharts/modules/venn';
 
@@ -9,15 +9,17 @@ import {data} from '../mocks/venn';
 
 import {ChartStory} from './components/ChartStory';
 
-export default {
+const meta: Meta = {
     title: 'Plugins/Highcharts/Venn',
     component: ChartKit,
-} as Meta;
+};
+
+export default meta;
 
 venn(Highcharts);
 
-const Template: Story<any> = () => {
-    return <ChartStory data={data} />;
-};
+type Story = StoryObj<typeof meta>;
 
-export const Venn = Template.bind({});
+export const Venn: Story = {
+    render: () => <ChartStory data={data} />,
+};

@@ -1,0 +1,131 @@
+name: Update Visual Regression Screenshots
+
+on:
+  issue_comment:
+    types: [created]
+
+env:
+  AUTHOR_NAME: 'gravity-ui[bot]'
+  AUTHOR_EMAIL: '207856522+gravity-ui[bot]@users.noreply.github.com'
+  COMMIT_MESSAGE: |
+    test: update visual regression screenshots
+
+    Co-authored-by: ${{ github.event.sender.login }} <${{ github.event.sender.id }}+${{ github.event.sender.login }}@users.noreply.github.com>
+
+jobs:
+  update-screenshots:
+    runs-on: ubuntu-latest
+
+    if: github.event.issue.pull_request && !github.event.issue.pull_request.merged_at && contains(github.event.comment.body, '/update-screenshots')
+
+    # one at a time per branch
+    concurrency:
+      group: visual-regression-screenshots@${{ github.event.issue.number }}
+      cancel-in-progress: true
+
+    permissions:
+      contents: write # needs to push changes
+
+    steps:
+      - name: Generate token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GRAVITY_UI_APP_ID }}
+          private-key: ${{ secrets.GRAVITY_UI_APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "${{ env.AUTHOR_NAME }}"
+          git config --global user.email "${{ env.AUTHOR_EMAIL }}"
+
+      - name: Set eyes emoji
+        id: start_working
+        run: |
+          echo "reaction_id=$(gh api repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions -f 'content=eyes' | jq .id)" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Checkout pull request
+        run: gh pr checkout ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        uses: ./.github/actions/setup-playwright
+
+      # the magic happens below 🪄
+      - name: Update Visual Regression Screenshots
+        run: npm run test:visual -- --update
+
+      # check what changed
+      - name: Check for changes
+        id: check_changes
+        run: |
+          CHANGED_FILES=$(git status --porcelain | awk '{print $2}')
+          if [ "${CHANGED_FILES:+x}" ]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+
+            # save the list for the summary
+            echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+            echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            echo "changed_count=$(echo "$CHANGED_FILES" | wc -l)" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          fi
+
+      # commit if there are changes
+      - name: Commit changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git add -A
+          git commit -m "${{ env.COMMIT_MESSAGE }}"
+
+      - name: Push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: git push
+
+      - name: Set done emoji
+        run: |
+          gh api --method DELETE repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions/${{ steps.start_working.outputs.reaction_id }}
+          gh api repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions -f 'content=${{ steps.check_changes.outputs.changes == 'true' && '+1' || 'confused' }}'
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      # pretty summary for humans
+      - name: Summary
+        run: |
+          if [[ "${{ steps.check_changes.outputs.changes }}" == "true" ]]; then
+            echo "### 📸 Visual Regression Screenshots Updated" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Successfully updated **${{ steps.check_changes.outputs.changed_count }}** screenshot(s) on PR #${{ github.event.issue.number }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "#### Changed Files:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.check_changes.outputs.changed_files }}" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ The updated screenshots have been committed and pushed. Your visual regression baseline is now up to date!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ℹ️ No Screenshot Updates Required" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The visual regression test command ran successfully but no screenshots needed updating." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "All screenshots are already up to date! 🎉" >> $GITHUB_STEP_SUMMARY
+          fi

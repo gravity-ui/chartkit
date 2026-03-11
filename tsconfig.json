@@ -10,5 +10,14 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "tests/*"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "test-utils/**/*.ts",
+    "test-utils/**/*.tsx",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
+    "vitest.shims.d.ts",
+    "vitest.config.ts"
+  ]
 }
