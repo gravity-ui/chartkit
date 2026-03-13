@@ -20,7 +20,14 @@ function compileTs() {
         module: 'esnext',
     });
 
-    return src(['src/**/*.{js,jsx,ts,tsx}'])
+    return src([
+        'src/**/*.{js,jsx,ts,tsx}',
+        '!src/**/__tests__/**',
+        '!src/**/__stories__/**',
+        '!src/**/*.test.{ts,tsx}',
+        '!src/**/*.visual.test.{ts,tsx}',
+        '!src/**/*.stories.{ts,tsx}',
+    ])
         .pipe(replace(/import '.+\.scss';/g, (match) => match.replace('.scss', '.css')))
         .pipe(tsProject())
         .pipe(dest(path.resolve(BUILD_DIR)));
