@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.42.2](https://github.com/gravity-ui/chartkit/compare/v7.42.1...v7.42.2) (2026-03-13)
+
+
+### Bug Fixes
+
+* **build:** exclude test and story files from gulp compilation, add build CI check ([#808](https://github.com/gravity-ui/chartkit/issues/808)) ([934d223](https://github.com/gravity-ui/chartkit/commit/934d223003a98100bb4bad1a42c74b81c181310b))
+
 ## [7.42.1](https://github.com/gravity-ui/chartkit/compare/v7.42.0...v7.42.1) (2026-03-13)
 
 
