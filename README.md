@@ -172,7 +172,7 @@ When you're done:
 
 ```shell
 # In ChartKit:
-npm install
+npm ci
 
 # Optionally, remove the global link:
 # npm unlink -g @gravity-ui/charts
