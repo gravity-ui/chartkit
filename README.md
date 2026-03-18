@@ -122,6 +122,62 @@ npm run start
 
 Storybook will be available at `http://localhost:7007`.
 
+### Developing with a local dependency
+
+To work on a dependency (e.g. `@gravity-ui/charts`) and see your changes live in Storybook without publishing to npm:
+
+**1. Link the local package**
+
+```shell
+# In your local clone of @gravity-ui/charts:
+git clone https://github.com/gravity-ui/charts.git
+cd charts
+npm ci
+# make your changes
+npm run build
+npm link
+
+# In ChartKit:
+npm link @gravity-ui/charts
+```
+
+**2. Configure local package watching**
+
+Create a `.env.local` file in the ChartKit root (it is gitignored):
+
+```shell
+LOCAL_PKG=@gravity-ui/charts
+```
+
+This tells Vite to watch that package in `node_modules` and skip pre-bundling it. After rebuilding `@gravity-ui/charts`, Storybook will hot-reload automatically.
+
+For multiple packages, use a comma-separated list:
+
+```shell
+LOCAL_PKG=@gravity-ui/charts,@gravity-ui/uikit
+```
+
+**3. Start Storybook**
+
+```shell
+npm run start
+```
+
+**4. Restore the original package**
+
+When you're done:
+
+1. Comment out `LOCAL_PKG` in `.env.local`
+2. Run `npm install` in ChartKit — it replaces the symlink with the registry version
+
+```shell
+# In ChartKit:
+npm install
+
+# Optionally, remove the global link:
+# npm unlink -g @gravity-ui/charts
+```
+
 ### Running tests
 
 ```shell
