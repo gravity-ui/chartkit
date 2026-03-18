@@ -68,30 +68,30 @@ import '@gravity-ui/uikit/styles/styles.css';
 settings.set({plugins: [GravityChartsPlugin]});
 
 const data = {
-    series: {
+  series: {
+    data: [
+      {
+        type: 'line',
+        name: 'Series',
         data: [
-            {
-                type: 'line',
-                name: 'Series',
-                data: [
-                    {x: 0, y: 10},
-                    {x: 1, y: 25},
-                    {x: 2, y: 18},
-                    {x: 3, y: 30},
-                ],
-            },
+          {x: 0, y: 10},
+          {x: 1, y: 25},
+          {x: 2, y: 18},
+          {x: 3, y: 30},
         ],
-    },
+      },
+    ],
+  },
 };
 
 export default function App() {
-    return (
-        <ThemeProvider theme="light">
-            <div style={{height: 300}}>
-                <ChartKit type="gravity-charts" data={data} />
-            </div>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider theme="light">
+      <div style={{height: 300}}>
+        <ChartKit type="gravity-charts" data={data} />
+      </div>
+    </ThemeProvider>
+  );
 }
 ```
 
