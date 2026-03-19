@@ -63,7 +63,9 @@ const SplitPaneContent = (
         const containerHeight = height;
         if (containerHeight - RESIZER_HEIGHT === size) {
             setSize(containerHeight - RESIZER_HEIGHT - tooltipHeight);
-            chartRef.current?.reflow();
+            queueMicrotask(() => {
+                chartRef.current?.reflow({immediate: true});
+            });
         }
     }
 
@@ -104,6 +106,9 @@ const SplitPaneContent = (
         };
 
         return {
+            defaultState: {
+                hoveredPosition: {x: 0, y: 0},
+            },
             ...data,
             chart: {
                 ...data.chart,
@@ -116,7 +121,7 @@ const SplitPaneContent = (
                 ...data.tooltip,
                 enabled: false,
             },
-        };
+        } satisfies ChartData;
     }, [data]);
 
     const handleOrientationChange = React.useCallback(() => {
