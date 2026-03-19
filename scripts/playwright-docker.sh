@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Usage:
+#   npm run test:docker:update                         - run all visual tests with --update
+#   npm run test:docker:update -- <file-pattern>        - run only matching files (e.g. Base.visual, SplitTooltip)
 
 set -euo pipefail
 

@@ -4,6 +4,8 @@ import {MobileProvider, ThemeProvider} from '@gravity-ui/uikit';
 import {render, renderHook} from 'vitest-browser-react';
 import type {ComponentRenderOptions} from 'vitest-browser-react';
 
+const DEFAULT_PROVIDERS: ProvidersProps = {theme: 'light'};
+
 interface ProvidersProps {
     theme?: string;
     mobile?: boolean;
@@ -43,7 +45,8 @@ function customRender(
         providers?: {theme?: string; mobile?: boolean};
     } = {},
 ) {
-    const wrapper = createWrapper(providers, options.wrapper);
+    const mergedProviders = {...DEFAULT_PROVIDERS, ...providers};
+    const wrapper = createWrapper(mergedProviders, options.wrapper);
     return render(ui, {...options, wrapper});
 }
 

@@ -21,7 +21,7 @@ export default defineConfig({
             instances: [
                 {
                     browser: 'chromium',
-                    viewport: {width: 1280, height: 720},
+                    viewport: {height: 280, width: 400},
                 },
             ],
             locators: {testIdAttribute: 'data-qa'},
