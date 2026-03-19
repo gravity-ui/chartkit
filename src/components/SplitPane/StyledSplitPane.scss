@@ -3,7 +3,16 @@
 
 .styled-split-pane {
     &__pane-resizer {
-        background: var(--g-color-base-generic);
+        background: linear-gradient(
+                to right,
+                var(--g-color-base-generic),
+                var(--g-color-base-generic)
+            ),
+            linear-gradient(
+                to right,
+                var(--g-color-base-background),
+                var(--g-color-base-background)
+            );
         z-index: 1;
         box-sizing: border-box;
         position: relative;
@@ -44,12 +53,23 @@
             height: 100%;
             width: 1px;
             min-width: 1px;
-            background: var(--data-table-border-color);
         }
     }
 
     .Pane {
         height: 100%;
-        background: var(--ck-split-pane-background);
+    }
+
+    .Pane2 {
+        background: linear-gradient(
+                to right,
+                var(--g-color-infographics-tooltip-bg),
+                var(--g-color-infographics-tooltip-bg)
+            ),
+            linear-gradient(
+                to right,
+                var(--g-color-base-background),
+                var(--g-color-base-background)
+            );
     }
 }
