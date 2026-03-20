@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.44.0](https://github.com/gravity-ui/chartkit/compare/v7.43.1...v7.44.0) (2026-03-20)
+
+
+### Features
+
+* **deps:** Update `@gravity-ui/charts` `1.41.1` -&gt; `1.42.0` ([#817](https://github.com/gravity-ui/chartkit/issues/817)) ([c9be577](https://github.com/gravity-ui/chartkit/commit/c9be577b22ac7c48e4bda98be06dd73579b8fbde))
+* **gravity-charts:** improve split tooltip UX ([#815](https://github.com/gravity-ui/chartkit/issues/815)) ([f8cb605](https://github.com/gravity-ui/chartkit/commit/f8cb60515416224fc7512ffb2b28bb6c520921f5))
+
 ## [7.43.1](https://github.com/gravity-ui/chartkit/compare/v7.43.0...v7.43.1) (2026-03-18)
 
 
