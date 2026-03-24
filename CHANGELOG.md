@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.44.1](https://github.com/gravity-ui/chartkit/compare/v7.44.0...v7.44.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* **deps:** Update `@gravity-ui/charts` `1.42.0` -&gt; `1.42.2` ([#822](https://github.com/gravity-ui/chartkit/issues/822)) ([6116496](https://github.com/gravity-ui/chartkit/commit/61164963778c119d42d3900144c69834276f74a8))
+* **Highcharts:** fix drillOnClick event ([#819](https://github.com/gravity-ui/chartkit/issues/819)) ([d15e6e8](https://github.com/gravity-ui/chartkit/commit/d15e6e8800b3e0f931a93a87c1f9bbd7e8129187))
+
 ## [7.44.0](https://github.com/gravity-ui/chartkit/compare/v7.43.1...v7.44.0) (2026-03-20)
 
 
