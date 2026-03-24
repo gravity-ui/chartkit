@@ -1416,7 +1416,7 @@ function drillOnClick(event, {options, chartType}) {
             const series = point.series;
 
             if (isColorDrillDown) {
-                return series.name;
+                return series.drillDownFilterValue || series.name;
             }
 
             let drillDownFilter =
