@@ -410,16 +410,15 @@ function getTypeParams(data, options) {
         }
     }
 
-    if (options.highstock) {
-        params.xAxis.events = {};
-        params.xAxis.events.afterSetExtremes = (e) => {
+    params.xAxis.events = {
+        afterSetExtremes: (e) => {
             const chart = e.target.chart;
             if (chart.userOptions.isCallbackCalled) {
                 hideComments(chart, chart.userOptions._getComments(), chart.userOptions._config);
                 drawComments(chart, chart.userOptions._getComments(), chart.userOptions._config);
             }
-        };
-    }
+        },
+    };
 
     if (options.zones) {
         params.yAxis.plotBands = prepareZones(options);
