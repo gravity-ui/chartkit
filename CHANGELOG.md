@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.53.1](https://github.com/gravity-ui/chartkit/compare/v7.53.0...v7.53.1) (2026-05-04)
+
+
+### Bug Fixes
+
+* **comments:** redraw comments on zoom/unzoom for non-highstock charts ([#857](https://github.com/gravity-ui/chartkit/issues/857)) ([7579c9a](https://github.com/gravity-ui/chartkit/commit/7579c9ae94714701fbe3bf983562e6a85c0a2f25))
+* **deps:** Update `@gravity-ui/charts` `1.51.0` -&gt; `1.51.1` ([#858](https://github.com/gravity-ui/chartkit/issues/858)) ([687b0ca](https://github.com/gravity-ui/chartkit/commit/687b0cacf212e4ff1b11bf6740f92fb13b0c6fb6))
+
 ## [7.53.0](https://github.com/gravity-ui/chartkit/compare/v7.52.0...v7.53.0) (2026-04-29)
 
 
