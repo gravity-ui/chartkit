@@ -26,7 +26,7 @@ export const ChartStory: React.FC<ChartStoryProps> = (props: ChartStoryProps) =>
 
     const initRef = React.useRef(false);
     const [visible, setVisible] = React.useState(Boolean(props.visible));
-    const chartKitRef = React.useRef<ChartKitRef>();
+    const chartKitRef = React.useRef<ChartKitRef | undefined>(undefined);
 
     if (!initRef.current) {
         if (!props.withoutPlugin) {

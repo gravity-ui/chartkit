@@ -61,7 +61,7 @@ function prepareData(): YagrWidgetData {
 
 const ChartStory = ({data}: {data: YagrWidgetData}) => {
     const [shown, setShown] = React.useState(false);
-    const chartkitRef = React.useRef<ChartKitRef>();
+    const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
 
     if (!shown) {
         settings.set({plugins: [YagrPlugin]});

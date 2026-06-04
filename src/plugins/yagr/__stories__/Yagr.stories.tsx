@@ -72,7 +72,7 @@ function Tooltip({yagr}: CustomTooltipProps) {
 export const Line: Story = {
     render: () => {
         const [shown, setShown] = React.useState(false);
-        const chartkitRef = React.useRef<ChartKitRef>();
+        const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
 
         if (!shown) {
             settings.set({plugins: [YagrPlugin]});
@@ -90,7 +90,7 @@ export const Line: Story = {
 export const Updates: Story = {
     render: () => {
         const [shown, setShown] = React.useState(false);
-        const chartkitRef = React.useRef<ChartKitRef>();
+        const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
 
         const [state, setState] = React.useState(line10);
 
@@ -118,7 +118,7 @@ export const Updates: Story = {
 export const CustomTooltip: Story = {
     render: () => {
         const [shown, setShown] = React.useState(false);
-        const chartkitRef = React.useRef<ChartKitRef>();
+        const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
 
         const [state, setState] = React.useState(line10);
 
@@ -145,7 +145,7 @@ export const CustomTooltip: Story = {
 export const Area: Story = {
     render: () => {
         const [shown, setShown] = React.useState(false);
-        const chartkitRef = React.useRef<ChartKitRef>();
+        const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
 
         if (!shown) {
             settings.set({plugins: [YagrPlugin]});
