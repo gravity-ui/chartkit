@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.59.0](https://github.com/gravity-ui/chartkit/compare/v7.58.0...v7.59.0) (2026-06-05)
+
+
+### Features
+
+* support React 19 ([#887](https://github.com/gravity-ui/chartkit/issues/887)) ([ef037d9](https://github.com/gravity-ui/chartkit/commit/ef037d988b03a5e2f55bb43a4839df0b20f5a495))
+
+
+### Bug Fixes
+
+* **deps:** Update `@gravity-ui/charts` `1.55.0` -&gt; `1.55.1` ([#889](https://github.com/gravity-ui/chartkit/issues/889)) ([0654e3a](https://github.com/gravity-ui/chartkit/commit/0654e3a02323de4e9fa63a34b65784f4be5ae9ea))
+
 ## [7.58.0](https://github.com/gravity-ui/chartkit/compare/v7.57.0...v7.58.0) (2026-06-04)
 
 
