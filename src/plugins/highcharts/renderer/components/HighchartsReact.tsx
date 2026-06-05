@@ -12,7 +12,7 @@ import {useElementSize} from './useElementSize';
 
 interface HighchartsReactRefObject {
     chart: Highcharts.Chart | null | undefined;
-    container: React.RefObject<HTMLDivElement | undefined>;
+    container: React.RefObject<HTMLDivElement | null>;
 }
 
 interface HighchartsReactProps {
@@ -33,7 +33,7 @@ export const HighchartsReact = React.memo(
         function HighchartsReact(props, ref) {
             const {onRender} = props;
             const containerRef = React.useRef<HTMLDivElement | null>(null);
-            const chartRef = React.useRef<Highcharts.Chart | null>();
+            const chartRef = React.useRef<Highcharts.Chart | null>(null);
             const {width, height} = useElementSize(containerRef);
             const performanceMeasure = React.useRef<ReturnType<typeof measurePerformance> | null>(
                 measurePerformance(),

@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 export const PerformanceIssue: Story = {
     render: () => {
         const [shown, setShown] = React.useState(false);
-        const chartkitRef = React.useRef<ChartKitRef>();
+        const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
 
         const widgetData = React.useMemo(() => {
             const categories = Array.from({length: 5000}).map((_, i) => String(i));

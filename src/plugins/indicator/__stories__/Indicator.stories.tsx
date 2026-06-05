@@ -32,7 +32,7 @@ interface ChartStoryProps {
 
 const ChartStory = ({color, size, title, nowrap}: ChartStoryProps) => {
     const [shown, setShown] = React.useState(false);
-    const chartkitRef = React.useRef<ChartKitRef>();
+    const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
     const resultData = cloneDeep(data);
 
     if (resultData.data) {
