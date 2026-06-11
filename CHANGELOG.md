@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.60.0](https://github.com/gravity-ui/chartkit/compare/v7.59.1...v7.60.0) (2026-06-11)
+
+
+### Features
+
+* **deps:** Update `@gravity-ui/charts` `1.55.2` -&gt; `1.56.0` ([#892](https://github.com/gravity-ui/chartkit/issues/892)) ([e8693f0](https://github.com/gravity-ui/chartkit/commit/e8693f0893bccdb0973f9349cce7168333a71a96))
+
 ## [7.59.1](https://github.com/gravity-ui/chartkit/compare/v7.59.0...v7.59.1) (2026-06-11)
 
 
