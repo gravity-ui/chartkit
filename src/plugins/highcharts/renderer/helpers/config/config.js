@@ -1828,7 +1828,8 @@ export function prepareConfig(data, options, isMobile, holidays) {
         params.tooltip.formatter = function (tooltip) {
             return `<div class="${b()}">${formatter.call(this, tooltip)}</div>`;
         };
-        delete options.highcharts.tooltip.formatter;
+        // The raw formatter is stripped from the merge source (preparedHighchartsOptions) below,
+        // not from options.highcharts, so the caller's libraryConfig is not mutated.
     } else {
         params.tooltip.formatter = function (tooltip) {
             const serieType =
@@ -1925,6 +1926,12 @@ export function prepareConfig(data, options, isMobile, holidays) {
         },
         options.highcharts,
     );
+
+    // params.tooltip.formatter already holds the wrapped user formatter (see above).
+    // Drop the raw formatter from this clone so the merge below doesn't override the wrapper.
+    if (preparedHighchartsOptions.tooltip) {
+        delete preparedHighchartsOptions.tooltip.formatter;
+    }
 
     mergeWith(params, getTypeParams(data, options), preparedHighchartsOptions, (a, b) => {
         if (typeof a === 'function' && typeof b === 'function' && a !== b) {
