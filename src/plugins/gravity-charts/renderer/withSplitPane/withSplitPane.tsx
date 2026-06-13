@@ -35,6 +35,10 @@ const SplitPaneContent = (
     const {data, height, ChartComponent, ...restProps} = props;
     const tooltipContainerRef = React.useRef<HTMLDivElement | null>(null);
     const chartRef = React.useRef<ChartRef>(null);
+    // Remounts the chart when the chart pane is first resized to fit the split tooltip (see below).
+    // The chart applies `data.defaultState.hoveredPosition` only once per mount, so a resize would
+    // otherwise leave the chart without its initial highlight while the tooltip still shows it.
+    const [chartGeneration, setChartGeneration] = React.useState(0);
     const tooltipRef = React.useRef<TooltipContentRef>(null);
     const shouldShowTooltip = React.useRef<boolean>(false);
     const {
@@ -62,10 +66,12 @@ const SplitPaneContent = (
     ) {
         const containerHeight = height;
         if (containerHeight - RESIZER_HEIGHT === size) {
+            // Shrink the chart pane to make room for the tooltip, then remount the chart (via
+            // `chartGeneration`) instead of reflowing it. A `reflow()` resizes the chart but drops
+            // its default hovered point, desyncing it from the split tooltip; remounting re-applies
+            // `defaultState` at the new size so the hovered bar stays highlighted.
             setSize(containerHeight - RESIZER_HEIGHT - tooltipHeight);
-            queueMicrotask(() => {
-                chartRef.current?.reflow({immediate: true});
-            });
+            setChartGeneration((generation) => generation + 1);
         }
     }
 
@@ -181,7 +187,14 @@ const SplitPaneContent = (
             split={split}
             onChange={handleSizeChange}
             resizerStyle={shouldShowTooltip.current ? undefined : {display: 'none'}}
-            paneOneRender={() => <ChartComponent {...restProps} ref={chartRef} data={resultData} />}
+            paneOneRender={() => (
+                <ChartComponent
+                    key={chartGeneration}
+                    {...restProps}
+                    ref={chartRef}
+                    data={resultData}
+                />
+            )}
             paneTwoRender={() => (
                 <div ref={tooltipContainerRef}>
                     <TooltipContent
