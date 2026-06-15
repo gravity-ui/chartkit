@@ -25,9 +25,7 @@ const SPLIT_TOOLTIP_DATA: ChartData = {
     xAxis: {type: 'category', categories: ['A', 'B']},
 };
 
-// TODO: flaky — screenshots captured before async chart render. Skipped until fixed.
-// https://github.com/gravity-ui/chartkit/issues/896
-describe.skip('Split tooltip visual tests', () => {
+describe('Split tooltip visual tests', () => {
     beforeAll(() => {
         settings.set({plugins: [GravityChartsPlugin]});
     });
