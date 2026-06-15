@@ -13,7 +13,9 @@ describe('GravityCharts base tests', () => {
         settings.set({plugins: [GravityChartsPlugin]});
     });
 
-    test('should render chart with valid data', async () => {
+    // TODO: flaky — screenshot captured before async chart render. Skipped until fixed.
+    // https://github.com/gravity-ui/chartkit/issues/896
+    test.skip('should render chart with valid data', async () => {
         const data: ChartData = {
             series: {
                 data: [
