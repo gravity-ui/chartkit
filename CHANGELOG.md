@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.60.1](https://github.com/gravity-ui/chartkit/compare/v7.60.0...v7.60.1) (2026-06-15)
+
+
+### Bug Fixes
+
+* **highcharts:** keep tooltip formatter override stable across re-renders ([#894](https://github.com/gravity-ui/chartkit/issues/894)) ([c9abd09](https://github.com/gravity-ui/chartkit/commit/c9abd097d82a282c85199f184250b470498c7e25))
+
 ## [7.60.0](https://github.com/gravity-ui/chartkit/compare/v7.59.1...v7.60.0) (2026-06-11)
 
 
