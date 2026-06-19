@@ -9,7 +9,7 @@ export type TooltipContentRef = {
 
 type TooltipContentProps = Pick<
     ChartTooltipContentProps,
-    'renderer' | 'headerFormat' | 'valueFormat' | 'rowRenderer' | 'totals'
+    'renderer' | 'headerFormat' | 'valueFormat' | 'rowRenderer' | 'totals' | 'rows'
 >;
 
 export const TooltipContent = React.forwardRef<TooltipContentRef, TooltipContentProps>(

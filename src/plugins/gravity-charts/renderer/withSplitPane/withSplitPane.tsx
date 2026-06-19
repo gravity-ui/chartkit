@@ -191,6 +191,7 @@ const SplitPaneContent = (
                         valueFormat={resultData.tooltip.valueFormat}
                         rowRenderer={resultData.tooltip.rowRenderer}
                         totals={resultData.tooltip.totals}
+                        rows={resultData.tooltip.rows}
                     />
                 </div>
             )}
