@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.60.3](https://github.com/gravity-ui/chartkit/compare/v7.60.2...v7.60.3) (2026-06-19)
+
+
+### Bug Fixes
+
+* **gravity-charts:** add tooltip.rows to splitPaneTooltip ([#900](https://github.com/gravity-ui/chartkit/issues/900)) ([6376215](https://github.com/gravity-ui/chartkit/commit/63762158b5507de585017e29cd95055ee193285f))
+
 ## [7.60.2](https://github.com/gravity-ui/chartkit/compare/v7.60.1...v7.60.2) (2026-06-17)
 
 
