@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.60.4](https://github.com/gravity-ui/chartkit/compare/v7.60.3...v7.60.4) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** Update `@gravity-ui/yagr` `4.13.4` -&gt; `4.13.6` ([#903](https://github.com/gravity-ui/chartkit/issues/903)) ([9a65849](https://github.com/gravity-ui/chartkit/commit/9a65849d3e130a613021cce88202d29127b13e1a))
+
 ## [7.60.3](https://github.com/gravity-ui/chartkit/compare/v7.60.2...v7.60.3) (2026-06-19)
 
 
