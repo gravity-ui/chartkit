@@ -1,7 +1,7 @@
 import type {MinimalValidConfig, RawSerieData, YagrConfig} from '@gravity-ui/yagr';
 import type Yagr from '@gravity-ui/yagr';
 
-import {ChartKitProps} from 'src/types';
+import type {ChartKitProps} from '../../types';
 
 export type {default as Yagr} from '@gravity-ui/yagr';
 export type {YagrReactRef} from '@gravity-ui/yagr/react';
