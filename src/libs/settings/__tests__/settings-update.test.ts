@@ -1,5 +1,4 @@
-import {ChartKitPlugin} from 'src/types';
-
+import type {ChartKitPlugin} from '../../../types';
 import {settings} from '../settings';
 
 const resetSettings = () => settings.set({lang: 'en'});
