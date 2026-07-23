@@ -122,7 +122,7 @@
     "clean": "gulp clean",
     "start": "storybook dev -p 7007",
     "build": "gulp",
-    "build:docs": "node scripts/build-docs.mjs",
+    "build:docs": "gulp copy-docs",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
     "lint:styles": "cross-env stylelint '{styles,src}/**/*.scss'",
