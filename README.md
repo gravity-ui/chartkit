@@ -233,3 +233,7 @@ A plugin-dispatching React component that renders charts from multiple Gravity U
 - **Forgetting a container height** — `ChartKit` fills its parent; without an explicit height on the wrapper, the chart collapses to zero.
 - **Expecting plugins to be bundled** — plugin renderers (`@gravity-ui/chartkit/gravity-charts`, `.../yagr`) are lazy; the first render of a type fetches its bundle.
 - **Missing the uikit styles import** — theming depends on `@gravity-ui/uikit/styles/styles.css`; without it, charts render unstyled.
+
+## Documentation for AI agents
+
+Agent-readable documentation for the installed version is located in `node_modules/@gravity-ui/chartkit/build/docs/INDEX.md`.
