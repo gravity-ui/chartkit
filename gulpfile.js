@@ -56,9 +56,36 @@ task('styles-components', () => {
         .pipe(dest(path.resolve(BUILD_DIR)));
 });
 
+// Bundles the AI-facing docs tree (cleaned README + docs/ guides) into build/docs so it
+// ships in the npm tarball.
+task('copy-docs', (done) => {
+    const {buildDocs} = require('@gravity-ui/readme-validator');
+    buildDocs({
+        rootDir: __dirname,
+        outDir: path.join(__dirname, 'build', 'docs'),
+        sources: [
+            {
+                title: 'Guides',
+                kind: 'markdown',
+                baseDir: 'docs',
+                outPrefix: 'guides',
+                nameFromTitle: true,
+            },
+        ],
+    });
+    done();
+});
+
 task(
     'build',
-    series(['clean', 'compile-to-esm', 'copy-js-declarations', 'copy-i18n', 'styles-components']),
+    series([
+        'clean',
+        'compile-to-esm',
+        'copy-js-declarations',
+        'copy-i18n',
+        'styles-components',
+        'copy-docs',
+    ]),
 );
 
 task('default', series(['build']));
