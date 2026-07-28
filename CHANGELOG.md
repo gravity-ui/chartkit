@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.61.0](https://github.com/gravity-ui/chartkit/compare/v7.60.5...v7.61.0) (2026-07-28)
+
+
+### Features
+
+* **deps:** Update `@gravity-ui/charts` `1.56.1` -&gt; `1.57.1` ([#913](https://github.com/gravity-ui/chartkit/issues/913)) ([499a129](https://github.com/gravity-ui/chartkit/commit/499a1297e59c6e782f4e031689e9e1c600fba456))
+
+
+### Bug Fixes
+
+* remove baseUrl, use relative imports ([#910](https://github.com/gravity-ui/chartkit/issues/910)) ([815f93d](https://github.com/gravity-ui/chartkit/commit/815f93d316d4e8adb281b61b1e39ad361138f262))
+
 ## [7.60.5](https://github.com/gravity-ui/chartkit/compare/v7.60.4...v7.60.5) (2026-07-07)
 
 
