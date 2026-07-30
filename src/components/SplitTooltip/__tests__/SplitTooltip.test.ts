@@ -1,12 +1,11 @@
-import {SplitLayout} from '../SplitPane';
-
+import {SplitLayout} from '../../SplitPane';
 import {
     SPLIT_TOOLTIP_RESIZER_SIZE,
     SplitTooltipLayout,
     getSplitTooltipLayout,
     getSplitTooltipMainPaneSize,
     getSplitTooltipSizeLimits,
-} from './SplitTooltip';
+} from '../SplitTooltip';
 
 describe('SplitTooltip', () => {
     test('exposes layout values as part of the public component API', () => {

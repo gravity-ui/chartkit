@@ -1,10 +1,9 @@
 import React from 'react';
 
-import {render} from '../../../test-utils/utils.js';
-import {SplitLayout} from '../SplitPane/index.js';
-
-import {SplitTooltip} from './SplitTooltip.js';
-import type {SplitTooltipLayout} from './SplitTooltip.js';
+import {render} from '../../../../test-utils/utils.js';
+import {SplitLayout} from '../../SplitPane/index.js';
+import {SplitTooltip} from '../SplitTooltip.js';
+import type {SplitTooltipLayout} from '../SplitTooltip.js';
 
 type TestCaseProps = {
     containerHeight: number;
