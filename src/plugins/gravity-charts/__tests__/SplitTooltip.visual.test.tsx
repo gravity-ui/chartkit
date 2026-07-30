@@ -25,28 +25,57 @@ const SPLIT_TOOLTIP_DATA: ChartData = {
     xAxis: {type: 'category', categories: ['A', 'B']},
 };
 
-// TODO: flaky — screenshots captured before async chart render. Skipped until fixed.
-// https://github.com/gravity-ui/chartkit/issues/896
-describe.skip('Split tooltip visual tests', () => {
+function createRenderWaiter(expectedRenderCount: number) {
+    let renderCount = 0;
+    let resolveRender: () => void;
+    const rendered = new Promise<void>((resolve) => {
+        resolveRender = resolve;
+    });
+
+    return {
+        rendered,
+        onRender() {
+            renderCount += 1;
+
+            if (renderCount === expectedRenderCount) {
+                resolveRender();
+            }
+        },
+    };
+}
+
+describe('Split tooltip visual tests', () => {
     beforeAll(() => {
         settings.set({plugins: [GravityChartsPlugin]});
     });
 
     test('should render tooltip in album orientation', async () => {
         await page.viewport(600, 280);
+        const renderWaiter = createRenderWaiter(1);
         const screen = await render(
-            <ChartTestStory data={SPLIT_TOOLTIP_DATA} tooltip={{splitted: true}} />,
+            <ChartTestStory
+                data={SPLIT_TOOLTIP_DATA}
+                tooltip={{splitted: true}}
+                onRender={renderWaiter.onRender}
+            />,
             {providers: {theme: 'dark'}},
         );
+        await renderWaiter.rendered;
         await expect(screen.getByTestId(CHART_TEST_STORY_DATA_QA)).toMatchScreenshot();
     });
 
     test('should render tooltip in portrait orientation', async () => {
         await page.viewport(280, 400);
+        const renderWaiter = createRenderWaiter(2);
         const screen = await render(
-            <ChartTestStory data={SPLIT_TOOLTIP_DATA} tooltip={{splitted: true}} />,
+            <ChartTestStory
+                data={SPLIT_TOOLTIP_DATA}
+                tooltip={{splitted: true}}
+                onRender={renderWaiter.onRender}
+            />,
             {providers: {theme: 'dark'}},
         );
+        await renderWaiter.rendered;
         await expect(screen.getByTestId(CHART_TEST_STORY_DATA_QA)).toMatchScreenshot();
     });
 });
