@@ -65,7 +65,7 @@ const SplitPaneContent = (props: ChartProps & {ChartComponent: typeof Chart}) =>
 
     return (
         <SplitTooltip
-            tooltipVisible={tooltipVisible}
+            resizerVisible={tooltipVisible}
             onMainPaneSizeChange={() => chartRef.current?.reflow()}
             renderMainPane={() => (
                 <ChartComponent {...restProps} ref={chartRef} data={resultData} />

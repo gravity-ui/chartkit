@@ -16,6 +16,13 @@ describe('SplitTooltip', () => {
         expect(getSplitTooltipLayout(640, 320)).toBe(SplitLayout.VERTICAL);
     });
 
+    test('uses explicit layout instead of container orientation', () => {
+        expect(getSplitTooltipLayout(320, 640, SplitLayout.VERTICAL)).toBe(SplitLayout.VERTICAL);
+        expect(getSplitTooltipLayout(640, 320, SplitLayout.HORIZONTAL)).toBe(
+            SplitLayout.HORIZONTAL,
+        );
+    });
+
     test('reserves tooltip height in horizontal layout', () => {
         expect(
             getSplitTooltipMainPaneSize({

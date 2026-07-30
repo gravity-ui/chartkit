@@ -8,16 +8,19 @@ import type {SplitLayoutType} from '../SplitPane';
 export const SPLIT_TOOLTIP_RESIZER_SIZE = 24;
 export const SPLIT_TOOLTIP_MAIN_PANE_RATIO = 0.6;
 
+export type SplitTooltipLayout = SplitLayoutType;
+
 export type SplitTooltipRenderProps = {
-    layout: SplitLayoutType;
+    layout: SplitTooltipLayout;
     size: number;
 };
 
 export type SplitTooltipProps = {
     renderMainPane: (props: SplitTooltipRenderProps) => React.ReactNode;
     renderTooltip: (props: SplitTooltipRenderProps) => React.ReactNode;
-    tooltipVisible: boolean;
-    onMainPaneSizeChange?: (size: number, layout: SplitLayoutType) => void;
+    layout?: SplitTooltipLayout;
+    resizerVisible: boolean;
+    onMainPaneSizeChange?: (size: number, layout: SplitTooltipLayout) => void;
     style?: React.CSSProperties;
     mainPaneStyle?: React.CSSProperties;
     tooltipPaneStyle?: React.CSSProperties;
@@ -31,8 +34,12 @@ type SplitTooltipContentProps = SplitTooltipProps & {
 const hiddenResizerStyle = {display: 'none'};
 const defaultTooltipPaneStyle = {overflow: 'auto'};
 
-export function getSplitTooltipLayout(width: number, height: number): SplitLayoutType {
-    return width > height ? SplitLayout.VERTICAL : SplitLayout.HORIZONTAL;
+export function getSplitTooltipLayout(
+    width: number,
+    height: number,
+    layout?: SplitTooltipLayout,
+): SplitTooltipLayout {
+    return layout ?? (width > height ? SplitLayout.VERTICAL : SplitLayout.HORIZONTAL);
 }
 
 export function getSplitTooltipMainPaneSize({
@@ -43,7 +50,7 @@ export function getSplitTooltipMainPaneSize({
 }: {
     containerHeight: number;
     containerWidth: number;
-    layout: SplitLayoutType;
+    layout: SplitTooltipLayout;
     tooltipHeight: number;
 }) {
     if (layout === SplitLayout.VERTICAL) {
@@ -67,20 +74,60 @@ export function getSplitTooltipSizeLimits(containerHeight: number, tooltipHeight
     };
 }
 
+type SplitTooltipDimensions = {
+    containerHeight: number;
+    containerWidth: number;
+    layout: SplitTooltipLayout;
+    tooltipHeight: number;
+};
+
+function getNextMainPaneSize({
+    currentSize,
+    nextDimensions,
+    previousDimensions,
+}: {
+    currentSize: number;
+    nextDimensions: SplitTooltipDimensions;
+    previousDimensions: SplitTooltipDimensions;
+}) {
+    if (
+        nextDimensions.layout !== previousDimensions.layout ||
+        nextDimensions.layout === SplitLayout.VERTICAL
+    ) {
+        return getSplitTooltipMainPaneSize(nextDimensions);
+    }
+
+    const {maxSize: previousMaxSize} = getSplitTooltipSizeLimits(
+        previousDimensions.containerHeight,
+        previousDimensions.tooltipHeight,
+    );
+    const {minSize: nextMinSize, maxSize: nextMaxSize} = getSplitTooltipSizeLimits(
+        nextDimensions.containerHeight,
+        nextDimensions.tooltipHeight,
+    );
+
+    if (currentSize === previousMaxSize) {
+        return nextMaxSize;
+    }
+
+    return Math.max(nextMinSize, Math.min(nextMaxSize, currentSize));
+}
+
 function SplitTooltipContent(props: SplitTooltipContentProps) {
     const {
         containerHeight,
         containerWidth,
         renderMainPane,
         renderTooltip,
-        tooltipVisible,
+        layout: layoutProp,
+        resizerVisible,
         onMainPaneSizeChange,
         style,
         mainPaneStyle,
         tooltipPaneStyle,
     } = props;
     const tooltipRef = React.useRef<HTMLDivElement | null>(null);
-    const layout = getSplitTooltipLayout(containerWidth, containerHeight);
+    const layout = getSplitTooltipLayout(containerWidth, containerHeight, layoutProp);
     const [tooltipHeight, setTooltipHeight] = React.useState(0);
     const [size, setSize] = React.useState(() =>
         getSplitTooltipMainPaneSize({
@@ -90,12 +137,21 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
             tooltipHeight: 0,
         }),
     );
-    const previousDimensionsRef = React.useRef({
-        containerHeight,
-        containerWidth,
-        layout,
-        tooltipHeight,
-    });
+    const dimensions = React.useMemo(
+        () => ({
+            containerHeight,
+            containerWidth,
+            layout,
+            tooltipHeight,
+        }),
+        [containerHeight, containerWidth, layout, tooltipHeight],
+    );
+    const previousDimensionsRef = React.useRef(dimensions);
+    const lastNotificationRef = React.useRef<{layout: SplitTooltipLayout; size: number} | null>(
+        null,
+    );
+    const onMainPaneSizeChangeRef = React.useRef(onMainPaneSizeChange);
+    onMainPaneSizeChangeRef.current = onMainPaneSizeChange;
 
     const handleTooltipResize = React.useCallback(() => {
         const nextTooltipHeight = tooltipRef.current?.getBoundingClientRect().height ?? 0;
@@ -107,65 +163,55 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
         onResize: handleTooltipResize,
     });
 
-    React.useLayoutEffect(() => {
-        const previousDimensions = previousDimensionsRef.current;
-        previousDimensionsRef.current = {
-            containerHeight,
-            containerWidth,
-            layout,
-            tooltipHeight,
-        };
+    const effectiveSize = getNextMainPaneSize({
+        currentSize: size,
+        nextDimensions: dimensions,
+        previousDimensions: previousDimensionsRef.current,
+    });
 
-        if (layout !== previousDimensions.layout || layout === SplitLayout.VERTICAL) {
-            setSize(
-                getSplitTooltipMainPaneSize({
-                    containerHeight,
-                    containerWidth,
-                    layout,
-                    tooltipHeight,
-                }),
-            );
-            return;
+    React.useLayoutEffect(() => {
+        previousDimensionsRef.current = dimensions;
+
+        if (effectiveSize !== size) {
+            setSize(effectiveSize);
+        }
+    }, [dimensions, effectiveSize, size]);
+
+    React.useLayoutEffect(() => {
+        const previousNotification = lastNotificationRef.current;
+
+        if (
+            previousNotification?.size === effectiveSize &&
+            previousNotification.layout === layout
+        ) {
+            return undefined;
         }
 
-        const {maxSize: previousMaxSize} = getSplitTooltipSizeLimits(
-            previousDimensions.containerHeight,
-            previousDimensions.tooltipHeight,
-        );
-        const {minSize: nextMinSize, maxSize: nextMaxSize} = getSplitTooltipSizeLimits(
-            containerHeight,
-            tooltipHeight,
-        );
+        const callback = onMainPaneSizeChangeRef.current;
+        if (!callback) {
+            return undefined;
+        }
 
-        setSize((currentSize) => {
-            if (currentSize === previousMaxSize) {
-                return nextMaxSize;
-            }
-
-            return Math.max(nextMinSize, Math.min(nextMaxSize, currentSize));
-        });
-    }, [containerHeight, containerWidth, layout, tooltipHeight]);
-
-    React.useLayoutEffect(() => {
-        onMainPaneSizeChange?.(size, layout);
-    }, [layout, onMainPaneSizeChange, size]);
+        lastNotificationRef.current = {layout, size: effectiveSize};
+        return callback(effectiveSize, layout);
+    });
 
     const allowResize = layout === SplitLayout.HORIZONTAL;
     const sizeLimits = getSplitTooltipSizeLimits(containerHeight, tooltipHeight);
     const maxSize = allowResize ? sizeLimits.maxSize : undefined;
     const minSize = allowResize ? sizeLimits.minSize : undefined;
-    const renderProps = {layout, size};
+    const renderProps = {layout, size: effectiveSize};
 
     return (
         <StyledSplitPane
             allowResize={allowResize}
             maxSize={maxSize}
             minSize={minSize}
-            size={size}
+            size={effectiveSize}
             split={layout}
             style={style}
             onChange={setSize}
-            resizerStyle={tooltipVisible ? undefined : hiddenResizerStyle}
+            resizerStyle={resizerVisible ? undefined : hiddenResizerStyle}
             paneOneRender={() => renderMainPane(renderProps)}
             paneTwoRender={() => <div ref={tooltipRef}>{renderTooltip(renderProps)}</div>}
             pane1Style={mainPaneStyle}
