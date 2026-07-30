@@ -1,2 +1,2 @@
-export {SplitTooltip} from './SplitTooltip';
-export type {SplitTooltipLayout, SplitTooltipProps, SplitTooltipRenderProps} from './SplitTooltip';
+export {SplitTooltip, SplitTooltipLayout} from './SplitTooltip';
+export type {SplitTooltipProps, SplitTooltipRenderProps} from './SplitTooltip';

@@ -19,7 +19,7 @@ function TestCase({
     containerHeight,
     containerWidth,
     layout,
-    resizerVisible = true,
+    resizerVisible,
     tooltipHeight,
     onMainPaneSizeChange,
 }: TestCaseProps) {
@@ -132,14 +132,9 @@ describe('SplitTooltip behavior', () => {
         );
     });
 
-    test('resizerVisible controls the resizer without hiding tooltip content', async () => {
+    test('resizerVisible is false by default and does not hide tooltip content', async () => {
         const screen = await render(
-            <TestCase
-                containerHeight={400}
-                containerWidth={200}
-                resizerVisible={false}
-                tooltipHeight={40}
-            />,
+            <TestCase containerHeight={400} containerWidth={200} tooltipHeight={40} />,
         );
 
         const resizer = screen.container.querySelector<HTMLElement>('.Resizer');

@@ -2,12 +2,20 @@ import {SplitLayout} from '../SplitPane';
 
 import {
     SPLIT_TOOLTIP_RESIZER_SIZE,
+    SplitTooltipLayout,
     getSplitTooltipLayout,
     getSplitTooltipMainPaneSize,
     getSplitTooltipSizeLimits,
 } from './SplitTooltip';
 
 describe('SplitTooltip', () => {
+    test('exposes layout values as part of the public component API', () => {
+        const layout: SplitTooltipLayout = SplitTooltipLayout.VERTICAL;
+
+        expect(layout).toBe('vertical');
+        expect(SplitTooltipLayout.HORIZONTAL).toBe('horizontal');
+    });
+
     test('uses horizontal layout in portrait orientation', () => {
         expect(getSplitTooltipLayout(320, 640)).toBe(SplitLayout.HORIZONTAL);
     });

@@ -78,4 +78,23 @@ describe('Split tooltip visual tests', () => {
         await renderWaiter.rendered;
         await expect(screen.getByTestId(CHART_TEST_STORY_DATA_QA)).toMatchScreenshot();
     });
+
+    test('should use viewport orientation instead of container orientation', async () => {
+        await page.viewport(600, 280);
+        const renderWaiter = createRenderWaiter(1);
+        const screen = await render(
+            <ChartTestStory
+                data={SPLIT_TOOLTIP_DATA}
+                styles={{height: 400, width: 280}}
+                tooltip={{splitted: true}}
+                onRender={renderWaiter.onRender}
+            />,
+            {providers: {theme: 'dark'}},
+        );
+        await renderWaiter.rendered;
+
+        await expect
+            .element(screen.container.querySelector<HTMLElement>('.SplitPane'))
+            .toHaveClass('vertical');
+    });
 });

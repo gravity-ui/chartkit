@@ -9,6 +9,7 @@ import {SplitTooltip} from '../../../../components/SplitTooltip';
 
 import {TooltipContent} from './TooltipContent';
 import type {TooltipContentRef} from './TooltipContent';
+import {useViewportSplitTooltipLayout} from './useViewportSplitTooltipLayout';
 
 type WithSplitPaneProps = {};
 
@@ -21,6 +22,7 @@ const SplitPaneContent = (props: ChartProps & {ChartComponent: typeof Chart}) =>
     const chartRef = React.useRef<ChartRef>(null);
     const tooltipRef = React.useRef<TooltipContentRef>(null);
     const [tooltipVisible, setTooltipVisible] = React.useState(false);
+    const layout = useViewportSplitTooltipLayout();
 
     const headerFormat = React.useMemo(() => {
         return (
@@ -65,6 +67,7 @@ const SplitPaneContent = (props: ChartProps & {ChartComponent: typeof Chart}) =>
 
     return (
         <SplitTooltip
+            layout={layout}
             resizerVisible={tooltipVisible}
             onMainPaneSizeChange={() => chartRef.current?.reflow()}
             renderMainPane={() => (

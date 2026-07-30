@@ -8,23 +8,37 @@ import type {SplitLayoutType} from '../SplitPane';
 export const SPLIT_TOOLTIP_RESIZER_SIZE = 24;
 export const SPLIT_TOOLTIP_MAIN_PANE_RATIO = 0.6;
 
+export {SplitLayout as SplitTooltipLayout};
 export type SplitTooltipLayout = SplitLayoutType;
 
-export type SplitTooltipRenderProps = {
+export interface SplitTooltipRenderProps {
+    /** The active pane layout. */
     layout: SplitTooltipLayout;
+    /** The current size of the main pane in pixels. */
     size: number;
-};
+}
 
-export type SplitTooltipProps = {
-    renderMainPane: (props: SplitTooltipRenderProps) => React.ReactNode;
-    renderTooltip: (props: SplitTooltipRenderProps) => React.ReactNode;
+export interface SplitTooltipProps {
+    /**
+     * The controlled pane layout. When omitted, the layout is derived from the container size:
+     * vertical when width is greater than height, horizontal otherwise.
+     */
     layout?: SplitTooltipLayout;
-    resizerVisible: boolean;
-    onMainPaneSizeChange?: (size: number, layout: SplitTooltipLayout) => void;
-    style?: React.CSSProperties;
+    /** Additional styles for the main pane. */
     mainPaneStyle?: React.CSSProperties;
+    /** Called after initialization and whenever the main pane size or layout changes. */
+    onMainPaneSizeChange?: (size: number, layout: SplitTooltipLayout) => void;
+    /** Renders the main pane with its current layout and size. */
+    renderMainPane: (props: SplitTooltipRenderProps) => React.ReactNode;
+    /** Renders the tooltip pane with the current main pane layout and size. */
+    renderTooltip: (props: SplitTooltipRenderProps) => React.ReactNode;
+    /** Controls the resizer visibility without hiding the tooltip pane. Defaults to `false`. */
+    resizerVisible?: boolean;
+    /** Additional styles for the split pane container. */
+    style?: React.CSSProperties;
+    /** Additional styles for the tooltip pane. */
     tooltipPaneStyle?: React.CSSProperties;
-};
+}
 
 type SplitTooltipContentProps = SplitTooltipProps & {
     containerHeight: number;
