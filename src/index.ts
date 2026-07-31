@@ -2,6 +2,8 @@ import {ChartKit} from './components/ChartKit';
 import {settings} from './libs';
 
 export * from './libs/chartkit-error/chartkit-error';
+export {SplitTooltip, SplitTooltipLayout} from './components/SplitTooltip';
+export type {SplitTooltipProps, SplitTooltipRenderProps} from './components/SplitTooltip';
 
 export type {
     ChartKitLang,

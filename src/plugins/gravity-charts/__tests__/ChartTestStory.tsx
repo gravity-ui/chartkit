@@ -3,6 +3,7 @@ import React from 'react';
 import type {ChartData} from '@gravity-ui/charts';
 
 import {ChartKit} from '../../../components/ChartKit.js';
+import type {ChartKitProps} from '../../../types/index.js';
 
 export const CHART_TEST_STORY_DATA_QA = 'chart-test-story-data-qa';
 
@@ -10,9 +11,10 @@ type Props = {
     data: ChartData;
     styles?: React.CSSProperties;
     tooltip?: {splitted?: boolean};
+    onRender?: ChartKitProps<'gravity-charts'>['onRender'];
 };
 
-export const ChartTestStory = ({data, styles, tooltip}: Props) => {
+export const ChartTestStory = ({data, styles, tooltip, onRender}: Props) => {
     const containerStyle: React.CSSProperties = {
         height: '100vh',
         width: '100vw',
@@ -21,7 +23,7 @@ export const ChartTestStory = ({data, styles, tooltip}: Props) => {
 
     return (
         <div style={containerStyle} data-qa={CHART_TEST_STORY_DATA_QA}>
-            <ChartKit type="gravity-charts" data={data} tooltip={tooltip} />
+            <ChartKit type="gravity-charts" data={data} tooltip={tooltip} onRender={onRender} />
         </div>
     );
 };
