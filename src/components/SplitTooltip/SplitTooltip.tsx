@@ -24,6 +24,8 @@ export interface SplitTooltipProps {
      * vertical when width is greater than height, horizontal otherwise.
      */
     layout?: SplitTooltipLayout;
+    /** The share of the container width occupied by the main pane in vertical layout. Defaults to `0.6`. */
+    mainPaneRatio?: number;
     /** Additional styles for the main pane. */
     mainPaneStyle?: React.CSSProperties;
     /** Called after initialization and whenever the main pane size or layout changes. */
@@ -60,15 +62,17 @@ export function getSplitTooltipMainPaneSize({
     containerHeight,
     containerWidth,
     layout,
+    mainPaneRatio = SPLIT_TOOLTIP_MAIN_PANE_RATIO,
     tooltipHeight,
 }: {
     containerHeight: number;
     containerWidth: number;
     layout: SplitTooltipLayout;
+    mainPaneRatio?: number;
     tooltipHeight: number;
 }) {
     if (layout === SplitLayout.VERTICAL) {
-        return containerWidth * SPLIT_TOOLTIP_MAIN_PANE_RATIO;
+        return containerWidth * mainPaneRatio;
     }
 
     return Math.max(0, containerHeight - SPLIT_TOOLTIP_RESIZER_SIZE - tooltipHeight);
@@ -92,6 +96,7 @@ type SplitTooltipDimensions = {
     containerHeight: number;
     containerWidth: number;
     layout: SplitTooltipLayout;
+    mainPaneRatio: number;
     tooltipHeight: number;
 };
 
@@ -134,6 +139,7 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
         renderMainPane,
         renderTooltip,
         layout: layoutProp,
+        mainPaneRatio = SPLIT_TOOLTIP_MAIN_PANE_RATIO,
         resizerVisible,
         onMainPaneSizeChange,
         style,
@@ -148,6 +154,7 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
             containerHeight,
             containerWidth,
             layout,
+            mainPaneRatio,
             tooltipHeight: 0,
         }),
     );
@@ -156,9 +163,10 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
             containerHeight,
             containerWidth,
             layout,
+            mainPaneRatio,
             tooltipHeight,
         }),
-        [containerHeight, containerWidth, layout, tooltipHeight],
+        [containerHeight, containerWidth, layout, mainPaneRatio, tooltipHeight],
     );
     const previousDimensionsRef = React.useRef(dimensions);
     const lastNotificationRef = React.useRef<{layout: SplitTooltipLayout; size: number} | null>(

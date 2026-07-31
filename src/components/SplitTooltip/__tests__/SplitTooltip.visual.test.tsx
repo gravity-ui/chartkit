@@ -9,24 +9,26 @@ type TestCaseProps = {
     containerHeight: number;
     containerWidth: number;
     layout?: SplitTooltipLayout;
+    mainPaneRatio?: number;
+    onMainPaneSizeChange?: (size: number, layout: SplitTooltipLayout) => void;
     resizerVisible?: boolean;
     tooltipHeight: number;
-    onMainPaneSizeChange?: (size: number, layout: SplitTooltipLayout) => void;
 };
 
 function TestCase({
     containerHeight,
     containerWidth,
     layout,
+    mainPaneRatio,
+    onMainPaneSizeChange,
     resizerVisible,
     tooltipHeight,
-    onMainPaneSizeChange,
 }: TestCaseProps) {
     return (
         <div style={{height: containerHeight, width: containerWidth}}>
             <SplitTooltip
                 layout={layout}
-                resizerVisible={resizerVisible}
+                mainPaneRatio={mainPaneRatio}
                 onMainPaneSizeChange={onMainPaneSizeChange}
                 renderMainPane={({layout: actualLayout, size}) => (
                     <div data-qa="main-pane">{`${actualLayout}:${size}`}</div>
@@ -36,6 +38,7 @@ function TestCase({
                         {`${actualLayout}:${size}`}
                     </div>
                 )}
+                resizerVisible={resizerVisible}
             />
         </div>
     );
@@ -71,6 +74,32 @@ describe('SplitTooltip behavior', () => {
         await expect
             .element(screen.getByTestId('tooltip-pane'))
             .toHaveTextContent('horizontal:336');
+    });
+
+    test('uses custom main pane ratio', async () => {
+        const screen = await render(
+            <TestCase
+                containerHeight={200}
+                containerWidth={400}
+                layout={SplitLayout.VERTICAL}
+                mainPaneRatio={0.75}
+                tooltipHeight={40}
+            />,
+        );
+
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('vertical:300');
+
+        await screen.rerender(
+            <TestCase
+                containerHeight={200}
+                containerWidth={400}
+                layout={SplitLayout.VERTICAL}
+                mainPaneRatio={0.5}
+                tooltipHeight={40}
+            />,
+        );
+
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('vertical:200');
     });
 
     test('recalculates size and reports only distinct size-layout pairs', async () => {
