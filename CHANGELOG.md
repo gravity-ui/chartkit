@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.62.0](https://github.com/gravity-ui/chartkit/compare/v7.61.0...v7.62.0) (2026-07-31)
+
+
+### Features
+
+* extract reusable SplitTooltip component ([#914](https://github.com/gravity-ui/chartkit/issues/914)) ([4f7a8f2](https://github.com/gravity-ui/chartkit/commit/4f7a8f2eed60fcd833c0e15728f9541f9ce3d1cf))
+
 ## [7.61.0](https://github.com/gravity-ui/chartkit/compare/v7.60.5...v7.61.0) (2026-07-28)
 
 
