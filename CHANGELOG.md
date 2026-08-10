@@ -7,15 +7,6 @@
 
 * **deps:** update @gravity-ui/yagr to v5 ([#919](https://github.com/gravity-ui/chartkit/issues/919))
 
-### Features
-
-* **deps:** update @gravity-ui/yagr to v5 ([#919](https://github.com/gravity-ui/chartkit/issues/919)) ([702730c](https://github.com/gravity-ui/chartkit/commit/702730c87ac65db4d748c5e4a07bf8749ec81c96))
-
-
-### Bug Fixes
-
-* **deps:** update @gravity-ui/yagr to v5 ([702730c](https://github.com/gravity-ui/chartkit/commit/702730c87ac65db4d748c5e4a07bf8749ec81c96))
-
 ## [7.62.1](https://github.com/gravity-ui/chartkit/compare/v7.62.0...v7.62.1) (2026-08-06)
 
 
