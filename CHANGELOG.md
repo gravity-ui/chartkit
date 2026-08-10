@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.0](https://github.com/gravity-ui/chartkit/compare/v7.62.1...v8.0.0) (2026-08-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** update @gravity-ui/yagr to v5 ([#919](https://github.com/gravity-ui/chartkit/issues/919))
+
 ## [7.62.1](https://github.com/gravity-ui/chartkit/compare/v7.62.0...v7.62.1) (2026-08-06)
 
 
