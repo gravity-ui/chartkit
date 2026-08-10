@@ -12,7 +12,7 @@ import './polyfills';
 import {useWidgetData} from './useWidgetData';
 import {checkFocus, detectClickOutside, synchronizeTooltipTablesCellsWidth} from './utils';
 
-import '@gravity-ui/yagr/dist/index.css';
+import '@gravity-ui/yagr/index.css';
 // We need to save order in such state
 // eslint-disable-next-line import/order
 import './YagrWidget.scss';

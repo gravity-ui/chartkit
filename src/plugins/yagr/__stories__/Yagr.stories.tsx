@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 import {dateTime} from '@gravity-ui/date-utils';
 import {Button} from '@gravity-ui/uikit';
-import placement from '@gravity-ui/yagr/dist/YagrCore/plugins/tooltip/placement';
+import {placement} from '@gravity-ui/yagr';
 import type {Meta, StoryObj} from '@storybook/react';
 
 import {CustomTooltipProps, TooltipHandlerData, YagrPlugin} from '../';
@@ -12,7 +12,7 @@ import type {ChartKitRef} from '../../../types';
 
 import {getNewConfig, line10, line10WithGrafanaStyle} from './mocks/line10';
 
-import '@gravity-ui/yagr/dist/index.css';
+import '@gravity-ui/yagr/index.css';
 
 const meta: Meta = {
     title: 'Plugins/Yagr',
