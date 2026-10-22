@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.10.1](https://github.com/gravity-ui/chartkit/compare/v8.10.0...v8.10.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* **Highcharts:** fix tooltip offset after scrolling a parent container ([#946](https://github.com/gravity-ui/chartkit/issues/946)) ([f3dfbf9](https://github.com/gravity-ui/chartkit/commit/f3dfbf9b25ded1ab4241e2334415435e2f19eb87))
+
 ## [8.10.0](https://github.com/gravity-ui/chartkit/compare/v8.9.0...v8.10.0) (2026-10-21)
 
 
