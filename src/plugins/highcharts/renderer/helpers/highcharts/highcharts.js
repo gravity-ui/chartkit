@@ -185,6 +185,21 @@ function initHighchartsLangOptions() {
     });
 }
 
+// Backport of the Highcharts 9 fix (we are pinned to v8): when any ancestor scrolls, refresh
+// the cached `pointer.chartPosition`, otherwise the tooltip drifts by the scroll offset.
+// Recalculated, not deleted: `onDocumentMouseMove` relies on its presence.
+// `mouseover` is handled because the browser may fire it before `scroll`.
+function updateChartPositions() {
+    Highcharts.charts.forEach((chart) => {
+        const pointer = chart && chart.pointer;
+
+        if (pointer && pointer.chartPosition) {
+            pointer.chartPosition = undefined;
+            pointer.getChartPosition();
+        }
+    });
+}
+
 function initHighcharts({isMobile}) {
     initHighchartsLangOptions();
 
@@ -202,6 +217,9 @@ function initHighcharts({isMobile}) {
             return t;
         });
     })(Highcharts);
+
+    window.document.addEventListener('scroll', updateChartPositions, true);
+    window.document.addEventListener('mouseover', updateChartPositions, true);
 
     Highcharts.wrap(Highcharts.Chart.prototype, 'redraw', function (proceed, ...rest) {
         if (this.tooltip.fixed) {
