@@ -41,9 +41,7 @@ const ChartKitComponent = <T extends ChartKitType>(props: ChartKitComponentProps
         instanceRef,
         () => ({
             reflow(details) {
-                if (widgetRef.current?.reflow) {
-                    widgetRef.current.reflow(details);
-                }
+                return widgetRef.current?.reflow?.(details);
             },
         }),
         [],

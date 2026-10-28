@@ -11,7 +11,8 @@ export type ChartKitLang = 'ru' | 'en';
 export type ChartKitType = keyof ChartKitWidget;
 
 export type ChartKitRef = {
-    reflow: (details?: unknown) => void;
+    /** Renderers may return a promise that completes when the resized chart is ready. */
+    reflow: (details?: unknown) => void | Promise<void>;
 };
 
 export type ChartKitWidgetRef = {

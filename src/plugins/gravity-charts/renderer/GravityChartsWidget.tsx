@@ -47,7 +47,7 @@ export const GravityChartsWidget = React.forwardRef<
         forwardedRef,
         () => ({
             reflow() {
-                chartRef.current?.reflow();
+                return chartRef.current?.reflow();
             },
         }),
         [],
