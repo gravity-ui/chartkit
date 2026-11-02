@@ -1,50 +1,125 @@
 import React from 'react';
 
+import {page, userEvent} from 'vitest/browser';
+
 import {render} from '../../../../test-utils/utils.js';
 import {SplitLayout} from '../../SplitPane/index.js';
 import {SplitTooltip} from '../SplitTooltip.js';
-import type {SplitTooltipLayout} from '../SplitTooltip.js';
+import type {SplitTooltipLayout, SplitTooltipProps} from '../SplitTooltip.js';
 
 type TestCaseProps = {
     containerHeight: number;
     containerWidth: number;
+    enabled?: boolean;
+    hidden?: boolean;
     layout?: SplitTooltipLayout;
     mainPaneRatio?: number;
+    minMainPaneSize?: number;
     onMainPaneSizeChange?: (size: number, layout: SplitTooltipLayout) => void;
     resizerVisible?: boolean;
     tooltipHeight: number;
+    renderMainPane?: SplitTooltipProps['renderMainPane'];
+    renderTooltip?: SplitTooltipProps['renderTooltip'];
 };
 
 function TestCase({
     containerHeight,
     containerWidth,
+    enabled,
+    hidden,
     layout,
     mainPaneRatio,
+    minMainPaneSize,
     onMainPaneSizeChange,
     resizerVisible,
     tooltipHeight,
+    renderMainPane,
+    renderTooltip,
 }: TestCaseProps) {
     return (
-        <div style={{height: containerHeight, width: containerWidth}}>
+        <div
+            style={{
+                height: containerHeight,
+                width: containerWidth,
+                display: hidden ? 'none' : undefined,
+            }}
+        >
             <SplitTooltip
+                enabled={enabled}
                 layout={layout}
                 mainPaneRatio={mainPaneRatio}
+                minMainPaneSize={minMainPaneSize}
                 onMainPaneSizeChange={onMainPaneSizeChange}
-                renderMainPane={({layout: actualLayout, size}) => (
-                    <div data-qa="main-pane">{`${actualLayout}:${size}`}</div>
-                )}
-                renderTooltip={({layout: actualLayout, size}) => (
-                    <div data-qa="tooltip-pane" style={{height: tooltipHeight}}>
-                        {`${actualLayout}:${size}`}
-                    </div>
-                )}
+                renderMainPane={
+                    renderMainPane ??
+                    (({layout: actualLayout, size}) => (
+                        <div data-qa="main-pane">{`${actualLayout}:${size}`}</div>
+                    ))
+                }
+                renderTooltip={
+                    renderTooltip ??
+                    (({layout: actualLayout, size}) => (
+                        <div data-qa="tooltip-pane" style={{height: tooltipHeight}}>
+                            {`${actualLayout}:${size}`}
+                        </div>
+                    ))
+                }
                 resizerVisible={resizerVisible}
             />
         </div>
     );
 }
 
+function getElement(container: HTMLElement, selector: string) {
+    const element = container.querySelector<HTMLElement>(selector);
+    if (!element) {
+        throw new Error(`Expected a rendered ${selector}`);
+    }
+    return element;
+}
+
+async function dragMainPane(container: HTMLElement, size: number) {
+    const splitPane = getElement(container, '.SplitPane');
+    const resizer = getElement(container, '.Resizer');
+    await userEvent.dragAndDrop(resizer, splitPane, {
+        targetPosition: {x: 10, y: size + 12},
+    });
+}
+
+function AsyncTooltip({loadedHeight}: {loadedHeight: Promise<number>}) {
+    const [height, setHeight] = React.useState(40);
+    React.useEffect(() => {
+        let active = true;
+        loadedHeight.then((nextHeight) => {
+            if (active) {
+                setHeight(nextHeight);
+            }
+        });
+        return () => {
+            active = false;
+        };
+    }, [loadedHeight]);
+    return <div style={{height}}>Async tooltip</div>;
+}
+
+function StatefulMainPane({onMount, onUnmount}: {onMount: () => void; onUnmount: () => void}) {
+    const [count, setCount] = React.useState(0);
+    React.useEffect(() => {
+        onMount();
+        return onUnmount;
+    }, [onMount, onUnmount]);
+    return (
+        <button data-qa="stateful-main-pane" onClick={() => setCount(count + 1)}>
+            {count}
+        </button>
+    );
+}
+
 describe('SplitTooltip behavior', () => {
+    beforeEach(async () => {
+        await page.viewport(800, 800);
+    });
+
     test('explicit layout overrides automatic layout and reaches both render functions', async () => {
         const screen = await render(
             <TestCase
@@ -181,4 +256,280 @@ describe('SplitTooltip behavior', () => {
         expect(resizer?.style.display).toBe('');
         await expect.element(screen.getByTestId('tooltip-pane')).toBeVisible();
     });
+
+    test('keeps the main pane minimum and scrolls a long tooltip', async () => {
+        const screen = await render(
+            <TestCase
+                containerHeight={400}
+                containerWidth={300}
+                minMainPaneSize={120}
+                tooltipHeight={800}
+                resizerVisible
+            />,
+        );
+        const mainPane = getElement(screen.container, '.Pane1');
+        const tooltipPane = getElement(screen.container, '.Pane2');
+
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:120');
+        expect(mainPane.getBoundingClientRect().height).toBe(120);
+        expect(tooltipPane.clientHeight).toBe(256);
+        expect(tooltipPane.scrollHeight).toBeGreaterThan(tooltipPane.clientHeight);
+
+        await screen.rerender(
+            <TestCase
+                containerHeight={200}
+                containerWidth={300}
+                layout={SplitLayout.HORIZONTAL}
+                minMainPaneSize={120}
+                tooltipHeight={800}
+                resizerVisible
+            />,
+        );
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:88');
+        expect(mainPane.getBoundingClientRect().height).toBe(88);
+        expect(tooltipPane.clientHeight).toBe(88);
+    });
+
+    test('keeps automatic sizing without a minimum for existing consumers', async () => {
+        const screen = await render(
+            <TestCase containerHeight={400} containerWidth={300} tooltipHeight={800} />,
+        );
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:0');
+    });
+
+    test('follows asynchronous tooltip growth and shrinkage before dragging', async () => {
+        let resolveHeight!: (height: number) => void;
+        const loadedHeight = new Promise<number>((resolve) => {
+            resolveHeight = resolve;
+        });
+        const onMainPaneSizeChange = vi.fn();
+        const renderTestCase = (height: Promise<number>) => (
+            <TestCase
+                containerHeight={400}
+                containerWidth={300}
+                tooltipHeight={0}
+                minMainPaneSize={120}
+                onMainPaneSizeChange={onMainPaneSizeChange}
+                renderTooltip={() => <AsyncTooltip loadedHeight={height} />}
+            />
+        );
+        const screen = await render(renderTestCase(loadedHeight));
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([336, SplitLayout.HORIZONTAL]);
+
+        resolveHeight(800);
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([120, SplitLayout.HORIZONTAL]);
+
+        await screen.rerender(renderTestCase(Promise.resolve(80)));
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([296, SplitLayout.HORIZONTAL]);
+    });
+
+    test('allows dragging the tooltip below its content height and retains the manual size', async () => {
+        const onMainPaneSizeChange = vi.fn();
+        const renderTestCase = (tooltipHeight: number) => (
+            <TestCase
+                containerHeight={400}
+                containerWidth={300}
+                tooltipHeight={tooltipHeight}
+                minMainPaneSize={120}
+                resizerVisible
+                onMainPaneSizeChange={onMainPaneSizeChange}
+            />
+        );
+        const screen = await render(renderTestCase(240));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:136');
+
+        await dragMainPane(screen.container, 220);
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:220');
+        const tooltipPane = getElement(screen.container, '.Pane2');
+        expect(tooltipPane.clientHeight).toBe(156);
+        expect(tooltipPane.scrollHeight).toBeGreaterThan(tooltipPane.clientHeight);
+
+        await screen.rerender(renderTestCase(800));
+        await expect.poll(() => tooltipPane.scrollHeight).toBeGreaterThanOrEqual(800);
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:220');
+        await screen.rerender(renderTestCase(156));
+        await dragMainPane(screen.container, 180);
+        await dragMainPane(screen.container, 220);
+        // A manual size equal to the automatic size must still remain a manual choice.
+        await screen.rerender(renderTestCase(40));
+        await expect.poll(() => tooltipPane.scrollHeight).toBe(156);
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([220, SplitLayout.HORIZONTAL]);
+    });
+
+    test('restores the selected size after the container temporarily constrains it', async () => {
+        const renderTestCase = (containerHeight: number) => (
+            <TestCase
+                containerHeight={containerHeight}
+                containerWidth={300}
+                layout={SplitLayout.HORIZONTAL}
+                tooltipHeight={40}
+                minMainPaneSize={120}
+                resizerVisible
+            />
+        );
+        const screen = await render(renderTestCase(400));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:336');
+        await dragMainPane(screen.container, 260);
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:260');
+
+        await screen.rerender(renderTestCase(200));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:176');
+        await screen.rerender(renderTestCase(12));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:0');
+        await expect
+            .element(screen.container.querySelector<HTMLElement>('.SplitPane'))
+            .toHaveClass('disabled');
+        await screen.rerender(renderTestCase(400));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:260');
+    });
+
+    test.each([SplitLayout.HORIZONTAL, SplitLayout.VERTICAL])(
+        'fills the container and reports its size when disabled in %s layout',
+        async (layout) => {
+            const onMainPaneSizeChange = vi.fn();
+            const renderTestCase = (containerHeight: number, containerWidth: number) => (
+                <TestCase
+                    containerHeight={containerHeight}
+                    containerWidth={containerWidth}
+                    layout={layout}
+                    enabled={false}
+                    tooltipHeight={800}
+                    resizerVisible
+                    onMainPaneSizeChange={onMainPaneSizeChange}
+                />
+            );
+            const screen = await render(renderTestCase(400, 300));
+            await expect
+                .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+                .toEqual([layout === SplitLayout.HORIZONTAL ? 400 : 300, layout]);
+            await expect.element(screen.getByTestId('tooltip-pane')).not.toBeVisible();
+            await expect
+                .element(screen.container.querySelector<HTMLElement>('.Resizer'))
+                .not.toBeVisible();
+            await expect
+                .element(screen.container.querySelector<HTMLElement>('.SplitPane'))
+                .toHaveClass('disabled');
+            const mainPane = getElement(screen.container, '.Pane1');
+            expect(mainPane.getBoundingClientRect().height).toBe(400);
+            expect(mainPane.getBoundingClientRect().width).toBe(300);
+
+            await screen.rerender(renderTestCase(500, 350));
+            await expect
+                .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+                .toEqual([layout === SplitLayout.HORIZONTAL ? 500 : 350, layout]);
+        },
+    );
+
+    test('preserves the mounted main pane, state and manual size across mode changes and hiding', async () => {
+        const onMount = vi.fn();
+        const onUnmount = vi.fn();
+        const onMainPaneSizeChange = vi.fn();
+        const renderTestCase = (props?: Partial<TestCaseProps>) => (
+            <TestCase
+                containerHeight={400}
+                containerWidth={300}
+                layout={SplitLayout.HORIZONTAL}
+                tooltipHeight={80}
+                minMainPaneSize={120}
+                resizerVisible
+                onMainPaneSizeChange={onMainPaneSizeChange}
+                renderMainPane={() => <StatefulMainPane onMount={onMount} onUnmount={onUnmount} />}
+                {...props}
+            />
+        );
+        const screen = await render(renderTestCase());
+        const originalMainPane = screen.getByTestId('stateful-main-pane').element();
+        await screen.getByTestId('stateful-main-pane').click();
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([296, SplitLayout.HORIZONTAL]);
+        await dragMainPane(screen.container, 240);
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([240, SplitLayout.HORIZONTAL]);
+
+        await screen.rerender(renderTestCase({enabled: false}));
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([400, SplitLayout.HORIZONTAL]);
+        await screen.rerender(renderTestCase({tooltipHeight: 800}));
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([240, SplitLayout.HORIZONTAL]);
+        await screen.rerender(renderTestCase({layout: SplitLayout.VERTICAL}));
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([180, SplitLayout.VERTICAL]);
+        await screen.rerender(renderTestCase({layout: SplitLayout.VERTICAL, enabled: false}));
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([300, SplitLayout.VERTICAL]);
+        await screen.rerender(renderTestCase({containerHeight: 0, containerWidth: 0}));
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([0, SplitLayout.HORIZONTAL]);
+        await screen.rerender(renderTestCase());
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([240, SplitLayout.HORIZONTAL]);
+        await screen.rerender(renderTestCase({hidden: true}));
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([0, SplitLayout.HORIZONTAL]);
+        await screen.rerender(renderTestCase());
+        await expect
+            .poll(() => onMainPaneSizeChange.mock.calls.at(-1))
+            .toEqual([240, SplitLayout.HORIZONTAL]);
+
+        expect(screen.getByTestId('stateful-main-pane').element()).toBe(originalMainPane);
+        await expect.element(screen.getByTestId('stateful-main-pane')).toHaveTextContent('1');
+        expect(onMount).toHaveBeenCalledTimes(1);
+        expect(onUnmount).not.toHaveBeenCalled();
+    });
+
+    test.each(['disabled', 'vertical'])(
+        'cancels an active drag when switching to %s mode',
+        async (mode) => {
+            const renderTestCase = (props?: Partial<TestCaseProps>) => (
+                <TestCase
+                    containerHeight={400}
+                    containerWidth={300}
+                    tooltipHeight={80}
+                    resizerVisible
+                    {...props}
+                />
+            );
+            const screen = await render(renderTestCase());
+            await expect
+                .element(screen.getByTestId('main-pane'))
+                .toHaveTextContent('horizontal:296');
+            const resizer = getElement(screen.container, '.Resizer');
+            resizer.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, clientY: 308}));
+            await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+            document.dispatchEvent(new MouseEvent('mousemove', {bubbles: true, clientY: 252}));
+            await expect
+                .element(screen.getByTestId('main-pane'))
+                .toHaveTextContent('horizontal:240');
+            await screen.rerender(
+                renderTestCase(
+                    mode === 'disabled' ? {enabled: false} : {layout: SplitLayout.VERTICAL},
+                ),
+            );
+            await screen.rerender(renderTestCase());
+            document.dispatchEvent(new MouseEvent('mousemove', {bubbles: true, clientY: 200}));
+            document.dispatchEvent(new MouseEvent('mouseup', {bubbles: true, clientY: 200}));
+            await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+            await expect
+                .element(screen.getByTestId('main-pane'))
+                .toHaveTextContent('horizontal:240');
+        },
+    );
 });

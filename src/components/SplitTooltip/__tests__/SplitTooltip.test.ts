@@ -63,10 +63,59 @@ describe('SplitTooltip', () => {
         ).toBe(0);
     });
 
-    test('keeps size limits valid when tooltip is higher than the container', () => {
-        expect(getSplitTooltipSizeLimits(100, 200)).toEqual({
-            minSize: 0,
-            maxSize: 0,
-        });
+    test('keeps the main pane minimum with a long tooltip', () => {
+        expect(
+            getSplitTooltipMainPaneSize({
+                containerHeight: 400,
+                containerWidth: 300,
+                layout: SplitLayout.HORIZONTAL,
+                minMainPaneSize: 120,
+                tooltipHeight: 800,
+            }),
+        ).toBe(120);
+    });
+
+    test('adapts an explicit minimum to half the available height', () => {
+        expect(
+            getSplitTooltipMainPaneSize({
+                containerHeight: 200,
+                containerWidth: 300,
+                layout: SplitLayout.HORIZONTAL,
+                minMainPaneSize: 120,
+                tooltipHeight: 800,
+            }),
+        ).toBe(88);
+    });
+
+    test('does not apply the height minimum in vertical layout', () => {
+        expect(
+            getSplitTooltipMainPaneSize({
+                containerHeight: 400,
+                containerWidth: 100,
+                layout: SplitLayout.VERTICAL,
+                minMainPaneSize: 120,
+                tooltipHeight: 800,
+            }),
+        ).toBe(60);
+    });
+
+    test('reserves only the resizer when calculating the maximum drag size', () => {
+        expect(getSplitTooltipSizeLimits(400)).toEqual({minSize: 400 / 3, maxSize: 376});
+        expect(getSplitTooltipSizeLimits(400, 120)).toEqual({minSize: 120, maxSize: 376});
+        expect(getSplitTooltipSizeLimits(200, 120)).toEqual({minSize: 88, maxSize: 176});
+    });
+
+    test.each([0, 12, SPLIT_TOOLTIP_RESIZER_SIZE])(
+        'keeps limits valid when the container height is %i',
+        (containerHeight) => {
+            expect(getSplitTooltipSizeLimits(containerHeight, 120)).toEqual({
+                minSize: 0,
+                maxSize: 0,
+            });
+        },
+    );
+
+    test('does not allow a negative minimum', () => {
+        expect(getSplitTooltipSizeLimits(400, -120)).toEqual({minSize: 0, maxSize: 376});
     });
 });

@@ -181,6 +181,15 @@ export class SplitPane extends React.Component<Props, State> {
         this.setState(SplitPane.getSizeUpdate(this.props, this.state));
     }
 
+    componentDidUpdate(previousProps: Props) {
+        if (
+            this.state.active &&
+            (!this.props.allowResize || previousProps.split !== this.props.split)
+        ) {
+            this.setState({active: false});
+        }
+    }
+
     componentWillUnmount() {
         document.removeEventListener('mouseup', this.onMouseUp);
         document.removeEventListener('mousemove', this.onMouseMove);
