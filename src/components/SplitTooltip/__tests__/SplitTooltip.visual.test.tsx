@@ -297,6 +297,55 @@ describe('SplitTooltip behavior', () => {
         await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:0');
     });
 
+    test.each([-1, 1])(
+        'does not jump when the first drag moves %i pixel from a small automatic size',
+        async (delta) => {
+            const renderTestCase = (tooltipHeight: number) => (
+                <TestCase
+                    containerHeight={400}
+                    containerWidth={300}
+                    tooltipHeight={tooltipHeight}
+                    resizerVisible
+                />
+            );
+            const screen = await render(renderTestCase(320));
+            const mainPane = getElement(screen.container, '.Pane1');
+            const resizer = getElement(screen.container, '.Resizer');
+            await expect
+                .element(screen.getByTestId('main-pane'))
+                .toHaveTextContent('horizontal:56');
+            const initialPosition = resizer.getBoundingClientRect().top + 12;
+
+            resizer.dispatchEvent(
+                new MouseEvent('mousedown', {bubbles: true, clientY: initialPosition}),
+            );
+            await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+            document.dispatchEvent(
+                new MouseEvent('mousemove', {bubbles: true, clientY: initialPosition + delta}),
+            );
+            document.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+
+            const expectedSize = Math.max(56, 56 + delta);
+            await expect
+                .element(screen.getByTestId('main-pane'))
+                .toHaveTextContent(`horizontal:${expectedSize}`);
+            expect(mainPane.getBoundingClientRect().height).toBe(expectedSize);
+
+            await screen.rerender(renderTestCase(40));
+            await expect
+                .element(screen.getByTestId('main-pane'))
+                .toHaveTextContent(`horizontal:${expectedSize}`);
+            await dragMainPane(screen.container, 80);
+            await expect
+                .element(screen.getByTestId('main-pane'))
+                .toHaveTextContent('horizontal:80');
+            await dragMainPane(screen.container, 40);
+            await expect
+                .element(screen.getByTestId('main-pane'))
+                .toHaveTextContent('horizontal:56');
+        },
+    );
+
     test('follows asynchronous tooltip growth and shrinkage before dragging', async () => {
         let resolveHeight!: (height: number) => void;
         const loadedHeight = new Promise<number>((resolve) => {
