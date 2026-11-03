@@ -34,6 +34,7 @@ describe('Indicator visual tests', () => {
             options,
         );
 
+        await expect.element(screen.getByText('1539577973')).toBeVisible();
         await expect(screen.getByTestId('indicator-wrapper')).toMatchScreenshot();
     });
 

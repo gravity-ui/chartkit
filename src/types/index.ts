@@ -11,7 +11,15 @@ export type ChartKitLang = 'ru' | 'en';
 export type ChartKitType = keyof ChartKitWidget;
 
 export type ChartKitRef = {
-    reflow: (details?: unknown) => void;
+    /**
+     * Renderers may return a promise that completes when the resized chart is ready.
+     * `undefined` means no completion signal is available, including while the widget is loading.
+     * It does not guarantee that the chart is ready. Awaiting callers must handle rejection.
+     * Gravity Charts also reports preparation failures through onError/renderError;
+     * unavailable-host, zero-size and unmount cancellations only reject the promise.
+     * For Gravity Charts, pass `{immediate: true}` to skip the resize debounce.
+     */
+    reflow: (details?: unknown) => void | Promise<void>;
 };
 
 export type ChartKitWidgetRef = {

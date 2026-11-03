@@ -11,15 +11,37 @@ import {TooltipContent} from './TooltipContent';
 import type {TooltipContentRef} from './TooltipContent';
 import {useViewportSplitTooltipLayout} from './useViewportSplitTooltipLayout';
 
-type WithSplitPaneProps = {};
+type WithSplitPaneProps = {
+    onReflowError: (error: unknown) => void;
+};
 
 type PointerMoveHandler = NonNullable<
     NonNullable<NonNullable<ChartData['chart']>['events']>['pointermove']
 >;
 
-const SplitPaneContent = (props: ChartProps & {ChartComponent: typeof Chart}) => {
-    const {data, ChartComponent, ...restProps} = props;
+const SplitPaneContent = (
+    props: ChartProps &
+        WithSplitPaneProps & {
+            ChartComponent: typeof Chart;
+            forwardedRef: React.ForwardedRef<ChartRef>;
+        },
+) => {
+    const {data, ChartComponent, forwardedRef, onReflowError, ...restProps} = props;
     const chartRef = React.useRef<ChartRef>(null);
+    React.useImperativeHandle(
+        forwardedRef,
+        () => ({
+            reflow: (options) => {
+                if (chartRef.current) {
+                    return chartRef.current.reflow(options);
+                }
+                const unavailable = Promise.reject<void>(new Error('Chart host is unavailable'));
+                unavailable.catch(() => undefined);
+                return unavailable;
+            },
+        }),
+        [],
+    );
     const tooltipRef = React.useRef<TooltipContentRef>(null);
     const [tooltipVisible, setTooltipVisible] = React.useState(false);
     const layout = useViewportSplitTooltipLayout();
@@ -69,7 +91,9 @@ const SplitPaneContent = (props: ChartProps & {ChartComponent: typeof Chart}) =>
         <SplitTooltip
             layout={layout}
             resizerVisible={tooltipVisible}
-            onMainPaneSizeChange={() => chartRef.current?.reflow()}
+            onMainPaneSizeChange={() => {
+                chartRef.current?.reflow().catch(onReflowError);
+            }}
             renderMainPane={() => (
                 <ChartComponent {...restProps} ref={chartRef} data={resultData} />
             )}
@@ -91,8 +115,10 @@ const SplitPaneContent = (props: ChartProps & {ChartComponent: typeof Chart}) =>
 export function withSplitPane(ChartComponent: typeof Chart) {
     const componentName = getComponentName(ChartComponent);
     const component = React.forwardRef<ChartRef, ChartProps & WithSplitPaneProps>(
-        function WithSplitPaneComponent(props, _ref) {
-            return <SplitPaneContent ChartComponent={ChartComponent} {...props} />;
+        function WithSplitPaneComponent(props, ref) {
+            return (
+                <SplitPaneContent ChartComponent={ChartComponent} forwardedRef={ref} {...props} />
+            );
         },
     );
 
