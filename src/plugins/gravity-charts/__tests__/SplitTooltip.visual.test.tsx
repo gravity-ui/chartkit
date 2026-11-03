@@ -98,7 +98,7 @@ describe('Split tooltip visual tests', () => {
             .toHaveClass('vertical');
     });
 
-    test('scrolls a manually shortened tooltip and reflows the existing chart across orientation changes', async () => {
+    test('preserves tooltip content height and reflows the existing chart across orientation changes', async () => {
         await page.viewport(320, 500);
         const renderTestCase = (tooltipHeight: number) => (
             <ChartTestStory
@@ -134,16 +134,16 @@ describe('Split tooltip visual tests', () => {
         await userEvent.dragAndDrop(resizer, splitPane, {
             targetPosition: {x: 10, y: 352},
         });
-        await expect.poll(() => mainPane.getBoundingClientRect().height).toBe(340);
+        await expect.poll(() => mainPane.getBoundingClientRect().height).toBe(236);
         await expect
             .poll(() => chart?.querySelector('svg')?.getBoundingClientRect().height)
-            .toBe(340);
-        expect(tooltipPane.clientHeight).toBe(136);
-        expect(tooltipPane.scrollHeight).toBeGreaterThan(tooltipPane.clientHeight);
+            .toBe(236);
+        expect(tooltipPane.clientHeight).toBe(240);
 
         await screen.rerender(renderTestCase(400));
         await expect.poll(() => tooltipPane.scrollHeight).toBeGreaterThanOrEqual(400);
-        expect(mainPane.getBoundingClientRect().height).toBe(340);
+        await expect.poll(() => mainPane.getBoundingClientRect().height).toBe(76);
+        expect(tooltipPane.clientHeight).toBe(400);
 
         await page.viewport(600, 300);
         await expect.element(splitPane).toHaveClass('vertical');
@@ -154,7 +154,7 @@ describe('Split tooltip visual tests', () => {
         await expect.element(splitPane).toHaveClass('horizontal');
         await expect
             .poll(() => chart?.querySelector('svg')?.getBoundingClientRect().height)
-            .toBe(340);
+            .toBe(76);
         expect(mainPane.querySelector('.gcharts-chart')).toBe(chart);
     });
 });

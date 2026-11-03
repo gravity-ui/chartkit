@@ -99,16 +99,31 @@ describe('SplitTooltip', () => {
         ).toBe(60);
     });
 
-    test('reserves only the resizer when calculating the maximum drag size', () => {
-        expect(getSplitTooltipSizeLimits(400)).toEqual({minSize: 400 / 3, maxSize: 376});
-        expect(getSplitTooltipSizeLimits(400, 120)).toEqual({minSize: 120, maxSize: 376});
-        expect(getSplitTooltipSizeLimits(200, 120)).toEqual({minSize: 88, maxSize: 176});
+    test('reserves tooltip content height in the default drag limits', () => {
+        expect(getSplitTooltipSizeLimits(400, 120)).toEqual({minSize: 400 / 3, maxSize: 256});
+        expect(getSplitTooltipSizeLimits(400, 320)).toEqual({minSize: 56, maxSize: 56});
+        expect(getSplitTooltipSizeLimits(100, 200)).toEqual({minSize: 0, maxSize: 0});
+    });
+
+    test('allows scrolling a long tooltip when a main pane minimum is set', () => {
+        expect(getSplitTooltipSizeLimits(400, 800, 120)).toEqual({
+            minSize: 120,
+            maxSize: 376,
+        });
+    });
+
+    test('reserves only the resizer when a main pane minimum is set', () => {
+        expect(getSplitTooltipSizeLimits(400, 120, 120)).toEqual({
+            minSize: 120,
+            maxSize: 376,
+        });
+        expect(getSplitTooltipSizeLimits(200, 120, 120)).toEqual({minSize: 88, maxSize: 176});
     });
 
     test.each([0, 12, SPLIT_TOOLTIP_RESIZER_SIZE])(
         'keeps limits valid when the container height is %i',
         (containerHeight) => {
-            expect(getSplitTooltipSizeLimits(containerHeight, 120)).toEqual({
+            expect(getSplitTooltipSizeLimits(containerHeight, 120, 120)).toEqual({
                 minSize: 0,
                 maxSize: 0,
             });
@@ -116,6 +131,9 @@ describe('SplitTooltip', () => {
     );
 
     test('does not allow a negative minimum', () => {
-        expect(getSplitTooltipSizeLimits(400, -120)).toEqual({minSize: 0, maxSize: 376});
+        expect(getSplitTooltipSizeLimits(400, 0, -120)).toEqual({
+            minSize: 0,
+            maxSize: 376,
+        });
     });
 });

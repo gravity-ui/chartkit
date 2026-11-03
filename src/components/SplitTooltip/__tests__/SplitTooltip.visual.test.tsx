@@ -295,6 +295,66 @@ describe('SplitTooltip behavior', () => {
             <TestCase containerHeight={400} containerWidth={300} tooltipHeight={800} />,
         );
         await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:0');
+        await expect.element(getElement(screen.container, '.SplitPane')).toHaveClass('disabled');
+    });
+
+    test('reserves tooltip content height when dragging without new options', async () => {
+        const renderTestCase = (tooltipHeight: number) => (
+            <TestCase
+                containerHeight={400}
+                containerWidth={300}
+                tooltipHeight={tooltipHeight}
+                resizerVisible
+            />
+        );
+        const screen = await render(renderTestCase(240));
+        const mainPane = getElement(screen.container, '.Pane1');
+        const tooltipPane = getElement(screen.container, '.Pane2');
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:136');
+
+        await dragMainPane(screen.container, 220);
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:136');
+        expect(mainPane.getBoundingClientRect().height).toBe(136);
+        expect(tooltipPane.clientHeight).toBe(240);
+
+        await screen.rerender(renderTestCase(320));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:56');
+        await dragMainPane(screen.container, 55);
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:56');
+        expect(tooltipPane.clientHeight).toBe(320);
+
+        await screen.rerender(renderTestCase(40));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:336');
+        expect(tooltipPane.clientHeight).toBe(40);
+    });
+
+    test('recalculates a manual size after content and layout changes by default', async () => {
+        const renderTestCase = (props?: Partial<TestCaseProps>) => (
+            <TestCase
+                containerHeight={400}
+                containerWidth={300}
+                layout={SplitLayout.HORIZONTAL}
+                tooltipHeight={120}
+                resizerVisible
+                {...props}
+            />
+        );
+        const screen = await render(renderTestCase());
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:256');
+        await dragMainPane(screen.container, 200);
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:200');
+
+        await screen.rerender(renderTestCase({tooltipHeight: 240}));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:136');
+        await screen.rerender(renderTestCase());
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:256');
+
+        await dragMainPane(screen.container, 200);
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:200');
+        await screen.rerender(renderTestCase({layout: SplitLayout.VERTICAL}));
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('vertical:180');
+        await screen.rerender(renderTestCase());
+        await expect.element(screen.getByTestId('main-pane')).toHaveTextContent('horizontal:256');
     });
 
     test.each([-1, 1])(
@@ -305,6 +365,7 @@ describe('SplitTooltip behavior', () => {
                     containerHeight={400}
                     containerWidth={300}
                     tooltipHeight={tooltipHeight}
+                    minMainPaneSize={40}
                     resizerVisible
                 />
             );
@@ -325,7 +386,7 @@ describe('SplitTooltip behavior', () => {
             );
             document.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
 
-            const expectedSize = Math.max(56, 56 + delta);
+            const expectedSize = 56 + delta;
             await expect
                 .element(screen.getByTestId('main-pane'))
                 .toHaveTextContent(`horizontal:${expectedSize}`);
@@ -335,14 +396,6 @@ describe('SplitTooltip behavior', () => {
             await expect
                 .element(screen.getByTestId('main-pane'))
                 .toHaveTextContent(`horizontal:${expectedSize}`);
-            await dragMainPane(screen.container, 80);
-            await expect
-                .element(screen.getByTestId('main-pane'))
-                .toHaveTextContent('horizontal:80');
-            await dragMainPane(screen.container, 40);
-            await expect
-                .element(screen.getByTestId('main-pane'))
-                .toHaveTextContent('horizontal:56');
         },
     );
 
@@ -552,6 +605,7 @@ describe('SplitTooltip behavior', () => {
                     containerHeight={400}
                     containerWidth={300}
                     tooltipHeight={80}
+                    minMainPaneSize={120}
                     resizerVisible
                     {...props}
                 />
