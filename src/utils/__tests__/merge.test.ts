@@ -93,8 +93,9 @@ describe('utils/merge', () => {
     it('keeps React components of a source with shared objects', () => {
         const renderer = React.lazy(() => Promise.resolve({default: () => null}));
         const plugin = {type: 'line', renderer};
+        const plugins: (typeof plugin)[] = [];
 
-        const result = mergeWith({plugins: []}, {plugins: [plugin, plugin]}, (_, srcValue, key) =>
+        const result = mergeWith({plugins}, {plugins: [plugin, plugin]}, (_, srcValue, key) =>
             key === 'plugins' ? srcValue : undefined,
         );
 
