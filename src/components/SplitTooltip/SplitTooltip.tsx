@@ -30,15 +30,19 @@ export interface SplitTooltipProps {
     mainPaneRatio?: number;
     /**
      * Minimum main pane height in pixels in horizontal layout. Does not apply in vertical layout.
-     * Capped at half the height available after the resizer. Setting it also preserves manual sizing
-     * across content, container and layout changes, allowing the tooltip to shrink and scroll.
-     * When omitted, sizing follows the tooltip content and automatic sizing has no minimum.
+     * Capped at half the height available after the resizer. When omitted, automatic sizing has no minimum.
      */
     minMainPaneSize?: number;
     /** Additional styles for the main pane. */
     mainPaneStyle?: React.CSSProperties;
     /** Called after initialization and whenever the main pane size or layout changes. */
     onMainPaneSizeChange?: (size: number, layout: SplitTooltipLayout) => void;
+    /**
+     * Preserves the manually selected horizontal main pane size across content, container and layout
+     * changes, allowing the tooltip to shrink and scroll. Defaults to `false`.
+     * Before the first drag, sizing follows the tooltip content in either mode.
+     */
+    preserveManualSize?: boolean;
     /** Renders the main pane with its current layout and size. */
     renderMainPane: (props: SplitTooltipRenderProps) => React.ReactNode;
     /** Renders the tooltip pane with the current main pane layout and size. */
@@ -97,14 +101,16 @@ export function getSplitTooltipSizeLimits(
     containerHeight: number,
     tooltipHeight: number,
     minMainPaneSize?: number,
+    preserveManualSize = false,
 ) {
     const availableSize = Math.max(0, containerHeight - SPLIT_TOOLTIP_RESIZER_SIZE);
-    const maxSize =
-        minMainPaneSize === undefined ? Math.max(0, availableSize - tooltipHeight) : availableSize;
+    const contentSize = Math.max(0, availableSize - tooltipHeight);
+    const defaultMinSize = preserveManualSize ? 0 : Math.min(containerHeight / 3, contentSize);
     const minSize =
         minMainPaneSize === undefined
-            ? Math.min(containerHeight / 3, maxSize)
+            ? defaultMinSize
             : Math.min(Math.max(0, minMainPaneSize), availableSize / 2);
+    const maxSize = preserveManualSize ? availableSize : Math.max(minSize, contentSize);
 
     return {minSize, maxSize};
 }
@@ -119,6 +125,7 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
         layout: layoutProp,
         mainPaneRatio = SPLIT_TOOLTIP_MAIN_PANE_RATIO,
         minMainPaneSize,
+        preserveManualSize = false,
         resizerVisible,
         onMainPaneSizeChange,
         style,
@@ -129,7 +136,6 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
     const layout = getSplitTooltipLayout(containerWidth, containerHeight, layoutProp);
     const [tooltipHeight, setTooltipHeight] = React.useState(0);
     const [userSize, setUserSize] = React.useState<number>();
-    const persistentSizing = minMainPaneSize !== undefined;
     const lastNotificationRef = React.useRef<{layout: SplitTooltipLayout; size: number} | null>(
         null,
     );
@@ -154,6 +160,7 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
         containerHeight,
         tooltipHeight,
         minMainPaneSize,
+        preserveManualSize,
     );
     const automaticSize = getSplitTooltipMainPaneSize({
         containerHeight,
@@ -169,9 +176,11 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
     if (!enabled) {
         effectiveSize = layout === SplitLayout.HORIZONTAL ? containerHeight : containerWidth;
     } else if (layout === SplitLayout.HORIZONTAL) {
-        if (persistentSizing && userSize !== undefined) {
-            effectiveSize = Math.max(minSize, Math.min(maxSize, userSize));
-        } else if (!persistentSizing && previousSizingRef.current.layout === layout) {
+        if (preserveManualSize) {
+            if (userSize !== undefined) {
+                effectiveSize = Math.max(minSize, Math.min(maxSize, userSize));
+            }
+        } else if (previousSizingRef.current.layout === layout) {
             effectiveSize =
                 size === previousSizingRef.current.maxSize
                     ? maxSize
@@ -221,14 +230,14 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
             size={effectiveSize}
             split={layout}
             style={style}
-            onChange={persistentSizing ? setUserSize : setSize}
+            onChange={preserveManualSize ? setUserSize : setSize}
             resizerStyle={enabled && resizerVisible ? undefined : hiddenResizerStyle}
             paneOneRender={() => renderMainPane(renderProps)}
             paneTwoRender={() => <div ref={tooltipRef}>{renderTooltip(renderProps)}</div>}
             pane1Style={mainPaneStyle}
             pane2Style={{
                 ...defaultTooltipPaneStyle,
-                ...(persistentSizing && {
+                ...((preserveManualSize || minMainPaneSize !== undefined) && {
                     minHeight: 0,
                     minWidth: 0,
                 }),

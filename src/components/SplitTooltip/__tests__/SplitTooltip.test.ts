@@ -105,28 +105,46 @@ describe('SplitTooltip', () => {
         expect(getSplitTooltipSizeLimits(100, 200)).toEqual({minSize: 0, maxSize: 0});
     });
 
-    test('allows scrolling a long tooltip when a main pane minimum is set', () => {
+    test('keeps the main pane minimum when tooltip content exceeds the available height', () => {
         expect(getSplitTooltipSizeLimits(400, 800, 120)).toEqual({
             minSize: 120,
-            maxSize: 376,
+            maxSize: 120,
         });
     });
 
-    test('reserves only the resizer when a main pane minimum is set', () => {
+    test('reserves tooltip content height when only a main pane minimum is set', () => {
         expect(getSplitTooltipSizeLimits(400, 120, 120)).toEqual({
             minSize: 120,
-            maxSize: 376,
+            maxSize: 256,
         });
-        expect(getSplitTooltipSizeLimits(200, 120, 120)).toEqual({minSize: 88, maxSize: 176});
+        expect(getSplitTooltipSizeLimits(200, 120, 120)).toEqual({minSize: 88, maxSize: 88});
     });
 
-    test.each([0, 12, SPLIT_TOOLTIP_RESIZER_SIZE])(
-        'keeps limits valid when the container height is %i',
-        (containerHeight) => {
-            expect(getSplitTooltipSizeLimits(containerHeight, 120, 120)).toEqual({
-                minSize: 0,
-                maxSize: 0,
-            });
+    test.each([undefined, 0, 120])(
+        'preserves the manual drag range with minimum %s',
+        (minMainPaneSize) => {
+            for (const tooltipHeight of [120, 800]) {
+                expect(
+                    getSplitTooltipSizeLimits(400, tooltipHeight, minMainPaneSize, true),
+                ).toEqual({
+                    minSize: minMainPaneSize ?? 0,
+                    maxSize: 376,
+                });
+            }
+        },
+    );
+
+    test.each([false, true])(
+        'keeps limits valid in short containers with preservation %s',
+        (preserveManualSize) => {
+            for (const containerHeight of [0, 12, SPLIT_TOOLTIP_RESIZER_SIZE]) {
+                expect(
+                    getSplitTooltipSizeLimits(containerHeight, 120, 120, preserveManualSize),
+                ).toEqual({
+                    minSize: 0,
+                    maxSize: 0,
+                });
+            }
         },
     );
 

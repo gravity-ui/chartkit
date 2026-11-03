@@ -181,11 +181,12 @@ export class SplitPane extends React.Component<Props, State> {
         this.setState(SplitPane.getSizeUpdate(this.props, this.state));
     }
 
-    componentDidUpdate(previousProps: Props) {
+    componentDidUpdate(previousProps: Props, previousState: State) {
         if (
             this.state.active &&
             (!this.props.allowResize || previousProps.split !== this.props.split)
         ) {
+            this.props.onDragFinished?.(previousState.draggedSize);
             this.setState({active: false});
         }
     }
