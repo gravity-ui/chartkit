@@ -107,7 +107,7 @@
   },
   "peerDependencies": {
     "@gravity-ui/uikit": "^8.0.0",
-    "react": "^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+    "react": "^18.0.0 || ^19.0.0"
   },
   "scripts": {
     "test": "vitest run --project unit",
