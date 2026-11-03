@@ -215,7 +215,8 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
         }
 
         lastNotificationRef.current = {layout, size: effectiveSize};
-        return callback(effectiveSize, layout);
+        callback(effectiveSize, layout);
+        return undefined;
     });
 
     const allowResize = layout === SplitLayout.HORIZONTAL;

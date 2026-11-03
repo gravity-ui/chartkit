@@ -103,7 +103,7 @@ describe('SplitTooltip behavior', () => {
     });
 
     test('recalculates size and reports only distinct size-layout pairs', async () => {
-        const onMainPaneSizeChange = vi.fn();
+        const onMainPaneSizeChange = vi.fn().mockResolvedValue(undefined);
         const renderTestCase = (props?: Partial<TestCaseProps>) => (
             <TestCase
                 containerHeight={400}

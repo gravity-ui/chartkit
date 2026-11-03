@@ -6,7 +6,7 @@ import {render} from '../../../../test-utils/utils';
 import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
 import type {ChartKitRef} from '../../../types';
-import {GravityChartsWidget} from '../renderer/GravityChartsWidget';
+import {GravityChartsPlugin} from '../index';
 
 const {reflow} = vi.hoisted(() => ({reflow: vi.fn()}));
 
@@ -26,15 +26,8 @@ const DATA = {series: {data: [{type: 'line' as const, name: 'Line', data: [{x: 0
 
 describe('Gravity Charts reflow forwarding', () => {
     beforeEach(() => {
-        reflow.mockReset();
-        settings.set({
-            plugins: [
-                {
-                    type: 'gravity-charts',
-                    renderer: React.lazy(async () => ({default: GravityChartsWidget})),
-                },
-            ],
-        });
+        reflow.mockReset().mockResolvedValue(undefined);
+        settings.set({plugins: [GravityChartsPlugin]});
     });
 
     test.each([false, true])(
@@ -52,7 +45,9 @@ describe('Gravity Charts reflow forwarding', () => {
                 </div>,
             );
             await expect.element(screen.getByText('Rendered chart')).toBeVisible();
-            expect(ref.current?.reflow()).toBe(completion);
+            const options = {immediate: true};
+            expect(ref.current?.reflow(options)).toBe(completion);
+            expect(reflow).toHaveBeenLastCalledWith(options);
             complete();
             await completion;
         },
@@ -61,20 +56,43 @@ describe('Gravity Charts reflow forwarding', () => {
     test.each([false, true])(
         'preserves rejection cause without replacing handled promise (split tooltip: %s)',
         async (splitted) => {
-            const failure = new Error('chart preparation failed');
-            const completion = Promise.reject<void>(failure);
-            completion.catch(() => undefined);
-            reflow.mockReturnValue(completion);
+            const onError = vi.fn();
             const ref = React.createRef<ChartKitRef>();
             const screen = await render(
                 <div style={{width: 800, height: 500}}>
-                    <ChartKit ref={ref} type="gravity-charts" data={DATA} tooltip={{splitted}} />
+                    <ChartKit
+                        ref={ref}
+                        type="gravity-charts"
+                        data={DATA}
+                        tooltip={{splitted}}
+                        onError={onError}
+                    />
                 </div>,
             );
             await expect.element(screen.getByText('Rendered chart')).toBeVisible();
+
+            for (const message of [
+                'Chart host is unavailable',
+                'Chart host has zero size',
+                'Chart is unmounted',
+                'Chart unmounted before reflow completed',
+            ]) {
+                const cancellation = new Error(message);
+                const cancelled = Promise.reject<void>(cancellation);
+                reflow.mockReturnValue(cancelled);
+                expect(ref.current?.reflow()).toBe(cancelled);
+                await expect(cancelled).rejects.toBe(cancellation);
+            }
+            expect(onError).not.toHaveBeenCalled();
+
+            const failure = new Error('chart preparation failed');
+            const completion = Promise.reject<void>(failure);
+            reflow.mockReturnValue(completion);
             const result = ref.current?.reflow();
             expect(result).toBe(completion);
             await expect(result).rejects.toBe(failure);
+            await expect.element(screen.getByText(failure.message)).toBeVisible();
+            expect(onError).toHaveBeenCalledWith({error: failure});
         },
     );
 
@@ -85,8 +103,10 @@ describe('Gravity Charts reflow forwarding', () => {
                 <ChartKit ref={ref} type="gravity-charts" data={DATA} tooltip={{splitted: true}} />
             </div>,
         );
-        await vi.waitFor(() => expect(ref.current).toBeDefined());
-        await expect(ref.current?.reflow()).rejects.toThrow('unavailable');
+        await vi.waitFor(() => {
+            expect(ref.current?.reflow()).toBeInstanceOf(Promise);
+        });
+        await expect(ref.current?.reflow()).rejects.toThrow('Chart host is unavailable');
     });
 
     test('keeps legacy void renderer and details forwarding', async () => {

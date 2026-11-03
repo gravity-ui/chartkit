@@ -24,7 +24,24 @@ export const GravityChartsWidget = React.forwardRef<
         measurePerformance(),
     );
     const chartRef = React.useRef<ChartRef>(null);
+    const [reflowFailure, setReflowFailure] = React.useState<{error: unknown}>();
     const ChartComponent = tooltip?.splitted ? ChartWithSplitPane : Chart;
+
+    const handleReflowError = React.useCallback((error: unknown) => {
+        // shortcut: Match lifecycle messages until charts exposes a cancellation error type.
+        if (
+            error instanceof Error &&
+            [
+                'Chart host is unavailable',
+                'Chart host has zero size',
+                'Chart is unmounted',
+                'Chart unmounted before reflow completed',
+            ].includes(error.message)
+        ) {
+            return;
+        }
+        setReflowFailure({error});
+    }, []);
 
     const handleChartReady: NonNullable<ChartProps['onReady']> = React.useCallback(() => {
         if (!performanceMeasure.current) {
@@ -46,11 +63,20 @@ export const GravityChartsWidget = React.forwardRef<
     React.useImperativeHandle(
         forwardedRef,
         () => ({
-            reflow() {
-                return chartRef.current?.reflow();
+            reflow(details) {
+                const options =
+                    details &&
+                    typeof details === 'object' &&
+                    'immediate' in details &&
+                    typeof details.immediate === 'boolean'
+                        ? {immediate: details.immediate}
+                        : undefined;
+                const completion = chartRef.current?.reflow(options);
+                completion?.catch(handleReflowError);
+                return completion;
             },
         }),
-        [],
+        [handleReflowError],
     );
 
     React.useLayoutEffect(() => {
@@ -59,7 +85,19 @@ export const GravityChartsWidget = React.forwardRef<
         }
     }, [onChartLoad]);
 
-    return <ChartComponent ref={chartRef} data={data} lang={lang} onReady={handleChartReady} />;
+    if (reflowFailure) {
+        throw reflowFailure.error;
+    }
+
+    return (
+        <ChartComponent
+            ref={chartRef}
+            data={data}
+            lang={lang}
+            onReady={handleChartReady}
+            onReflowError={handleReflowError}
+        />
+    );
 });
 
 export default GravityChartsWidget;
