@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Lang, MobileProvider, ThemeProvider, configure} from '@gravity-ui/uikit';
+import {Lang, Provider, configure} from '@gravity-ui/uikit';
 import addonDocs from '@storybook/addon-docs';
 import type {Decorator} from '@storybook/react-vite';
 import {definePreview} from '@storybook/react-vite';
@@ -20,11 +20,9 @@ configure({
 const withContextProvider: Decorator = (Story, context) => {
     return (
         <React.StrictMode>
-            <ThemeProvider theme={context.globals.theme}>
-                <MobileProvider>
-                    <Story {...context} />
-                </MobileProvider>
-            </ThemeProvider>
+            <Provider theme={context.globals.theme}>
+                <Story {...context} />
+            </Provider>
         </React.StrictMode>
     );
 };
