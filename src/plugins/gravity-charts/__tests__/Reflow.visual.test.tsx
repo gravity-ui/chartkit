@@ -78,12 +78,15 @@ describe('Gravity Charts reflow forwarding', () => {
                 'Chart unmounted before reflow completed',
             ]) {
                 const cancellation = new Error(message);
-                const cancelled = Promise.reject<void>(cancellation);
-                reflow.mockReturnValue(cancelled);
-                expect(ref.current?.reflow()).toBe(cancelled);
-                await expect(cancelled).rejects.toBe(cancellation);
+                await React.act(async () => {
+                    const cancelled = Promise.reject<void>(cancellation);
+                    reflow.mockReturnValue(cancelled);
+                    expect(ref.current?.reflow()).toBe(cancelled);
+                    await expect(cancelled).rejects.toBe(cancellation);
+                });
+                expect(onError).not.toHaveBeenCalled();
+                await expect.element(screen.getByText('Rendered chart')).toBeVisible();
             }
-            expect(onError).not.toHaveBeenCalled();
 
             const failure = new Error('chart preparation failed');
             const completion = Promise.reject<void>(failure);
