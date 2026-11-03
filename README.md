@@ -24,8 +24,8 @@ Each plugin renderer is lazy-loaded, so the underlying library code is only down
 
 ### Requirements
 
-- React 16, 17, or 18
-- `[@gravity-ui/uikit](https://github.com/gravity-ui/uikit)` — required peer dependency (provides theming and UI primitives)
+- React 18 or 19
+- [@gravity-ui/uikit](https://github.com/gravity-ui/uikit) 8 — required peer dependency (provides theming and UI primitives)
 
 ### Install
 
@@ -59,7 +59,7 @@ Or call `settings.set` multiple times — it merges the plugin list rather than 
 **Basic example:**
 
 ```tsx
-import {ThemeProvider} from '@gravity-ui/uikit';
+import {Provider} from '@gravity-ui/uikit';
 import ChartKit, {settings} from '@gravity-ui/chartkit';
 import {GravityChartsPlugin} from '@gravity-ui/chartkit/gravity-charts';
 
@@ -87,11 +87,11 @@ const data = {
 
 export default function App() {
   return (
-    <ThemeProvider theme="light">
+    <Provider theme="light">
       <div style={{height: 300}}>
         <ChartKit type="gravity-charts" data={data} />
       </div>
-    </ThemeProvider>
+    </Provider>
   );
 }
 ```
