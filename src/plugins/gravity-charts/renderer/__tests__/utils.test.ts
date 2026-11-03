@@ -1,5 +1,5 @@
-import cloneDeep from 'lodash/cloneDeep';
-import merge from 'lodash/merge';
+import cloneDeep from 'es-toolkit/compat/cloneDeep';
+import merge from 'es-toolkit/compat/merge';
 
 import type {ChartKitProps} from '../../../../types';
 import {vaildateData} from '../utils';

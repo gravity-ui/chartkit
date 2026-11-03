@@ -1,7 +1,7 @@
 import React from 'react';
 
+import get from 'es-toolkit/compat/get';
 import Highcharts, {Chart, ChartCallbackFunction, Options} from 'highcharts';
-import get from 'lodash/get';
 
 import {settings} from '../../../../libs';
 import {settingsEventEmitter} from '../../../../libs/settings/settings';

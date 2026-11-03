@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 
-import _escape from 'lodash/escape';
+import _escape from 'es-toolkit/compat/escape';
 
 import {i18n} from '../../../../../i18n';
 import type {Highcharts} from '../../../types';

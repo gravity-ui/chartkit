@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
 import {Meta, StoryObj} from '@storybook/react';
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from 'es-toolkit/compat/cloneDeep';
 import {action} from 'storybook/actions';
 
 import {IndicatorPlugin} from '../';

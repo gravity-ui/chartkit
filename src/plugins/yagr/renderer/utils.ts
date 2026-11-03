@@ -1,8 +1,8 @@
 import {dateTime} from '@gravity-ui/date-utils';
 import {defaults} from '@gravity-ui/yagr';
-import merge from 'lodash/merge';
 
 import {settings} from '../../../libs';
+import {merge} from '../../../utils/merge';
 import type {MinimalValidConfig, Yagr, YagrChartOptions, YagrTheme, YagrWidgetData} from '../types';
 
 import {getRenderTooltip} from './tooltip';
