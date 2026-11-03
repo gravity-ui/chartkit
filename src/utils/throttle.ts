@@ -7,8 +7,9 @@ export interface ThrottledFunction<T extends (...args: never[]) => void> {
 /**
  * Calls `fn` at once, then at most once per `wait` milliseconds with the latest arguments, at the
  * end of each interval. es-toolkit's throttle waits `wait` after the last call instead, which
- * slows down updates during continuous pointer moves, such as the split tooltip of highcharts. Time comes from performance.now(), which,
- * unlike Date.now(), does not jump when the system clock is set.
+ * slows down updates during continuous pointer moves, such as the split tooltip of highcharts.
+ * Time comes from performance.now(), which, unlike Date.now(), does not jump when the system clock
+ * is set.
  */
 export function throttle<T extends (...args: never[]) => void>(
     fn: T,

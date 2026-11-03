@@ -16,7 +16,10 @@ settings.set({lang: 'en'});
 type PreparedConfig = {
     plotOptions: Record<
         string,
-        {states?: {hover?: {lineWidthPlus?: number}}; dataLabels?: {color?: string}}
+        {
+            states?: {hover?: {lineWidthPlus?: number}};
+            dataLabels?: {enabled?: boolean; color?: string};
+        }
     >;
     yAxis: {gridLineColor?: string; opposite?: boolean; labels?: {formatter?: unknown}}[];
 };
@@ -45,6 +48,10 @@ describe('highcharts prepareConfig merges user options as lodash did', () => {
         expect(config.plotOptions.area.dataLabels?.color).toBe('red');
         expect(config.plotOptions.bar.dataLabels?.color).toBeUndefined();
         expect(config.plotOptions.line.dataLabels?.color).toBeUndefined();
+        // plotOptions.series.dataLabels still reaches every type it is copied into
+        expect(config.plotOptions.area.dataLabels?.enabled).toBe(true);
+        expect(config.plotOptions.bar.dataLabels?.enabled).toBe(true);
+        expect(config.plotOptions.line.dataLabels?.enabled).toBe(true);
     });
 
     test('every axis of an axis array gets the default axis options', () => {

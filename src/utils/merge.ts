@@ -17,6 +17,8 @@ type InnerCustomizer = (
     source: unknown,
 ) => unknown;
 
+// An array, or a plain object of any realm: its prototype is null or a root prototype, such as the
+// Object.prototype of an iframe. Lodash and es-toolkit treat such objects as plain, too.
 function isPlainContainer(value: unknown): value is object {
     if (Array.isArray(value)) {
         return true;
@@ -25,12 +27,23 @@ function isPlainContainer(value: unknown): value is object {
         return false;
     }
     const prototype = Object.getPrototypeOf(value);
-    return prototype === Object.prototype || prototype === null;
+    return prototype === null || Object.getPrototypeOf(prototype) === null;
 }
 
-// The keys es-toolkit merges: own enumerable strings, then own enumerable symbols.
+// What unshare walks and copies. React components and elements, such as the React.lazy renderer of
+// a plugin in the settings, are plain objects with $$typeof, and a copy would lose their identity.
+function isOptionContainer(value: unknown): value is object {
+    return isPlainContainer(value) && !('$$typeof' in value);
+}
+
+// The keys es-toolkit merges in an object: own enumerable strings except __proto__, which it skips,
+// then own enumerable symbols. In an array it merges the indexes of a copy made by slice.
 function ownEnumerableKeys(value: object) {
     const keys: PropertyKey[] = Object.keys(value);
+    const protoIndex = keys.indexOf('__proto__');
+    if (protoIndex !== -1) {
+        keys.splice(protoIndex, 1);
+    }
     for (const symbol of Object.getOwnPropertySymbols(value)) {
         if (Object.prototype.propertyIsEnumerable.call(value, symbol)) {
             keys.push(symbol);
@@ -41,38 +54,47 @@ function ownEnumerableKeys(value: object) {
 
 // Whether one plain object or array sits at several paths. A cycle back to an ancestor is not
 // sharing: es-toolkit handles cycles itself. `visited` maps a container to true while its paths
-// are walked and to false after. Sources may hold series data, so the walk skips primitives
-// without a call.
+// are walked and to false after. Sources may hold series data, so arrays go by index and
+// primitives are skipped without a call.
 function hasSharedPaths(value: object, visited: Map<object, boolean>): boolean {
     const state = visited.get(value);
     if (state !== undefined) {
         return !state;
     }
     visited.set(value, true);
-    const keys = ownEnumerableKeys(value);
+    const keys = Array.isArray(value) ? undefined : ownEnumerableKeys(value);
+    const length = keys ? keys.length : (value as unknown[]).length;
     let shared = false;
-    for (let i = 0; i < keys.length && !shared; i++) {
-        const child = (value as Record<PropertyKey, unknown>)[keys[i]];
-        shared = isPlainContainer(child) && hasSharedPaths(child, visited);
+    for (let i = 0; i < length && !shared; i++) {
+        const child = (value as Record<PropertyKey, unknown>)[keys ? keys[i] : i];
+        shared = isOptionContainer(child) && hasSharedPaths(child, visited);
     }
     visited.set(value, false);
     return shared;
 }
 
-// Copies plain objects and arrays so that every path gets an object of its own. Other values,
-// such as functions, dates or class instances, stay as they are, as do cycles.
-function copyPaths(value: unknown, ancestors: Set<object>): unknown {
-    if (!isPlainContainer(value) || ancestors.has(value)) {
+// Copies plain objects and arrays so that every path gets an object of its own. Other values, such
+// as functions, dates, class instances or React components, stay as they are. A cycle points to the
+// copy of its ancestor, so that the copy has no shared paths either.
+function copyPaths(value: unknown, ancestorCopies: Map<object, unknown>): unknown {
+    if (!isOptionContainer(value)) {
         return value;
     }
-    const copy: Record<PropertyKey, unknown> = Array.isArray(value)
-        ? new Array(value.length)
-        : Object.create(Object.getPrototypeOf(value));
-    ancestors.add(value);
-    for (const key of ownEnumerableKeys(value)) {
-        copy[key] = copyPaths((value as Record<PropertyKey, unknown>)[key], ancestors);
+    const ancestorCopy = ancestorCopies.get(value);
+    if (ancestorCopy !== undefined) {
+        return ancestorCopy;
     }
-    ancestors.delete(value);
+    const keys = Array.isArray(value) ? undefined : ownEnumerableKeys(value);
+    const copy: Record<PropertyKey, unknown> = keys
+        ? Object.create(Object.getPrototypeOf(value))
+        : new Array((value as unknown[]).length);
+    ancestorCopies.set(value, copy);
+    const length = keys ? keys.length : (value as unknown[]).length;
+    for (let i = 0; i < length; i++) {
+        const key = keys ? keys[i] : i;
+        copy[key] = copyPaths((value as Record<PropertyKey, unknown>)[key], ancestorCopies);
+    }
+    ancestorCopies.delete(value);
     return copy;
 }
 
@@ -96,10 +118,11 @@ function mergeValue(target: unknown, source: unknown, customizer: InnerCustomize
 
 function withLodashValues(customizer?: MergeCustomizer): InnerCustomizer {
     const merged: InnerCustomizer = (objValue, srcValue, key, object, source) => {
-        if (customizer) {
+        // es-toolkit also merges symbol keys; lodash calls the customizer for string keys only.
+        if (customizer && typeof key === 'string') {
             // For an array source, es-toolkit passes a copy of the target value, or [] in place of
             // an object; lodash passes the target value itself, and customizers rely on it.
-            const value = customizer(object[key], srcValue, key as string, object, source);
+            const value = customizer(object[key], srcValue, key, object, source);
             if (value !== undefined) {
                 return value;
             }
@@ -110,8 +133,8 @@ function withLodashValues(customizer?: MergeCustomizer): InnerCustomizer {
 }
 
 function unshare(source: unknown) {
-    return isPlainContainer(source) && hasSharedPaths(source, new Map())
-        ? copyPaths(source, new Set())
+    return isOptionContainer(source) && hasSharedPaths(source, new Map())
+        ? copyPaths(source, new Map())
         : source;
 }
 

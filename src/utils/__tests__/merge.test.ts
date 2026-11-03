@@ -1,3 +1,7 @@
+import vm from 'node:vm';
+
+import React from 'react';
+
 import type {MergeCustomizer} from '../merge';
 import {merge, mergeWith} from '../merge';
 
@@ -55,6 +59,47 @@ describe('utils/merge', () => {
 
         expect(result.a.format).toBe(format);
         expect(result.b.format).toBe(format);
+    });
+
+    it('keeps the paths of a cyclic shared object apart', () => {
+        const shared: Record<string, unknown> = {v: 1};
+        shared.self = shared;
+
+        const result = merge({a: {self: {x: 1}}, b: {self: {y: 2}}}, {a: shared, b: shared});
+
+        expect(result.b.self).not.toHaveProperty('x');
+        expect(result.a.self).not.toBe(result.b.self);
+    });
+
+    it('merges a plain object of another realm', () => {
+        const source = vm.runInNewContext('({a: {x: 1}})');
+
+        const result = merge({a: {y: 2}}, source);
+
+        expect(result.a).toEqual({x: 1, y: 2});
+        expect(result.a).not.toBe(source.a);
+    });
+
+    it('does not take an own __proto__ key of a source with shared objects', () => {
+        const shared = JSON.parse('{"__proto__": {"polluted": true}, "y": 2}');
+
+        const result = merge({}, {a: shared, b: shared});
+
+        expect(Object.getPrototypeOf(result.a)).toBe(Object.prototype);
+        expect(result.a).toEqual({y: 2});
+        expect(result.b).toEqual({y: 2});
+    });
+
+    it('keeps React components of a source with shared objects', () => {
+        const renderer = React.lazy(() => Promise.resolve({default: () => null}));
+        const plugin = {type: 'line', renderer};
+
+        const result = mergeWith({plugins: []}, {plugins: [plugin, plugin]}, (_, srcValue, key) =>
+            key === 'plugins' ? srcValue : undefined,
+        );
+
+        expect(result.plugins[0].renderer).toBe(renderer);
+        expect(result.plugins[1].renderer).toBe(renderer);
     });
 });
 
@@ -123,5 +168,16 @@ describe('utils/mergeWith', () => {
         });
 
         expect(keys).toEqual(['a', 'y']);
+    });
+
+    it('calls the customizer for string keys only', () => {
+        const keys: unknown[] = [];
+
+        mergeWith({}, {a: 1, [Symbol('b')]: 2}, (_objValue, _srcValue, key) => {
+            keys.push(key);
+            return undefined;
+        });
+
+        expect(keys).toEqual(['a']);
     });
 });
