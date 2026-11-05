@@ -5,8 +5,8 @@
 // a CommonJS file with ESM syntax fails here. CSS and JSON keysets are handled the way bundlers
 // handle them: Node cannot import CSS, and imports JSON only with an import attribute.
 // Extensionless imports inside the dependencies get `.js` or `/index.js` the way bundlers do
-// (`@gravity-ui/charts` 1.x has them in its own build); the fallback never applies to
-// chartkit's files.
+// (some dependencies still have them in their builds); the fallback never applies to chartkit's
+// files.
 // Both builds must export the same names.
 //
 // The plugin renderers sit behind `React.lazy`, so a load never evaluates them: every emitted
@@ -39,8 +39,8 @@ function isDependencyFile(url) {
 const RESOLUTION_ERRORS = ['ERR_MODULE_NOT_FOUND', 'ERR_UNSUPPORTED_DIR_IMPORT'];
 
 // Bundlers append `.js` or `/index.js` to an extensionless specifier; Node does not. The
-// dependencies get that here (`@gravity-ui/charts` 1.x needs it); chartkit's own files, never
-// under node_modules, are resolved strictly.
+// dependencies get that here; chartkit's own files, never under node_modules, are resolved
+// strictly.
 function resolveLikeBundlers(specifier, context, nextResolve) {
     const candidates = [specifier];
     if (isDependencyFile(context.parentURL)) {
