@@ -7,5 +7,11 @@ export * from './types';
 
 export const GravityChartsPlugin: ChartKitPlugin = {
     type: 'gravity-charts',
-    renderer: React.lazy(() => import('./renderer/GravityChartsWidget')),
+    // The named export loads the same in the ESM build and in the CommonJS build, where the
+    // dynamic import becomes `require` and `default` would be the whole module.
+    renderer: React.lazy(() =>
+        import('./renderer/GravityChartsWidget.js').then((module) => ({
+            default: module.GravityChartsWidget,
+        })),
+    ),
 };

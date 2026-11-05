@@ -6,5 +6,11 @@ export * from './types';
 
 export const IndicatorPlugin: ChartKitPlugin = {
     type: 'indicator',
-    renderer: React.lazy(() => import('./renderer/IndicatorWidget')),
+    // The named export loads the same in the ESM build and in the CommonJS build, where the
+    // dynamic import becomes `require` and `default` would be the whole module.
+    renderer: React.lazy(() =>
+        import('./renderer/IndicatorWidget.js').then((module) => ({
+            default: module.IndicatorWidget,
+        })),
+    ),
 };

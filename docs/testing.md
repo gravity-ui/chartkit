@@ -13,6 +13,7 @@
 | `npm run test:docker:update`      | Update baseline screenshots via Docker                                                    |
 | `npm run test:docker:clear-cache` | Clear Docker image cache                                                                  |
 | `npm run test:visual`             | Run visual tests locally (macOS) — used internally by Docker scripts, not for regular use |
+| `npm run test:build`              | Load the built package (`npm run build` first) in Node: CommonJS and ESM, every entry     |
 
 ## Test Projects
 
