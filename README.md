@@ -1,6 +1,6 @@
 # Gravity UI ChartKit · [![npm package](https://img.shields.io/npm/v/@gravity-ui/chartkit)](https://www.npmjs.com/package/@gravity-ui/chartkit) [![License](https://img.shields.io/github/license/gravity-ui/ChartKit)](LICENSE) [![CI](https://img.shields.io/github/actions/workflow/status/gravity-ui/ChartKit/.github/workflows/ci.yml?label=CI&logo=github)](https://github.com/gravity-ui/ChartKit/actions/workflows/ci.yml?query=branch:main) [![storybook](https://img.shields.io/badge/Storybook-deployed-ff4685)](https://preview.gravity-ui.com/chartkit/)
 
-Plugin-based React component that provides a unified rendering interface for multiple charting libraries. You register one or more plugins and render charts via `<ChartKit type="..." data={...} />` — ChartKit dispatches to the correct renderer automatically.
+Plugin-based React component that renders charts from multiple charting libraries (Gravity Charts, YAGR) through a single ChartKit component. You register one or more plugins and render charts via `<ChartKit type="..." data={...} />` — ChartKit dispatches to the correct renderer automatically.
 
 Each plugin renderer is lazy-loaded, so the underlying library code is only downloaded when ChartKit is actually rendered in the UI. ChartKit also handles mobile-friendly tooltip display out of the box. You can use the built-in plugins or implement your own.
 
@@ -213,13 +213,13 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ## For AI agents
 
-A plugin-dispatching React component that renders charts from multiple Gravity UI charting libraries through one `<ChartKit type="..." data={...} />` API — reach for it when you need a single lazy-loading entry point for mixed chart types, instead of importing each chart library directly.
+A plugin-based React component that renders charts from multiple charting libraries (Gravity Charts, YAGR) through a single `<ChartKit type="..." data={...} />` API, lazy-loading each library only when its chart type is rendered.
 
 ### When to use
 
-- Rendering more than one charting engine (e.g. `gravity-charts` + `yagr`) behind one consistent component.
+- Rendering more than one charting engine behind one consistent component: `gravity-charts` (declarative SVG charts via [`@gravity-ui/charts`](https://github.com/gravity-ui/charts)) and `yagr` (uPlot-based time-series via [`@gravity-ui/yagr`](https://github.com/gravity-ui/yagr)).
 - Lazy-loading chart bundles — each plugin's renderer is `React.lazy`, so a library's code is only fetched when its chart type is actually shown.
-- Bundling charts into a Gravity UI app that wants mobile-friendly tooltips and unified theming out of the box.
+- Building charts into a Gravity UI app that wants mobile-friendly tooltips and unified theming out of the box.
 
 ### When not to use
 
@@ -230,8 +230,9 @@ A plugin-dispatching React component that renders charts from multiple Gravity U
 
 - **Rendering `<ChartKit>` before `settings.set({plugins: [...]})`** — the global plugin registry must be populated at app entry; an unregistered `type` throws at render time.
 - **Hallucinated prop `chartType` / `library`** — the dispatch prop is `type` (e.g. `type="gravity-charts"`), and the data is `data`.
+- **Importing plugins from the root entry** — plugins live in subpath exports (`@gravity-ui/chartkit/gravity-charts`, `@gravity-ui/chartkit/yagr`); the root `@gravity-ui/chartkit` entry does not re-export them. Renderers are lazy, so the first render of a type fetches its bundle.
+- **One `data` shape for every `type`** — the shape depends on the plugin: `gravity-charts` takes `ChartData` from `@gravity-ui/charts` (`{series: {data: [...]}}`), `yagr` takes `{data: {graphs, timeline}, libraryConfig}`.
 - **Forgetting a container height** — `ChartKit` fills its parent; without an explicit height on the wrapper, the chart collapses to zero.
-- **Expecting plugins to be bundled** — plugin renderers (`@gravity-ui/chartkit/gravity-charts`, `.../yagr`) are lazy; the first render of a type fetches its bundle.
 - **Missing the uikit styles import** — theming depends on `@gravity-ui/uikit/styles/styles.css`; without it, charts render unstyled.
 
 ## Documentation for AI agents
