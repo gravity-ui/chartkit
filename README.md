@@ -98,6 +98,27 @@ export default function App() {
 
 `ChartKit` adapts to its parent's size — make sure the container has an explicit height.
 
+### SplitTooltip
+
+The split-pane tooltip layout that `gravity-charts` uses on touch devices (`tooltip={{splitted: true}}`) is also available as a standalone component. It works with any content: it renders the main pane and the tooltip pane side by side (or stacked, depending on the container size) with a draggable resizer between them.
+
+```tsx
+import {SplitTooltip} from '@gravity-ui/chartkit';
+
+export function Panel() {
+  return (
+    <div style={{height: 400}}>
+      <SplitTooltip
+        renderMainPane={() => <MyVisualization />}
+        renderTooltip={() => <MyTooltipContent />}
+      />
+    </div>
+  );
+}
+```
+
+See the `SplitTooltipProps` type for layout control, pane sizing and resizer options.
+
 ## Updating charting packages
 
 ChartKit bundles two Gravity UI charting libraries as dependencies:
@@ -219,7 +240,8 @@ A plugin-based React component that renders charts from multiple charting librar
 
 - Rendering more than one charting engine behind one consistent component: `gravity-charts` (declarative SVG charts via [`@gravity-ui/charts`](https://github.com/gravity-ui/charts)) and `yagr` (uPlot-based time-series via [`@gravity-ui/yagr`](https://github.com/gravity-ui/yagr)).
 - Lazy-loading chart bundles — each plugin's renderer is `React.lazy`, so a library's code is only fetched when its chart type is actually shown.
-- Mobile-friendly tooltips out of the box — `SplitTooltip` (exported from the root entry) shows the chart and its tooltip in resizable split panes instead of a hover popup; for `gravity-charts` turn it on with `<ChartKit type="gravity-charts" tooltip={{splitted: true}} />`.
+- Mobile-friendly tooltips out of the box — the chart and its tooltip are shown in resizable split panes instead of a hover popup; for `gravity-charts` turn it on with `<ChartKit type="gravity-charts" tooltip={{splitted: true}} />`.
+- Using the split-pane tooltip layout on its own — `SplitTooltip` is a standalone component exported from the root entry: pass `renderMainPane` and `renderTooltip`, and it lays them out as resizable panes (vertical or horizontal, picked from the container size) for any content, not only ChartKit charts.
 - Writing your own plugin — register `{type, renderer}` via `settings.set({plugins: [...]})`, where `renderer` is a `React.lazy` component; ChartKit dispatches to it by `type` exactly like to the built-in plugins.
 - Consistent light/dark theming across every chart engine out of the box — the charts follow the `@gravity-ui/uikit` theme of the surrounding app.
 
