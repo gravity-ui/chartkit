@@ -8,7 +8,7 @@ Each plugin renderer is lazy-loaded, so the underlying library code is only down
 
 - You need modern declarative charts (`gravity-charts`) or time-series / monitoring charts (`yagr`)
 - You need multiple chart types under a single consistent API
-- You're building in the Gravity UI ecosystem
+- You want charts that follow the same light/dark theme as the rest of your UI out of the box
 
 **When not to use:**
 
@@ -221,7 +221,7 @@ A plugin-based React component that renders charts from multiple charting librar
 - Lazy-loading chart bundles — each plugin's renderer is `React.lazy`, so a library's code is only fetched when its chart type is actually shown.
 - Mobile-friendly tooltips out of the box — `SplitTooltip` (exported from the root entry) shows the chart and its tooltip in resizable split panes instead of a hover popup; for `gravity-charts` turn it on with `<ChartKit type="gravity-charts" tooltip={{splitted: true}} />`.
 - Writing your own plugin — register `{type, renderer}` via `settings.set({plugins: [...]})`, where `renderer` is a `React.lazy` component; ChartKit dispatches to it by `type` exactly like to the built-in plugins.
-- Building charts into a Gravity UI app that wants unified theming out of the box.
+- Consistent light/dark theming across every chart engine out of the box — the charts follow the `@gravity-ui/uikit` theme of the surrounding app.
 
 ### When not to use
 
