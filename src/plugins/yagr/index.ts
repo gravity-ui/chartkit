@@ -6,5 +6,7 @@ export * from './types';
 
 export const YagrPlugin: ChartKitPlugin = {
     type: 'yagr',
-    renderer: React.lazy(() => import('./renderer/YagrWidget')),
+    renderer: React.lazy(() =>
+        import('./renderer/YagrWidget.js').then((module) => ({default: module.YagrWidget})),
+    ),
 };

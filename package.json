@@ -18,31 +18,78 @@
   "homepage": "https://github.com/gravity-ui/ChartKit#readme",
   "license": "MIT",
   "repository": "git@github.com:gravity-ui/ChartKit.git",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "main": "./build/cjs/index.js",
+  "module": "./build/esm/index.js",
+  "types": "./build/cjs/index.d.ts",
   "exports": {
-    ".": "./build/index.js",
-    "./gravity-charts": "./build/plugins/gravity-charts/index.js",
-    "./highcharts": "./build/plugins/highcharts/index.js",
-    "./indicator": "./build/plugins/indicator/index.js",
-    "./yagr": "./build/plugins/yagr/index.js"
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./build/esm/index.d.ts",
+        "default": "./build/esm/index.js"
+      },
+      "require": {
+        "types": "./build/cjs/index.d.ts",
+        "default": "./build/cjs/index.js"
+      }
+    },
+    "./gravity-charts": {
+      "import": {
+        "types": "./build/esm/plugins/gravity-charts/index.d.ts",
+        "default": "./build/esm/plugins/gravity-charts/index.js"
+      },
+      "require": {
+        "types": "./build/cjs/plugins/gravity-charts/index.d.ts",
+        "default": "./build/cjs/plugins/gravity-charts/index.js"
+      }
+    },
+    "./highcharts": {
+      "import": {
+        "types": "./build/esm/plugins/highcharts/index.d.ts",
+        "default": "./build/esm/plugins/highcharts/index.js"
+      },
+      "require": {
+        "types": "./build/cjs/plugins/highcharts/index.d.ts",
+        "default": "./build/cjs/plugins/highcharts/index.js"
+      }
+    },
+    "./indicator": {
+      "import": {
+        "types": "./build/esm/plugins/indicator/index.d.ts",
+        "default": "./build/esm/plugins/indicator/index.js"
+      },
+      "require": {
+        "types": "./build/cjs/plugins/indicator/index.d.ts",
+        "default": "./build/cjs/plugins/indicator/index.js"
+      }
+    },
+    "./yagr": {
+      "import": {
+        "types": "./build/esm/plugins/yagr/index.d.ts",
+        "default": "./build/esm/plugins/yagr/index.js"
+      },
+      "require": {
+        "types": "./build/cjs/plugins/yagr/index.d.ts",
+        "default": "./build/cjs/plugins/yagr/index.js"
+      }
+    }
   },
   "typesVersions": {
     "*": {
       "index.d.ts": [
-        "./build/index.d.ts"
+        "./build/cjs/index.d.ts"
       ],
       "gravity-charts": [
-        "./build/plugins/gravity-charts/index.d.ts"
+        "./build/cjs/plugins/gravity-charts/index.d.ts"
       ],
       "highcharts": [
-        "./build/plugins/highcharts/index.d.ts"
+        "./build/cjs/plugins/highcharts/index.d.ts"
       ],
       "indicator": [
-        "./build/plugins/indicator/index.d.ts"
+        "./build/cjs/plugins/indicator/index.d.ts"
       ],
       "yagr": [
-        "./build/plugins/yagr/index.d.ts"
+        "./build/cjs/plugins/yagr/index.d.ts"
       ]
     }
   },
@@ -71,6 +118,7 @@
   },
   "devDependencies": {
     "@gravity-ui/eslint-config": "^4.2.1",
+    "@gravity-ui/gulp-utils": "^1.2.0",
     "@gravity-ui/prettier-config": "^1.1.0",
     "@gravity-ui/readme-validator": "^1.3.0",
     "@gravity-ui/stylelint-config": "^4.0.1",
@@ -95,11 +143,9 @@
     "eslint": "^9.39.4",
     "eslint-plugin-storybook": "^10.2.16",
     "globals": "^17.4.0",
-    "gulp": "^4.0.2",
-    "gulp-cli": "^2.3.0",
+    "gulp": "^5.0.1",
+    "gulp-cli": "^3.1.0",
     "gulp-dart-sass": "^1.0.2",
-    "gulp-replace": "^1.1.3",
-    "gulp-typescript": "^5.0.1",
     "highcharts": "^8.2.2",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.7",
@@ -132,6 +178,7 @@
     "test:docker": "./scripts/playwright-docker.sh npm run test:visual --",
     "test:docker:update": "./scripts/playwright-docker.sh npm run test:visual -- --update",
     "test:docker:clear-cache": "./scripts/playwright-docker.sh clear-cache",
+    "test:build": "node scripts/check-build.mjs",
     "clean": "gulp clean",
     "start": "storybook dev -p 7007",
     "build": "gulp",

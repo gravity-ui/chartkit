@@ -99,5 +99,3 @@ export const GravityChartsWidget = React.forwardRef<
         />
     );
 });
-
-export default GravityChartsWidget;

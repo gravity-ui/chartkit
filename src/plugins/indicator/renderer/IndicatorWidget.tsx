@@ -15,7 +15,10 @@ import './IndicatorWidget.scss';
 
 const b = block('indicator');
 
-const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'indicator'>>(
+export const IndicatorWidget = React.forwardRef<
+    ChartKitWidgetRef | undefined,
+    ChartKitProps<'indicator'>
+>(
     // _ref needs to avoid this React warning:
     // "forwardRef render functions accept exactly two parameters: props and ref"
     function IndicatorWidgetInner(props, _ref) {
@@ -65,5 +68,3 @@ const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKit
         );
     },
 );
-
-export default IndicatorWidget;

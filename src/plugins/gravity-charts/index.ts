@@ -7,5 +7,9 @@ export * from './types';
 
 export const GravityChartsPlugin: ChartKitPlugin = {
     type: 'gravity-charts',
-    renderer: React.lazy(() => import('./renderer/GravityChartsWidget')),
+    renderer: React.lazy(() =>
+        import('./renderer/GravityChartsWidget.js').then((module) => ({
+            default: module.GravityChartsWidget,
+        })),
+    ),
 };
