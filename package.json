@@ -1,7 +1,21 @@
 {
   "name": "@gravity-ui/chartkit",
-  "version": "8.11.0",
-  "description": "React component used to render charts based on any sources you need",
+  "version": "8.12.0",
+  "description": "Plugin-based React component that renders charts from multiple charting libraries, such as Gravity Charts and Yagr, through a single ChartKit API, with mobile-friendly tooltips and custom plugin support",
+  "keywords": [
+    "charts",
+    "chart",
+    "charting",
+    "data-visualization",
+    "dataviz",
+    "react",
+    "react-component",
+    "typescript",
+    "gravity-ui",
+    "chartkit",
+    "yagr"
+  ],
+  "homepage": "https://github.com/gravity-ui/ChartKit#readme",
   "license": "MIT",
   "repository": "git@github.com:gravity-ui/ChartKit.git",
   "main": "build/index.js",
@@ -47,7 +61,7 @@
   ],
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
-    "@gravity-ui/charts": "^1.71.0",
+    "@gravity-ui/charts": "^1.73.0",
     "@gravity-ui/date-utils": "^2.1.0",
     "@gravity-ui/i18n": "^1.0.0",
     "@gravity-ui/yagr": "^5.0.0",

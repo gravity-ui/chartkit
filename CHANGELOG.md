@@ -1,5 +1,14 @@
 # Changelog
 
+## [8.12.0](https://github.com/gravity-ui/chartkit/compare/v8.11.0...v8.12.0) (2026-11-03)
+
+
+### Features
+
+* **deps:** Update `@gravity-ui/charts` `1.72.0` -&gt; `1.73.0` ([#955](https://github.com/gravity-ui/chartkit/issues/955)) ([662ea96](https://github.com/gravity-ui/chartkit/commit/662ea96a905a349ff91bfeb965908018613ef89b))
+* forward renderer reflow completion ([#948](https://github.com/gravity-ui/chartkit/issues/948)) ([c69398b](https://github.com/gravity-ui/chartkit/commit/c69398b86df9d339ace542d5d12e14b845ee7b71))
+* **SplitTooltip:** add visibility control and persistent pane sizing ([#951](https://github.com/gravity-ui/chartkit/issues/951)) ([6a2361f](https://github.com/gravity-ui/chartkit/commit/6a2361f885c04b6d02d740985c4800b0ead86420))
+
 ## [8.11.0](https://github.com/gravity-ui/chartkit/compare/v8.10.1...v8.11.0) (2026-10-30)
 
 
