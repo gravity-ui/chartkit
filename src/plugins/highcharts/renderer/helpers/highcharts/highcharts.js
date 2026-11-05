@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 
+import get from 'es-toolkit/compat/get';
 import Highcharts from 'highcharts';
-import get from 'lodash/get';
 
 import {i18n} from '../../../../../i18n';
 import {

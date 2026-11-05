@@ -99,7 +99,7 @@
     "@gravity-ui/i18n": "^1.0.0",
     "@gravity-ui/yagr": "^5.0.0",
     "afterframe": "^1.0.2",
-    "lodash": "^4.17.21",
+    "es-toolkit": "^1.53.0",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
@@ -116,7 +116,6 @@
     "@storybook/react-vite": "^10.2.0",
     "@types/d3": "^7.4.0",
     "@types/d3-selection": "^3.0.10",
-    "@types/lodash": "^4.14.177",
     "@types/node": "^18.0.0",
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",

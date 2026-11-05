@@ -1,9 +1,8 @@
 /** Default options for Highcharts & Highstock */
 
-import merge from 'lodash/merge';
-
 import {i18n} from '../../../../../i18n';
 import {block} from '../../../../../utils/cn';
+import {merge} from '../../../../../utils/merge';
 
 import {getChartKitFormattedValue} from './utils';
 import LocalStorage from './utils/localStorage';

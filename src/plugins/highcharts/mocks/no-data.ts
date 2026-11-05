@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import type {HighchartsWidgetData} from '../types';
 
 const baseData: Omit<HighchartsWidgetData, 'data'> = {

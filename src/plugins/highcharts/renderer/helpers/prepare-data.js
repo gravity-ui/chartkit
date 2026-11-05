@@ -1,5 +1,5 @@
 import {dateTime} from '@gravity-ui/date-utils';
-import lodashMin from 'lodash/min';
+import arrayMin from 'es-toolkit/compat/min';
 
 import {i18n} from '../../../../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../../libs';
@@ -132,7 +132,7 @@ export function prepareData(data, options, holidays) {
         if (data.categories_ms) {
             options.highchartsScale = HIGHCHARTS_SCALE[options.scale];
 
-            const closestPointRange = lodashMin(
+            const closestPointRange = arrayMin(
                 data.categories_ms.map(
                     (timestamp, index) => timestamp - data.categories_ms[index - 1],
                 ),

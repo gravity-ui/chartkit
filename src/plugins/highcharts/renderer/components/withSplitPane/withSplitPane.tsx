@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import debounce from 'lodash/debounce';
-import get from 'lodash/get';
+import debounce from 'es-toolkit/compat/debounce';
+import get from 'es-toolkit/compat/get';
 
 import {StyledSplitPane} from '../../../../../components/SplitPane';
 import {getRandomCKId} from '../../../../../utils';

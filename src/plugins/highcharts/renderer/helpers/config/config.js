@@ -1,18 +1,17 @@
 /* eslint new-cap: 0, complexity: 0 */
 
 import {dateTime} from '@gravity-ui/date-utils';
+import clamp from 'es-toolkit/compat/clamp';
+import get from 'es-toolkit/compat/get';
+import isEmpty from 'es-toolkit/compat/isEmpty';
+import isNumber from 'es-toolkit/compat/isNumber';
+import pick from 'es-toolkit/compat/pick';
 import Highcharts from 'highcharts';
-import clamp from 'lodash/clamp';
-import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
-import isNumber from 'lodash/isNumber';
-import merge from 'lodash/merge';
-import mergeWith from 'lodash/mergeWith';
-import pick from 'lodash/pick';
-import throttle from 'lodash/throttle';
 
 import {i18n} from '../../../../../i18n';
 import {block} from '../../../../../utils/cn';
+import {merge, mergeWith} from '../../../../../utils/merge';
+import {throttle} from '../../../../../utils/throttle';
 import {formatNumber} from '../../../../shared';
 import {
     drawComments,
