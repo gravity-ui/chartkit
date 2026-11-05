@@ -68,7 +68,53 @@ describe('utils/merge', () => {
         const result = merge({a: {self: {x: 1}}, b: {self: {y: 2}}}, {a: shared, b: shared});
 
         expect(result.b.self).not.toHaveProperty('x');
-        expect(result.a.self).not.toBe(result.b.self);
+        expect(result.a.self).toBe(result.a);
+        expect(result.b.self).toBe(result.b);
+    });
+
+    it('points a cycle to the merged ancestor', () => {
+        const series: Record<string, unknown> = {value: 1};
+        series.self = series;
+
+        const result = merge({}, {a: series});
+
+        expect(result.a.self).toBe(result.a);
+        expect(result.a.value).toBe(1);
+    });
+
+    it('merges a cycle back to the root source into a new object', () => {
+        type Cyclic = {value: number; self?: Cyclic};
+        const source: Cyclic = {value: 1};
+        source.self = source;
+
+        const result = merge({} as Cyclic, source);
+
+        expect(result.self).not.toBe(result);
+        expect(result.self?.self).toBe(result.self);
+        expect(result.self?.value).toBe(1);
+    });
+
+    it('puts a copy of a typed array in place of a target object', () => {
+        const samples = new Float64Array([1, 2]);
+
+        const result = merge({samples: {label: 'old'}}, {samples});
+
+        expect(result.samples).toBeInstanceOf(Float64Array);
+        expect(result.samples).toEqual(new Float64Array([1, 2]));
+        expect(result.samples).not.toBe(samples);
+    });
+
+    it('merges a typed array into an array, and into an array copy of an array-like target', () => {
+        const samples = new Float64Array([1, 2]);
+
+        expect(merge({a: [0, 0, 9]}, {a: samples}).a).toEqual([1, 2, 9]);
+        expect(merge({a: new Float64Array([0, 0, 9])}, {a: samples}).a).toEqual([1, 2, 9]);
+    });
+
+    it('puts a DataView in place of a target object', () => {
+        const view = new DataView(new ArrayBuffer(2));
+
+        expect(merge({a: {x: 1}}, {a: view}).a).toBe(view);
     });
 
     it('merges a plain object of another realm', () => {

@@ -1,3 +1,4 @@
+import isArrayLikeObject from 'es-toolkit/compat/isArrayLikeObject';
 // eslint-disable-next-line no-restricted-imports -- the wrapper that other code uses instead
 import esMergeWith from 'es-toolkit/compat/mergeWith';
 
@@ -15,6 +16,7 @@ type InnerCustomizer = (
     key: PropertyKey,
     object: Record<PropertyKey, unknown>,
     source: unknown,
+    stack?: Map<unknown, unknown>,
 ) => unknown;
 
 // An array, or a plain object of any realm: its prototype is null or a root prototype, such as the
@@ -100,8 +102,23 @@ function copyPaths(value: unknown, ancestorCopies: Map<object, unknown>): unknow
 
 // Where es-toolkit's merge differs from lodash's, returns the value lodash would put in place.
 function mergeValue(target: unknown, source: unknown, customizer: InnerCustomizer): unknown {
-    if (source === null || typeof source !== 'object' || ArrayBuffer.isView(source)) {
+    if (source === null || typeof source !== 'object') {
         return undefined;
+    }
+    // es-toolkit merges a typed array or a DataView into a plain target object. Lodash merges a typed
+    // array into an array target, or into an array copy of an array-like one, and otherwise puts a
+    // copy of the typed array in place; a DataView it puts in place as it is.
+    if (ArrayBuffer.isView(source)) {
+        if (Object.prototype.toString.call(source) === '[object DataView]') {
+            return source;
+        }
+        if (Array.isArray(target)) {
+            return undefined;
+        }
+        if (isArrayLikeObject(target)) {
+            return esMergeWith(Array.from(target as ArrayLike<unknown>), source, customizer);
+        }
+        return (source as unknown as {slice(): unknown}).slice();
     }
     // Lodash puts a Date, a Map, a class instance or another non-plain object in place as it is;
     // es-toolkit merges it into a plain object of the target, which loses it.
@@ -116,8 +133,19 @@ function mergeValue(target: unknown, source: unknown, customizer: InnerCustomize
     return undefined;
 }
 
-function withLodashValues(customizer?: MergeCustomizer): InnerCustomizer {
-    const merged: InnerCustomizer = (objValue, srcValue, key, object, source) => {
+function withLodashValues(root: unknown, customizer?: MergeCustomizer): InnerCustomizer {
+    const merged: InnerCustomizer = (objValue, srcValue, key, object, source, stack) => {
+        // A cycle back to an ancestor, the only way a source object can be on es-toolkit's stack once
+        // unshare has run: es-toolkit puts a copy of the ancestor's partial result in place, lodash
+        // the result itself. Lodash keeps the root source off its stack, so it merges a cycle back
+        // to the root into a new object.
+        const stacked =
+            srcValue !== null && typeof srcValue === 'object' ? stack?.get(srcValue) : undefined;
+        if (stacked !== undefined && isOptionContainer(srcValue)) {
+            return stacked === root
+                ? esMergeWith(Array.isArray(srcValue) ? [] : {}, srcValue, merged)
+                : stacked;
+        }
         // es-toolkit also merges symbol keys; lodash calls the customizer for string keys only.
         if (customizer && typeof key === 'string') {
             // For an array source, es-toolkit passes a copy of the target value, or [] in place of
@@ -143,14 +171,15 @@ function unshare(source: unknown) {
  * several paths, es-toolkit merges it once and reuses that result for the other paths: a default
  * shared by two series types would get the user options of the first type. Such a source is copied
  * first, so every path is merged on its own, as lodash did. Dates, class instances and other
- * non-plain objects of a source replace the target value, and a source object that replaces a
- * function or a primitive is copied, also as in lodash.
+ * non-plain objects of a source replace the target value, typed arrays are copied, a source object
+ * that replaces a function or a primitive is copied, and a cycle points to the merged ancestor, also
+ * as in lodash.
  */
 export function merge<T, U>(object: T, source: U): T & U;
 export function merge<T, U, V>(object: T, source1: U, source2: V): T & U & V;
 export function merge<T, U, V, W>(object: T, source1: U, source2: V, source3: W): T & U & V & W;
 export function merge(object: unknown, ...sources: unknown[]) {
-    return esMergeWith(object, ...sources.map(unshare), withLodashValues());
+    return esMergeWith(object, ...sources.map(unshare), withLodashValues(object));
 }
 
 /**
@@ -166,5 +195,5 @@ export function mergeWith<T, U, V>(
 ): T & U & V;
 export function mergeWith(object: unknown, ...args: unknown[]) {
     const customizer = args.pop() as MergeCustomizer;
-    return esMergeWith(object, ...args.map(unshare), withLodashValues(customizer));
+    return esMergeWith(object, ...args.map(unshare), withLodashValues(object, customizer));
 }
