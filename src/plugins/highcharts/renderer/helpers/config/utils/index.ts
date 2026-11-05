@@ -1,4 +1,4 @@
-import orderBy from 'lodash/orderBy';
+import orderBy from 'es-toolkit/compat/orderBy';
 
 import type {HighchartsSortData} from '../../../../types/widget';
 

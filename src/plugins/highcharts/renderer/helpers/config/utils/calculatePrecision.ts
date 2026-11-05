@@ -1,4 +1,4 @@
-import isInteger from 'lodash/isInteger';
+import isInteger from 'es-toolkit/compat/isInteger';
 
 export const calculatePrecision = (
     alternativePrecision: number | null,

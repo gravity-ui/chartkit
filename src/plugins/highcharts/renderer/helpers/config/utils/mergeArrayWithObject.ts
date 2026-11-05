@@ -1,4 +1,4 @@
-import merge from 'lodash/merge';
+import {merge} from '../../../../../../utils/merge';
 
 export const mergeArrayWithObject = (a: unknown[] | unknown, b: unknown[] | unknown) => {
     if (Array.isArray(a) && b && typeof b === 'object' && !Array.isArray(b)) {

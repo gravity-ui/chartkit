@@ -1,7 +1,7 @@
 import React from 'react';
 
-import debounce from 'lodash/debounce';
-import round from 'lodash/round';
+import debounce from 'es-toolkit/compat/debounce';
+import round from 'es-toolkit/compat/round';
 
 const RESIZE_DEBOUNCE = 200;
 const ROUND_PRESICION = 2;

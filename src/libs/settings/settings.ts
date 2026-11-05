@@ -1,9 +1,9 @@
 import {configure} from '@gravity-ui/uikit';
-import get from 'lodash/get';
-import mergeWith from 'lodash/mergeWith';
+import get from 'es-toolkit/compat/get';
 
 import {i18nFactory} from '../../i18n';
 import type {ChartKitHolidays, ChartKitLang, ChartKitPlugin} from '../../types';
+import {mergeWith} from '../../utils/merge';
 
 import {EventEmitter} from './eventEmitter';
 import {mergeSettingStrategy} from './mergeSettingStrategy';

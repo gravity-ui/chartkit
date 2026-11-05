@@ -1,6 +1,6 @@
 import React from 'react';
 
-import isEmpty from 'lodash/isEmpty';
+import isEmpty from 'es-toolkit/compat/isEmpty';
 
 import {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from '../../../constants';
 import {i18n} from '../../../i18n';
