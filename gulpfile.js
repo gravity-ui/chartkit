@@ -45,11 +45,11 @@ function completeSourceMaps(outDir) {
 }
 
 // `import('./module')` → `Promise.resolve().then(() => require('./module'))`, for the CommonJS
-// build only. With `module: nodenext` TypeScript leaves a dynamic import native, and a native
-// `import()` of a CommonJS file resolves to a namespace whose `default` is the whole
-// `module.exports`. `require` returns `module.exports` itself, which is what the ESM build gives
-// to the same code. The ESM build keeps `import()`: that is where the bundlers split the chunk.
-// Ported from `@gravity-ui/uikit` 8 (build-utils/transform-dynamic-import.js).
+// build only. With `module: nodenext` TypeScript leaves a dynamic import native. Node runs it,
+// but Jest without `--experimental-vm-modules` does not, and in Node the namespace of a
+// CommonJS file wraps `module.exports` once more under `default`. `require` gives the consumer
+// the same shape in both builds. The ESM build keeps `import()`: that is where the bundlers
+// split the chunk. Ported from `@gravity-ui/uikit` 8 (build-utils/transform-dynamic-import.js).
 function createDynamicImportTransformer() {
     return (context) => {
         const {factory} = context;
@@ -147,6 +147,7 @@ async function compileTs(modules = false) {
                 }),
             )
             .pipe(dest(outDir, {sourcemaps: '.'}))
+            .on('error', reject)
             .on('end', resolve);
     });
 }

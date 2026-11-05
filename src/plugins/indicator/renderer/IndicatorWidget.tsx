@@ -68,5 +68,3 @@ export const IndicatorWidget = React.forwardRef<
         );
     },
 );
-
-export default IndicatorWidget;

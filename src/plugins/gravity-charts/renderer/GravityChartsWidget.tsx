@@ -61,5 +61,3 @@ export const GravityChartsWidget = React.forwardRef<
 
     return <ChartComponent ref={chartRef} data={data} lang={lang} onReady={handleChartReady} />;
 });
-
-export default GravityChartsWidget;

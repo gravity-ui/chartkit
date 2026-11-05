@@ -121,5 +121,3 @@ export const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWi
         );
     },
 );
-
-export default YagrWidget;

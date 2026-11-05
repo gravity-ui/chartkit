@@ -10,5 +10,3 @@ export const HighchartsWidget = React.forwardRef<
 >(function HighchartsWidgetInner(props, ref) {
     return <HighchartsComponent ref={ref as React.LegacyRef<HighchartsComponent>} {...props} />;
 });
-
-export default HighchartsWidget;

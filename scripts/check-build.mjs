@@ -12,11 +12,11 @@
 // The plugin renderers sit behind `React.lazy`, so a load never evaluates them: every emitted
 // `.js` is also scanned for ESM syntax (CommonJS build) and extensionless relative specifiers
 // (ESM build).
-import {readFileSync, readdirSync, statSync} from 'node:fs';
+import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {createRequire, registerHooks} from 'node:module';
-import {join, relative, resolve} from 'node:path';
+import {dirname, join, relative, resolve} from 'node:path';
 import {exit, stderr, stdout} from 'node:process';
-import {fileURLToPath} from 'node:url';
+import {pathToFileURL} from 'node:url';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const BUILD = join(ROOT, 'build');
@@ -29,8 +29,11 @@ if (!registerHooks) {
     exit(1);
 }
 
+const BUILD_URL = `${pathToFileURL(BUILD).href}/`;
+
+// Everything but chartkit's own build: the dependencies, wherever they are installed.
 function isDependencyFile(url) {
-    return url?.startsWith('file:') && fileURLToPath(url).includes('/node_modules/');
+    return url !== undefined && !url.startsWith(BUILD_URL);
 }
 
 const RESOLUTION_ERRORS = ['ERR_MODULE_NOT_FOUND', 'ERR_UNSUPPORTED_DIR_IMPORT'];
@@ -49,7 +52,7 @@ function resolveLikeBundlers(specifier, context, nextResolve) {
             return nextResolve(candidate, context);
         } catch (error) {
             firstError ??= error;
-            if (!RESOLUTION_ERRORS.includes(error.code)) {
+            if (candidate === specifier && !RESOLUTION_ERRORS.includes(error.code)) {
                 throw error;
             }
         }
@@ -72,9 +75,11 @@ registerHooks({
     },
 });
 
+// The names, with `default` only when the module has a default export: the CommonJS build
+// has the key only when TypeScript emitted one, like the ESM build.
 function exportNames(module) {
     return Object.keys(module)
-        .filter((key) => key !== 'default' && key !== '__esModule')
+        .filter((key) => key !== '__esModule')
         .sort();
 }
 
@@ -125,9 +130,25 @@ function* jsFiles(dir) {
     }
 }
 
-// Specifiers of static imports, re-exports and dynamic imports.
-const SPECIFIER = /(?:\b(?:import|export)\b[^'"`;]*?\bfrom\s*|\bimport\s*\(?\s*)['"]([^'"]+)['"]/g;
+// Specifiers of static imports, re-exports, dynamic imports and `require` calls.
+const SPECIFIER =
+    /(?:\b(?:import|export)\b[^'"`;]*?\bfrom\s*|\bimport\s*\(?\s*|\brequire\s*\(\s*)['"]([^'"]+)['"]/g;
 const RESOLVED_EXTENSIONS = ['.js', '.css', '.json'];
+
+function relativeSpecifiers(code) {
+    return [...code.matchAll(SPECIFIER)]
+        .map(([, specifier]) => specifier)
+        .filter((specifier) => specifier.startsWith('.'));
+}
+
+// A relative specifier must point to a file that exists: this is the only check the renderer
+// subtrees get, and a failed `.scss` compile leaves a `.css` import without its file.
+function missingFiles(code, file) {
+    const missing = relativeSpecifiers(code).filter(
+        (specifier) => !existsSync(resolve(dirname(file), specifier)),
+    );
+    return missing.length ? `relative import of a missing file: ${missing.join(', ')}` : undefined;
+}
 
 function scanBuild(format, check) {
     const problems = [];
@@ -136,7 +157,7 @@ function scanBuild(format, check) {
             .split('\n')
             .filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line))
             .join('\n');
-        const problem = check(code);
+        const problem = check(code, file);
         if (problem) {
             problems.push(`${relative(ROOT, file)}: ${problem}`);
         }
@@ -150,25 +171,24 @@ function scanBuild(format, check) {
     }
 }
 
-scanBuild('cjs', (code) => {
+scanBuild('cjs', (code, file) => {
     if (/^(import|export)\b/m.test(code)) {
         return 'ESM syntax in the CommonJS build';
     }
     if (/\bimport\s*\(/.test(code)) {
         return 'native import() in the CommonJS build';
     }
-    return undefined;
+    return missingFiles(code, file);
 });
 
-scanBuild('esm', (code) => {
-    const bad = [...code.matchAll(SPECIFIER)]
-        .map(([, specifier]) => specifier)
-        .filter(
-            (specifier) =>
-                specifier.startsWith('.') &&
-                !RESOLVED_EXTENSIONS.some((extension) => specifier.endsWith(extension)),
-        );
-    return bad.length ? `relative import without an extension: ${bad.join(', ')}` : undefined;
+scanBuild('esm', (code, file) => {
+    const bad = relativeSpecifiers(code).filter(
+        (specifier) => !RESOLVED_EXTENSIONS.some((extension) => specifier.endsWith(extension)),
+    );
+    if (bad.length) {
+        return `relative import without an extension: ${bad.join(', ')}`;
+    }
+    return missingFiles(code, file);
 });
 
 if (failed) {

@@ -14,8 +14,8 @@ i18nFactory.registerKeysets(EN, en);
 i18nFactory.registerKeysets(RU, ru);
 
 // The keyset type is inferred from the argument, so declaration files inline it instead of
-// importing the JSON, which TypeScript rejects in the declarations of an ES module without
-// `resolveJsonModule` or an import attribute.
+// importing the JSON: in the declarations of an ES module TypeScript requires an import
+// attribute for that, and consumers without `resolveJsonModule` reject it altogether.
 function bindI18n<T extends KeysetData>(_keysets: T) {
     return i18nFactory.i18n.bind(i18nFactory) as I18NFn<T>;
 }
