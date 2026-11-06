@@ -69,7 +69,7 @@ type TooltipMeasurement = {
 
 type ContainerDimensions = {height: number; width: number; initialized: boolean};
 
-function updateContainerDimensions(
+function getContainerDimensions(
     previous: ContainerDimensions,
     rect: {height: number; width: number} | undefined,
 ): ContainerDimensions {
@@ -191,11 +191,7 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
 
     React.useLayoutEffect(handleTooltipResize, [handleTooltipResize, layout, containerWidth]);
 
-    // The tooltip height is measured after commit, so the first render after a layout or width
-    // change still carries the height of the previous pane. Sizing from it can produce a zero
-    // main pane that the chart host would observe. Until the tooltip is re-measured, size the
-    // main pane as if the tooltip were empty and hold the size notification back. The vertical
-    // layout does not depend on the tooltip height.
+    // Until the tooltip is re-measured in the current pane, size as if it were empty.
     const tooltipMeasured =
         !enabled ||
         layout === SplitLayout.VERTICAL ||
@@ -306,7 +302,7 @@ export function SplitTooltip(props: SplitTooltipProps) {
 
     const updateDimensions = React.useCallback(() => {
         const rect = containerRef.current?.getBoundingClientRect();
-        setDimensions((previous) => updateContainerDimensions(previous, rect));
+        setDimensions((previous) => getContainerDimensions(previous, rect));
     }, []);
 
     useResizeObserver({
@@ -316,15 +312,13 @@ export function SplitTooltip(props: SplitTooltipProps) {
 
     React.useLayoutEffect(updateDimensions, [updateDimensions]);
 
-    // A controlled layout usually changes from a window resize event, which fires before the
-    // container ResizeObserver delivers the new size. Re-measure synchronously so the content
-    // never renders the new layout with the dimensions of the previous one.
+    // A window resize event changes the layout before ResizeObserver reports the new size.
     const [measuredLayout, setMeasuredLayout] = React.useState(props.layout);
     if (props.layout !== measuredLayout) {
         setMeasuredLayout(props.layout);
         const rect = containerRef.current?.getBoundingClientRect();
         if (rect) {
-            setDimensions((previous) => updateContainerDimensions(previous, rect));
+            setDimensions((previous) => getContainerDimensions(previous, rect));
         }
     }
 
