@@ -16,6 +16,10 @@ npm install @gravity-ui/chartkit@^9 @gravity-ui/uikit@^8
 
 The package ships real CommonJS in `build/cjs` and strict ESM in `build/esm`; `main` points to the CommonJS build and `module` to the ESM build, and every entry point of `exports` has `import` and `require` conditions with types. Deep imports of `build/*` files must be updated: import from `@gravity-ui/chartkit` or one of the plugin subpaths (`@gravity-ui/chartkit/gravity-charts`, `@gravity-ui/chartkit/highcharts`, `@gravity-ui/chartkit/indicator`, `@gravity-ui/chartkit/yagr`).
 
+## TypeScript module resolution
+
+The declaration files are resolved through the `exports` conditions, so `moduleResolution` set to `node16`, `nodenext` or `bundler` finds every type. The package keeps `typesVersions` for the legacy `node` (node10) resolution: the entry points resolve, but the `gravity-charts` plugin declarations import `@gravity-ui/charts/migration/v1`, and `@gravity-ui/charts` 2 has no `typesVersions`. Under `moduleResolution: node` this import fails with TS2307 when `skipLibCheck` is off; with `skipLibCheck` on, the migration adapter types (`migrateChartDataV1`, `inspectChartDataV1`, `ChartDataV1`) become `any`. Switch to `bundler` or `node16` to get the full types.
+
 ## `gravity-charts` data from charts 1
 
 The `gravity-charts` plugin renders with `@gravity-ui/charts` 2, and `ChartData` (the type of the widget's `data`) is now the charts 2 type. These v1 options are removed and ignored at runtime without a warning:
