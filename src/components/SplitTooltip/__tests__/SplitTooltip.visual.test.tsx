@@ -3,6 +3,7 @@ import React from 'react';
 import {page, userEvent} from 'vitest/browser';
 
 import {render} from '../../../../test-utils/utils.js';
+import {useViewportSplitTooltipLayout} from '../../../plugins/gravity-charts/renderer/withSplitPane/useViewportSplitTooltipLayout.js';
 import {SplitLayout} from '../../SplitPane/index.js';
 import {SplitTooltip} from '../SplitTooltip.js';
 import type {SplitTooltipLayout, SplitTooltipProps} from '../SplitTooltip.js';
@@ -121,9 +122,76 @@ function StatefulMainPane({onMount, onUnmount}: {onMount: () => void; onUnmount:
     );
 }
 
+// 12 blocks of 100x100 wrap into 6 rows (600px) in a 216px wide pane and into 4 rows (400px)
+// in a 320px wide pane, so the tooltip height depends on the pane width deterministically.
+const WRAPPING_TOOLTIP_BLOCKS = Array.from({length: 12}, (_, index) => index);
+
+function ViewportLayoutTestCase({
+    onMainPaneSizeChange,
+}: {
+    onMainPaneSizeChange: (size: number, layout: SplitTooltipLayout) => void;
+}) {
+    const layout = useViewportSplitTooltipLayout();
+    return (
+        <div style={{position: 'fixed', inset: 0}}>
+            <SplitTooltip
+                layout={layout}
+                onMainPaneSizeChange={onMainPaneSizeChange}
+                renderMainPane={({layout: actualLayout, size}) => (
+                    <div data-qa="main-pane">{`${actualLayout}:${size}`}</div>
+                )}
+                renderTooltip={() => (
+                    <div data-qa="tooltip-pane" style={{display: 'flex', flexWrap: 'wrap'}}>
+                        {WRAPPING_TOOLTIP_BLOCKS.map((block) => (
+                            <div key={block} style={{height: 100, width: 100}} />
+                        ))}
+                    </div>
+                )}
+            />
+        </div>
+    );
+}
+
 describe('SplitTooltip behavior', () => {
     beforeEach(async () => {
         await page.viewport(800, 800);
+    });
+
+    test('never reports a stale main pane size when the viewport orientation changes', async () => {
+        await page.viewport(600, 300);
+        const calls: [number, SplitTooltipLayout][] = [];
+        const screen = await render(
+            <ViewportLayoutTestCase
+                onMainPaneSizeChange={(size, layout) => calls.push([size, layout])}
+            />,
+        );
+
+        // Vertical: the main pane takes 60% of the width; the 216px tooltip pane wraps 6 rows.
+        await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
+        expect(calls).toEqual([[360, SplitLayout.VERTICAL]]);
+        await expect.element(screen.getByTestId('tooltip-pane')).toHaveStyle({height: '600px'});
+
+        // Horizontal: 500 - 24 (resizer) - 400 (4 rows of the now 320px wide tooltip). The layout
+        // and the container size arrive separately, so the previous layout may be reported once
+        // more for the new viewport, but the new layout must never come with stale dimensions
+        // (300 - 24 - 600 < 0 or 500 - 24 - 600 < 0 would report a zero main pane).
+        const horizontalFrom = calls.length;
+        await page.viewport(320, 500);
+        await expect.poll(() => calls.at(-1)).toEqual([76, SplitLayout.HORIZONTAL]);
+        expect(
+            calls.slice(horizontalFrom).filter(([, layout]) => layout === SplitLayout.HORIZONTAL),
+        ).toEqual([[76, SplitLayout.HORIZONTAL]]);
+        expect(calls.slice(horizontalFrom).map(([size]) => size)).not.toContain(0);
+
+        // Back to vertical: the size must come from the already resized container, not from the
+        // previous 320px one (320 * 0.6 = 192).
+        const verticalFrom = calls.length;
+        await page.viewport(600, 300);
+        await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
+        expect(
+            calls.slice(verticalFrom).filter(([, layout]) => layout === SplitLayout.VERTICAL),
+        ).toEqual([[360, SplitLayout.VERTICAL]]);
+        expect(calls.slice(verticalFrom).map(([size]) => size)).not.toContain(0);
     });
 
     test('explicit layout overrides automatic layout and reaches both render functions', async () => {

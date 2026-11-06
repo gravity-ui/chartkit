@@ -60,6 +60,13 @@ type SplitTooltipContentProps = SplitTooltipProps & {
     containerWidth: number;
 };
 
+type TooltipMeasurement = {
+    height: number;
+    /** The layout and container width the tooltip was measured in. */
+    layout: SplitTooltipLayout;
+    containerWidth: number;
+};
+
 const hiddenResizerStyle = {display: 'none'};
 const defaultTooltipPaneStyle = {overflow: 'auto'};
 
@@ -134,7 +141,9 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
     } = props;
     const tooltipRef = React.useRef<HTMLDivElement | null>(null);
     const layout = getSplitTooltipLayout(containerWidth, containerHeight, layoutProp);
-    const [tooltipHeight, setTooltipHeight] = React.useState(0);
+    const [tooltipMeasurement, setTooltipMeasurement] = React.useState<TooltipMeasurement | null>(
+        null,
+    );
     const [userSize, setUserSize] = React.useState<number>();
     const lastNotificationRef = React.useRef<{layout: SplitTooltipLayout; size: number} | null>(
         null,
@@ -143,18 +152,36 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
     onMainPaneSizeChangeRef.current = onMainPaneSizeChange;
 
     const handleTooltipResize = React.useCallback(() => {
-        if (enabled) {
-            const nextTooltipHeight = tooltipRef.current?.getBoundingClientRect().height ?? 0;
-            setTooltipHeight(nextTooltipHeight);
+        if (!enabled) {
+            return;
         }
-    }, [enabled]);
+
+        const height = tooltipRef.current?.getBoundingClientRect().height ?? 0;
+        setTooltipMeasurement((previous) =>
+            previous?.height === height &&
+            previous.layout === layout &&
+            previous.containerWidth === containerWidth
+                ? previous
+                : {height, layout, containerWidth},
+        );
+    }, [containerWidth, enabled, layout]);
 
     useResizeObserver({
         ref: tooltipRef,
         onResize: handleTooltipResize,
     });
 
-    React.useLayoutEffect(handleTooltipResize, [handleTooltipResize, layout, containerWidth]);
+    React.useLayoutEffect(handleTooltipResize, [handleTooltipResize]);
+
+    // The tooltip height is measured after commit, so the first render after a layout or width
+    // change still carries the height of the previous pane. Sizing from it can produce a zero
+    // main pane that the chart host would observe. Until the tooltip is re-measured, size the
+    // main pane as if the tooltip were empty and hold the size notification back.
+    const tooltipMeasured =
+        !enabled ||
+        (tooltipMeasurement?.layout === layout &&
+            tooltipMeasurement.containerWidth === containerWidth);
+    const tooltipHeight = tooltipMeasured ? tooltipMeasurement?.height ?? 0 : 0;
 
     const {minSize, maxSize} = getSplitTooltipSizeLimits(
         containerHeight,
@@ -201,8 +228,8 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
         const previousNotification = lastNotificationRef.current;
 
         if (
-            previousNotification?.size === effectiveSize &&
-            previousNotification.layout === layout
+            !tooltipMeasured ||
+            (previousNotification?.size === effectiveSize && previousNotification.layout === layout)
         ) {
             return undefined;
         }
@@ -270,6 +297,26 @@ export function SplitTooltip(props: SplitTooltipProps) {
     });
 
     React.useLayoutEffect(updateDimensions, [updateDimensions]);
+
+    // A controlled layout usually changes from a window resize event, which fires before the
+    // container ResizeObserver delivers the new size. Re-measure synchronously so the content
+    // never renders the new layout with the dimensions of the previous one.
+    const [measuredLayout, setMeasuredLayout] = React.useState(props.layout);
+    if (props.layout !== measuredLayout) {
+        setMeasuredLayout(props.layout);
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (rect) {
+            setDimensions((previous) =>
+                previous.height === rect.height && previous.width === rect.width
+                    ? previous
+                    : {
+                          height: rect.height,
+                          width: rect.width,
+                          initialized: previous.initialized || (rect.height > 0 && rect.width > 0),
+                      },
+            );
+        }
+    }
 
     return (
         <div ref={containerRef} style={{position: 'relative', height: '100%'}}>
