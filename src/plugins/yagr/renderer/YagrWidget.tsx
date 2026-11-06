@@ -1,7 +1,7 @@
 import React from 'react';
 
 import YagrComponent, {YagrChartProps, YagrReactRef} from '@gravity-ui/yagr/react';
-import isEmpty from 'lodash/isEmpty';
+import isEmpty from 'es-toolkit/compat/isEmpty';
 
 import {i18n} from '../../../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
@@ -17,7 +17,7 @@ import '@gravity-ui/yagr/index.css';
 // eslint-disable-next-line import/order
 import './YagrWidget.scss';
 
-const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetProps>(
+export const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetProps>(
     function YagrWidget(props, forwardedRef) {
         const {
             id,
@@ -121,5 +121,3 @@ const YagrWidget = React.forwardRef<ChartKitWidgetRef | undefined, YagrWidgetPro
         );
     },
 );
-
-export default YagrWidget;

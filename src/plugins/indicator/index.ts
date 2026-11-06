@@ -6,5 +6,9 @@ export * from './types';
 
 export const IndicatorPlugin: ChartKitPlugin = {
     type: 'indicator',
-    renderer: React.lazy(() => import('./renderer/IndicatorWidget')),
+    renderer: React.lazy(() =>
+        import('./renderer/IndicatorWidget.js').then((module) => ({
+            default: module.IndicatorWidget,
+        })),
+    ),
 };

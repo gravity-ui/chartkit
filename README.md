@@ -24,8 +24,8 @@ Each plugin renderer is lazy-loaded, so the underlying library code is only down
 
 ### Requirements
 
-- React 16, 17, or 18
-- [`@gravity-ui/uikit`](https://github.com/gravity-ui/uikit) — required peer dependency (provides theming and UI primitives)
+- React 18 or 19
+- [`@gravity-ui/uikit`](https://github.com/gravity-ui/uikit) 8 — required peer dependency (provides theming and UI primitives)
 
 ### Install
 
@@ -59,7 +59,7 @@ Or call `settings.set` multiple times — it merges the plugin list rather than 
 **Basic example:**
 
 ```tsx
-import {ThemeProvider} from '@gravity-ui/uikit';
+import {Provider} from '@gravity-ui/uikit';
 import ChartKit, {settings} from '@gravity-ui/chartkit';
 import {GravityChartsPlugin} from '@gravity-ui/chartkit/gravity-charts';
 
@@ -87,11 +87,11 @@ const data = {
 
 export default function App() {
   return (
-    <ThemeProvider theme="light">
+    <Provider theme="light">
       <div style={{height: 300}}>
         <ChartKit type="gravity-charts" data={data} />
       </div>
-    </ThemeProvider>
+    </Provider>
   );
 }
 ```
@@ -127,6 +127,10 @@ ChartKit bundles two Gravity UI charting libraries as dependencies:
 - [`@gravity-ui/yagr`](https://github.com/gravity-ui/yagr) — powers the `yagr` plugin
 
 If you need a newer version of one of these packages, open a [Package update request](https://github.com/gravity-ui/ChartKit/issues/new?template=package-update-request.yml) issue and select the package(s) you need. Maintainers will bump the selected packages and release the update.
+
+### Upgrading from ChartKit 8
+
+See the [migration guide](docs/migration-to-v9.md): uikit 8 and React 18+, the CommonJS/ESM build and TypeScript `moduleResolution` notes, and the `gravity-charts` data changes that come with `@gravity-ui/charts` 2.
 
 ## Development
 
@@ -210,6 +214,13 @@ npm ci
 
 ```shell
 npm test
+```
+
+To check the built package, build it first. The check loads both the CommonJS and the ESM build in Node, compares their exports, and type-checks a consumer under the `nodenext`, `bundler` and `node` module resolutions:
+
+```shell
+npm run build
+npm run test:build
 ```
 
 Visual regression tests run in Docker to ensure consistent screenshots across environments:

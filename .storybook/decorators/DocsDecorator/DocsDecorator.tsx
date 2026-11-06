@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {MobileProvider, ThemeProvider, getThemeType} from '@gravity-ui/uikit';
+import {Provider, getThemeType} from '@gravity-ui/uikit';
 import {DocsContainer, DocsContainerProps} from '@storybook/addon-docs/blocks';
 
 import {themes} from '../../../.storybook/theme';
@@ -36,9 +36,7 @@ export function DocsDecorator({children, context}: DocsDecoratorProps) {
                     },
                 }}
             >
-                <ThemeProvider theme={theme}>
-                    <MobileProvider mobile={false}>{children}</MobileProvider>
-                </ThemeProvider>
+                <Provider theme={theme}>{children}</Provider>
             </DocsContainer>
         </div>
     );

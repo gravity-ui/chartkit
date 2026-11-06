@@ -1,9 +1,8 @@
-import isObject from 'lodash/isObject';
-import mergeWith from 'lodash/mergeWith';
+import isObject from 'es-toolkit/compat/isObject';
 
 import type {ChartKitPlugin} from '../../types';
+import {mergeWith} from '../../utils/merge';
 
-// @ts-ignore
 export function mergeSettingStrategy(objValue: any, srcValue: any, key: string): any {
     if (key === 'plugins') {
         const currentPlugins: ChartKitPlugin[] = [...objValue];

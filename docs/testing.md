@@ -2,17 +2,18 @@
 
 ## Scripts
 
-| Script                            | Description                                                                               |
-| --------------------------------- | ----------------------------------------------------------------------------------------- |
-| `npm test`                        | Run unit tests once                                                                       |
-| `npm run test:watch`              | Run unit tests in watch mode                                                              |
-| `npm run test:unit`               | Alias for `npm test`                                                                      |
-| `npm run test:coverage`           | Unit tests with coverage report (saved to `reports/coverage/`)                            |
-| `npm run test:storybook`          | Run all Storybook stories as tests                                                        |
-| `npm run test:docker`             | Run visual tests in Docker (Linux) — use this for visual testing                          |
-| `npm run test:docker:update`      | Update baseline screenshots via Docker                                                    |
-| `npm run test:docker:clear-cache` | Clear Docker image cache                                                                  |
-| `npm run test:visual`             | Run visual tests locally (macOS) — used internally by Docker scripts, not for regular use |
+| Script                            | Description                                                                                                                             |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm test`                        | Run unit tests once                                                                                                                     |
+| `npm run test:watch`              | Run unit tests in watch mode                                                                                                            |
+| `npm run test:unit`               | Alias for `npm test`                                                                                                                    |
+| `npm run test:coverage`           | Unit tests with coverage report (saved to `reports/coverage/`)                                                                          |
+| `npm run test:storybook`          | Run all Storybook stories as tests                                                                                                      |
+| `npm run test:docker`             | Run visual tests in Docker (Linux) — use this for visual testing                                                                        |
+| `npm run test:docker:update`      | Update baseline screenshots via Docker                                                                                                  |
+| `npm run test:docker:clear-cache` | Clear Docker image cache                                                                                                                |
+| `npm run test:visual`             | Run visual tests locally (macOS) — used internally by Docker scripts, not for regular use                                               |
+| `npm run test:build`              | Load the built package (`npm run build` first) in Node, CommonJS and ESM, every entry; type-check a consumer in every module resolution |
 
 ## Test Projects
 

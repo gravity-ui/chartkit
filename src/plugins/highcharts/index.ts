@@ -7,5 +7,9 @@ export {HighchartsReact} from './renderer/components/HighchartsReact';
 
 export const HighchartsPlugin: ChartKitPlugin = {
     type: 'highcharts',
-    renderer: React.lazy(() => import('./renderer/HighchartsWidget')),
+    renderer: React.lazy(() =>
+        import('./renderer/HighchartsWidget.js').then((module) => ({
+            default: module.HighchartsWidget,
+        })),
+    ),
 };

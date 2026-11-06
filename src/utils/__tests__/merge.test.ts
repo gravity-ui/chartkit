@@ -1,0 +1,230 @@
+import vm from 'node:vm';
+
+import React from 'react';
+
+import type {MergeCustomizer} from '../merge';
+import {merge, mergeWith} from '../merge';
+
+describe('utils/merge', () => {
+    it('merges an object shared by several paths into each path on its own', () => {
+        const shared = {width: 2};
+
+        const result = merge({a: {color: 'red'}, b: {color: 'blue'}}, {a: shared, b: shared});
+
+        expect(result).toEqual({a: {color: 'red', width: 2}, b: {color: 'blue', width: 2}});
+    });
+
+    it('keeps the paths of an object shared by several paths apart for later sources', () => {
+        const shared = {states: {hover: {lineWidthPlus: 1}}};
+
+        const result = merge(
+            {},
+            {spline: shared, areaspline: shared},
+            {spline: {states: {hover: {lineWidthPlus: 5}}}},
+        );
+
+        expect(result.areaspline.states.hover.lineWidthPlus).toBe(1);
+        expect(result.spline.states.hover.lineWidthPlus).toBe(5);
+        expect(shared.states.hover.lineWidthPlus).toBe(1);
+    });
+
+    it('does not change a source object merged in place of a primitive', () => {
+        const source = {a: {x: 1}};
+
+        merge({}, {a: 5}, source, {a: {y: 2}});
+
+        expect(source).toEqual({a: {x: 1}});
+    });
+
+    it('puts a date of a source in place of a target object', () => {
+        const date = new Date(0);
+
+        expect(merge({a: {x: 1}}, {a: date}).a).toBe(date);
+    });
+
+    it('does not change a source object merged in place of a function', () => {
+        const source = {a: {x: 1}};
+
+        merge({a: () => 1}, source, {a: {y: 2}});
+
+        expect(source).toEqual({a: {x: 1}});
+    });
+
+    it('keeps functions and handles cycles in a source with shared objects', () => {
+        const format = () => 'x';
+        const shared: Record<string, unknown> = {format};
+        shared.self = shared;
+
+        const result = merge({}, {a: shared, b: shared});
+
+        expect(result.a.format).toBe(format);
+        expect(result.b.format).toBe(format);
+    });
+
+    it('keeps the paths of a cyclic shared object apart', () => {
+        const shared: Record<string, unknown> = {v: 1};
+        shared.self = shared;
+
+        const result = merge({a: {self: {x: 1}}, b: {self: {y: 2}}}, {a: shared, b: shared});
+
+        expect(result.b.self).not.toHaveProperty('x');
+        expect(result.a.self).toBe(result.a);
+        expect(result.b.self).toBe(result.b);
+    });
+
+    it('points a cycle to the merged ancestor', () => {
+        const series: Record<string, unknown> = {value: 1};
+        series.self = series;
+
+        const result = merge({}, {a: series});
+
+        expect(result.a.self).toBe(result.a);
+        expect(result.a.value).toBe(1);
+    });
+
+    it('merges a cycle back to the root source into a new object', () => {
+        type Cyclic = {value: number; self?: Cyclic};
+        const source: Cyclic = {value: 1};
+        source.self = source;
+
+        const result = merge({} as Cyclic, source);
+
+        expect(result.self).not.toBe(result);
+        expect(result.self?.self).toBe(result.self);
+        expect(result.self?.value).toBe(1);
+    });
+
+    it('puts a copy of a typed array in place of a target object', () => {
+        const samples = new Float64Array([1, 2]);
+
+        const result = merge({samples: {label: 'old'}}, {samples});
+
+        expect(result.samples).toBeInstanceOf(Float64Array);
+        expect(result.samples).toEqual(new Float64Array([1, 2]));
+        expect(result.samples).not.toBe(samples);
+    });
+
+    it('merges a typed array into an array, and into an array copy of an array-like target', () => {
+        const samples = new Float64Array([1, 2]);
+
+        expect(merge({a: [0, 0, 9]}, {a: samples}).a).toEqual([1, 2, 9]);
+        expect(merge({a: new Float64Array([0, 0, 9])}, {a: samples}).a).toEqual([1, 2, 9]);
+    });
+
+    it('puts a DataView in place of a target object', () => {
+        const view = new DataView(new ArrayBuffer(2));
+
+        expect(merge({a: {x: 1}}, {a: view}).a).toBe(view);
+    });
+
+    it('merges a plain object of another realm', () => {
+        const source = vm.runInNewContext('({a: {x: 1}})');
+
+        const result = merge({a: {y: 2}}, source);
+
+        expect(result.a).toEqual({x: 1, y: 2});
+        expect(result.a).not.toBe(source.a);
+    });
+
+    it('does not take an own __proto__ key of a source with shared objects', () => {
+        const shared = JSON.parse('{"__proto__": {"polluted": true}, "y": 2}');
+
+        const result = merge({}, {a: shared, b: shared});
+
+        expect(Object.getPrototypeOf(result.a)).toBe(Object.prototype);
+        expect(result.a).toEqual({y: 2});
+        expect(result.b).toEqual({y: 2});
+    });
+
+    it('keeps React components of a source with shared objects', () => {
+        const renderer = React.lazy(() => Promise.resolve({default: () => null}));
+        const plugin = {type: 'line', renderer};
+        const plugins: (typeof plugin)[] = [];
+
+        const result = mergeWith({plugins}, {plugins: [plugin, plugin]}, (_, srcValue, key) =>
+            key === 'plugins' ? srcValue : undefined,
+        );
+
+        expect(result.plugins[0].renderer).toBe(renderer);
+        expect(result.plugins[1].renderer).toBe(renderer);
+    });
+});
+
+describe('utils/mergeWith', () => {
+    // Merges every item of an array source with the target object, as the highcharts config does.
+    const mergeItems: MergeCustomizer = (objValue, srcValue) => {
+        if (Array.isArray(srcValue) && objValue && typeof objValue === 'object') {
+            return Array.isArray(objValue)
+                ? undefined
+                : srcValue.map((value) => merge({}, objValue, value));
+        }
+        return undefined;
+    };
+
+    it('passes the target object to the customizer for an array source', () => {
+        const result = mergeWith({y: {a: 1}}, {y: [{b: 2}, {c: 3}]}, mergeItems);
+
+        expect(result.y).toEqual([
+            {a: 1, b: 2},
+            {a: 1, c: 3},
+        ]);
+    });
+
+    it('passes the target array itself to the customizer for an array source', () => {
+        const list = [1];
+        const customizer = vi.fn<MergeCustomizer>(() => undefined);
+
+        mergeWith({list}, {list: [2]}, customizer);
+
+        expect(customizer.mock.calls[0][0]).toBe(list);
+    });
+
+    it('takes the value the customizer returns', () => {
+        const result = mergeWith({a: 1, b: {x: 1}}, {a: 2, b: {y: 2}}, (objValue, srcValue, key) =>
+            key === 'a' ? [objValue, srcValue] : undefined,
+        );
+
+        expect(result).toEqual({a: [1, 2], b: {x: 1, y: 2}});
+    });
+
+    it('merges as merge does where the customizer returns undefined', () => {
+        const date = new Date(0);
+        const shared = {width: 2};
+        const source = {f: {x: 1}};
+
+        const result = mergeWith(
+            {f: () => 1, d: {x: 1}, a: {color: 'red'}, b: {color: 'blue'}},
+            {d: date, a: shared, b: shared},
+            source,
+            () => undefined,
+        );
+        merge(result, {f: {y: 2}});
+
+        expect(result.d).toBe(date);
+        expect(result.a).toEqual({color: 'red', width: 2});
+        expect(result.b).toEqual({color: 'blue', width: 2});
+        expect(source).toEqual({f: {x: 1}});
+    });
+
+    it('uses the customizer in an object merged in place of a function', () => {
+        const keys: string[] = [];
+
+        mergeWith({a: () => 1}, {a: {y: 1}}, (_objValue, _srcValue, key) => {
+            keys.push(key);
+            return undefined;
+        });
+
+        expect(keys).toEqual(['a', 'y']);
+    });
+
+    it('calls the customizer for string keys only', () => {
+        const keys: unknown[] = [];
+
+        mergeWith({}, {a: 1, [Symbol('b')]: 2}, (_objValue, _srcValue, key) => {
+            keys.push(key);
+            return undefined;
+        });
+
+        expect(keys).toEqual(['a']);
+    });
+});

@@ -23,8 +23,8 @@ React-компонент с плагинизированной архитект�
 
 ### Требования
 
-- React 16, 17 или 18
-- [@gravity-ui/uikit](https://github.com/gravity-ui/uikit) — обязательная peer-зависимость (темизация и UI-примитивы)
+- React 18 или 19
+- [@gravity-ui/uikit](https://github.com/gravity-ui/uikit) 8 — обязательная peer-зависимость (темизация и UI-примитивы)
 
 ### Установка
 
@@ -58,7 +58,7 @@ settings.set({plugins: [GravityChartsPlugin, YagrPlugin]});
 **Простой пример:**
 
 ```tsx
-import {ThemeProvider} from '@gravity-ui/uikit';
+import {Provider} from '@gravity-ui/uikit';
 import ChartKit, {settings} from '@gravity-ui/chartkit';
 import {GravityChartsPlugin} from '@gravity-ui/chartkit/gravity-charts';
 
@@ -86,11 +86,11 @@ const data = {
 
 export default function App() {
   return (
-    <ThemeProvider theme="light">
+    <Provider theme="light">
       <div style={{height: 300}}>
         <ChartKit type="gravity-charts" data={data} />
       </div>
-    </ThemeProvider>
+    </Provider>
   );
 }
 ```

@@ -3,7 +3,7 @@ import React from 'react';
 import {Chart, getDefaultTooltipHeaderFormat} from '@gravity-ui/charts';
 import type {ChartData, ChartProps, ChartRef} from '@gravity-ui/charts';
 import {getComponentName} from '@gravity-ui/uikit';
-import isEmpty from 'lodash/isEmpty';
+import isEmpty from 'es-toolkit/compat/isEmpty';
 
 import {SplitTooltip} from '../../../../components/SplitTooltip';
 

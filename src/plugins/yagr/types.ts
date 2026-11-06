@@ -1,14 +1,18 @@
-import type {MinimalValidConfig, RawSerieData, YagrConfig} from '@gravity-ui/yagr';
-import type Yagr from '@gravity-ui/yagr';
+import type {RawSerieData, YagrConfig} from '@gravity-ui/yagr';
+import type {YagrReactRef} from '@gravity-ui/yagr/react';
 
 import type {ChartKitProps} from '../../types';
 
-export type {default as Yagr} from '@gravity-ui/yagr';
 export type * from '@gravity-ui/yagr';
 export type {YagrReactRef} from '@gravity-ui/yagr/react';
 
+// The chart instance type, taken from a named export. @gravity-ui/yagr exposes the class only as
+// its default export, and a default import of that CommonJS-typed package from the ESM
+// declarations resolves to the module namespace under `moduleResolution: nodenext` (TS2709).
+export type Yagr = NonNullable<ReturnType<YagrReactRef['yagr']>>;
+
 export interface CustomTooltipProps {
-    yagr: Yagr<MinimalValidConfig> | undefined;
+    yagr: Yagr | undefined;
 }
 
 export type YagrWidgetProps = ChartKitProps<'yagr'> & {
