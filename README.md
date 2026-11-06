@@ -128,20 +128,9 @@ ChartKit bundles two Gravity UI charting libraries as dependencies:
 
 If you need a newer version of one of these packages, open a [Package update request](https://github.com/gravity-ui/ChartKit/issues/new?template=package-update-request.yml) issue and select the package(s) you need. Maintainers will bump the selected packages and release the update.
 
-### Migrating `gravity-charts` data from charts 1
+### Upgrading from ChartKit 8
 
-ChartKit 9 renders with `@gravity-ui/charts` 2, which removes the v1 options `maxPadding`, `ticks.pixelInterval`, `numberFormat.unit` and bar `dataLabels.inside` (see the [charts migration guide](https://github.com/gravity-ui/charts/blob/main/docs/diplodoc/pages/migration/v2.md)). The charts migration adapter is re-exported from the plugin entry, so you do not need `@gravity-ui/charts` in your own dependencies:
-
-```tsx
-import {migrateChartDataV1} from '@gravity-ui/chartkit/gravity-charts';
-import type {ChartDataV1} from '@gravity-ui/chartkit/gravity-charts';
-
-const {data, warnings} = migrateChartDataV1(legacyData as ChartDataV1);
-
-<ChartKit type="gravity-charts" data={data} />;
-```
-
-`inspectChartDataV1` reports the same warnings without changing the configuration.
+See the [migration guide](docs/migration-to-v9.md): uikit 8 and React 18+, the CommonJS/ESM build, and the `gravity-charts` data changes that come with `@gravity-ui/charts` 2.
 
 ## Development
 
