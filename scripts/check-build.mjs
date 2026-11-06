@@ -9,13 +9,32 @@
 // chartkit's files.
 // Both builds must export the same names.
 //
+// A scratch consumer is then type-checked against the package in the resolution modes TypeScript
+// offers for `exports`: an ESM and a CommonJS project under `nodenext`, and `bundler`. The
+// consumer asserts with `@ts-expect-error` that a wrong value is rejected, so a type that
+// silently degrades to `any` (a declaration that does not resolve under `skipLibCheck`) fails
+// the check. The legacy `node` resolution is checked with the entry points only: see
+// docs/migration-to-v9.md for what degrades there.
+//
 // The plugin renderers sit behind `React.lazy`, so a load never evaluates them: every emitted
 // `.js` is also scanned for ESM syntax (CommonJS build) and extensionless relative specifiers
 // (ESM build).
-import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {
+    existsSync,
+    mkdirSync,
+    mkdtempSync,
+    readFileSync,
+    readdirSync,
+    rmSync,
+    statSync,
+    symlinkSync,
+    writeFileSync,
+} from 'node:fs';
 import {createRequire, registerHooks} from 'node:module';
+import {tmpdir} from 'node:os';
 import {dirname, join, relative, resolve} from 'node:path';
-import {exit, stderr, stdout} from 'node:process';
+import {execPath, exit, stderr, stdout} from 'node:process';
 import {pathToFileURL} from 'node:url';
 
 const ROOT = resolve(import.meta.dirname, '..');
@@ -190,6 +209,103 @@ scanBuild('esm', (code, file) => {
     }
     return missingFiles(code, file);
 });
+
+const CONSUMER = `import ChartKit, {settings} from '${name}';
+import type {ChartKitWidget} from '${name}';
+import {GravityChartsPlugin, migrateChartDataV1} from '${name}/gravity-charts';
+import {HighchartsPlugin} from '${name}/highcharts';
+import {IndicatorPlugin} from '${name}/indicator';
+import {YagrPlugin} from '${name}/yagr';
+
+settings.set({plugins: [GravityChartsPlugin, HighchartsPlugin, IndicatorPlugin, YagrPlugin]});
+
+// @ts-expect-error a number is not a chart instance: the yagr types must not degrade to any
+export const widget: ChartKitWidget['yagr']['widget'] = 123;
+// @ts-expect-error a number is not a charts 1 configuration: the adapter types must not degrade to any
+export const migrated = migrateChartDataV1(123);
+export {ChartKit};
+`;
+
+// The entry points only: what the `node` resolution cannot see is documented, not asserted.
+const CONSUMER_NODE10 = CONSUMER.split('\n')
+    .filter((line) => !line.startsWith('// @ts-expect-error') && !line.startsWith('export const'))
+    .join('\n');
+
+const CONSUMER_MODES = [
+    {
+        label: 'ESM, moduleResolution nodenext',
+        type: 'module',
+        options: {module: 'nodenext', moduleResolution: 'nodenext'},
+        source: CONSUMER,
+    },
+    {
+        label: 'CommonJS, moduleResolution nodenext',
+        type: 'commonjs',
+        options: {module: 'nodenext', moduleResolution: 'nodenext'},
+        source: CONSUMER,
+    },
+    {
+        label: 'moduleResolution bundler',
+        type: 'module',
+        options: {module: 'esnext', moduleResolution: 'bundler'},
+        source: CONSUMER,
+    },
+    {
+        label: 'moduleResolution node (entry points only)',
+        type: 'commonjs',
+        options: {module: 'commonjs', moduleResolution: 'node', esModuleInterop: true},
+        source: CONSUMER_NODE10,
+    },
+];
+
+function typecheckConsumers() {
+    const tsc = require.resolve('typescript/bin/tsc');
+    const dir = mkdtempSync(join(tmpdir(), 'chartkit-consumer-'));
+    try {
+        // The package resolves through a symlink to the repository, and its dependencies from the
+        // repository's node_modules (TypeScript resolves the symlink to its real path).
+        mkdirSync(join(dir, 'node_modules', dirname(name)), {recursive: true});
+        symlinkSync(ROOT, join(dir, 'node_modules', name), 'dir');
+        for (const [index, mode] of CONSUMER_MODES.entries()) {
+            const project = join(dir, `mode-${index}`);
+            mkdirSync(project);
+            writeFileSync(join(project, 'package.json'), JSON.stringify({type: mode.type}));
+            writeFileSync(join(project, 'consumer.ts'), mode.source);
+            // skipLibCheck as in a typical application: the check is on what the consumer sees.
+            // No @types are picked up: the scratch project has none.
+            writeFileSync(
+                join(project, 'tsconfig.json'),
+                JSON.stringify({
+                    compilerOptions: {
+                        strict: true,
+                        noEmit: true,
+                        target: 'es2022',
+                        skipLibCheck: true,
+                        types: [],
+                        ...mode.options,
+                    },
+                    files: ['consumer.ts'],
+                }),
+            );
+            const result = spawnSync(execPath, [tsc, '-p', project], {
+                cwd: project,
+                encoding: 'utf8',
+            });
+            if (result.status === 0) {
+                stdout.write(`consumer (${mode.label}): types resolve\n`);
+            } else {
+                stderr.write(
+                    `consumer (${mode.label}) fails to type-check:\n${result.stdout}${result.stderr}`,
+                );
+                failed = true;
+            }
+        }
+    } finally {
+        rmSync(dir, {recursive: true, force: true});
+    }
+}
+
+typecheckConsumers();
 
 if (failed) {
     exit(1);

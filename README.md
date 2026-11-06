@@ -216,7 +216,7 @@ npm ci
 npm test
 ```
 
-To check the built package, build it first. The check loads both the CommonJS and the ESM build in Node and compares their exports:
+To check the built package, build it first. The check loads both the CommonJS and the ESM build in Node, compares their exports, and type-checks a consumer under the `nodenext`, `bundler` and `node` module resolutions:
 
 ```shell
 npm run build
