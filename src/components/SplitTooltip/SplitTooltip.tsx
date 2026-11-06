@@ -321,6 +321,11 @@ export function SplitTooltip(props: SplitTooltipProps) {
     React.useLayoutEffect(() => {
         updateDimensions();
         setAppliedLayout(props.layout);
+        // ResizeObserver only reports changes against the size it delivered last, so a size that
+        // changes and reverts before the next frame is never reported. Re-measure in that frame
+        // to stay in sync with it.
+        const frame = requestAnimationFrame(updateDimensions);
+        return () => cancelAnimationFrame(frame);
     }, [updateDimensions, props.layout]);
 
     return (
