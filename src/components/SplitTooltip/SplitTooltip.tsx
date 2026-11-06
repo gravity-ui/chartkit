@@ -165,8 +165,12 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
     const onMainPaneSizeChangeRef = React.useRef(onMainPaneSizeChange);
     onMainPaneSizeChangeRef.current = onMainPaneSizeChange;
 
+    // Updated after commit so that an interrupted render cannot tag a measurement with a
+    // layout that never reached the DOM.
     const tooltipPaneRef = React.useRef({layout, containerWidth});
-    tooltipPaneRef.current = {layout, containerWidth};
+    React.useLayoutEffect(() => {
+        tooltipPaneRef.current = {layout, containerWidth};
+    }, [layout, containerWidth]);
 
     const handleTooltipResize = React.useCallback(() => {
         if (!enabled) {
@@ -310,23 +314,21 @@ export function SplitTooltip(props: SplitTooltipProps) {
         onResize: updateDimensions,
     });
 
-    React.useLayoutEffect(updateDimensions, [updateDimensions]);
-
-    // A window resize event changes the layout before ResizeObserver reports the new size.
-    const [measuredLayout, setMeasuredLayout] = React.useState(props.layout);
-    if (props.layout !== measuredLayout) {
-        setMeasuredLayout(props.layout);
-        const rect = containerRef.current?.getBoundingClientRect();
-        if (rect) {
-            setDimensions((previous) => getContainerDimensions(previous, rect));
-        }
-    }
+    // A new layout usually comes with a new container size (a window resize event, or a parent
+    // update) that ResizeObserver reports only later. Apply the layout together with the size
+    // measured after the commit, so the content never sees it with the previous dimensions.
+    const [appliedLayout, setAppliedLayout] = React.useState(props.layout);
+    React.useLayoutEffect(() => {
+        updateDimensions();
+        setAppliedLayout(props.layout);
+    }, [updateDimensions, props.layout]);
 
     return (
         <div ref={containerRef} style={{position: 'relative', height: '100%'}}>
             {dimensions.initialized ? (
                 <SplitTooltipContent
                     {...props}
+                    layout={appliedLayout}
                     containerHeight={dimensions.height}
                     containerWidth={dimensions.width}
                 />

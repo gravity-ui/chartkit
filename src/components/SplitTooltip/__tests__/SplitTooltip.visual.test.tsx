@@ -125,6 +125,16 @@ function StatefulMainPane({onMount, onUnmount}: {onMount: () => void; onUnmount:
 // in a 320px wide pane, so the tooltip height depends on the pane width deterministically.
 const WRAPPING_TOOLTIP_BLOCKS = Array.from({length: 12}, (_, index) => index);
 
+function WrappingTooltip() {
+    return (
+        <div data-qa="tooltip-pane" style={{display: 'flex', flexWrap: 'wrap'}}>
+            {WRAPPING_TOOLTIP_BLOCKS.map((block) => (
+                <div key={block} style={{height: 100, width: 100}} />
+            ))}
+        </div>
+    );
+}
+
 // Mirrors the gravity-charts plugin: the layout follows the viewport orientation through the
 // window resize event, which fires before the container ResizeObserver.
 function useViewportLayout(): SplitTooltipLayout {
@@ -153,13 +163,7 @@ function ViewportLayoutTestCase({
                 renderMainPane={({layout: actualLayout, size}) => (
                     <div data-qa="main-pane">{`${actualLayout}:${size}`}</div>
                 )}
-                renderTooltip={() => (
-                    <div data-qa="tooltip-pane" style={{display: 'flex', flexWrap: 'wrap'}}>
-                        {WRAPPING_TOOLTIP_BLOCKS.map((block) => (
-                            <div key={block} style={{height: 100, width: 100}} />
-                        ))}
-                    </div>
-                )}
+                renderTooltip={() => <WrappingTooltip />}
             />
         </div>
     );
@@ -200,6 +204,46 @@ describe('SplitTooltip behavior', () => {
         // previous 320px one (320 * 0.6 = 192).
         const verticalFrom = calls.length;
         await page.viewport(600, 300);
+        await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
+        expect(
+            calls.slice(verticalFrom).filter(([, layout]) => layout === SplitLayout.VERTICAL),
+        ).toEqual([[360, SplitLayout.VERTICAL]]);
+        expect(calls.slice(verticalFrom).map(([size]) => size)).not.toContain(0);
+    });
+
+    test('never reports a stale main pane size when a parent changes the container and the layout together', async () => {
+        const calls: [number, SplitTooltipLayout][] = [];
+        const renderTestCase = (props: Partial<TestCaseProps>) => (
+            <TestCase
+                tooltipHeight={0}
+                renderTooltip={() => <WrappingTooltip />}
+                onMainPaneSizeChange={(size, layout) => calls.push([size, layout])}
+                containerHeight={300}
+                containerWidth={600}
+                layout={SplitLayout.VERTICAL}
+                {...props}
+            />
+        );
+        const screen = await render(renderTestCase({}));
+        await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
+
+        // The container ResizeObserver has not reported 320x500 yet: 300 - 24 - 400 < 0.
+        const horizontalFrom = calls.length;
+        await screen.rerender(
+            renderTestCase({
+                containerHeight: 500,
+                containerWidth: 320,
+                layout: SplitLayout.HORIZONTAL,
+            }),
+        );
+        await expect.poll(() => calls.at(-1)).toEqual([76, SplitLayout.HORIZONTAL]);
+        expect(
+            calls.slice(horizontalFrom).filter(([, layout]) => layout === SplitLayout.HORIZONTAL),
+        ).toEqual([[76, SplitLayout.HORIZONTAL]]);
+        expect(calls.slice(horizontalFrom).map(([size]) => size)).not.toContain(0);
+
+        const verticalFrom = calls.length;
+        await screen.rerender(renderTestCase({}));
         await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
         expect(
             calls.slice(verticalFrom).filter(([, layout]) => layout === SplitLayout.VERTICAL),
