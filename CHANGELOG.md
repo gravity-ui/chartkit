@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.0.0](https://github.com/gravity-ui/chartkit/compare/v8.12.0...v9.0.0) (2026-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* @gravity-ui/uikit peer dependency is now ^8.0.0
+
+### Features
+
+* release v9 ([#961](https://github.com/gravity-ui/chartkit/issues/961)) ([f72bc26](https://github.com/gravity-ui/chartkit/commit/f72bc26680a1c33687202180dceeee5f808f4e56))
+
 ## [8.12.0](https://github.com/gravity-ui/chartkit/compare/v8.11.0...v8.12.0) (2026-11-03)
 
 
