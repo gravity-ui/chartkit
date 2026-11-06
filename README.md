@@ -128,6 +128,10 @@ ChartKit bundles two Gravity UI charting libraries as dependencies:
 
 If you need a newer version of one of these packages, open a [Package update request](https://github.com/gravity-ui/ChartKit/issues/new?template=package-update-request.yml) issue and select the package(s) you need. Maintainers will bump the selected packages and release the update.
 
+### Upgrading from ChartKit 8
+
+See the [migration guide](docs/migration-to-v9.md): uikit 8 and React 18+, the CommonJS/ESM build, and the `gravity-charts` data changes that come with `@gravity-ui/charts` 2.
+
 ## Development
 
 ### Prerequisites
