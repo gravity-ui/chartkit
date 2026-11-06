@@ -60,12 +60,26 @@ type SplitTooltipContentProps = SplitTooltipProps & {
     containerWidth: number;
 };
 
+/** The tooltip height together with the layout and container width it was measured in. */
 type TooltipMeasurement = {
     height: number;
-    /** The layout and container width the tooltip was measured in. */
     layout: SplitTooltipLayout;
     containerWidth: number;
 };
+
+type ContainerDimensions = {height: number; width: number; initialized: boolean};
+
+function updateContainerDimensions(
+    previous: ContainerDimensions,
+    rect: {height: number; width: number} | undefined,
+): ContainerDimensions {
+    const height = rect?.height ?? 0;
+    const width = rect?.width ?? 0;
+    if (previous.height === height && previous.width === width) {
+        return previous;
+    }
+    return {height, width, initialized: previous.initialized || (height > 0 && width > 0)};
+}
 
 const hiddenResizerStyle = {display: 'none'};
 const defaultTooltipPaneStyle = {overflow: 'auto'};
@@ -151,34 +165,40 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
     const onMainPaneSizeChangeRef = React.useRef(onMainPaneSizeChange);
     onMainPaneSizeChangeRef.current = onMainPaneSizeChange;
 
+    const tooltipPaneRef = React.useRef({layout, containerWidth});
+    tooltipPaneRef.current = {layout, containerWidth};
+
     const handleTooltipResize = React.useCallback(() => {
         if (!enabled) {
             return;
         }
 
         const height = tooltipRef.current?.getBoundingClientRect().height ?? 0;
+        const measuredIn = tooltipPaneRef.current;
         setTooltipMeasurement((previous) =>
             previous?.height === height &&
-            previous.layout === layout &&
-            previous.containerWidth === containerWidth
+            previous.layout === measuredIn.layout &&
+            previous.containerWidth === measuredIn.containerWidth
                 ? previous
-                : {height, layout, containerWidth},
+                : {height, ...measuredIn},
         );
-    }, [containerWidth, enabled, layout]);
+    }, [enabled]);
 
     useResizeObserver({
         ref: tooltipRef,
         onResize: handleTooltipResize,
     });
 
-    React.useLayoutEffect(handleTooltipResize, [handleTooltipResize]);
+    React.useLayoutEffect(handleTooltipResize, [handleTooltipResize, layout, containerWidth]);
 
     // The tooltip height is measured after commit, so the first render after a layout or width
     // change still carries the height of the previous pane. Sizing from it can produce a zero
     // main pane that the chart host would observe. Until the tooltip is re-measured, size the
-    // main pane as if the tooltip were empty and hold the size notification back.
+    // main pane as if the tooltip were empty and hold the size notification back. The vertical
+    // layout does not depend on the tooltip height.
     const tooltipMeasured =
         !enabled ||
+        layout === SplitLayout.VERTICAL ||
         (tooltipMeasurement?.layout === layout &&
             tooltipMeasurement.containerWidth === containerWidth);
     const tooltipHeight = tooltipMeasured ? tooltipMeasurement?.height ?? 0 : 0;
@@ -278,17 +298,15 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
 
 export function SplitTooltip(props: SplitTooltipProps) {
     const containerRef = React.useRef<HTMLDivElement | null>(null);
-    const [dimensions, setDimensions] = React.useState({height: 0, width: 0, initialized: false});
+    const [dimensions, setDimensions] = React.useState<ContainerDimensions>({
+        height: 0,
+        width: 0,
+        initialized: false,
+    });
 
     const updateDimensions = React.useCallback(() => {
         const rect = containerRef.current?.getBoundingClientRect();
-        const height = rect?.height ?? 0;
-        const width = rect?.width ?? 0;
-        setDimensions((previous) => ({
-            height,
-            width,
-            initialized: previous.initialized || (height > 0 && width > 0),
-        }));
+        setDimensions((previous) => updateContainerDimensions(previous, rect));
     }, []);
 
     useResizeObserver({
@@ -306,15 +324,7 @@ export function SplitTooltip(props: SplitTooltipProps) {
         setMeasuredLayout(props.layout);
         const rect = containerRef.current?.getBoundingClientRect();
         if (rect) {
-            setDimensions((previous) =>
-                previous.height === rect.height && previous.width === rect.width
-                    ? previous
-                    : {
-                          height: rect.height,
-                          width: rect.width,
-                          initialized: previous.initialized || (rect.height > 0 && rect.width > 0),
-                      },
-            );
+            setDimensions((previous) => updateContainerDimensions(previous, rect));
         }
     }
 

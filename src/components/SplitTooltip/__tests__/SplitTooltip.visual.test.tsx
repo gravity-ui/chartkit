@@ -3,7 +3,6 @@ import React from 'react';
 import {page, userEvent} from 'vitest/browser';
 
 import {render} from '../../../../test-utils/utils.js';
-import {useViewportSplitTooltipLayout} from '../../../plugins/gravity-charts/renderer/withSplitPane/useViewportSplitTooltipLayout.js';
 import {SplitLayout} from '../../SplitPane/index.js';
 import {SplitTooltip} from '../SplitTooltip.js';
 import type {SplitTooltipLayout, SplitTooltipProps} from '../SplitTooltip.js';
@@ -122,16 +121,30 @@ function StatefulMainPane({onMount, onUnmount}: {onMount: () => void; onUnmount:
     );
 }
 
-// 12 blocks of 100x100 wrap into 6 rows (600px) in a 216px wide pane and into 4 rows (400px)
+// 12 blocks of 100x100 wrap into 6 rows (600px) in a 240px wide pane and into 4 rows (400px)
 // in a 320px wide pane, so the tooltip height depends on the pane width deterministically.
 const WRAPPING_TOOLTIP_BLOCKS = Array.from({length: 12}, (_, index) => index);
+
+// Mirrors the gravity-charts plugin: the layout follows the viewport orientation through the
+// window resize event, which fires before the container ResizeObserver.
+function useViewportLayout(): SplitTooltipLayout {
+    const getLayout = () =>
+        window.innerWidth > window.innerHeight ? SplitLayout.VERTICAL : SplitLayout.HORIZONTAL;
+    const [layout, setLayout] = React.useState(getLayout);
+    React.useLayoutEffect(() => {
+        const handleResize = () => setLayout(getLayout());
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    return layout;
+}
 
 function ViewportLayoutTestCase({
     onMainPaneSizeChange,
 }: {
     onMainPaneSizeChange: (size: number, layout: SplitTooltipLayout) => void;
 }) {
-    const layout = useViewportSplitTooltipLayout();
+    const layout = useViewportLayout();
     return (
         <div style={{position: 'fixed', inset: 0}}>
             <SplitTooltip
@@ -166,7 +179,7 @@ describe('SplitTooltip behavior', () => {
             />,
         );
 
-        // Vertical: the main pane takes 60% of the width; the 216px tooltip pane wraps 6 rows.
+        // Vertical: the main pane takes 60% of the width; the 240px tooltip pane wraps 6 rows.
         await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
         expect(calls).toEqual([[360, SplitLayout.VERTICAL]]);
         await expect.element(screen.getByTestId('tooltip-pane')).toHaveStyle({height: '600px'});
