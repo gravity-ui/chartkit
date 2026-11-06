@@ -5,11 +5,31 @@
 
 ### ⚠ BREAKING CHANGES
 
-* @gravity-ui/uikit peer dependency is now ^8.0.0
+* `@gravity-ui/uikit` peer dependency is now `^8.0.0`; `ThemeProvider` becomes `Provider`. Follow the [uikit migration guide](https://github.com/gravity-ui/uikit/blob/main/docs/migration-to-v8.md) first.
+* React 16 and 17 are no longer supported: the `react` peer dependency is `^18.0.0 || ^19.0.0`.
+* The package ships real CommonJS in `build/cjs` and strict ESM in `build/esm`; `main`/`types` point to CommonJS, `module` to ESM, and every entry of `exports` has `import`/`require` conditions with types. Deep imports of `build/*` files must be updated to `@gravity-ui/chartkit` or a plugin subpath.
+* Compiled to ES2022 instead of ES2017: the runtime or the build must support ES2022 syntax.
+* `require` of the CommonJS build directly in Node needs Node 20.19 / 22.12 or later (`require(esm)` for ESM-only dependencies of uikit 8 and charts 2) and a loader that handles `.css`.
+* `@gravity-ui/charts` is updated to `^2.0.0`: `ChartData` of the `gravity-charts` widget is the charts 2 type. The v1 options `xAxis/yAxis.maxPadding`, `ticks.pixelInterval`, `numberFormat.unit` and bar-x/bar-y `dataLabels.inside` are removed and ignored at runtime; use `padding.max`, `ticks.interval`, `units` and `dataLabels.placement`, or convert existing configurations with `migrateChartDataV1` / `inspectChartDataV1`, now re-exported from `@gravity-ui/chartkit/gravity-charts`.
+* The `Yagr` type exported from `@gravity-ui/chartkit/yagr` is the chart instance type without the config type parameter (`Yagr<MyConfig>` becomes `Yagr`).
+* Under `moduleResolution: node` (node10) the declarations need `skipLibCheck`, and the yagr and migration adapter types degrade to `any`; use `bundler`, `node16` or `nodenext` for full types. See [docs/migration-to-v9.md](https://github.com/gravity-ui/chartkit/blob/main/docs/migration-to-v9.md).
 
 ### Features
 
+* update to `@gravity-ui/uikit` 8 ([#953](https://github.com/gravity-ui/chartkit/issues/953))
+* build real CommonJS and strict ESM and compile to ES2022 like uikit 8 ([#957](https://github.com/gravity-ui/chartkit/issues/957))
+* **deps:** update `@gravity-ui/charts` `1.73.0` -&gt; `2.0.0` ([#959](https://github.com/gravity-ui/chartkit/issues/959))
+* **GravityCharts:** re-export the charts v1 migration adapter (`migrateChartDataV1`, `inspectChartDataV1`, `ChartDataV1`, `MigrationV1Result`, `MigrationV1Warning`) from `@gravity-ui/chartkit/gravity-charts` ([#959](https://github.com/gravity-ui/chartkit/issues/959))
+* `npm run test:build` loads both builds in Node, compares their exports and type-checks a consumer under `nodenext`, `bundler` and `node` ([#957](https://github.com/gravity-ui/chartkit/issues/957), [#961](https://github.com/gravity-ui/chartkit/issues/961))
 * release v9 ([#961](https://github.com/gravity-ui/chartkit/issues/961)) ([f72bc26](https://github.com/gravity-ui/chartkit/commit/f72bc26680a1c33687202180dceeee5f808f4e56))
+
+### Bug Fixes
+
+* **Yagr:** derive the `Yagr` type from a named export of `@gravity-ui/yagr`, so ESM consumers with `moduleResolution: nodenext` no longer get TS2709 or a silent `any` ([#961](https://github.com/gravity-ui/chartkit/issues/961))
+
+### Performance Improvements
+
+* replace lodash with es-toolkit ([#956](https://github.com/gravity-ui/chartkit/issues/956))
 
 ## [8.12.0](https://github.com/gravity-ui/chartkit/compare/v8.11.0...v8.12.0) (2026-11-03)
 
