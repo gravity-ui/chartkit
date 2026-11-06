@@ -7,6 +7,7 @@ ChartKit 9 moves to `@gravity-ui/uikit` 8, `@gravity-ui/charts` 2 and a dual Com
 - React 18 or 19. React 16 and 17 are no longer supported, as required by `@gravity-ui/uikit` 8.
 - `@gravity-ui/uikit` 8 as the peer dependency. Follow the [uikit migration guide](https://github.com/gravity-ui/uikit/blob/main/docs/migration-to-v8.md) first; in particular, `ThemeProvider` becomes `Provider`.
 - A runtime or a build that supports ES2022 syntax. The package is no longer downleveled to ES2017.
+- To `require` the CommonJS build in Node directly (SSR, tests without a bundler): Node 20.19 or 22.12 and later, because the dependencies of `@gravity-ui/uikit` 8 and `@gravity-ui/charts` 2 include ESM-only packages (`colors-named`, `d3-selection`) that Node loads through `require(esm)`. The build also imports CSS, so a loader or a bundler that handles `.css` is needed in any case.
 
 ```sh
 npm install @gravity-ui/chartkit@^9 @gravity-ui/uikit@^8
@@ -44,4 +45,8 @@ Run the adapter when the configuration changes, not on every render. It does not
 
 ## TypeScript module resolution
 
-The declaration files are resolved through the `exports` conditions, so `moduleResolution` set to `bundler`, `node16` or `nodenext` finds every type. The package keeps `typesVersions` for the legacy `node` (node10) resolution, which ignores `exports` and sees a subpath only through `typesVersions`. The entry points resolve that way, but the declarations of `@gravity-ui/chartkit/gravity-charts` import `@gravity-ui/charts/migration/v1`, and `@gravity-ui/charts` 2 ships no `typesVersions`. Under `moduleResolution: node` that import fails with TS2307 when `skipLibCheck` is off, and every re-export of the migration adapter (`migrateChartDataV1`, `inspectChartDataV1`, `ChartDataV1`, `MigrationV1Result`, `MigrationV1Warning`) becomes `any` when it is on. The `yagr` plugin declarations have the same limitation with `@gravity-ui/yagr/react` (the type of `YagrReactRef`), as in ChartKit 8. The root entry, `highcharts` and `indicator` are unaffected. Switch to `bundler`, `node16` or `nodenext` to get the full types.
+The declaration files are resolved through the `exports` conditions, so `moduleResolution` set to `bundler`, `node16` or `nodenext` finds every type. `npm run test:build` type-checks a consumer in these modes.
+
+The package keeps `typesVersions` for the legacy `node` (node10) resolution, which ignores `exports` and sees a subpath only through `typesVersions`. The ChartKit entry points resolve that way, but their declarations import `@gravity-ui/yagr` and `@gravity-ui/yagr/react` (every entry, through the `ChartKitWidget` type) and `@gravity-ui/charts/migration/v1` (the `gravity-charts` entry), and neither `@gravity-ui/yagr` 5 nor `@gravity-ui/charts` 2 ships `typesVersions`. Under `moduleResolution: node` these imports fail with TS2307 when `skipLibCheck` is off; with `skipLibCheck` on, the yagr types (`Yagr`, `YagrWidgetData` and the rest) and the migration adapter re-exports (`migrateChartDataV1`, `inspectChartDataV1`, `ChartDataV1`, `MigrationV1Result`, `MigrationV1Warning`) become `any`. The yagr part is the same as in ChartKit 8. Switch to `bundler`, `node16` or `nodenext` to get the full types.
+
+The `Yagr` type exported from `@gravity-ui/chartkit/yagr` is now the chart instance type without the config type parameter (`Yagr<MyConfig>` becomes `Yagr`): it is derived from the named `YagrReactRef` export, because a default import of the `@gravity-ui/yagr` class from the ESM declarations does not resolve under `nodenext`.
