@@ -121,8 +121,7 @@ function StatefulMainPane({onMount, onUnmount}: {onMount: () => void; onUnmount:
     );
 }
 
-// 12 blocks of 100x100 wrap into 6 rows (600px) in a 240px wide pane and into 4 rows (400px)
-// in a 320px wide pane, so the tooltip height depends on the pane width deterministically.
+// 6 rows (600px) in a 240px wide pane, 4 rows (400px) in a 320px wide pane.
 const WRAPPING_TOOLTIP_BLOCKS = Array.from({length: 12}, (_, index) => index);
 
 function WrappingTooltip() {
@@ -135,8 +134,6 @@ function WrappingTooltip() {
     );
 }
 
-// Mirrors the gravity-charts plugin: the layout follows the viewport orientation through the
-// window resize event, which fires before the container ResizeObserver.
 function useViewportLayout(): SplitTooltipLayout {
     const getLayout = () =>
         window.innerWidth > window.innerHeight ? SplitLayout.VERTICAL : SplitLayout.HORIZONTAL;
@@ -183,15 +180,11 @@ describe('SplitTooltip behavior', () => {
             />,
         );
 
-        // Vertical: the main pane takes 60% of the width; the 240px tooltip pane wraps 6 rows.
         await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
         expect(calls).toEqual([[360, SplitLayout.VERTICAL]]);
         await expect.element(screen.getByTestId('tooltip-pane')).toHaveStyle({height: '600px'});
 
-        // Horizontal: 500 - 24 (resizer) - 400 (4 rows of the now 320px wide tooltip). The layout
-        // and the container size arrive separately, so the previous layout may be reported once
-        // more for the new viewport, but the new layout must never come with stale dimensions
-        // (300 - 24 - 600 < 0 or 500 - 24 - 600 < 0 would report a zero main pane).
+        // 500 - 24 (resizer) - 400 (tooltip).
         const horizontalFrom = calls.length;
         await page.viewport(320, 500);
         await expect.poll(() => calls.at(-1)).toEqual([76, SplitLayout.HORIZONTAL]);
@@ -200,8 +193,6 @@ describe('SplitTooltip behavior', () => {
         ).toEqual([[76, SplitLayout.HORIZONTAL]]);
         expect(calls.slice(horizontalFrom).map(([size]) => size)).not.toContain(0);
 
-        // Back to vertical: the size must come from the already resized container, not from the
-        // previous 320px one (320 * 0.6 = 192).
         const verticalFrom = calls.length;
         await page.viewport(600, 300);
         await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
@@ -227,7 +218,6 @@ describe('SplitTooltip behavior', () => {
         const screen = await render(renderTestCase({}));
         await expect.poll(() => calls.at(-1)).toEqual([360, SplitLayout.VERTICAL]);
 
-        // The container ResizeObserver has not reported 320x500 yet: 300 - 24 - 400 < 0.
         const horizontalFrom = calls.length;
         await screen.rerender(
             renderTestCase({

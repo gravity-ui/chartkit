@@ -60,7 +60,6 @@ type SplitTooltipContentProps = SplitTooltipProps & {
     containerWidth: number;
 };
 
-/** The tooltip height together with the layout and container width it was measured in. */
 type TooltipMeasurement = {
     height: number;
     layout: SplitTooltipLayout;
@@ -165,8 +164,6 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
     const onMainPaneSizeChangeRef = React.useRef(onMainPaneSizeChange);
     onMainPaneSizeChangeRef.current = onMainPaneSizeChange;
 
-    // Updated after commit so that an interrupted render cannot tag a measurement with a
-    // layout that never reached the DOM.
     const tooltipPaneRef = React.useRef({layout, containerWidth});
     React.useLayoutEffect(() => {
         tooltipPaneRef.current = {layout, containerWidth};
@@ -195,7 +192,7 @@ function SplitTooltipContent(props: SplitTooltipContentProps) {
 
     React.useLayoutEffect(handleTooltipResize, [handleTooltipResize, layout, containerWidth]);
 
-    // Until the tooltip is re-measured in the current pane, size as if it were empty.
+    // Size as if the tooltip were empty until it is measured in the current pane.
     const tooltipMeasured =
         !enabled ||
         layout === SplitLayout.VERTICAL ||
@@ -314,16 +311,12 @@ export function SplitTooltip(props: SplitTooltipProps) {
         onResize: updateDimensions,
     });
 
-    // A new layout usually comes with a new container size (a window resize event, or a parent
-    // update) that ResizeObserver reports only later. Apply the layout together with the size
-    // measured after the commit, so the content never sees it with the previous dimensions.
+    // Apply a new layout only together with the container size measured after commit.
     const [appliedLayout, setAppliedLayout] = React.useState(props.layout);
     React.useLayoutEffect(() => {
         updateDimensions();
         setAppliedLayout(props.layout);
-        // ResizeObserver only reports changes against the size it delivered last, so a size that
-        // changes and reverts before the next frame is never reported. Re-measure in that frame
-        // to stay in sync with it.
+        // ResizeObserver misses a size that reverts within a frame.
         const frame = requestAnimationFrame(updateDimensions);
         return () => cancelAnimationFrame(frame);
     }, [updateDimensions, props.layout]);
