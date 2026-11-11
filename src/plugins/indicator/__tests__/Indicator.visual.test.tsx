@@ -4,7 +4,7 @@ import {render} from '../../../../test-utils/utils.js';
 import {ChartKit} from '../../../components/ChartKit.js';
 import {settings} from '../../../libs/index.js';
 import {IndicatorPlugin} from '../index.js';
-import type {IndicatorWidgetData} from '../types.js';
+import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types.js';
 
 const indicatorData: IndicatorWidgetData = {
     data: [
@@ -57,37 +57,75 @@ describe('Indicator visual tests', () => {
 
     test('secondary value', async () => {
         settings.set({plugins: [IndicatorPlugin]});
-        const screen = await render(
-            <div data-qa="indicator-secondary-wrapper" style={{height: 300, width: '100%'}}>
-                <ChartKit
-                    type="indicator"
-                    data={{
-                        data: [
-                            {
-                                title: 'Revenue',
-                                content: {current: {value: 1200}},
-                                secondaryValue: {
-                                    value: 0.124,
-                                    numberFormat: {
-                                        format: 'percent',
-                                        precision: 1,
-                                        signDisplay: 'exceptZero',
-                                    },
-                                    position: 'right',
-                                    caption: 'vs the previous month',
-                                    color: 'var(--g-color-text-positive)',
-                                    view: 'badge',
-                                    arrow: 'up',
-                                },
-                            },
-                        ],
-                    }}
-                />
-            </div>,
-            options,
+        const item = {
+            title: 'Revenue',
+            content: {current: {value: 1200}},
+            secondaryValue: {
+                value: 0.124,
+                numberFormat: {
+                    format: 'percent',
+                    precision: 1,
+                    signDisplay: 'exceptZero',
+                },
+                position: 'right',
+                caption: 'vs the previous month',
+                color: 'var(--g-color-text-positive)',
+                view: 'badge',
+                arrow: 'up',
+            },
+        } satisfies IndicatorWidgetDataItem;
+        const renderIndicator = (
+            dataItem: IndicatorWidgetDataItem,
+            width: number | string = '100%',
+        ) => (
+            <div data-qa="indicator-secondary-wrapper" style={{height: 300, width}}>
+                <ChartKit type="indicator" data={{data: [dataItem]}} />
+            </div>
         );
+        const screen = await render(renderIndicator(item), options);
 
         await expect.element(screen.getByText('+12.4%', {exact: true})).toBeVisible();
         await expect(screen.getByTestId('indicator-secondary-wrapper')).toMatchScreenshot();
+
+        for (const {width, size} of [
+            {width: 300, size: 'm'},
+            {width: 400, size: 'xl'},
+            {width: 100, size: 'm'},
+        ] as const) {
+            await screen.rerender(
+                renderIndicator(
+                    {
+                        ...item,
+                        size,
+                        content: {current: {value: 1539577973}},
+                    },
+                    width,
+                ),
+            );
+
+            const text = screen.getByText('+12.4%', {exact: true}).element();
+            const secondary = screen.container.querySelector(
+                '.chartkit-indicator__secondary-value',
+            );
+            const scrollable = screen.container.querySelector('.chartkit-indicator__content');
+            if (!secondary || !scrollable) {
+                throw new Error('Indicator content is missing');
+            }
+
+            const secondaryRect = secondary.getBoundingClientRect();
+            const textRect = text.getBoundingClientRect();
+            expect(textRect.left).toBeGreaterThanOrEqual(secondaryRect.left);
+            expect(textRect.right).toBeLessThanOrEqual(secondaryRect.right);
+            expect(scrollable.scrollWidth).toBeGreaterThan(scrollable.clientWidth);
+
+            scrollable.scrollLeft = scrollable.scrollWidth;
+            await expect
+                .poll(() => {
+                    const viewport = scrollable.getBoundingClientRect();
+                    const value = text.getBoundingClientRect();
+                    return value.left >= viewport.left && value.right <= viewport.right;
+                })
+                .toBe(true);
+        }
     });
 });

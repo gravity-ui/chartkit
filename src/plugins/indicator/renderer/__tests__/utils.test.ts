@@ -17,8 +17,23 @@ describe('formatValue', () => {
 
         expect(formatValue({value: 0.124, numberFormat}, formatNumber)).toBe('custom result');
         expect(formatNumber).toHaveBeenCalledExactlyOnceWith(0.124, {
-            value: 0.124,
             ...numberFormat,
+            value: 0.124,
+        });
+    });
+
+    test('preserves the actual value when formatting options come from another value', () => {
+        const mainValueFormatting = {value: 1000, format: 'percent' as const, precision: 1};
+        const formatNumber = vi.fn((_value: number, options: {value: number}) =>
+            String(options.value),
+        );
+
+        expect(formatValue({value: 0.124, numberFormat: mainValueFormatting}, formatNumber)).toBe(
+            '0.124',
+        );
+        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(0.124, {
+            ...mainValueFormatting,
+            value: 0.124,
         });
     });
 

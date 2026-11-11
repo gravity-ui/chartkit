@@ -57,7 +57,8 @@ The application computes differences, chooses colors and localizes captions.
 For numeric secondary values, formatting priority is:
 
 1. If the widget has a `formatNumber` callback, it receives the number and
-   `{value, ...numberFormat}`. The callback controls formatting, including the sign.
+   `{...numberFormat, value}`, where `value` is always the secondary value.
+   The callback controls formatting, including the sign.
 2. Otherwise, `numberFormat` is applied by ChartKit's shared number formatter.
    Its locale defaults to `settings.lang`, with an optional `numberFormat.lang` override.
 3. With neither callback nor options, the number is rendered as plain text.

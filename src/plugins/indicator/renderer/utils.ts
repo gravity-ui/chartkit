@@ -11,7 +11,7 @@ export function formatValue(
     }
 
     if (formatNumber) {
-        return formatNumber(value, {value, ...numberFormat});
+        return formatNumber(value, {...numberFormat, value});
     }
 
     if (numberFormat) {

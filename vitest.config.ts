@@ -96,6 +96,9 @@ export default defineConfig({
             {
                 extends: true,
                 plugins: [react()],
+                optimizeDeps: {
+                    include: ['@gravity-ui/icons'],
+                },
                 test: {
                     name: 'visual',
                     include: ['src/**/*.visual.test.ts?(x)'],

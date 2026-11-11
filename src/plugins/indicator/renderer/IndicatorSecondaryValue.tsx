@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {Label} from '@gravity-ui/uikit';
+import {ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon} from '@gravity-ui/icons';
+import {Icon, Label} from '@gravity-ui/uikit';
 
 import type {ChartKitProps} from '../../../types';
 import {block} from '../../../utils/cn';
@@ -13,7 +14,7 @@ import {formatValue} from './utils';
 
 const b = block('indicator');
 
-const LABEL_SIZES = {s: 'xs', m: 's', l: 's', xl: 'm'} as const;
+const BADGE_SIZE_BY_INDICATOR_SIZE = {s: 'xs', m: 's', l: 's', xl: 'm'} as const;
 
 export function IndicatorSecondaryValue({
     secondaryValue,
@@ -29,16 +30,11 @@ export function IndicatorSecondaryValue({
     const content = (
         <React.Fragment>
             {arrow && (
-                <svg
-                    className={b('secondary-value-arrow', {down: arrow === 'down'})}
-                    width="14"
-                    height="14"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    aria-hidden="true"
-                >
-                    <path d="M8.53 1.47a.75.75 0 0 0-1.06 0l-4 4a.75.75 0 0 0 1.06 1.06l2.72-2.72V14a.75.75 0 0 0 1.5 0V3.81l2.72 2.72a.75.75 0 0 0 1.06-1.06l-4-4Z" />
-                </svg>
+                <Icon
+                    className={b('secondary-value-arrow')}
+                    data={arrow === 'up' ? ArrowUpIcon : ArrowDownIcon}
+                    size={14}
+                />
             )}
             <span className={b('secondary-value-text')}>{formattedValue}</span>
         </React.Fragment>
@@ -53,7 +49,7 @@ export function IndicatorSecondaryValue({
                 {view === 'badge' ? (
                     <Label
                         className={b('secondary-value-badge', {background: true})}
-                        size={LABEL_SIZES[size ?? 'm']}
+                        size={BADGE_SIZE_BY_INDICATOR_SIZE[size ?? 'm']}
                     >
                         <span className={b('secondary-value-badge-content')}>{content}</span>
                     </Label>

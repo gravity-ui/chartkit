@@ -111,6 +111,7 @@
     "@gravity-ui/charts": "^2.0.0",
     "@gravity-ui/date-utils": "^2.1.0",
     "@gravity-ui/i18n": "^1.0.0",
+    "@gravity-ui/icons": "^2.23.1",
     "@gravity-ui/yagr": "^5.0.0",
     "afterframe": "^1.0.2",
     "es-toolkit": "^1.53.0",
