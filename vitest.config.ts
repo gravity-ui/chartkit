@@ -16,6 +16,7 @@ export default defineConfig({
         },
         browser: {
             enabled: true,
+            testerHtmlPath: 'test-utils/tester.html',
             headless: true,
             provider: playwright({}),
             instances: [
