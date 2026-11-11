@@ -4,6 +4,8 @@ import type {ChartKitProps} from '../../../types';
 import {block} from '../../../utils/cn';
 import type {IndicatorWidgetDataItem} from '../types';
 
+import {IndicatorSecondaryValue} from './IndicatorSecondaryValue';
+
 const b = block('indicator');
 
 export const IndicatorItem = (
@@ -12,8 +14,8 @@ export const IndicatorItem = (
         formatNumber?: ChartKitProps<'indicator'>['formatNumber'];
     },
 ) => {
-    const {formatNumber, content, color, defaultColor, size, title, nowrap} = props;
-    const mods = {size, nowrap};
+    const {formatNumber, content, color, defaultColor, size, title, nowrap, secondaryValue} = props;
+    const mods = {size, nowrap, right: secondaryValue?.position === 'right'};
     const style: React.CSSProperties = {color: color || defaultColor};
 
     let value = content.current.value;
@@ -22,6 +24,12 @@ export const IndicatorItem = (
         value = formatNumber(value, content.current);
     }
 
+    const valueContent = (
+        <div className={b('item-value')} style={style}>
+            {value}
+        </div>
+    );
+
     return (
         <div className={b('item', mods)}>
             {title && (
@@ -29,9 +37,18 @@ export const IndicatorItem = (
                     {title}
                 </div>
             )}
-            <div className={b('item-value')} style={style}>
-                {value}
-            </div>
+            {secondaryValue ? (
+                <div className={b('value-row')}>
+                    {valueContent}
+                    <IndicatorSecondaryValue
+                        secondaryValue={secondaryValue}
+                        size={size}
+                        formatNumber={formatNumber}
+                    />
+                </div>
+            ) : (
+                valueContent
+            )}
         </div>
     );
 };

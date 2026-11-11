@@ -54,4 +54,40 @@ describe('Indicator visual tests', () => {
 
         await expect.element(screen.getByText('No data')).toBeVisible();
     });
+
+    test('secondary value', async () => {
+        settings.set({plugins: [IndicatorPlugin]});
+        const screen = await render(
+            <div data-qa="indicator-secondary-wrapper" style={{height: 300, width: '100%'}}>
+                <ChartKit
+                    type="indicator"
+                    data={{
+                        data: [
+                            {
+                                title: 'Revenue',
+                                content: {current: {value: 1200}},
+                                secondaryValue: {
+                                    value: 0.124,
+                                    numberFormat: {
+                                        format: 'percent',
+                                        precision: 1,
+                                        signDisplay: 'exceptZero',
+                                    },
+                                    position: 'right',
+                                    caption: 'vs the previous month',
+                                    color: 'var(--g-color-text-positive)',
+                                    view: 'badge',
+                                    arrow: 'up',
+                                },
+                            },
+                        ],
+                    }}
+                />
+            </div>,
+            options,
+        );
+
+        await expect.element(screen.getByText('+12.4%', {exact: true})).toBeVisible();
+        await expect(screen.getByTestId('indicator-secondary-wrapper')).toMatchScreenshot();
+    });
 });

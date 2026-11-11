@@ -29,7 +29,7 @@ const unitFormatter = ({
     unitDelimiterI18nKey: string;
 }) => {
     return function formatUnit(value: number, options: FormatOptions = {}) {
-        const {precision, unitRate, showRankDelimiter = true, lang} = options;
+        const {precision, unitRate, showRankDelimiter = true, lang, signDisplay} = options;
 
         const i18nLang = i18nInstance.lang as string;
         if (lang) {
@@ -50,6 +50,7 @@ const unitFormatter = ({
             minimumFractionDigits: typeof precision === 'number' ? precision : 0,
             maximumFractionDigits: 20,
             useGrouping: showRankDelimiter,
+            signDisplay,
         }).format(result);
 
         const unit = i18n(unitsI18nKeys[resultUnitRate]);

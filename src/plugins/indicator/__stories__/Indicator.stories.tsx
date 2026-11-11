@@ -28,9 +28,10 @@ interface ChartStoryProps {
     size: IndicatorWidgetDataItem['size'];
     title: string;
     nowrap: boolean;
+    secondaryValue?: IndicatorWidgetDataItem['secondaryValue'];
 }
 
-const ChartStory = ({color, size, title, nowrap}: ChartStoryProps) => {
+const ChartStory = ({color, size, title, nowrap, secondaryValue}: ChartStoryProps) => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
     const resultData = cloneDeep(data);
@@ -40,6 +41,7 @@ const ChartStory = ({color, size, title, nowrap}: ChartStoryProps) => {
         resultData.data[0].color = color;
         resultData.data[0].title = title;
         resultData.data[0].nowrap = nowrap;
+        resultData.data[0].secondaryValue = secondaryValue;
     }
 
     if (!shown) {
@@ -79,5 +81,35 @@ export const Showcase: StoryObj<typeof ChartStory> = {
         size: {control: 'radio', options: ['s', 'm', 'l', 'xl']},
         title: {control: 'text'},
         nowrap: {control: 'boolean'},
+        secondaryValue: {control: 'object'},
+    },
+};
+
+export const WithSecondaryValue: StoryObj<typeof ChartStory> = {
+    ...Showcase,
+    args: {
+        ...Showcase.args,
+        secondaryValue: {
+            value: 0.124,
+            numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
+            caption: 'vs the previous month',
+            arrow: 'up',
+            color: 'var(--g-color-text-positive)',
+            view: 'badge',
+        },
+    },
+};
+
+export const SecondaryValueOnTheRight: StoryObj<typeof ChartStory> = {
+    ...WithSecondaryValue,
+    args: {
+        ...WithSecondaryValue.args,
+        secondaryValue: {
+            ...WithSecondaryValue.args?.secondaryValue,
+            value: -0.082,
+            position: 'right',
+            arrow: 'down',
+            color: 'var(--g-color-text-danger)',
+        },
     },
 };
