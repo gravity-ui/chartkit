@@ -19,9 +19,14 @@ export type YagrWidgetProps = ChartKitProps<'yagr'> & {
     id: string;
 };
 
+export type YagrSeriesPointLabels = {
+    /** Prepared plain-text labels in timeline order. Empty, null, and missing entries hide a label. */
+    pointLabels?: (string | null)[];
+};
+
 export type YagrWidgetData = {
     data: {
-        graphs: RawSerieData[];
+        graphs: (RawSerieData & YagrSeriesPointLabels)[];
         timeline: number[];
         /**
          * Allow to setup timezone for X axis and tooltip's header.

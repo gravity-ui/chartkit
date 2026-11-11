@@ -9,6 +9,7 @@ import {CustomTooltipProps, TooltipHandlerData, YagrPlugin} from '../';
 import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
 import type {ChartKitRef} from '../../../types';
+import type {YagrWidgetData} from '../types';
 
 import {getNewConfig, line10, line10WithGrafanaStyle} from './mocks/line10';
 
@@ -155,6 +156,51 @@ export const Area: Story = {
         return (
             <div style={{height: 300, width: '100%'}}>
                 <ChartKit ref={chartkitRef} id="1" type="yagr" data={line10WithGrafanaStyle} />
+            </div>
+        );
+    },
+};
+
+const POINT_LABELS_DATA: YagrWidgetData = {
+    data: {
+        timeline: [Date.UTC(2026, 0, 1), Date.UTC(2026, 0, 2)],
+        graphs: [{id: 'revenue', name: 'Revenue', data: [10, 20], pointLabels: ['Plan', 'Actual']}],
+    },
+    libraryConfig: {
+        chart: {series: {type: 'line'}},
+        scales: {y: {min: 0, max: 40}},
+    },
+};
+
+export const PreparedLabels: Story = {
+    name: 'Prepared labels',
+    render: () => {
+        const [labels, setLabels] = React.useState(['Plan', 'Actual']);
+        const [showLabels, setShowLabels] = React.useState(true);
+        settings.set({plugins: [YagrPlugin]});
+
+        const data: YagrWidgetData = {
+            ...POINT_LABELS_DATA,
+            data: {
+                ...POINT_LABELS_DATA.data,
+                graphs: POINT_LABELS_DATA.data.graphs.map((graph) => ({
+                    ...graph,
+                    pointLabels: showLabels ? labels : undefined,
+                })),
+            },
+        };
+
+        return (
+            <div>
+                <div style={{height: 300}}>
+                    <ChartKit id="prepared-labels" type="yagr" data={data} />
+                </div>
+                <Button onClick={() => setLabels(['Updated plan', 'Updated actual'])}>
+                    Update labels
+                </Button>
+                <Button onClick={() => setShowLabels(!showLabels)}>
+                    {showLabels ? 'Hide labels' : 'Show labels'}
+                </Button>
             </div>
         );
     },

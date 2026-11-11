@@ -5,6 +5,7 @@ import {settings} from '../../../libs';
 import {merge} from '../../../utils/merge';
 import type {MinimalValidConfig, Yagr, YagrChartOptions, YagrTheme, YagrWidgetData} from '../types';
 
+import {getLabelHooks} from './labels';
 import {getRenderTooltip} from './tooltip';
 
 const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
@@ -210,6 +211,8 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
             values: getXAxisFormatter(config.chart.timeMultiplier, timeZone),
         };
     }
+
+    config.hooks = getLabelHooks(config.hooks);
 
     return config;
 };
