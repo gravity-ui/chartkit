@@ -101,6 +101,9 @@ independent and accept the following options:
 | `lang`              | Locale override                                                                            | `settings.lang`      |
 | `signDisplay`       | `auto`, `always`, `never` or `exceptZero`                                                  | `auto`               |
 
+`lang` accepts an `Intl.NumberFormat` locale, including regional tags such as
+`en-US` and `ru-RU`. Unit labels use Russian for `ru` locales and English otherwise.
+
 With `format: 'percent'`, the multiplier is always `100`; a supplied `multiplier`
 is ignored.
 

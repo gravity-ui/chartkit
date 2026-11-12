@@ -41,43 +41,10 @@ function migratePrimaryValue(
 /**
  * Normalize indicator configuration without mutating input, invoking callbacks or logging.
  */
-export function migrateIndicatorDataFromV9ToV10(
+export function normalizeIndicatorData(
     input: IndicatorWidgetData,
-): MigrationResult<NormalizedIndicatorWidgetConfig, IndicatorMigrationWarning> {
-    const warnings: IndicatorMigrationWarning[] = [];
-    const data = input.data?.map((item, index): NormalizedIndicatorWidgetConfigItem => {
-        const warn = (
-            code: IndicatorMigrationWarning['code'],
-            path: (string | number)[],
-            message: string,
-            replacement: string,
-        ) => {
-            warnings.push({
-                code,
-                path: ['data', index, ...path],
-                message,
-                replacement,
-                resolution: 'automatic',
-            });
-        };
-
-        if ('content' in item) {
-            warn(
-                'indicator-content',
-                ['content'],
-                'Use primaryValue instead of content.current.',
-                'primaryValue',
-            );
-        }
-        if ('color' in item) {
-            warn(
-                'indicator-color',
-                ['color'],
-                'Use primaryValue.color instead of the item color.',
-                'primaryValue.color',
-            );
-        }
-
+): NormalizedIndicatorWidgetConfig {
+    const data = input.data?.map((item): NormalizedIndicatorWidgetConfigItem => {
         const primaryValue = migratePrimaryValue(item);
 
         if (item.primaryValue === primaryValue && !('content' in item) && !('color' in item)) {
@@ -94,7 +61,36 @@ export function migrateIndicatorDataFromV9ToV10(
     });
 
     if (data?.every((item, index) => item === input.data?.[index]) ?? true) {
-        return {data: input as NormalizedIndicatorWidgetConfig, warnings};
+        return input as NormalizedIndicatorWidgetConfig;
     }
-    return {data: {...input, data}, warnings};
+    return {...input, data};
+}
+
+/** Normalize configuration and collect diagnostics for an explicit migration. */
+export function migrateIndicatorDataFromV9ToV10(
+    input: IndicatorWidgetData,
+): MigrationResult<NormalizedIndicatorWidgetConfig, IndicatorMigrationWarning> {
+    const data = normalizeIndicatorData(input);
+    const warnings: IndicatorMigrationWarning[] = [];
+    input.data?.forEach((item, index) => {
+        if ('content' in item) {
+            warnings.push({
+                code: 'indicator-content',
+                path: ['data', index, 'content'],
+                message: 'Use primaryValue instead of content.current.',
+                replacement: 'primaryValue',
+                resolution: 'automatic',
+            });
+        }
+        if ('color' in item) {
+            warnings.push({
+                code: 'indicator-color',
+                path: ['data', index, 'color'],
+                message: 'Use primaryValue.color instead of the item color.',
+                replacement: 'primaryValue.color',
+                resolution: 'automatic',
+            });
+        }
+    });
+    return {data, warnings};
 }

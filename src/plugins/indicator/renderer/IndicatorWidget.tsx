@@ -9,10 +9,7 @@ import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../utils';
 import {block} from '../../../utils/cn';
 import type {IndicatorItemProps} from '../internal-types';
-import {
-    getPrimaryValueFormatOptions,
-    migrateIndicatorDataFromV9ToV10,
-} from '../migration/from-v9-to-v10';
+import {getPrimaryValueFormatOptions, normalizeIndicatorData} from '../migration/from-v9-to-v10';
 
 import {IndicatorItem} from './IndicatorItem';
 import {formatValue} from './utils';
@@ -32,7 +29,7 @@ export const IndicatorWidget = React.forwardRef<
         const {data = [], defaultColor} = config;
 
         const normalizedData = React.useMemo(
-            () => migrateIndicatorDataFromV9ToV10(config).data.data ?? [],
+            () => normalizeIndicatorData(config).data ?? [],
             [config],
         );
 

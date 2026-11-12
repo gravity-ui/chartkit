@@ -60,4 +60,14 @@ describe('formatValue', () => {
             }),
         ).toBe('12.4%');
     });
+
+    test('supports regional locales and rounds decimal ties in explicit formats', () => {
+        expect(formatValue({value: 1200, numberFormat: {lang: 'en-US'}})).toBe('1,200');
+        expect(
+            formatValue({
+                value: 0.01005,
+                numberFormat: {lang: 'ru-RU', format: 'percent', precision: 2},
+            }),
+        ).toBe('1,01%');
+    });
 });

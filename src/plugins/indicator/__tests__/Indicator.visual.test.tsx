@@ -148,6 +148,7 @@ describe('Indicator visual tests', () => {
             const secondary = screen.container.querySelector(
                 '.chartkit-indicator__secondary-value',
             );
+            const caption = screen.getByText('vs the previous month', {exact: true}).element();
             const scrollable = screen.container.querySelector('.chartkit-indicator__content');
             if (!secondary || !scrollable) {
                 throw new Error('Indicator content is missing');
@@ -157,6 +158,8 @@ describe('Indicator visual tests', () => {
             const textRect = text.getBoundingClientRect();
             expect(textRect.left).toBeGreaterThanOrEqual(secondaryRect.left);
             expect(textRect.right).toBeLessThanOrEqual(secondaryRect.right);
+            expect(caption.getBoundingClientRect().width).toBeGreaterThan(0);
+            expect(caption.getAttribute('title')).toBe('vs the previous month');
             expect(scrollable.scrollWidth).toBeGreaterThan(scrollable.clientWidth);
 
             scrollable.scrollLeft = scrollable.scrollWidth;
@@ -164,7 +167,13 @@ describe('Indicator visual tests', () => {
                 .poll(() => {
                     const viewport = scrollable.getBoundingClientRect();
                     const value = text.getBoundingClientRect();
-                    return value.left >= viewport.left && value.right <= viewport.right;
+                    const captionRect = caption.getBoundingClientRect();
+                    return (
+                        value.left >= viewport.left &&
+                        value.right <= viewport.right &&
+                        captionRect.left >= viewport.left &&
+                        captionRect.right <= viewport.right
+                    );
                 })
                 .toBe(true);
         }

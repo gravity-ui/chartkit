@@ -97,7 +97,8 @@
         display: grid;
         grid-auto-flow: column;
         grid-template-columns: max-content;
-        grid-auto-columns: minmax(0, 1fr);
+        // Keep an ellipsis visible so a truncated caption can still show its tooltip.
+        grid-auto-columns: minmax(1em, 1fr);
         align-items: center;
         gap: calc(var(--g-spacing-1) + var(--g-spacing-half));
         min-width: 0;
@@ -144,5 +145,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         color: var(--g-color-text-secondary);
+
+        &:empty {
+            display: none;
+        }
     }
 }
