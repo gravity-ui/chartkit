@@ -1,16 +1,17 @@
 import type {MigrationResult, MigrationWarning} from '../../shared/migration';
 import type {
     IndicatorFormatOptions,
+    IndicatorWidgetInput,
+    IndicatorWidgetInputItem,
     NormalizedIndicatorWidgetConfig,
     NormalizedIndicatorWidgetConfigItem,
 } from '../internal-types';
-import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types';
 
 type IndicatorMigrationWarning = MigrationWarning<'indicator-content' | 'indicator-color'>;
 
 /** Return the original formatNumber options, preserving application metadata and object identity. */
 export function getPrimaryValueFormatOptions(
-    item: IndicatorWidgetDataItem,
+    item: IndicatorWidgetInputItem,
 ): IndicatorFormatOptions {
     if (item.primaryValue) {
         return item.primaryValue;
@@ -22,7 +23,7 @@ export function getPrimaryValueFormatOptions(
 }
 
 function migratePrimaryValue(
-    item: IndicatorWidgetDataItem,
+    item: IndicatorWidgetInputItem,
 ): NormalizedIndicatorWidgetConfigItem['primaryValue'] {
     const value = getPrimaryValueFormatOptions(item);
     if (item.primaryValue) {
@@ -42,7 +43,7 @@ function migratePrimaryValue(
  * Normalize indicator configuration without mutating input, invoking callbacks or logging.
  */
 export function normalizeIndicatorData(
-    input: IndicatorWidgetData,
+    input: IndicatorWidgetInput,
 ): NormalizedIndicatorWidgetConfig {
     const data = input.data?.map((item): NormalizedIndicatorWidgetConfigItem => {
         const primaryValue = migratePrimaryValue(item);
@@ -68,7 +69,7 @@ export function normalizeIndicatorData(
 
 /** Normalize configuration and collect diagnostics for an explicit migration. */
 export function migrateIndicatorDataFromV9ToV10(
-    input: IndicatorWidgetData,
+    input: IndicatorWidgetInput,
 ): MigrationResult<NormalizedIndicatorWidgetConfig, IndicatorMigrationWarning> {
     const data = normalizeIndicatorData(input);
     const warnings: IndicatorMigrationWarning[] = [];

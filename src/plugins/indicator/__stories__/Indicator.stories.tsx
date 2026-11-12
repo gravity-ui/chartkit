@@ -7,8 +7,8 @@ import {action} from 'storybook/actions';
 import {IndicatorPlugin} from '../';
 import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
-import type {ChartKitRef} from '../../../types';
-import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types';
+import type {ChartKitProps, ChartKitRef} from '../../../types';
+import type {IndicatorWidgetDataItem} from '../types';
 
 interface ChartStoryProps {
     color: string;
@@ -20,7 +20,7 @@ interface ChartStoryProps {
 const ChartStory = ({color, size, title, nowrap}: ChartStoryProps) => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
-    const resultData: IndicatorWidgetData = {
+    const resultData: ChartKitProps<'indicator'>['data'] = {
         data: [{primaryValue: {value: 1539577973, color}, size, title, nowrap}],
     };
 

@@ -48,9 +48,13 @@ the configuration without deprecated fields. Their imports from
 Use `LegacyIndicatorWidgetData` and `LegacyIndicatorWidgetDataItem` for the old
 configuration accepted by the migration adapter.
 
-In v9, only the shared `IndicatorWidgetData` and `IndicatorWidgetDataItem` types
-are public. They accept both forms, with the old fields marked as deprecated.
-The types without deprecated fields remain internal until the major release.
+In v9, `IndicatorWidgetData` and `IndicatorWidgetDataItem` keep the legacy
+contract with required `content.current`. Existing interfaces can still extend
+them, and existing code can read `item.content.current` without a guard.
+
+Use `ChartKitProps<'indicator'>['data']` for input containing `primaryValue`
+or a mix of new and legacy items. The types without deprecated fields remain
+internal until the major release.
 
 `title`, `size`, `nowrap`, `defaultColor`, and `formatNumber` use the same options.
 

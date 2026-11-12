@@ -4,6 +4,7 @@ import {render} from '../../../../test-utils/utils.js';
 import {ChartKit} from '../../../components/ChartKit.js';
 import {settings} from '../../../libs/index.js';
 import {IndicatorPlugin} from '../index.js';
+import type {IndicatorWidgetInputItem} from '../internal-types.js';
 import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types.js';
 
 const indicatorData: IndicatorWidgetData = {
@@ -96,7 +97,7 @@ describe('Indicator visual tests', () => {
             },
         } satisfies IndicatorWidgetDataItem;
         const renderIndicator = (
-            dataItem: IndicatorWidgetDataItem,
+            dataItem: IndicatorWidgetInputItem,
             width: number | string = '100%',
         ) => (
             <div data-qa="indicator-secondary-wrapper" style={{height: 300, width}}>
@@ -265,7 +266,7 @@ describe('Indicator visual tests', () => {
             value: 0.124,
             numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
         };
-        const renderIndicator = (item: IndicatorWidgetDataItem) => (
+        const renderIndicator = (item: IndicatorWidgetInputItem) => (
             <div data-qa="indicator-formats-wrapper" style={{height: 300, width: '100%'}}>
                 <ChartKit type="indicator" data={{data: [item]}} formatNumber={formatNumber} />
             </div>

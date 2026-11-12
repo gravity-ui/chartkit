@@ -6,12 +6,12 @@ Register `IndicatorPlugin` from `@gravity-ui/chartkit/indicator` and pass the
 configuration to `<ChartKit type="indicator" data={data} />`:
 
 ```tsx
-import ChartKit, {settings} from '@gravity-ui/chartkit';
-import {IndicatorPlugin, type IndicatorWidgetData} from '@gravity-ui/chartkit/indicator';
+import ChartKit, {settings, type ChartKitProps} from '@gravity-ui/chartkit';
+import {IndicatorPlugin} from '@gravity-ui/chartkit/indicator';
 
 settings.set({plugins: [IndicatorPlugin]});
 
-const data: IndicatorWidgetData = {
+const data: ChartKitProps<'indicator'>['data'] = {
   data: [
     {
       title: 'Revenue',
@@ -47,9 +47,13 @@ The application computes differences, chooses colors and localizes captions.
 ## Configuration
 
 The widget configuration contains a `data` array with one entry per indicator.
-Use `IndicatorWidgetData` for the configuration type and
-`IndicatorWidgetDataItem` for an individual item. Use `ChartKitProps<'indicator'>`
-for the props of a wrapper around `<ChartKit type="indicator" />`.
+Use `ChartKitProps<'indicator'>['data']` for configurations with `primaryValue`
+or a mix of new and legacy items. Use `ChartKitProps<'indicator'>` for the props
+of a wrapper around `<ChartKit type="indicator" />`.
+
+`IndicatorWidgetData` and `IndicatorWidgetDataItem` retain the legacy contract
+with required `content.current`, so existing TypeScript wrappers and interfaces
+can keep using them.
 
 | Item property    | Description                                                               | Default                               |
 | ---------------- | ------------------------------------------------------------------------- | ------------------------------------- |

@@ -39,21 +39,13 @@ type LegacyIndicatorContent = {
 };
 
 export type IndicatorWidgetDataItem = IndicatorItemOptions & {
+    /** @deprecated Use primaryValue in ChartKitProps<'indicator'>['data']. */
+    content: LegacyIndicatorContent;
+    primaryValue?: IndicatorPrimaryValue;
     /** @deprecated Use primaryValue.color. */
     color?: string;
     secondaryValue?: IndicatorSecondaryValue;
-} & (
-        | {
-              primaryValue: IndicatorPrimaryValue;
-              /** @deprecated Use primaryValue. */
-              content?: LegacyIndicatorContent;
-          }
-        | {
-              primaryValue?: IndicatorPrimaryValue;
-              /** @deprecated Use primaryValue. */
-              content: LegacyIndicatorContent;
-          }
-    );
+};
 
 export type IndicatorWidgetData = {
     data?: IndicatorWidgetDataItem[];

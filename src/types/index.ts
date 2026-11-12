@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {ChartKitError} from '../libs';
+import type {IndicatorWidgetInput} from '../plugins/indicator/internal-types';
 
 import type {ChartKitWidget} from './widget';
 
@@ -45,7 +46,7 @@ export type ChartKitRenderPluginLoader = () => React.ReactNode;
 
 export type ChartKitProps<T extends ChartKitType> = {
     type: T;
-    data: ChartKitWidget[T]['data'];
+    data: ChartKitWidget[T]['data'] | (T extends 'indicator' ? IndicatorWidgetInput : never);
     id?: string;
     isMobile?: boolean;
     onLoad?: (data?: ChartKitOnLoadData<T>) => void;
