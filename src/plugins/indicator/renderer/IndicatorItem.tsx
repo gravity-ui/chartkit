@@ -5,6 +5,7 @@ import {block} from '../../../utils/cn';
 import type {IndicatorWidgetDataItem} from '../types';
 
 import {IndicatorSecondaryValue} from './IndicatorSecondaryValue';
+import {formatValue} from './utils';
 
 const b = block('indicator');
 
@@ -20,7 +21,9 @@ export const IndicatorItem = (
 
     let value = content.current.value;
 
-    if (formatNumber && typeof value === 'number') {
+    if (content.current.numberFormat) {
+        value = formatValue(content.current);
+    } else if (formatNumber && typeof value === 'number') {
         value = formatNumber(value, content.current);
     }
 

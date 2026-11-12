@@ -4,7 +4,11 @@ import {render} from '../../../../test-utils/utils.js';
 import {ChartKit} from '../../../components/ChartKit.js';
 import {settings} from '../../../libs/index.js';
 import {IndicatorPlugin} from '../index.js';
-import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types.js';
+import type {
+    IndicatorSecondaryValue,
+    IndicatorWidgetData,
+    IndicatorWidgetDataItem,
+} from '../types.js';
 
 const indicatorData: IndicatorWidgetData = {
     data: [
@@ -72,6 +76,7 @@ describe('Indicator visual tests', () => {
                 color: 'var(--g-color-text-positive)',
                 view: 'badge',
                 arrow: 'up',
+                arrowLabel: 'Increase',
             },
         } satisfies IndicatorWidgetDataItem;
         const renderIndicator = (
@@ -85,6 +90,7 @@ describe('Indicator visual tests', () => {
         const screen = await render(renderIndicator(item), options);
 
         await expect.element(screen.getByText('+12.4%', {exact: true})).toBeVisible();
+        await expect.element(screen.getByRole('img', {name: 'Increase'})).toBeVisible();
         await expect(screen.getByTestId('indicator-secondary-wrapper')).toMatchScreenshot();
 
         for (const {width, size} of [
@@ -127,5 +133,131 @@ describe('Indicator visual tests', () => {
                 })
                 .toBe(true);
         }
+    });
+
+    test('secondary value below: text with a downward arrow', async () => {
+        settings.set({plugins: [IndicatorPlugin], lang: 'en'});
+
+        const screen = await render(
+            <div data-qa="indicator-secondary-wrapper" style={{height: 300, width: '100%'}}>
+                <ChartKit
+                    type="indicator"
+                    data={{
+                        data: [
+                            {
+                                title: 'Revenue',
+                                content: {current: {value: 1200}},
+                                secondaryValue: {
+                                    value: -0.124,
+                                    numberFormat: {format: 'percent', precision: 1},
+                                    caption: 'vs the previous month',
+                                    arrow: 'down',
+                                    arrowLabel: 'Decrease',
+                                    color: 'var(--g-color-text-danger)',
+                                },
+                            },
+                        ],
+                    }}
+                />
+            </div>,
+            options,
+        );
+
+        await expect.element(screen.getByText('-12.4%', {exact: true})).toBeVisible();
+        await expect.element(screen.getByRole('img', {name: 'Decrease'})).toBeVisible();
+
+        const mainRect = screen.getByText('1200', {exact: true}).element().getBoundingClientRect();
+        const secondaryRect = screen
+            .getByText('-12.4%', {exact: true})
+            .element()
+            .getBoundingClientRect();
+        expect(secondaryRect.top).toBeGreaterThanOrEqual(mainRect.bottom);
+
+        await expect(screen.getByTestId('indicator-secondary-wrapper')).toMatchScreenshot();
+    });
+
+    test('secondary value below: badge without color or caption', async () => {
+        settings.set({plugins: [IndicatorPlugin], lang: 'en'});
+
+        const screen = await render(
+            <div data-qa="indicator-secondary-wrapper" style={{height: 300, width: '100%'}}>
+                <ChartKit
+                    type="indicator"
+                    data={{
+                        data: [
+                            {
+                                title: 'Revenue',
+                                content: {current: {value: 1200}},
+                                secondaryValue: {value: '12.4%', view: 'badge'},
+                            },
+                        ],
+                    }}
+                />
+            </div>,
+            options,
+        );
+
+        await expect.element(screen.getByText('12.4%', {exact: true})).toBeVisible();
+
+        const mainRect = screen.getByText('1200', {exact: true}).element().getBoundingClientRect();
+        const secondaryRect = screen
+            .getByText('12.4%', {exact: true})
+            .element()
+            .getBoundingClientRect();
+        expect(secondaryRect.top).toBeGreaterThanOrEqual(mainRect.bottom);
+
+        await expect(screen.getByTestId('indicator-secondary-wrapper')).toMatchScreenshot();
+    });
+
+    test('independent number formats', async () => {
+        settings.set({plugins: [IndicatorPlugin], lang: 'en'});
+        const formatNumber = vi.fn(() => 'custom result');
+        const current = {
+            value: 1234.56,
+            precision: 2,
+            customMetadata: 'main value',
+        };
+        const mainNumberFormat = {precision: 0, showRankDelimiter: true, postfix: ' USD'};
+        const secondaryValue: IndicatorSecondaryValue = {
+            value: 0.124,
+            numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
+        };
+        const renderIndicator = (item: IndicatorWidgetDataItem) => (
+            <div data-qa="indicator-formats-wrapper" style={{height: 300, width: '100%'}}>
+                <ChartKit type="indicator" data={{data: [item]}} formatNumber={formatNumber} />
+            </div>
+        );
+        const screen = await render(
+            renderIndicator({
+                content: {current: {...current, numberFormat: mainNumberFormat}},
+                secondaryValue,
+            }),
+            options,
+        );
+
+        await expect.element(screen.getByText('1,235 USD', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('+12.4%', {exact: true})).toBeVisible();
+        expect(formatNumber).not.toHaveBeenCalled();
+        await expect(screen.getByTestId('indicator-formats-wrapper')).toMatchScreenshot();
+
+        await screen.rerender(renderIndicator({content: {current}, secondaryValue}));
+
+        await expect.element(screen.getByText('custom result', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('+12.4%', {exact: true})).toBeVisible();
+        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(current.value, current);
+
+        formatNumber.mockClear();
+        await screen.rerender(
+            renderIndicator({
+                content: {current: {...current, numberFormat: mainNumberFormat}},
+                secondaryValue: {value: secondaryValue.value},
+            }),
+        );
+
+        await expect.element(screen.getByText('1,235 USD', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('custom result', {exact: true})).toBeVisible();
+        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(secondaryValue.value, {
+            value: secondaryValue.value,
+        });
     });
 });

@@ -1,5 +1,5 @@
 import {settings} from '../../../../libs';
-import type {FormatNumberOptions} from '../../index';
+import type {IndicatorNumberFormat} from '../../index';
 import {formatValue} from '../utils';
 
 describe('formatValue', () => {
@@ -7,34 +7,23 @@ describe('formatValue', () => {
         settings.set({lang: 'en'});
     });
 
-    test('passes numbers and their formatting options to the external formatter', () => {
-        const numberFormat: FormatNumberOptions = {
+    test('explicit options take precedence over the external formatter', () => {
+        const numberFormat: IndicatorNumberFormat = {
             format: 'percent',
             precision: 1,
             signDisplay: 'exceptZero',
         };
         const formatNumber = vi.fn(() => 'custom result');
 
-        expect(formatValue({value: 0.124, numberFormat}, formatNumber)).toBe('custom result');
-        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(0.124, {
-            ...numberFormat,
-            value: 0.124,
-        });
+        expect(formatValue({value: 0.124, numberFormat}, formatNumber)).toBe('+12.4%');
+        expect(formatNumber).not.toHaveBeenCalled();
     });
 
-    test('preserves the actual value when formatting options come from another value', () => {
-        const mainValueFormatting = {value: 1000, format: 'percent' as const, precision: 1};
-        const formatNumber = vi.fn((_value: number, options: {value: number}) =>
-            String(options.value),
-        );
+    test('an empty explicit format uses the built-in defaults', () => {
+        const formatNumber = vi.fn(() => 'custom result');
 
-        expect(formatValue({value: 0.124, numberFormat: mainValueFormatting}, formatNumber)).toBe(
-            '0.124',
-        );
-        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(0.124, {
-            ...mainValueFormatting,
-            value: 0.124,
-        });
+        expect(formatValue({value: 1200, numberFormat: {}}, formatNumber)).toBe('1,200');
+        expect(formatNumber).not.toHaveBeenCalled();
     });
 
     test.each(['+12.4%', '—', '0.124'])('preserves the supplied string %s', (value) => {

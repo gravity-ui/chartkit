@@ -123,6 +123,7 @@ export const WithSecondaryValue: StoryObj<SecondaryValueStoryProps> = {
             numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
             caption: 'vs the previous month',
             arrow: 'up',
+            arrowLabel: 'Increase',
             color: 'var(--g-color-text-positive)',
             view: 'badge',
         },

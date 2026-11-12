@@ -25,16 +25,18 @@ export function IndicatorSecondaryValue({
     size: IndicatorWidgetDataItem['size'];
     formatNumber?: ChartKitProps<'indicator'>['formatNumber'];
 }) {
-    const {caption, view = 'text', arrow, color} = secondaryValue;
+    const {caption, view = 'text', arrow, arrowLabel, color} = secondaryValue;
     const formattedValue = formatValue(secondaryValue, formatNumber);
     const content = (
         <React.Fragment>
             {arrow && (
-                <Icon
+                <span
                     className={b('secondary-value-arrow')}
-                    data={arrow === 'up' ? ArrowUpIcon : ArrowDownIcon}
-                    size={14}
-                />
+                    role={arrowLabel ? 'img' : undefined}
+                    aria-label={arrowLabel}
+                >
+                    <Icon data={arrow === 'up' ? ArrowUpIcon : ArrowDownIcon} size={14} />
+                </span>
             )}
             <span className={b('secondary-value-text')}>{formattedValue}</span>
         </React.Fragment>
