@@ -1,4 +1,4 @@
-import type {IndicatorWidgetConfig} from '../../types';
+import type {IndicatorWidgetData} from '../../types';
 import {getPrimaryValueFormatOptions, migrateIndicatorDataFromV9ToV10} from '../from-v9-to-v10';
 
 describe('migrateIndicatorDataFromV9ToV10', () => {
@@ -23,7 +23,7 @@ describe('migrateIndicatorDataFromV9ToV10', () => {
         const input = Object.freeze({
             data: [modern, legacy],
             defaultColor: 'black',
-        }) satisfies IndicatorWidgetConfig;
+        }) satisfies IndicatorWidgetData;
         Object.freeze(input.data);
 
         const {data, warnings} = migrateIndicatorDataFromV9ToV10(input);

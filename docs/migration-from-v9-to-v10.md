@@ -4,12 +4,10 @@
 
 ## Indicator configuration
 
-| v9                        | v10                         |
-| ------------------------- | --------------------------- |
-| `IndicatorWidgetData`     | `IndicatorWidgetConfig`     |
-| `IndicatorWidgetDataItem` | `IndicatorWidgetConfigItem` |
-| `content.current`         | `primaryValue`              |
-| Item `color`              | `primaryValue.color`        |
+| v9                | v10                  |
+| ----------------- | -------------------- |
+| `content.current` | `primaryValue`       |
+| Item `color`      | `primaryValue.color` |
 
 Before:
 
@@ -25,10 +23,10 @@ const data: IndicatorWidgetData = {
 };
 ```
 
-After:
+After (v10):
 
 ```ts
-const data: IndicatorWidgetConfig = {
+const data: IndicatorWidgetData = {
   data: [
     {
       title: 'Revenue',
@@ -41,10 +39,22 @@ const data: IndicatorWidgetConfig = {
 };
 ```
 
-Import the configuration types from `@gravity-ui/chartkit/indicator`.
+## Public types in v10
+
+Keep `IndicatorWidgetData` and `IndicatorWidgetDataItem` as the public names for
+the configuration without deprecated fields. Their imports from
+`@gravity-ui/chartkit/indicator` do not need to change.
+
+Use `LegacyIndicatorWidgetData` and `LegacyIndicatorWidgetDataItem` for the old
+configuration accepted by the migration adapter.
+
+In v9, only the shared `IndicatorWidgetData` and `IndicatorWidgetDataItem` types
+are public. They accept both forms, with the old fields marked as deprecated.
+The types without deprecated fields remain internal until the major release.
+
 `title`, `size`, `nowrap`, `defaultColor`, and `formatNumber` use the same options.
 
-In configurations containing both forms, `primaryValue` takes precedence over
+In v9 configurations containing both forms, `primaryValue` takes precedence over
 `content.current`. If `primaryValue.color` is omitted, the item-level `color` is
 used; an explicitly empty `primaryValue.color` uses `defaultColor`.
 

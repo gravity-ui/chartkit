@@ -4,12 +4,7 @@ import {render} from '../../../../test-utils/utils.js';
 import {ChartKit} from '../../../components/ChartKit.js';
 import {settings} from '../../../libs/index.js';
 import {IndicatorPlugin} from '../index.js';
-import type {
-    IndicatorSecondaryValue,
-    IndicatorWidgetConfigItem,
-    IndicatorWidgetData,
-    IndicatorWidgetDataItem,
-} from '../types.js';
+import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types.js';
 
 const indicatorData: IndicatorWidgetData = {
     data: [
@@ -101,7 +96,7 @@ describe('Indicator visual tests', () => {
             },
         } satisfies IndicatorWidgetDataItem;
         const renderIndicator = (
-            dataItem: IndicatorWidgetConfigItem,
+            dataItem: IndicatorWidgetDataItem,
             width: number | string = '100%',
         ) => (
             <div data-qa="indicator-secondary-wrapper" style={{height: 300, width}}>
@@ -257,11 +252,11 @@ describe('Indicator visual tests', () => {
             customMetadata: 'main value',
         };
         const mainNumberFormat = {precision: 0, showRankDelimiter: true, postfix: ' USD'};
-        const secondaryValue: IndicatorSecondaryValue = {
+        const secondaryValue: NonNullable<IndicatorWidgetDataItem['secondaryValue']> = {
             value: 0.124,
             numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
         };
-        const renderIndicator = (item: IndicatorWidgetConfigItem) => (
+        const renderIndicator = (item: IndicatorWidgetDataItem) => (
             <div data-qa="indicator-formats-wrapper" style={{height: 300, width: '100%'}}>
                 <ChartKit type="indicator" data={{data: [item]}} formatNumber={formatNumber} />
             </div>

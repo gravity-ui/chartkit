@@ -7,11 +7,11 @@ configuration to `<ChartKit type="indicator" data={data} />`:
 
 ```tsx
 import ChartKit, {settings} from '@gravity-ui/chartkit';
-import {IndicatorPlugin, type IndicatorWidgetConfig} from '@gravity-ui/chartkit/indicator';
+import {IndicatorPlugin, type IndicatorWidgetData} from '@gravity-ui/chartkit/indicator';
 
 settings.set({plugins: [IndicatorPlugin]});
 
-const data: IndicatorWidgetConfig = {
+const data: IndicatorWidgetData = {
   data: [
     {
       title: 'Revenue',
@@ -47,17 +47,17 @@ The application computes differences, chooses colors and localizes captions.
 ## Configuration
 
 The widget configuration contains a `data` array with one entry per indicator.
-Use `IndicatorWidgetConfig` for the configuration type and
-`IndicatorWidgetConfigItem` for an individual item. Use `ChartKitProps<'indicator'>`
+Use `IndicatorWidgetData` for the configuration type and
+`IndicatorWidgetDataItem` for an individual item. Use `ChartKitProps<'indicator'>`
 for the props of a wrapper around `<ChartKit type="indicator" />`.
 
-| Item property    | Description                                                               | Default  |
-| ---------------- | ------------------------------------------------------------------------- | -------- |
-| `primaryValue`   | Main value (`IndicatorPrimaryValue`)                                      | Required |
-| `secondaryValue` | Additional value (`IndicatorSecondaryValue`)                              | None     |
-| `title`          | Text displayed above the main value                                       | None     |
-| `size`           | `s`, `m`, `l`, or `xl`; controls both values                              | `m`      |
-| `nowrap`         | Truncate the title to one line and show its full text in a native tooltip | `false`  |
+| Item property    | Description                                                               | Default                               |
+| ---------------- | ------------------------------------------------------------------------- | ------------------------------------- |
+| `primaryValue`   | Main value                                                                | Required unless using the legacy form |
+| `secondaryValue` | Additional value                                                          | None                                  |
+| `title`          | Text displayed above the main value                                       | None                                  |
+| `size`           | `s`, `m`, `l`, or `xl`; controls both values                              | `m`                                   |
+| `nowrap`         | Truncate the title to one line and show its full text in a native tooltip | `false`                               |
 
 Both values accept `value`, `numberFormat`, and `color`. Primary values can also
 carry application metadata for the `formatNumber` callback.
@@ -70,7 +70,7 @@ Set the widget's `defaultColor` to provide a fallback color for primary values.
 | Secondary value property | Description                                                                      | Default            |
 | ------------------------ | -------------------------------------------------------------------------------- | ------------------ |
 | `value`                  | A number or an already formatted string                                          | Required           |
-| `numberFormat`           | `FormatNumberOptions` applied to this value                                      | None               |
+| `numberFormat`           | Formatting options applied to this value                                         | None               |
 | `caption`                | A caption (`ReactNode`); string captions also have a native tooltip              | None               |
 | `position`               | `bottom` or `right`                                                              | `bottom`           |
 | `color`                  | A CSS color for the value and arrow, including theme variables                   | Primary text color |
@@ -86,7 +86,7 @@ decorative, so its meaning should be conveyed by the value or caption as well.
 
 Set `primaryValue.numberFormat` for the main value and
 `secondaryValue.numberFormat` for the secondary value. The two configurations are
-independent and use `FormatNumberOptions`, exported from `@gravity-ui/chartkit/indicator`:
+independent and accept the following options:
 
 | Option              | Description                                                                                | Default              |
 | ------------------- | ------------------------------------------------------------------------------------------ | -------------------- |
@@ -127,8 +127,7 @@ values and omits the sign for values rounded to zero.
 ## Legacy configuration
 
 The legacy form supplies the main value through `content.current.value` and its
-color through the item-level `color` property. Use `IndicatorWidgetData` for the
-configuration type and `IndicatorWidgetDataItem` for an individual item:
+color through the item-level `color` property:
 
 ```tsx
 import type {IndicatorWidgetData} from '@gravity-ui/chartkit/indicator';

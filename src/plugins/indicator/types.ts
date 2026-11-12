@@ -11,7 +11,7 @@ type IndicatorValue = {
     color?: string;
 };
 
-export type IndicatorPrimaryValue = IndicatorValue & Record<string, unknown>;
+type IndicatorPrimaryValue = IndicatorValue & Record<string, unknown>;
 
 type IndicatorItemOptions = {
     size?: 's' | 'm' | 'l' | 'xl';
@@ -19,7 +19,7 @@ type IndicatorItemOptions = {
     nowrap?: boolean;
 };
 
-export type IndicatorSecondaryValue = IndicatorValue & {
+type IndicatorSecondaryValue = IndicatorValue & {
     caption?: ReactNode;
     /** Defaults to bottom. */
     position?: 'bottom' | 'right';
@@ -33,27 +33,12 @@ export type IndicatorSecondaryValue = IndicatorValue & {
     };
 };
 
-/** @deprecated Use IndicatorWidgetConfigItem for new configurations. */
+type LegacyIndicatorContent = {
+    /** @deprecated Use primaryValue. */
+    current: {value: string | number} & Record<string, unknown>;
+};
+
 export type IndicatorWidgetDataItem = IndicatorItemOptions & {
-    /** @deprecated Use primaryValue instead of content.current. */
-    content: {
-        /** @deprecated Use primaryValue. */
-        current: {
-            value: string | number;
-        } & Record<string, unknown>;
-    };
-    /** @deprecated Use primaryValue.color. */
-    color?: string;
-    secondaryValue?: IndicatorSecondaryValue;
-};
-
-/** @deprecated Use IndicatorWidgetConfig for new configurations. */
-export type IndicatorWidgetData = {
-    data?: IndicatorWidgetDataItem[];
-    defaultColor?: string;
-};
-
-export type IndicatorWidgetConfigItem = IndicatorItemOptions & {
     /** @deprecated Use primaryValue.color. */
     color?: string;
     secondaryValue?: IndicatorSecondaryValue;
@@ -61,17 +46,17 @@ export type IndicatorWidgetConfigItem = IndicatorItemOptions & {
         | {
               primaryValue: IndicatorPrimaryValue;
               /** @deprecated Use primaryValue. */
-              content?: IndicatorWidgetDataItem['content'];
+              content?: LegacyIndicatorContent;
           }
         | {
               primaryValue?: IndicatorPrimaryValue;
               /** @deprecated Use primaryValue. */
-              content: IndicatorWidgetDataItem['content'];
+              content: LegacyIndicatorContent;
           }
     );
 
-export type IndicatorWidgetConfig = {
-    data?: IndicatorWidgetConfigItem[];
+export type IndicatorWidgetData = {
+    data?: IndicatorWidgetDataItem[];
     /** Fallback color for primary values only. */
     defaultColor?: string;
 };

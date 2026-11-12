@@ -2,8 +2,7 @@ import React from 'react';
 
 import {ChartKitPlugin} from '../../types';
 
-export * from './types';
-export type {FormatNumberOptions} from '../shared';
+export type {IndicatorWidgetData, IndicatorWidgetDataItem} from './types';
 
 export const IndicatorPlugin: ChartKitPlugin = {
     type: 'indicator',

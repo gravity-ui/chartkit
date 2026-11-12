@@ -2,7 +2,7 @@ import type {ChartData} from '@gravity-ui/charts';
 
 import type {SplitLayoutType} from '../components/SplitPane/types';
 import type {Highcharts, HighchartsWidgetData, StringParams} from '../plugins/highcharts/types';
-import type {IndicatorWidgetConfig} from '../plugins/indicator/types';
+import type {IndicatorWidgetData} from '../plugins/indicator/types';
 import type {CustomTooltipProps, Yagr, YagrWidgetData} from '../plugins/yagr/types';
 
 export interface ChartKitWidget {
@@ -12,7 +12,7 @@ export interface ChartKitWidget {
         tooltip?: <T extends CustomTooltipProps = CustomTooltipProps>(props: T) => React.ReactNode;
     };
     indicator: {
-        data: IndicatorWidgetConfig;
+        data: IndicatorWidgetData;
         widget: never;
         formatNumber?: <T = any>(value: number, options?: T) => string;
     };

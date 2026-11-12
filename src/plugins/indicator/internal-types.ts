@@ -1,20 +1,15 @@
-import type {
-    IndicatorPrimaryValue,
-    IndicatorSecondaryValue,
-    IndicatorWidgetConfig,
-    IndicatorWidgetConfigItem,
-} from './types';
+import type {IndicatorWidgetData, IndicatorWidgetDataItem} from './types';
 
-export type IndicatorFormatOptions = Pick<IndicatorPrimaryValue, 'value'> & Record<string, unknown>;
+export type IndicatorFormatOptions = {value: string | number} & Record<string, unknown>;
 
 export type NormalizedIndicatorWidgetConfigItem = Omit<
-    IndicatorWidgetConfigItem,
+    IndicatorWidgetDataItem,
     'content' | 'color' | 'primaryValue'
 > & {
-    primaryValue: IndicatorPrimaryValue;
+    primaryValue: NonNullable<IndicatorWidgetDataItem['primaryValue']>;
 };
 
-export type NormalizedIndicatorWidgetConfig = Omit<IndicatorWidgetConfig, 'data'> & {
+export type NormalizedIndicatorWidgetConfig = Omit<IndicatorWidgetData, 'data'> & {
     data?: NormalizedIndicatorWidgetConfigItem[];
 };
 
@@ -22,6 +17,11 @@ export type IndicatorItemProps = Pick<
     NormalizedIndicatorWidgetConfigItem,
     'title' | 'size' | 'nowrap'
 > & {
-    primaryValue: Pick<IndicatorPrimaryValue, 'color'> & {value: string};
-    secondaryValue?: Omit<IndicatorSecondaryValue, 'value' | 'numberFormat'> & {value: string};
+    primaryValue: Pick<NormalizedIndicatorWidgetConfigItem['primaryValue'], 'color'> & {
+        value: string;
+    };
+    secondaryValue?: Omit<
+        NonNullable<NormalizedIndicatorWidgetConfigItem['secondaryValue']>,
+        'value' | 'numberFormat'
+    > & {value: string};
 };

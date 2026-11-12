@@ -1,10 +1,12 @@
 import {settings} from '../../../libs';
 import {formatNumber as defaultFormatNumber} from '../../shared';
-import type {IndicatorFormatOptions} from '../internal-types';
-import type {IndicatorPrimaryValue} from '../types';
+import type {IndicatorFormatOptions, NormalizedIndicatorWidgetConfigItem} from '../internal-types';
 
 export function formatValue(
-    {value, numberFormat}: Pick<IndicatorPrimaryValue, 'value' | 'numberFormat'>,
+    {
+        value,
+        numberFormat,
+    }: Pick<NormalizedIndicatorWidgetConfigItem['primaryValue'], 'value' | 'numberFormat'>,
     formatNumber?: (value: number, options: {value: number | string}) => string,
     formatOptions?: IndicatorFormatOptions,
 ): string {

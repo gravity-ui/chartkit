@@ -8,15 +8,11 @@ import {IndicatorPlugin} from '../';
 import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
 import type {ChartKitRef} from '../../../types';
-import type {
-    IndicatorSecondaryValue,
-    IndicatorWidgetConfig,
-    IndicatorWidgetConfigItem,
-} from '../types';
+import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types';
 
 interface ChartStoryProps {
     color: string;
-    size: IndicatorWidgetConfigItem['size'];
+    size: IndicatorWidgetDataItem['size'];
     title: string;
     nowrap: boolean;
 }
@@ -24,7 +20,7 @@ interface ChartStoryProps {
 const ChartStory = ({color, size, title, nowrap}: ChartStoryProps) => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
-    const resultData: IndicatorWidgetConfig = {
+    const resultData: IndicatorWidgetData = {
         data: [{primaryValue: {value: 1539577973, color}, size, title, nowrap}],
     };
 
@@ -69,8 +65,8 @@ export const Showcase: StoryObj<typeof ChartStory> = {
 };
 
 interface SecondaryValueStoryProps extends ChartStoryProps {
-    secondaryValuePosition: IndicatorSecondaryValue['position'];
-    secondaryValue: Omit<IndicatorSecondaryValue, 'position'>;
+    secondaryValuePosition: NonNullable<IndicatorWidgetDataItem['secondaryValue']>['position'];
+    secondaryValue: Omit<NonNullable<IndicatorWidgetDataItem['secondaryValue']>, 'position'>;
 }
 
 export const WithSecondaryValue: StoryObj<SecondaryValueStoryProps> = {

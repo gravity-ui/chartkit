@@ -216,19 +216,21 @@ import {GravityChartsPlugin, migrateChartDataV1} from '${name}/gravity-charts';
 import {HighchartsPlugin} from '${name}/highcharts';
 import type {HighchartsWidgetData} from '${name}/highcharts';
 import {IndicatorPlugin} from '${name}/indicator';
-import type {FormatNumberOptions, IndicatorSecondaryValue, IndicatorWidgetConfig, IndicatorWidgetData, IndicatorWidgetDataItem} from '${name}/indicator';
+import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '${name}/indicator';
 import {YagrPlugin} from '${name}/yagr';
 
 settings.set({plugins: [GravityChartsPlugin, HighchartsPlugin, IndicatorPlugin, YagrPlugin]});
 
 const legacyIndicator: IndicatorWidgetDataItem = {content: {current: {value: 42, numberFormat: 'application metadata'}}};
-const legacyIndicatorValue: string | number = legacyIndicator.content.current.value;
+if (legacyIndicator.content) {
+    const legacyIndicatorValue: string | number = legacyIndicator.content.current.value;
+}
 const legacyIndicatorData: IndicatorWidgetData = {data: [legacyIndicator]};
 ChartKit({type: 'indicator', data: legacyIndicatorData});
-const numberFormat: FormatNumberOptions = {unitRate: 1, multiplier: 1000, precision: 1};
-const indicatorData: IndicatorWidgetConfig = {data: [{primaryValue: {value: 42, numberFormat}, secondaryValue: {value: 1, arrow: {direction: 'up', ariaLabel: 'Increase'}}}]};
+const numberFormat = {unitRate: 1, multiplier: 1000, precision: 1};
+const indicatorData: IndicatorWidgetData = {data: [{primaryValue: {value: 42, numberFormat}, secondaryValue: {value: 1, arrow: {direction: 'up', ariaLabel: 'Increase'}}}]};
 const publicIndicatorData: ChartKitWidget['indicator']['data'] = indicatorData;
-const indicatorInput: IndicatorWidgetConfig = {data: [legacyIndicator, ...indicatorData.data!]};
+const indicatorInput: IndicatorWidgetData = {data: [legacyIndicator, ...indicatorData.data!]};
 const indicatorProps: ChartKitProps<'indicator'> = {type: 'indicator', data: indicatorInput};
 ChartKit(indicatorProps);
 ChartKit({type: 'indicator', data: indicatorData});
@@ -249,18 +251,24 @@ import {migrateIndicatorDataFromV9ToV10} from '${name}/indicator';
 import type {NormalizedIndicatorWidgetConfig} from '${name}/indicator';
 // @ts-expect-error the shared value shape is internal
 import type {IndicatorValue} from '${name}/indicator';
+// @ts-expect-error clean configuration types are internal
+import type {IndicatorWidgetConfig} from '${name}/indicator';
+// @ts-expect-error clean configuration item types are internal
+import type {IndicatorWidgetConfigItem} from '${name}/indicator';
+// @ts-expect-error standalone formatting types are internal
+import type {FormatNumberOptions} from '${name}/indicator';
 // @ts-expect-error the indicator value type must not degrade to any
-const invalidIndicator: IndicatorWidgetConfig = {data: [{primaryValue: {value: false}}]};
+const invalidIndicator: IndicatorWidgetData = {data: [{primaryValue: {value: false}}]};
 // @ts-expect-error the legacy value type must retain its original contract
-const invalidLegacyValue: IndicatorWidgetDataItem['content']['current']['value'] = false;
+const invalidLegacyValue: NonNullable<IndicatorWidgetDataItem['content']>['current']['value'] = false;
 // @ts-expect-error each indicator requires a primary or legacy value
-const emptyIndicator: IndicatorWidgetConfig = {data: [{}]};
+const emptyIndicator: IndicatorWidgetData = {data: [{}]};
 // @ts-expect-error arrows use an object with a direction
-const invalidArrow: IndicatorSecondaryValue = {value: 1, arrow: 'up'};
+const invalidArrow: NonNullable<IndicatorWidgetDataItem['secondaryValue']> = {value: 1, arrow: 'up'};
 // @ts-expect-error arrow directions are restricted to up and down
-const invalidDirection: IndicatorSecondaryValue = {value: 1, arrow: {direction: 'left'}};
+const invalidDirection: NonNullable<IndicatorWidgetDataItem['secondaryValue']> = {value: 1, arrow: {direction: 'left'}};
 // @ts-expect-error labelMode is not a public formatting option
-const invalidNumberFormat: FormatNumberOptions = {labelMode: 'percent'};
+const invalidNumberFormat: IndicatorWidgetDataItem = {primaryValue: {value: 1, numberFormat: {labelMode: 'percent'}}};
 // @ts-expect-error Highcharts tooltip precision must retain its original type
 const invalidTooltipPrecision: TooltipLine['chartKitPrecision'] = true;
 `;
