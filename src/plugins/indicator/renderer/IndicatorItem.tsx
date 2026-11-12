@@ -1,35 +1,20 @@
 import React from 'react';
 
-import type {ChartKitProps} from '../../../types';
 import {block} from '../../../utils/cn';
-import type {IndicatorWidgetDataItem} from '../types';
+import type {IndicatorItemProps} from '../internal-types';
 
 import {IndicatorSecondaryValue} from './IndicatorSecondaryValue';
-import {formatValue} from './utils';
 
 const b = block('indicator');
 
-export const IndicatorItem = (
-    props: IndicatorWidgetDataItem & {
-        defaultColor?: string;
-        formatNumber?: ChartKitProps<'indicator'>['formatNumber'];
-    },
-) => {
-    const {formatNumber, content, color, defaultColor, size, title, nowrap, secondaryValue} = props;
+export const IndicatorItem = (props: IndicatorItemProps) => {
+    const {primaryValue, size, title, nowrap, secondaryValue} = props;
     const mods = {size, nowrap, right: secondaryValue?.position === 'right'};
-    const style: React.CSSProperties = {color: color || defaultColor};
-
-    let value = content.current.value;
-
-    if (content.current.numberFormat) {
-        value = formatValue(content.current);
-    } else if (formatNumber && typeof value === 'number') {
-        value = formatNumber(value, content.current);
-    }
+    const style: React.CSSProperties = {color: primaryValue.color};
 
     const valueContent = (
         <div className={b('item-value')} style={style}>
-            {value}
+            {primaryValue.value}
         </div>
     );
 
@@ -43,11 +28,7 @@ export const IndicatorItem = (
             {secondaryValue ? (
                 <div className={b('value-row')}>
                     {valueContent}
-                    <IndicatorSecondaryValue
-                        secondaryValue={secondaryValue}
-                        size={size}
-                        formatNumber={formatNumber}
-                    />
+                    <IndicatorSecondaryValue secondaryValue={secondaryValue} size={size} />
                 </div>
             ) : (
                 valueContent

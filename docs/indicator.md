@@ -1,8 +1,9 @@
 # Indicator
 
 Register `IndicatorPlugin` from `@gravity-ui/chartkit/indicator` and render
-`<ChartKit type="indicator" data={data} />`. Existing configurations keep their
-layout, colors, title wrapping and number formatting.
+`<ChartKit type="indicator" data={data} />`. Each item has a `primaryValue` and an
+optional `secondaryValue`. Existing configurations keep their layout, colors,
+title wrapping and number formatting.
 
 An item can optionally include `secondaryValue`, an additional value with a
 caption, arrow and badge. For example, an application can calculate a
@@ -10,19 +11,17 @@ comparison and pass the result to the indicator:
 
 ```tsx
 import ChartKit, {settings} from '@gravity-ui/chartkit';
-import {IndicatorPlugin, type IndicatorWidgetData} from '@gravity-ui/chartkit/indicator';
+import {IndicatorPlugin, type IndicatorWidgetConfig} from '@gravity-ui/chartkit/indicator';
 
 settings.set({plugins: [IndicatorPlugin]});
 
-const data: IndicatorWidgetData = {
+const data: IndicatorWidgetConfig = {
   data: [
     {
       title: 'Revenue',
-      content: {
-        current: {
-          value: 1539577,
-          numberFormat: {precision: 0, showRankDelimiter: true},
-        },
+      primaryValue: {
+        value: 1539577,
+        numberFormat: {precision: 0, showRankDelimiter: true},
       },
       size: 'm',
       secondaryValue: {
@@ -36,8 +35,7 @@ const data: IndicatorWidgetData = {
         position: 'right',
         color: 'var(--g-color-text-positive)',
         view: 'badge',
-        arrow: 'up',
-        arrowLabel: 'Increase',
+        arrow: {direction: 'up', ariaLabel: 'Increase'},
       },
     },
   ],
@@ -58,12 +56,25 @@ The application computes differences, chooses colors and localizes captions.
 | `position`               | `bottom` or `right`                                                              | `bottom`           |
 | `color`                  | A CSS color for the value and arrow, including theme variables                   | Primary text color |
 | `view`                   | `text` or `badge`; the badge background is a 15% tint of `color`                 | `text`             |
-| `arrow`                  | `up` or `down`, chosen explicitly by the application                             | None               |
-| `arrowLabel`             | A localized accessible label for the arrow, for example `Increase` or `Decrease` | None               |
+| `arrow.direction`        | `up` or `down`, chosen explicitly by the application                             | None               |
+| `arrow.ariaLabel`        | A localized accessible label for the arrow, for example `Increase` or `Decrease` | None               |
+
+`primaryValue` accepts `value`, `numberFormat`, and `color`. Both values use the
+exported `IndicatorValue` base type. Primary values can also carry application
+metadata for the `formatNumber` callback. `primaryValue.color` takes precedence
+over the widget's `defaultColor`; both affect only the primary value.
+
+Use `IndicatorWidgetConfig`, `IndicatorWidgetConfigItem`, `IndicatorPrimaryValue`,
+`IndicatorSecondaryValue`, and `IndicatorArrow` for new configurations.
+`IndicatorWidgetConfig` accepts legacy fields as well, including partially migrated items.
+Use `IndicatorProps` when typing a wrapper around `<ChartKit type="indicator" />`.
+The existing `IndicatorWidgetData` and `IndicatorWidgetDataItem` retain their
+legacy property types throughout v9. `ChartKitProps<'indicator'>` and
+`ChartKitWidget['indicator']['data']` accept both forms through `IndicatorWidgetConfig`.
 
 ## Number formatting
 
-Set `content.current.numberFormat` for the main value and
+Set `primaryValue.numberFormat` for the main value and
 `secondaryValue.numberFormat` for the secondary value. The two configurations are
 independent and use the exported `IndicatorNumberFormat` type:
 
@@ -85,10 +96,15 @@ For each numeric value, formatting priority is:
    the built-in defaults. Its locale defaults to `settings.lang`, with an optional
    `numberFormat.lang` override.
 2. Without explicit options, the widget's `formatNumber` callback is called. For
-   the main value it receives the number and the complete `content.current`
-   object. For the secondary value it receives the number and `{value}`, where
+   the main value it receives the number and the complete `primaryValue`
+   object, including application metadata. Legacy configurations still pass the
+   original `content.current` object. For the secondary value it receives the number and `{value}`, where
    `value` is the secondary value. The callback controls formatting, including the sign.
 3. With neither callback nor options, the number is rendered as plain text.
+
+For legacy configurations, fields inside `content.current` other than `value`
+remain application-owned formatter metadata. Set `primaryValue.numberFormat`
+to use the built-in primary-value formatter.
 
 You can configure just one value and let the other use the widget callback.
 Strings bypass both formatters. To display a missing value, supply a string such
@@ -98,9 +114,9 @@ as `value: '—'` and omit `arrow`.
 `never` or `exceptZero`. For example, `exceptZero` shows a plus sign for positive
 values and omits the sign for values rounded to zero.
 
-Provide `arrowLabel` when the arrow conveys information beyond the displayed
+Provide `arrow.ariaLabel` when the arrow conveys information beyond the displayed
 value. The application localizes this label. Without a label, the arrow is
 decorative, so its meaning should be conveyed by the value or caption as well.
 
-The item `size` controls both values. Existing `color` and `defaultColor` continue
-to apply only to the main value.
+The item `size` controls both values. `title` and `nowrap` retain their existing
+behavior; `nowrap` truncates the title to one line and provides its native tooltip.

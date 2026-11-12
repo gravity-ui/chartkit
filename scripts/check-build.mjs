@@ -215,6 +215,11 @@ import type {ChartKitWidget} from '${name}';
 import {GravityChartsPlugin, migrateChartDataV1} from '${name}/gravity-charts';
 import {HighchartsPlugin} from '${name}/highcharts';
 import {IndicatorPlugin} from '${name}/indicator';
+import type {IndicatorWidgetConfig, IndicatorProps, IndicatorWidgetDataItem} from '${name}/indicator';
+// @ts-expect-error the indicator adapter is internal
+import {migrateIndicatorDataFromV9ToV10} from '${name}/indicator';
+// @ts-expect-error the normalized indicator configuration is internal
+import type {NormalizedIndicatorWidgetConfig} from '${name}/indicator';
 import {YagrPlugin} from '${name}/yagr';
 
 settings.set({plugins: [GravityChartsPlugin, HighchartsPlugin, IndicatorPlugin, YagrPlugin]});
@@ -223,12 +228,30 @@ settings.set({plugins: [GravityChartsPlugin, HighchartsPlugin, IndicatorPlugin, 
 export const widget: ChartKitWidget['yagr']['widget'] = 123;
 // @ts-expect-error a number is not a charts 1 configuration: the adapter types must not degrade to any
 export const migrated = migrateChartDataV1(123);
+
+const legacyIndicator: IndicatorWidgetDataItem = {content: {current: {value: 42, numberFormat: 'application metadata'}}};
+const legacyIndicatorValue: string | number = legacyIndicator.content.current.value;
+const indicatorData: IndicatorWidgetConfig = {data: [{primaryValue: {value: 42}, secondaryValue: {value: 1, arrow: {direction: 'up', ariaLabel: 'Increase'}}}]};
+const publicIndicatorData: ChartKitWidget['indicator']['data'] = indicatorData;
+const indicatorInput: IndicatorWidgetConfig = {data: [legacyIndicator, ...indicatorData.data!]};
+const indicatorProps: IndicatorProps = {type: 'indicator', data: indicatorInput};
+ChartKit(indicatorProps);
+ChartKit({type: 'indicator', data: indicatorData});
+// @ts-expect-error the indicator value type must not degrade to any
+const invalidIndicator: IndicatorWidgetConfig = {data: [{primaryValue: {value: false}}]};
 export {ChartKit};
 `;
 
 // The entry points only: what the `node` resolution cannot see is documented, not asserted.
 const CONSUMER_NODE10 = CONSUMER.split('\n')
-    .filter((line) => !line.startsWith('// @ts-expect-error') && !line.startsWith('export const'))
+    .filter(
+        (line) =>
+            !line.startsWith('// @ts-expect-error') &&
+            !line.startsWith('export const') &&
+            !line.includes('migrateIndicatorDataFromV9ToV10') &&
+            !line.includes('NormalizedIndicatorWidgetConfig') &&
+            !line.includes('invalidIndicator'),
+    )
     .join('\n');
 
 const CONSUMER_MODES = [

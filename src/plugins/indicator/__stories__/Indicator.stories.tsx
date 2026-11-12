@@ -2,30 +2,21 @@ import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
 import {Meta, StoryObj} from '@storybook/react';
-import cloneDeep from 'es-toolkit/compat/cloneDeep';
 import {action} from 'storybook/actions';
 
 import {IndicatorPlugin} from '../';
 import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
 import type {ChartKitRef} from '../../../types';
-import type {IndicatorSecondaryValue, IndicatorWidgetData, IndicatorWidgetDataItem} from '../types';
-
-const data: IndicatorWidgetData = {
-    data: [
-        {
-            content: {
-                current: {
-                    value: 1539577973,
-                },
-            },
-        },
-    ],
-};
+import type {
+    IndicatorSecondaryValue,
+    IndicatorWidgetConfig,
+    IndicatorWidgetConfigItem,
+} from '../types';
 
 interface ChartStoryProps {
     color: string;
-    size: IndicatorWidgetDataItem['size'];
+    size: IndicatorWidgetConfigItem['size'];
     title: string;
     nowrap: boolean;
 }
@@ -33,14 +24,9 @@ interface ChartStoryProps {
 const ChartStory = ({color, size, title, nowrap}: ChartStoryProps) => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
-    const resultData = cloneDeep(data);
-
-    if (resultData.data) {
-        resultData.data[0].size = size;
-        resultData.data[0].color = color;
-        resultData.data[0].title = title;
-        resultData.data[0].nowrap = nowrap;
-    }
+    const resultData: IndicatorWidgetConfig = {
+        data: [{primaryValue: {value: 1539577973, color}, size, title, nowrap}],
+    };
 
     if (!shown) {
         settings.set({plugins: [IndicatorPlugin]});
@@ -98,8 +84,7 @@ export const WithSecondaryValue: StoryObj<SecondaryValueStoryProps> = {
                     data={{
                         data: [
                             {
-                                content: {current: {value: 1539577973}},
-                                color,
+                                primaryValue: {value: 1539577973, color},
                                 size,
                                 title,
                                 nowrap,
@@ -122,8 +107,7 @@ export const WithSecondaryValue: StoryObj<SecondaryValueStoryProps> = {
             value: 0.124,
             numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
             caption: 'vs the previous month',
-            arrow: 'up',
-            arrowLabel: 'Increase',
+            arrow: {direction: 'up', ariaLabel: 'Increase'},
             color: 'var(--g-color-text-positive)',
             view: 'badge',
         },

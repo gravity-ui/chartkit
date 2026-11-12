@@ -3,14 +3,8 @@ import React from 'react';
 import {ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon} from '@gravity-ui/icons';
 import {Icon, Label} from '@gravity-ui/uikit';
 
-import type {ChartKitProps} from '../../../types';
 import {block} from '../../../utils/cn';
-import type {
-    IndicatorSecondaryValue as IndicatorSecondaryValueData,
-    IndicatorWidgetDataItem,
-} from '../types';
-
-import {formatValue} from './utils';
+import type {IndicatorItemProps} from '../internal-types';
 
 const b = block('indicator');
 
@@ -19,26 +13,23 @@ const BADGE_SIZE_BY_INDICATOR_SIZE = {s: 'xs', m: 's', l: 's', xl: 'm'} as const
 export function IndicatorSecondaryValue({
     secondaryValue,
     size,
-    formatNumber,
 }: {
-    secondaryValue: IndicatorSecondaryValueData;
-    size: IndicatorWidgetDataItem['size'];
-    formatNumber?: ChartKitProps<'indicator'>['formatNumber'];
+    secondaryValue: NonNullable<IndicatorItemProps['secondaryValue']>;
+    size: IndicatorItemProps['size'];
 }) {
-    const {caption, view = 'text', arrow, arrowLabel, color} = secondaryValue;
-    const formattedValue = formatValue(secondaryValue, formatNumber);
+    const {value, caption, view = 'text', arrow, color} = secondaryValue;
     const content = (
         <React.Fragment>
             {arrow && (
                 <span
                     className={b('secondary-value-arrow')}
-                    role={arrowLabel ? 'img' : undefined}
-                    aria-label={arrowLabel}
+                    role={arrow.ariaLabel ? 'img' : undefined}
+                    aria-label={arrow.ariaLabel}
                 >
-                    <Icon data={arrow === 'up' ? ArrowUpIcon : ArrowDownIcon} size={14} />
+                    <Icon data={arrow.direction === 'up' ? ArrowUpIcon : ArrowDownIcon} size={14} />
                 </span>
             )}
-            <span className={b('secondary-value-text')}>{formattedValue}</span>
+            <span className={b('secondary-value-text')}>{value}</span>
         </React.Fragment>
     );
 

@@ -6,6 +6,7 @@ import {settings} from '../../../libs/index.js';
 import {IndicatorPlugin} from '../index.js';
 import type {
     IndicatorSecondaryValue,
+    IndicatorWidgetConfigItem,
     IndicatorWidgetData,
     IndicatorWidgetDataItem,
 } from '../types.js';
@@ -40,6 +41,27 @@ describe('Indicator visual tests', () => {
 
         await expect.element(screen.getByText('1539577973')).toBeVisible();
         await expect(screen.getByTestId('indicator-wrapper')).toMatchScreenshot();
+
+        const legacyMarkup = screen.container.querySelector('.chartkit-indicator')?.innerHTML;
+        await screen.rerender(
+            <div data-qa="indicator-wrapper" style={{height: 300, width: '100%'}}>
+                <ChartKit
+                    id="indicator-1"
+                    type="indicator"
+                    data={{
+                        data: [
+                            {
+                                primaryValue: {value: 1539577973, color: '#4da2f1'},
+                                title: 'Value title',
+                                size: 'm',
+                            },
+                        ],
+                    }}
+                />
+            </div>,
+        );
+        await expect.element(screen.getByText('1539577973')).toBeVisible();
+        expect(screen.container.querySelector('.chartkit-indicator')?.innerHTML).toBe(legacyMarkup);
     });
 
     test('no data state', async () => {
@@ -75,12 +97,11 @@ describe('Indicator visual tests', () => {
                 caption: 'vs the previous month',
                 color: 'var(--g-color-text-positive)',
                 view: 'badge',
-                arrow: 'up',
-                arrowLabel: 'Increase',
+                arrow: {direction: 'up', ariaLabel: 'Increase'},
             },
         } satisfies IndicatorWidgetDataItem;
         const renderIndicator = (
-            dataItem: IndicatorWidgetDataItem,
+            dataItem: IndicatorWidgetConfigItem,
             width: number | string = '100%',
         ) => (
             <div data-qa="indicator-secondary-wrapper" style={{height: 300, width}}>
@@ -92,6 +113,25 @@ describe('Indicator visual tests', () => {
         await expect.element(screen.getByText('+12.4%', {exact: true})).toBeVisible();
         await expect.element(screen.getByRole('img', {name: 'Increase'})).toBeVisible();
         await expect(screen.getByTestId('indicator-secondary-wrapper')).toMatchScreenshot();
+
+        const legacyMarkup = screen.container.querySelector('.chartkit-indicator')?.innerHTML;
+        await screen.rerender(
+            renderIndicator({
+                title: 'Revenue',
+                primaryValue: {value: 1200},
+                secondaryValue: {
+                    value: 0.124,
+                    numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
+                    position: 'right',
+                    caption: 'vs the previous month',
+                    color: 'var(--g-color-text-positive)',
+                    view: 'badge',
+                    arrow: {direction: 'up', ariaLabel: 'Increase'},
+                },
+            }),
+        );
+        await expect.element(screen.getByRole('img', {name: 'Increase'})).toBeVisible();
+        expect(screen.container.querySelector('.chartkit-indicator')?.innerHTML).toBe(legacyMarkup);
 
         for (const {width, size} of [
             {width: 300, size: 'm'},
@@ -146,13 +186,12 @@ describe('Indicator visual tests', () => {
                         data: [
                             {
                                 title: 'Revenue',
-                                content: {current: {value: 1200}},
+                                primaryValue: {value: 1200},
                                 secondaryValue: {
                                     value: -0.124,
                                     numberFormat: {format: 'percent', precision: 1},
                                     caption: 'vs the previous month',
-                                    arrow: 'down',
-                                    arrowLabel: 'Decrease',
+                                    arrow: {direction: 'down', ariaLabel: 'Decrease'},
                                     color: 'var(--g-color-text-danger)',
                                 },
                             },
@@ -187,7 +226,7 @@ describe('Indicator visual tests', () => {
                         data: [
                             {
                                 title: 'Revenue',
-                                content: {current: {value: 1200}},
+                                primaryValue: {value: 1200},
                                 secondaryValue: {value: '12.4%', view: 'badge'},
                             },
                         ],
@@ -211,7 +250,7 @@ describe('Indicator visual tests', () => {
 
     test('independent number formats', async () => {
         settings.set({plugins: [IndicatorPlugin], lang: 'en'});
-        const formatNumber = vi.fn(() => 'custom result');
+        const formatNumber = vi.fn((_value: number, _options?: unknown) => 'custom result');
         const current = {
             value: 1234.56,
             precision: 2,
@@ -222,14 +261,14 @@ describe('Indicator visual tests', () => {
             value: 0.124,
             numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
         };
-        const renderIndicator = (item: IndicatorWidgetDataItem) => (
+        const renderIndicator = (item: IndicatorWidgetConfigItem) => (
             <div data-qa="indicator-formats-wrapper" style={{height: 300, width: '100%'}}>
                 <ChartKit type="indicator" data={{data: [item]}} formatNumber={formatNumber} />
             </div>
         );
         const screen = await render(
             renderIndicator({
-                content: {current: {...current, numberFormat: mainNumberFormat}},
+                primaryValue: {...current, numberFormat: mainNumberFormat},
                 secondaryValue,
             }),
             options,
@@ -245,11 +284,12 @@ describe('Indicator visual tests', () => {
         await expect.element(screen.getByText('custom result', {exact: true})).toBeVisible();
         await expect.element(screen.getByText('+12.4%', {exact: true})).toBeVisible();
         expect(formatNumber).toHaveBeenCalledExactlyOnceWith(current.value, current);
+        expect(formatNumber.mock.calls[0][1]).toBe(current);
 
         formatNumber.mockClear();
         await screen.rerender(
             renderIndicator({
-                content: {current: {...current, numberFormat: mainNumberFormat}},
+                primaryValue: {...current, numberFormat: mainNumberFormat},
                 secondaryValue: {value: secondaryValue.value},
             }),
         );
@@ -259,5 +299,89 @@ describe('Indicator visual tests', () => {
         expect(formatNumber).toHaveBeenCalledExactlyOnceWith(secondaryValue.value, {
             value: secondaryValue.value,
         });
+
+        formatNumber.mockClear();
+        const primaryValue = {value: 0, customMetadata: 'new value'};
+        await screen.rerender(renderIndicator({primaryValue, secondaryValue}));
+        await expect.element(screen.getByText('custom result', {exact: true})).toBeVisible();
+        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(0, primaryValue);
+        expect(formatNumber.mock.calls[0][1]).toBe(primaryValue);
+    });
+
+    test('legacy formatter metadata does not override the default color', async () => {
+        settings.set({plugins: [IndicatorPlugin]});
+        const current = {
+            value: 42,
+            color: 'red',
+            numberFormat: 'formatter metadata',
+            customMetadata: 'legacy',
+        };
+        const formatNumber = vi.fn((value: number, _options?: unknown) => String(value));
+        const screen = await render(
+            <ChartKit
+                type="indicator"
+                formatNumber={formatNumber}
+                data={{
+                    defaultColor: 'blue',
+                    data: [{content: {current}}],
+                }}
+            />,
+            options,
+        );
+        await expect.element(screen.getByText('42', {exact: true})).toBeVisible();
+        expect(screen.getByText('42', {exact: true}).element().getAttribute('style')).toBe(
+            'color: blue;',
+        );
+        expect(formatNumber.mock.calls[0][1]).toBe(current);
+    });
+
+    test('updates when a new configuration reuses the data array', async () => {
+        settings.set({plugins: [IndicatorPlugin]});
+        const items: IndicatorWidgetDataItem[] = [
+            {
+                content: {current: {value: 42}},
+                color: 'red',
+                title: 'Before',
+            },
+        ];
+        const screen = await render(<ChartKit type="indicator" data={{data: items}} />, options);
+        await expect.element(screen.getByText('42', {exact: true})).toBeVisible();
+
+        items[0] = {content: {current: {value: 43}}, color: 'blue', title: 'After'};
+        await screen.rerender(<ChartKit type="indicator" data={{data: items}} />);
+
+        await expect.element(screen.getByText('43', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('After', {exact: true})).toBeVisible();
+        expect(screen.getByText('43', {exact: true}).element().getAttribute('style')).toBe(
+            'color: blue;',
+        );
+    });
+
+    test('updates formatted values when only the formatter changes', async () => {
+        settings.set({plugins: [IndicatorPlugin]});
+        const current = {value: 42, numberFormat: {precision: 2}, customMetadata: 'source'};
+        const config = {data: [{content: {current}, secondaryValue: {value: 7}}]};
+        const firstFormatter = vi.fn((value: number, _options?: unknown) => `first:${value}`);
+        const screen = await render(
+            <ChartKit type="indicator" data={config} formatNumber={firstFormatter} />,
+            options,
+        );
+        await expect.element(screen.getByText('first:42', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('first:7', {exact: true})).toBeVisible();
+        expect(firstFormatter.mock.calls[0][1]).toBe(current);
+        firstFormatter.mockClear();
+
+        const nextFormatter = vi.fn((value: number, _options?: unknown) => `next:${value}`);
+        await screen.rerender(
+            <ChartKit type="indicator" data={config} formatNumber={nextFormatter} />,
+        );
+        await expect.element(screen.getByText('next:42', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('next:7', {exact: true})).toBeVisible();
+        expect(firstFormatter).not.toHaveBeenCalled();
+        expect(nextFormatter.mock.calls).toEqual([
+            [42, current],
+            [7, {value: 7}],
+        ]);
+        expect(nextFormatter.mock.calls[0][1]).toBe(current);
     });
 });

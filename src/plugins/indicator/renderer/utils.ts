@@ -1,10 +1,12 @@
 import {settings} from '../../../libs';
 import {formatNumber as defaultFormatNumber} from '../../shared';
-import type {IndicatorNumberFormat} from '../types';
+import type {IndicatorFormatNumberOptions} from '../internal-types';
+import type {IndicatorValue} from '../types';
 
 export function formatValue(
-    {value, numberFormat}: {value: number | string; numberFormat?: IndicatorNumberFormat},
-    formatNumber?: (value: number, options: {value: number}) => string,
+    {value, numberFormat}: IndicatorValue,
+    formatNumber?: (value: number, options: {value: number | string}) => string,
+    formatOptions?: IndicatorFormatNumberOptions,
 ): string {
     if (typeof value === 'string') {
         return value;
@@ -18,7 +20,7 @@ export function formatValue(
     }
 
     if (formatNumber) {
-        return formatNumber(value, {value});
+        return formatNumber(value, formatOptions ?? {value});
     }
 
     return String(value);
