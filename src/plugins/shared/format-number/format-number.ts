@@ -1,5 +1,5 @@
 import {i18nInstance, makeInstance} from './i18n/i18n';
-import type {FormatNumberOptions, FormatOptions} from './types';
+import type {FormatOptions, InternalFormatNumberOptions} from './types';
 
 import en from './i18n/en.json';
 import ru from './i18n/ru.json';
@@ -100,7 +100,7 @@ const NUMBER_UNIT_RATE_BY_UNIT = {
     t: 4,
 };
 
-export const formatNumber = (value: number | string, options: FormatNumberOptions = {}) => {
+export const formatNumber = (value: number | string, options: InternalFormatNumberOptions = {}) => {
     if (Number.isNaN(value) || Number.isNaN(Number(value))) {
         return new Intl.NumberFormat('en').format(Number(value));
     }

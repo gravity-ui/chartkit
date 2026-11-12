@@ -4,7 +4,6 @@ export type FormatOptions = {
     showRankDelimiter?: boolean;
     signDisplay?: Intl.NumberFormatOptions['signDisplay'];
     lang?: string;
-    labelMode?: string;
 };
 
 export type FormatNumberOptions = FormatOptions & {
@@ -13,4 +12,8 @@ export type FormatNumberOptions = FormatOptions & {
     prefix?: string;
     postfix?: string;
     unit?: 'auto' | 'k' | 'm' | 'b' | 't' | null;
+};
+
+export type InternalFormatNumberOptions = FormatNumberOptions & {
+    labelMode?: string;
 };

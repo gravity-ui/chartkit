@@ -1,36 +1,17 @@
 import type {ReactNode} from 'react';
 
-import type {ChartKitProps} from '../../types';
 import type {FormatNumberOptions} from '../shared';
 
-export type IndicatorNumberFormat = Pick<
-    FormatNumberOptions,
-    | 'format'
-    | 'precision'
-    | 'showRankDelimiter'
-    | 'unit'
-    | 'prefix'
-    | 'postfix'
-    | 'lang'
-    | 'signDisplay'
->;
-
-export type IndicatorValue = {
+type IndicatorValue = {
     /** Numbers can be formatted; strings are displayed as supplied. */
     value: number | string;
     /** Explicit options take precedence over the widget's formatNumber callback. */
-    numberFormat?: IndicatorNumberFormat;
+    numberFormat?: FormatNumberOptions;
     /** Any CSS color, including theme variables. */
     color?: string;
 };
 
 export type IndicatorPrimaryValue = IndicatorValue & Record<string, unknown>;
-
-export type IndicatorArrow = {
-    direction: 'up' | 'down';
-    /** Localized accessible label, for example "Increase". Omit for a decorative arrow. */
-    ariaLabel?: string;
-};
 
 type IndicatorItemOptions = {
     size?: 's' | 'm' | 'l' | 'xl';
@@ -45,7 +26,11 @@ export type IndicatorSecondaryValue = IndicatorValue & {
     /** Badge uses a background derived from color. Defaults to text. */
     view?: 'text' | 'badge';
     /** Hidden by default. */
-    arrow?: IndicatorArrow;
+    arrow?: {
+        direction: 'up' | 'down';
+        /** Localized accessible label, for example "Increase". Omit for a decorative arrow. */
+        ariaLabel?: string;
+    };
 };
 
 /** @deprecated Use IndicatorWidgetConfigItem for new configurations. */
@@ -90,5 +75,3 @@ export type IndicatorWidgetConfig = {
     /** Fallback color for primary values only. */
     defaultColor?: string;
 };
-
-export type IndicatorProps = ChartKitProps<'indicator'>;

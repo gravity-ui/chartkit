@@ -1,5 +1,6 @@
+import type {MigrationResult, MigrationWarning} from '../../shared/migration';
 import type {
-    IndicatorFormatNumberOptions,
+    IndicatorFormatOptions,
     NormalizedIndicatorWidgetConfig,
     NormalizedIndicatorWidgetConfigItem,
 } from '../internal-types';
@@ -9,23 +10,12 @@ import type {
     IndicatorWidgetConfigItem,
 } from '../types';
 
-type MigrationWarning = {
-    code: 'indicator-content' | 'indicator-color';
-    path: (string | number)[];
-    message: string;
-    replacement: string;
-    resolution: 'automatic';
-};
+type IndicatorMigrationWarning = MigrationWarning<'indicator-content' | 'indicator-color'>;
 
-type MigrationResult = {
-    data: NormalizedIndicatorWidgetConfig;
-    warnings: MigrationWarning[];
-};
-
-/** Return the original formatter options, preserving application metadata and object identity. */
+/** Return the original formatNumber options, preserving application metadata and object identity. */
 export function getPrimaryValueFormatOptions(
     item: IndicatorWidgetConfigItem,
-): IndicatorFormatNumberOptions {
+): IndicatorFormatOptions {
     if (item.primaryValue) {
         return item.primaryValue;
     }
@@ -53,11 +43,13 @@ function migratePrimaryValue(item: IndicatorWidgetConfigItem): IndicatorPrimaryV
 /**
  * Normalize indicator configuration without mutating input, invoking callbacks or logging.
  */
-export function migrateIndicatorDataFromV9ToV10(input: IndicatorWidgetConfig): MigrationResult {
-    const warnings: MigrationWarning[] = [];
+export function migrateIndicatorDataFromV9ToV10(
+    input: IndicatorWidgetConfig,
+): MigrationResult<NormalizedIndicatorWidgetConfig, IndicatorMigrationWarning> {
+    const warnings: IndicatorMigrationWarning[] = [];
     const data = input.data?.map((item, index): NormalizedIndicatorWidgetConfigItem => {
         const warn = (
-            code: MigrationWarning['code'],
+            code: IndicatorMigrationWarning['code'],
             path: (string | number)[],
             message: string,
             replacement: string,

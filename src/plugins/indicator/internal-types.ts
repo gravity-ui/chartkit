@@ -1,12 +1,11 @@
 import type {
     IndicatorPrimaryValue,
     IndicatorSecondaryValue,
-    IndicatorValue,
     IndicatorWidgetConfig,
     IndicatorWidgetConfigItem,
 } from './types';
 
-export type IndicatorFormatNumberOptions = Pick<IndicatorValue, 'value'> & Record<string, unknown>;
+export type IndicatorFormatOptions = Pick<IndicatorPrimaryValue, 'value'> & Record<string, unknown>;
 
 export type NormalizedIndicatorWidgetConfigItem = Omit<
     IndicatorWidgetConfigItem,
@@ -23,6 +22,6 @@ export type IndicatorItemProps = Pick<
     NormalizedIndicatorWidgetConfigItem,
     'title' | 'size' | 'nowrap'
 > & {
-    primaryValue: Pick<IndicatorValue, 'color'> & {value: string};
+    primaryValue: Pick<IndicatorPrimaryValue, 'color'> & {value: string};
     secondaryValue?: Omit<IndicatorSecondaryValue, 'value' | 'numberFormat'> & {value: string};
 };

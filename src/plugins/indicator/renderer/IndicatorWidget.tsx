@@ -5,7 +5,7 @@ import isEmpty from 'es-toolkit/compat/isEmpty';
 import {CHARTKIT_SCROLLABLE_NODE_CLASSNAME} from '../../../constants';
 import {i18n} from '../../../i18n';
 import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
-import type {ChartKitWidgetRef} from '../../../types';
+import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../utils';
 import {block} from '../../../utils/cn';
 import type {IndicatorItemProps} from '../internal-types';
@@ -13,7 +13,6 @@ import {
     getPrimaryValueFormatOptions,
     migrateIndicatorDataFromV9ToV10,
 } from '../migration/from-v9-to-v10';
-import type {IndicatorProps} from '../types';
 
 import {IndicatorItem} from './IndicatorItem';
 import {formatValue} from './utils';
@@ -22,7 +21,10 @@ import './IndicatorWidget.scss';
 
 const b = block('indicator');
 
-export const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, IndicatorProps>(
+export const IndicatorWidget = React.forwardRef<
+    ChartKitWidgetRef | undefined,
+    ChartKitProps<'indicator'>
+>(
     // _ref needs to avoid this React warning:
     // "forwardRef render functions accept exactly two parameters: props and ref"
     function IndicatorWidgetInner(props, _ref) {

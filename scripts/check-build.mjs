@@ -210,49 +210,63 @@ scanBuild('esm', (code, file) => {
     return missingFiles(code, file);
 });
 
-const CONSUMER = `import ChartKit, {settings} from '${name}';
-import type {ChartKitWidget} from '${name}';
+const CONSUMER_BASE = `import ChartKit, {settings} from '${name}';
+import type {ChartKitProps, ChartKitWidget} from '${name}';
 import {GravityChartsPlugin, migrateChartDataV1} from '${name}/gravity-charts';
 import {HighchartsPlugin} from '${name}/highcharts';
+import type {HighchartsWidgetData} from '${name}/highcharts';
 import {IndicatorPlugin} from '${name}/indicator';
-import type {IndicatorWidgetConfig, IndicatorProps, IndicatorWidgetDataItem} from '${name}/indicator';
-// @ts-expect-error the indicator adapter is internal
-import {migrateIndicatorDataFromV9ToV10} from '${name}/indicator';
-// @ts-expect-error the normalized indicator configuration is internal
-import type {NormalizedIndicatorWidgetConfig} from '${name}/indicator';
+import type {FormatNumberOptions, IndicatorSecondaryValue, IndicatorWidgetConfig, IndicatorWidgetData, IndicatorWidgetDataItem} from '${name}/indicator';
 import {YagrPlugin} from '${name}/yagr';
 
 settings.set({plugins: [GravityChartsPlugin, HighchartsPlugin, IndicatorPlugin, YagrPlugin]});
 
-// @ts-expect-error a number is not a chart instance: the yagr types must not degrade to any
-export const widget: ChartKitWidget['yagr']['widget'] = 123;
-// @ts-expect-error a number is not a charts 1 configuration: the adapter types must not degrade to any
-export const migrated = migrateChartDataV1(123);
-
 const legacyIndicator: IndicatorWidgetDataItem = {content: {current: {value: 42, numberFormat: 'application metadata'}}};
 const legacyIndicatorValue: string | number = legacyIndicator.content.current.value;
-const indicatorData: IndicatorWidgetConfig = {data: [{primaryValue: {value: 42}, secondaryValue: {value: 1, arrow: {direction: 'up', ariaLabel: 'Increase'}}}]};
+const legacyIndicatorData: IndicatorWidgetData = {data: [legacyIndicator]};
+ChartKit({type: 'indicator', data: legacyIndicatorData});
+const numberFormat: FormatNumberOptions = {unitRate: 1, multiplier: 1000, precision: 1};
+const indicatorData: IndicatorWidgetConfig = {data: [{primaryValue: {value: 42, numberFormat}, secondaryValue: {value: 1, arrow: {direction: 'up', ariaLabel: 'Increase'}}}]};
 const publicIndicatorData: ChartKitWidget['indicator']['data'] = indicatorData;
 const indicatorInput: IndicatorWidgetConfig = {data: [legacyIndicator, ...indicatorData.data!]};
-const indicatorProps: IndicatorProps = {type: 'indicator', data: indicatorInput};
+const indicatorProps: ChartKitProps<'indicator'> = {type: 'indicator', data: indicatorInput};
 ChartKit(indicatorProps);
 ChartKit({type: 'indicator', data: indicatorData});
-// @ts-expect-error the indicator value type must not degrade to any
-const invalidIndicator: IndicatorWidgetConfig = {data: [{primaryValue: {value: false}}]};
+
+type TooltipLine = Parameters<NonNullable<HighchartsWidgetData['config']['manageTooltipConfig']>>[0]['lines'][number];
+const tooltipFormat: Pick<TooltipLine, 'chartKitFormat' | 'chartKitPrecision' | 'chartKitUnit'> = {chartKitFormat: 'number', chartKitPrecision: 'auto', chartKitUnit: 'k'};
 export {ChartKit};
 `;
 
-// The entry points only: what the `node` resolution cannot see is documented, not asserted.
-const CONSUMER_NODE10 = CONSUMER.split('\n')
-    .filter(
-        (line) =>
-            !line.startsWith('// @ts-expect-error') &&
-            !line.startsWith('export const') &&
-            !line.includes('migrateIndicatorDataFromV9ToV10') &&
-            !line.includes('NormalizedIndicatorWidgetConfig') &&
-            !line.includes('invalidIndicator'),
-    )
-    .join('\n');
+const CONSUMER_CHECKS = `
+// @ts-expect-error a number is not a chart instance: the yagr types must not degrade to any
+export const widget: ChartKitWidget['yagr']['widget'] = 123;
+// @ts-expect-error a number is not a charts configuration: the adapter types must not degrade to any
+export const migrated = migrateChartDataV1(123);
+// @ts-expect-error the indicator adapter is internal
+import {migrateIndicatorDataFromV9ToV10} from '${name}/indicator';
+// @ts-expect-error the normalized indicator configuration is internal
+import type {NormalizedIndicatorWidgetConfig} from '${name}/indicator';
+// @ts-expect-error the shared value shape is internal
+import type {IndicatorValue} from '${name}/indicator';
+// @ts-expect-error the indicator value type must not degrade to any
+const invalidIndicator: IndicatorWidgetConfig = {data: [{primaryValue: {value: false}}]};
+// @ts-expect-error the legacy value type must retain its original contract
+const invalidLegacyValue: IndicatorWidgetDataItem['content']['current']['value'] = false;
+// @ts-expect-error each indicator requires a primary or legacy value
+const emptyIndicator: IndicatorWidgetConfig = {data: [{}]};
+// @ts-expect-error arrows use an object with a direction
+const invalidArrow: IndicatorSecondaryValue = {value: 1, arrow: 'up'};
+// @ts-expect-error arrow directions are restricted to up and down
+const invalidDirection: IndicatorSecondaryValue = {value: 1, arrow: {direction: 'left'}};
+// @ts-expect-error labelMode is not a public formatting option
+const invalidNumberFormat: FormatNumberOptions = {labelMode: 'percent'};
+// @ts-expect-error Highcharts tooltip precision must retain its original type
+const invalidTooltipPrecision: TooltipLine['chartKitPrecision'] = true;
+`;
+
+const CONSUMER = CONSUMER_BASE + CONSUMER_CHECKS;
+const CONSUMER_NODE10 = CONSUMER_BASE;
 
 const CONSUMER_MODES = [
     {

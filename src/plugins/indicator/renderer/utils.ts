@@ -1,12 +1,12 @@
 import {settings} from '../../../libs';
 import {formatNumber as defaultFormatNumber} from '../../shared';
-import type {IndicatorFormatNumberOptions} from '../internal-types';
-import type {IndicatorValue} from '../types';
+import type {IndicatorFormatOptions} from '../internal-types';
+import type {IndicatorPrimaryValue} from '../types';
 
 export function formatValue(
-    {value, numberFormat}: IndicatorValue,
+    {value, numberFormat}: Pick<IndicatorPrimaryValue, 'value' | 'numberFormat'>,
     formatNumber?: (value: number, options: {value: number | string}) => string,
-    formatOptions?: IndicatorFormatNumberOptions,
+    formatOptions?: IndicatorFormatOptions,
 ): string {
     if (typeof value === 'string') {
         return value;

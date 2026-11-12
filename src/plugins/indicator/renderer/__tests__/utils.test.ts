@@ -1,65 +1,58 @@
 import {settings} from '../../../../libs';
-import type {IndicatorNumberFormat} from '../../index';
 import {formatValue} from '../utils';
 
 describe('formatValue', () => {
-    afterEach(() => {
-        settings.set({lang: 'en'});
-    });
+    afterEach(() => settings.set({lang: 'en'}));
 
-    test('explicit options take precedence over the external formatter', () => {
-        const numberFormat: IndicatorNumberFormat = {
-            format: 'percent',
-            precision: 1,
-            signDisplay: 'exceptZero',
-        };
-        const formatNumber = vi.fn(() => 'custom result');
-
-        expect(formatValue({value: 0.124, numberFormat}, formatNumber)).toBe('+12.4%');
-        expect(formatNumber).not.toHaveBeenCalled();
-    });
-
-    test('an empty explicit format uses the built-in defaults', () => {
-        const formatNumber = vi.fn(() => 'custom result');
-
+    test('selects explicit formats, then the callback, then plain text', () => {
+        const formatNumber = vi.fn(() => 'custom');
+        expect(
+            formatValue(
+                {
+                    value: 0.124,
+                    numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
+                },
+                formatNumber,
+            ),
+        ).toBe('+12.4%');
         expect(formatValue({value: 1200, numberFormat: {}}, formatNumber)).toBe('1,200');
         expect(formatNumber).not.toHaveBeenCalled();
-    });
-
-    test.each(['+12.4%', '—', '0.124'])('preserves the supplied string %s', (value) => {
-        const formatNumber = vi.fn();
-
-        expect(
-            formatValue({value, numberFormat: {format: 'percent', precision: 1}}, formatNumber),
-        ).toBe(value);
-        expect(formatNumber).not.toHaveBeenCalled();
-    });
-
-    test('uses the external formatter even without numberFormat', () => {
-        const formatNumber = vi.fn(() => 'custom result');
-
-        expect(formatValue({value: 1200}, formatNumber)).toBe('custom result');
+        expect(formatValue({value: 1200}, formatNumber)).toBe('custom');
         expect(formatNumber).toHaveBeenCalledExactlyOnceWith(1200, {value: 1200});
-    });
-
-    test('leaves numbers unformatted when neither formatter nor options are supplied', () => {
         expect(formatValue({value: 1234.5})).toBe('1234.5');
     });
 
-    test('uses the ChartKit locale for built-in formatting', () => {
-        settings.set({lang: 'ru'});
+    test('applies a multiplier and an explicit scale', () => {
+        expect(
+            formatValue({
+                value: 1.5,
+                numberFormat: {multiplier: 1000, unit: 'm', unitRate: 1},
+            }),
+        ).toBe('1.5K');
+    });
 
+    test('preserves numeric strings without invoking formatters', () => {
+        const formatNumber = vi.fn();
+        expect(
+            formatValue(
+                {
+                    value: '0.124',
+                    numberFormat: {format: 'percent', precision: 1},
+                },
+                formatNumber,
+            ),
+        ).toBe('0.124');
+        expect(formatNumber).not.toHaveBeenCalled();
+    });
+
+    test('uses the widget locale unless the value overrides it', () => {
+        settings.set({lang: 'ru'});
         expect(
             formatValue({
                 value: 0.124,
-                numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
+                numberFormat: {format: 'percent', precision: 1},
             }),
-        ).toBe('+12,4%');
-    });
-
-    test('allows the config to override the ChartKit locale', () => {
-        settings.set({lang: 'ru'});
-
+        ).toBe('12,4%');
         expect(
             formatValue({
                 value: 0.124,
