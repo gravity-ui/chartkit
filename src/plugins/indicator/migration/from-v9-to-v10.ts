@@ -27,16 +27,21 @@ function migratePrimaryValue(
 ): NormalizedIndicatorWidgetConfigItem['primaryValue'] {
     const value = getPrimaryValueFormatOptions(item);
     if (item.primaryValue) {
-        return value.color === undefined && item.color !== undefined
-            ? {...value, color: item.color}
-            : value;
+        if (value.color === undefined && item.color !== undefined) {
+            // Spread omits prototype getters and non-enumerable display fields.
+            const {value: rawValue, numberFormat, ...rest} = item.primaryValue;
+            return {...rest, value: rawValue, numberFormat, color: item.color};
+        }
+        return value;
     }
     // Reserved display options on legacy current are opaque formatter metadata.
     if (!('color' in value) && !('numberFormat' in value) && item.color === undefined) {
         return value;
     }
-    const {color: _color, numberFormat: _numberFormat, ...rest} = value;
-    return item.color === undefined ? rest : {...rest, color: item.color};
+    const {value: rawValue, color: _color, numberFormat: _numberFormat, ...rest} = value;
+    return item.color === undefined
+        ? {...rest, value: rawValue}
+        : {...rest, value: rawValue, color: item.color};
 }
 
 /**
