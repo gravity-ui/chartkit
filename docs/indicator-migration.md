@@ -67,5 +67,10 @@ The new `value` configuration declares `value`, `color`, `formatNumber`, and `nu
 In v9, arbitrary formatter metadata remains supported through the legacy
 `content.current` configuration.
 
+When converting legacy data, metadata named `color`, `formatNumber`, or
+`numberFormat` is removed or replaced. The adapter reports `resolution: 'review'`
+for each field; update any widget formatter that depends on it before using the
+migrated configuration. Legacy metadata is ignored when `value` is also supplied.
+
 `migrateIndicatorData` is internal and is not exported from the package.
 See the [indicator guide](indicator.md) for configuration and formatting options.

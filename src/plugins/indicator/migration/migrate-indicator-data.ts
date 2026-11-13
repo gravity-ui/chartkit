@@ -2,7 +2,9 @@ import type {MigrationResult, MigrationWarning} from '../../shared/migration';
 import {normalizeIndicatorData} from '../normalize';
 import type {IndicatorWidgetConfig, NormalizedIndicatorWidgetConfig} from '../types';
 
-type IndicatorMigrationWarning = MigrationWarning<'indicator-content' | 'indicator-color'>;
+type IndicatorMigrationWarning = MigrationWarning<
+    'indicator-content' | 'indicator-color' | 'indicator-formatter-metadata'
+>;
 
 /** Normalize configuration and collect diagnostics for an explicit migration. */
 export function migrateIndicatorData(
@@ -19,6 +21,18 @@ export function migrateIndicatorData(
                 replacement: 'value',
                 resolution: 'automatic',
             });
+            if (!item.value && item.content) {
+                for (const field of ['color', 'formatNumber', 'numberFormat']) {
+                    if (field in item.content.current) {
+                        warnings.push({
+                            code: 'indicator-formatter-metadata',
+                            path: ['data', index, 'content', 'current', field],
+                            message: `Legacy formatter metadata "${field}" is removed or replaced during migration. Update any widget formatNumber callback that depends on it.`,
+                            resolution: 'review',
+                        });
+                    }
+                }
+            }
         }
         if ('color' in item) {
             warnings.push({
