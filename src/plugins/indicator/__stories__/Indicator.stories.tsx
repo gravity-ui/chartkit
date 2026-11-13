@@ -105,7 +105,7 @@ export const WithSecondaryValue: StoryObj<SecondaryValueStoryProps> = {
             caption: 'vs the previous month',
             arrow: {direction: 'up', ariaLabel: 'Increase'},
             color: 'var(--g-color-text-positive)',
-            view: 'badge',
+            view: 'label',
         },
     },
     argTypes: {

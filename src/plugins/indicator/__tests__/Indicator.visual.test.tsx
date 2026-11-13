@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {page} from 'vitest/browser';
+
 import {render} from '../../../../test-utils/utils.js';
 import {ChartKit} from '../../../components/ChartKit.js';
 import {settings} from '../../../libs/index.js';
@@ -77,7 +79,7 @@ describe('Indicator visual tests', () => {
         await expect.element(screen.getByText('No data')).toBeVisible();
     });
 
-    test('secondary value', async () => {
+    test('secondary value formatting and overflow', async () => {
         settings.set({plugins: [IndicatorPlugin]});
         const item = {
             title: 'Revenue',
@@ -92,7 +94,7 @@ describe('Indicator visual tests', () => {
                 position: 'right',
                 caption: 'vs the previous month',
                 color: 'var(--g-color-text-positive)',
-                view: 'badge',
+                view: 'label',
                 arrow: {direction: 'up', ariaLabel: 'Increase'},
             },
         } satisfies IndicatorWidgetDataItem;
@@ -108,7 +110,6 @@ describe('Indicator visual tests', () => {
 
         await expect.element(screen.getByText('+12.4%', {exact: true})).toBeVisible();
         await expect.element(screen.getByRole('img', {name: 'Increase'})).toBeVisible();
-        await expect(screen.getByTestId('indicator-secondary-wrapper')).toMatchScreenshot();
 
         const legacyMarkup = screen.container.querySelector('.chartkit-indicator')?.innerHTML;
         await screen.rerender(
@@ -121,7 +122,7 @@ describe('Indicator visual tests', () => {
                     position: 'right',
                     caption: 'vs the previous month',
                     color: 'var(--g-color-text-positive)',
-                    view: 'badge',
+                    view: 'label',
                     arrow: {direction: 'up', ariaLabel: 'Increase'},
                 },
             }),
@@ -220,7 +221,85 @@ describe('Indicator visual tests', () => {
         await expect(screen.getByTestId('indicator-secondary-wrapper')).toMatchScreenshot();
     });
 
-    test('secondary value below: badge without color or caption', async () => {
+    test('secondary value', async () => {
+        await page.viewport(1000, 600);
+        settings.set({plugins: [IndicatorPlugin]});
+        const sizes = [
+            {size: 's', labelHeight: 20, iconSize: 12, captionSize: 13},
+            {size: 'm', labelHeight: 24, iconSize: 14, captionSize: 13},
+            {size: 'l', labelHeight: 24, iconSize: 14, captionSize: 15},
+            {size: 'xl', labelHeight: 28, iconSize: 16, captionSize: 15},
+        ] as const;
+        const screen = await render(
+            <div data-qa="indicator-alignment-wrapper" style={{width: 1000}}>
+                <ChartKit
+                    type="indicator"
+                    data={{
+                        data: sizes.map(({size}) => ({
+                            size,
+                            title: `Revenue (${size})`,
+                            value: {value: '$112.4M'},
+                            secondaryValue: {
+                                value: '+13.4%',
+                                position: 'right',
+                                caption: 'vs the previous month',
+                                color: 'var(--g-color-text-positive)',
+                                view: 'label',
+                                arrow: {direction: 'up', ariaLabel: 'Increase'},
+                            },
+                        })),
+                    }}
+                />
+            </div>,
+            options,
+        );
+
+        function getBaseline(element: Element) {
+            const marker = document.createElement('span');
+            marker.style.cssText =
+                'display: inline-block; width: 0; height: 0; vertical-align: baseline';
+            element.append(marker);
+            const baseline = marker.getBoundingClientRect().top;
+            marker.remove();
+            return baseline;
+        }
+
+        for (const [index, item] of screen.container
+            .querySelectorAll('.chartkit-indicator__item')
+            .entries()) {
+            const expected = sizes[index];
+            const main = item.querySelector('.chartkit-indicator__item-value');
+            const label = item.querySelector('.g-label');
+            const labelText = item.querySelector('.g-label__content');
+            const icon = item.querySelector('.chartkit-indicator__secondary-value-arrow svg');
+            const caption = item.querySelector('.chartkit-indicator__secondary-value-caption');
+            if (!main || !label || !labelText || !icon || !caption) {
+                throw new Error('Indicator content is missing');
+            }
+            expect(getComputedStyle(labelText).fontSize).toBe('13px');
+            expect(getComputedStyle(labelText).lineHeight).toBe('16px');
+            expect(getComputedStyle(caption).fontSize).toBe(`${expected.captionSize}px`);
+            expect(icon.getAttribute('width')).toBe(String(expected.iconSize));
+            expect(icon.getAttribute('height')).toBe(String(expected.iconSize));
+            const baseline = getBaseline(main);
+            const labelRect = label.getBoundingClientRect();
+            const captionRect = caption.getBoundingClientRect();
+            expect(labelRect.height).toBe(expected.labelHeight);
+            expect(Math.abs(labelRect.bottom - baseline)).toBeLessThan(1);
+            expect(
+                Math.abs(
+                    captionRect.top +
+                        captionRect.height / 2 -
+                        (labelRect.top + labelRect.height / 2),
+                ),
+            ).toBeLessThan(1);
+        }
+
+        await expect(screen.getByTestId('indicator-alignment-wrapper')).toMatchScreenshot();
+        await page.viewport(400, 280);
+    });
+
+    test('secondary value below: label without color or caption', async () => {
         settings.set({plugins: [IndicatorPlugin], lang: 'en'});
 
         const screen = await render(
@@ -232,7 +311,7 @@ describe('Indicator visual tests', () => {
                             {
                                 title: 'Revenue',
                                 value: {value: 1200},
-                                secondaryValue: {value: '12.4%', view: 'badge'},
+                                secondaryValue: {value: '12.4%', view: 'label'},
                             },
                         ],
                     }}

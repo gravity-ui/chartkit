@@ -8,7 +8,8 @@ import type {IndicatorItemProps} from '../types';
 
 const b = block('indicator');
 
-const BADGE_SIZE_BY_INDICATOR_SIZE = {s: 'xs', m: 's', l: 's', xl: 'm'} as const;
+const LABEL_SIZE_BY_INDICATOR_SIZE = {s: 'xs', m: 's', l: 's', xl: 'm'} as const;
+const ICON_SIZE_BY_INDICATOR_SIZE = {s: 12, m: 14, l: 14, xl: 16} as const;
 
 export function IndicatorSecondaryValue({
     secondaryValue,
@@ -18,36 +19,35 @@ export function IndicatorSecondaryValue({
     size: IndicatorItemProps['size'];
 }) {
     const {value, caption, view = 'text', arrow, color} = secondaryValue;
-    const content = (
-        <React.Fragment>
-            {arrow && (
-                <span
-                    className={b('secondary-value-arrow')}
-                    role={arrow.ariaLabel ? 'img' : undefined}
-                    aria-label={arrow.ariaLabel}
-                >
-                    <Icon data={arrow.direction === 'up' ? ArrowUpIcon : ArrowDownIcon} size={14} />
-                </span>
-            )}
-            <span className={b('secondary-value-text')}>{value}</span>
-        </React.Fragment>
+    const labelSize = LABEL_SIZE_BY_INDICATOR_SIZE[size ?? 'm'];
+    const arrowIcon = arrow && (
+        <span
+            className={b('secondary-value-arrow')}
+            role={arrow.ariaLabel ? 'img' : undefined}
+            aria-label={arrow.ariaLabel}
+        >
+            <Icon
+                data={arrow.direction === 'up' ? ArrowUpIcon : ArrowDownIcon}
+                size={ICON_SIZE_BY_INDICATOR_SIZE[size ?? 'm']}
+            />
+        </span>
     );
 
     return (
         <div
-            className={b('secondary-value')}
+            className={b('secondary-value', {view})}
             style={{'--indicator-secondary-value-color': color} as React.CSSProperties}
         >
             <div className={b('secondary-value-content')}>
-                {view === 'badge' ? (
-                    <Label
-                        className={b('secondary-value-badge', {background: true})}
-                        size={BADGE_SIZE_BY_INDICATOR_SIZE[size ?? 'm']}
-                    >
-                        <span className={b('secondary-value-badge-content')}>{content}</span>
+                {view === 'label' ? (
+                    <Label className={b('secondary-value-label')} size={labelSize} icon={arrowIcon}>
+                        {value}
                     </Label>
                 ) : (
-                    <span className={b('secondary-value-badge')}>{content}</span>
+                    <span className={b('secondary-value-text')} style={{color}}>
+                        {arrowIcon}
+                        <span>{value}</span>
+                    </span>
                 )}
                 {caption !== null && caption !== undefined && caption !== '' && (
                     <span

@@ -73,20 +73,19 @@
 
     &__item_right &__value-row {
         flex-direction: row;
-        align-items: last baseline;
+        align-items: baseline;
         gap: var(--g-spacing-3);
     }
 
-    &__secondary-value,
-    &__secondary-value-badge-content {
-        font-size: var(--g-text-body-1-font-size);
-        line-height: var(--g-text-body-1-line-height);
-        font-weight: var(--g-text-body-font-weight);
+    &__item_right &__secondary-value_view_label {
+        contain: layout;
     }
 
     &__secondary-value {
+        font-size: var(--g-text-body-1-font-size);
+        line-height: var(--g-text-body-1-line-height);
+        font-weight: var(--g-text-body-font-weight);
         display: block;
-        overflow: hidden;
         min-width: min-content;
         max-width: 100%;
     }
@@ -102,38 +101,33 @@
     }
 
     &__item_size_l &__secondary-value,
-    &__item_size_xl &__secondary-value,
-    &__item_size_l &__secondary-value-badge-content,
-    &__item_size_xl &__secondary-value-badge-content {
+    &__item_size_xl &__secondary-value {
         font-size: var(--g-text-body-2-font-size);
         line-height: var(--g-text-body-2-line-height);
     }
 
-    &__secondary-value-badge,
-    &__secondary-value-badge-content {
+    &__secondary-value-text {
         display: inline-flex;
         align-items: center;
         gap: var(--g-spacing-half);
         flex-shrink: 0;
-    }
-
-    &__secondary-value-badge {
         font: inherit;
         white-space: nowrap;
-        color: var(--indicator-secondary-value-color, var(--g-color-text-primary));
-    }
-
-    &__secondary-value-badge_background {
-        background: color-mix(
-            in sRGB,
-            var(--indicator-secondary-value-color, var(--g-color-text-primary)) 15%,
-            transparent
-        );
+        color: var(--g-color-text-primary);
     }
 
     &__secondary-value-arrow {
         display: inline-flex;
         flex-shrink: 0;
+    }
+
+    &__secondary-value-label {
+        color: var(--indicator-secondary-value-color, var(--g-color-text-primary));
+        background-color: color-mix(
+            in sRGB,
+            var(--indicator-secondary-value-color, var(--g-color-text-primary)) 15%,
+            transparent
+        );
     }
 
     &__secondary-value-caption {

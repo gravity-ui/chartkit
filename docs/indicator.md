@@ -30,7 +30,7 @@ const data: ChartKitProps<'indicator'>['data'] = {
         caption: 'vs the previous month',
         position: 'right',
         color: 'var(--g-color-text-positive)',
-        view: 'badge',
+        view: 'label',
         arrow: {direction: 'up', ariaLabel: 'Increase'},
       },
     },
@@ -78,7 +78,7 @@ Set the widget's `defaultColor` to provide a fallback color for primary values.
 | `caption`                | A caption (`ReactNode`); string captions also have a native tooltip              | None               |
 | `position`               | `bottom` or `right`                                                              | `bottom`           |
 | `color`                  | A CSS color for the value and arrow, including theme variables                   | Primary text color |
-| `view`                   | `text` or `badge`; the badge background is a 15% tint of `color`                 | `text`             |
+| `view`                   | `text` or `label`; the label background is a 15% tint of `color`                 | `text`             |
 | `arrow.direction`        | `up` or `down`, chosen explicitly by the application                             | None               |
 | `arrow.ariaLabel`        | A localized accessible label for the arrow, for example `Increase` or `Decrease` | None               |
 

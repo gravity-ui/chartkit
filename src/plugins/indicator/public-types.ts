@@ -23,8 +23,8 @@ type IndicatorSecondaryValue = IndicatorValue & {
     caption?: ReactNode;
     /** Defaults to bottom. */
     position?: 'bottom' | 'right';
-    /** Badge uses a background derived from color. Defaults to text. */
-    view?: 'text' | 'badge';
+    /** The label view uses a background derived from color. Defaults to text. */
+    view?: 'text' | 'label';
     /** Hidden by default. */
     arrow?: {
         direction: 'up' | 'down';
