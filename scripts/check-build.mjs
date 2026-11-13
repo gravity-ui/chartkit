@@ -260,8 +260,6 @@ const CONSUMER_CHECKS = `
 export const widget: ChartKitWidget['yagr']['widget'] = 123;
 // @ts-expect-error a number is not a charts configuration: the adapter types must not degrade to any
 export const migrated = migrateChartDataV1(123);
-// @ts-expect-error the indicator adapter is internal
-import {migrateIndicatorDataFromV9ToV10} from '${name}/indicator';
 // @ts-expect-error the normalized indicator configuration is internal
 import type {NormalizedIndicatorWidgetConfig} from '${name}/indicator';
 // @ts-expect-error the shared value shape is internal

@@ -187,10 +187,9 @@ task('styles-components', () => {
 // ships in the npm tarball.
 task('copy-docs', (done) => {
     const {buildDocs} = require('@gravity-ui/readme-validator');
-    const outDir = path.join(__dirname, 'build', 'docs');
-    const {sections} = buildDocs({
+    buildDocs({
         rootDir: __dirname,
-        outDir,
+        outDir: path.join(__dirname, 'build', 'docs'),
         sources: [
             {
                 title: 'Guides',
@@ -201,22 +200,6 @@ task('copy-docs', (done) => {
             },
         ],
     });
-    const drafts = sections
-        .flatMap(({entries}) => entries)
-        .filter(({name}) => /\(draft\)$/i.test(name));
-    if (drafts.length) {
-        const indexPath = path.join(outDir, 'INDEX.md');
-        const index = fs.readFileSync(indexPath, 'utf8').split('\n');
-        fs.writeFileSync(
-            indexPath,
-            index
-                .filter((line) => !drafts.some(({rel}) => line.includes(`](./${rel})`)))
-                .join('\n'),
-        );
-        for (const {rel} of drafts) {
-            fs.rmSync(path.join(outDir, rel));
-        }
-    }
     done();
 });
 

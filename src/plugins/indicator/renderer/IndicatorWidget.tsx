@@ -8,7 +8,7 @@ import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../utils';
 import {block} from '../../../utils/cn';
-import {getValueFormatOptions, normalizeIndicatorData} from '../migration/from-v9-to-v10';
+import {getValueFormatOptions, normalizeIndicatorData} from '../normalize';
 import type {IndicatorItemProps} from '../types';
 
 import {IndicatorItem} from './IndicatorItem';

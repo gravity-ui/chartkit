@@ -1,13 +1,10 @@
-import type {MigrationResult, MigrationWarning} from '../../shared/migration';
 import type {
     IndicatorFormatOptions,
     IndicatorWidgetInput,
     IndicatorWidgetInputItem,
     NormalizedIndicatorWidgetConfig,
     NormalizedIndicatorWidgetConfigItem,
-} from '../types';
-
-type IndicatorMigrationWarning = MigrationWarning<'indicator-content' | 'indicator-color'>;
+} from './types';
 
 /** Return the original formatNumber options, preserving application metadata and object identity. */
 export function getValueFormatOptions(item: IndicatorWidgetInputItem): IndicatorFormatOptions {
@@ -20,7 +17,7 @@ export function getValueFormatOptions(item: IndicatorWidgetInputItem): Indicator
     throw new TypeError('An indicator item requires value or content.current.');
 }
 
-function migrateValue(
+function normalizeValue(
     item: IndicatorWidgetInputItem,
 ): NormalizedIndicatorWidgetConfigItem['value'] {
     const value = getValueFormatOptions(item);
@@ -58,7 +55,7 @@ export function normalizeIndicatorData(
     input: IndicatorWidgetInput,
 ): NormalizedIndicatorWidgetConfig {
     const data = input.data?.map((item): NormalizedIndicatorWidgetConfigItem => {
-        const value = migrateValue(item);
+        const value = normalizeValue(item);
 
         if (item.value === value && !('content' in item) && !('color' in item)) {
             return item as NormalizedIndicatorWidgetConfigItem;
@@ -77,33 +74,4 @@ export function normalizeIndicatorData(
         return input as NormalizedIndicatorWidgetConfig;
     }
     return {...input, data};
-}
-
-/** Normalize configuration and collect diagnostics for an explicit migration. */
-export function migrateIndicatorDataFromV9ToV10(
-    input: IndicatorWidgetInput,
-): MigrationResult<NormalizedIndicatorWidgetConfig, IndicatorMigrationWarning> {
-    const data = normalizeIndicatorData(input);
-    const warnings: IndicatorMigrationWarning[] = [];
-    input.data?.forEach((item, index) => {
-        if ('content' in item) {
-            warnings.push({
-                code: 'indicator-content',
-                path: ['data', index, 'content'],
-                message: 'Use value instead of content.current.',
-                replacement: 'value',
-                resolution: 'automatic',
-            });
-        }
-        if ('color' in item) {
-            warnings.push({
-                code: 'indicator-color',
-                path: ['data', index, 'color'],
-                message: 'Use value.color instead of the item color.',
-                replacement: 'value.color',
-                resolution: 'automatic',
-            });
-        }
-    });
-    return {data, warnings};
 }
