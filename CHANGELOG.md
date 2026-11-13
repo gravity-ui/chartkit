@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.1.0](https://github.com/gravity-ui/chartkit/compare/v9.0.0...v9.1.0) (2026-11-13)
+
+
+### Features
+
+* **indicator:** add secondary values and number formatting ([#969](https://github.com/gravity-ui/chartkit/issues/969)) ([860e627](https://github.com/gravity-ui/chartkit/commit/860e627c7c95fc581030b949332d76372dd5e9c4))
+
+
+### Bug Fixes
+
+* **SplitTooltip:** keep the main pane from collapsing on layout changes ([#963](https://github.com/gravity-ui/chartkit/issues/963)) ([58fdf7d](https://github.com/gravity-ui/chartkit/commit/58fdf7d124b9db5f2207245cd8b0b25fbd6a4cef))
+
 ## [9.0.0](https://github.com/gravity-ui/chartkit/compare/v8.12.0...v9.0.0) (2026-11-06)
 
 
