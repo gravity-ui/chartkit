@@ -37,7 +37,7 @@ describe('migrateIndicatorDataFromV9ToV10', () => {
         });
         expect(data.defaultColor).toBe('black');
         expect(data.data?.[0]).toBe(modern);
-        expect(converted?.value.custom).toBe(custom);
+        expect(converted?.value).toHaveProperty('custom', custom);
         expect(converted?.secondaryValue).toBe(secondaryValue);
         expect(getValueFormatOptions(legacy)).toBe(current);
         expect(custom.callback).not.toHaveBeenCalled();
@@ -67,5 +67,43 @@ describe('migrateIndicatorDataFromV9ToV10', () => {
 
     test('handles missing data', () => {
         expect(migrateIndicatorDataFromV9ToV10({})).toEqual({data: {}, warnings: []});
+    });
+
+    test('keeps legacy formatNumber fields as formatter metadata', () => {
+        const formatNumber = vi.fn();
+        const current = {value: 42, formatNumber};
+        const item = {content: {current}};
+        const {data} = migrateIndicatorDataFromV9ToV10({data: [item]});
+        expect(data.data?.[0]?.value).toEqual({value: 42});
+        expect(getValueFormatOptions(item)).toBe(current);
+        expect(formatNumber).not.toHaveBeenCalled();
+    });
+
+    test('preserves prototype getters when applying an item color', () => {
+        const formatNumber = vi.fn(() => 'custom');
+        const numberFormat = {precision: 2};
+        class Value {
+            get value() {
+                return 42;
+            }
+            get formatNumber() {
+                return formatNumber;
+            }
+            get numberFormat() {
+                return numberFormat;
+            }
+        }
+        const item = {value: new Value(), color: 'green'};
+        const {data} = migrateIndicatorDataFromV9ToV10({data: [item]});
+        expect(data.data?.[0]?.value).toEqual({
+            value: 42,
+            formatNumber,
+            numberFormat,
+            color: 'green',
+        });
+        expect(data.data?.[0]?.value.formatNumber).toBe(formatNumber);
+        expect(data.data?.[0]?.value.numberFormat).toBe(numberFormat);
+        expect(getValueFormatOptions(item)).toBe(item.value);
+        expect(formatNumber).not.toHaveBeenCalled();
     });
 });

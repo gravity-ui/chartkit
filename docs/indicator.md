@@ -63,8 +63,7 @@ can keep using them.
 | `size`           | `s`, `m`, `l`, or `xl`; controls both values                              | `m`                                   |
 | `nowrap`         | Truncate the title to one line and show its full text in a native tooltip | `false`                               |
 
-Both values accept `value`, `numberFormat`, and `color`. Primary values can also
-carry application metadata for the `formatNumber` callback.
+Both values accept `value`, `formatNumber`, `numberFormat`, and `color`.
 
 Set the widget's `defaultColor` to provide a fallback color for primary values.
 `value.color` overrides it. Secondary values have their own `color`.
@@ -74,6 +73,7 @@ Set the widget's `defaultColor` to provide a fallback color for primary values.
 | Secondary value property | Description                                                                      | Default            |
 | ------------------------ | -------------------------------------------------------------------------------- | ------------------ |
 | `value`                  | A number or an already formatted string                                          | Required           |
+| `formatNumber`           | A custom `(value: number) => string` formatter; overrides `numberFormat`         | None               |
 | `numberFormat`           | Formatting options applied to this value                                         | None               |
 | `caption`                | A caption (`ReactNode`); string captions also have a native tooltip              | None               |
 | `position`               | `bottom` or `right`                                                              | `bottom`           |
@@ -111,21 +111,43 @@ independent and accept the following options:
 With `format: 'percent'`, the multiplier is always `100`; a supplied `multiplier`
 is ignored.
 
-For each numeric value, formatting priority is:
+For the numeric main value, formatting priority is:
 
-1. Explicit `numberFormat` options are applied by ChartKit's built-in formatter,
-   even when the widget has a `formatNumber` callback. An empty object `{}` selects
-   the built-in defaults. Its locale defaults to `settings.lang`, with an optional
-   `numberFormat.lang` override.
-2. Without explicit options, the widget's `formatNumber` callback is called. For
-   the main value it receives the number and the complete `value`
-   object, including application metadata. For the secondary value it receives the number and `{value}`, where
-   `value` is the secondary value. The callback controls formatting, including the sign.
-3. With neither callback nor options, the number is rendered as plain text.
+1. The local `value.formatNumber` callback.
+2. Explicit `value.numberFormat` options, applied by ChartKit's built-in formatter.
+3. The widget's `formatNumber` callback. It receives the number and the complete
+   `value` object, or the legacy `content.current` object including application metadata.
+4. Plain text if no callback or options are supplied.
 
-You can configure just one value and let the other use the widget callback.
-Strings bypass both formatters. To display a missing value, supply a string such
-as `value: '—'` and omit `arrow`.
+For the numeric secondary value, formatting priority is:
+
+1. The local `secondaryValue.formatNumber` callback.
+2. Explicit `secondaryValue.numberFormat` options.
+3. Plain text if no callback or options are supplied.
+
+Local callbacks receive the number and return its display string, including any
+sign or unit. The widget's callback applies only to main values; it can serve as
+a shared default for multiple indicators. Each value can independently provide
+a local callback or options:
+
+```ts
+const data: ChartKitProps<'indicator'>['data'] = {
+  data: [
+    {
+      value: {value: 1200, formatNumber: (value) => `${value} USD`},
+      secondaryValue: {
+        value: 0.124,
+        numberFormat: {format: 'percent', precision: 1},
+      },
+    },
+  ],
+};
+```
+
+An empty `numberFormat` object `{}` selects the built-in defaults and overrides
+the widget's callback. The built-in formatter uses `settings.lang` unless
+`numberFormat.lang` is specified. Strings bypass all formatters. To display a
+missing value, supply a string such as `value: '—'` and omit `arrow`.
 
 `numberFormat.signDisplay` follows `Intl.NumberFormat` semantics: `auto`, `always`,
 `never` or `exceptZero`. For example, `exceptZero` shows a plus sign for positive
@@ -157,7 +179,7 @@ above. The widget's `defaultColor` is used when the item has no color.
 
 For a numeric main value, `formatNumber` receives the number and the complete
 `content.current` object, including application metadata. Fields inside
-`content.current` other than `value`, including `color` and `numberFormat`, are
+`content.current` other than `value`, including `color`, `formatNumber`, and `numberFormat`, are
 formatter metadata and do not configure the display. Strings render as supplied.
 
 When an item supplies both forms, `value` determines the main value.

@@ -26,15 +26,26 @@ function migrateValue(
     const value = getValueFormatOptions(item);
     if (item.value) {
         if (value.color === undefined && item.color !== undefined) {
-            const {value: rawValue, numberFormat, ...rest} = item.value;
-            return {...rest, value: rawValue, numberFormat, color: item.color};
+            const {value: rawValue, formatNumber, numberFormat, ...rest} = item.value;
+            return {...rest, value: rawValue, formatNumber, numberFormat, color: item.color};
         }
         return value;
     }
-    if (!('color' in value) && !('numberFormat' in value) && item.color === undefined) {
+    if (
+        !('color' in value) &&
+        !('formatNumber' in value) &&
+        !('numberFormat' in value) &&
+        item.color === undefined
+    ) {
         return value;
     }
-    const {value: rawValue, color: _color, numberFormat: _numberFormat, ...rest} = value;
+    const {
+        value: rawValue,
+        color: _color,
+        formatNumber: _formatNumber,
+        numberFormat: _numberFormat,
+        ...rest
+    } = value;
     return item.color === undefined
         ? {...rest, value: rawValue}
         : {...rest, value: rawValue, color: item.color};

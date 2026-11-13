@@ -63,8 +63,9 @@ In v9 configurations containing both forms, `value` takes precedence over
 used; an explicitly empty `value.color` uses `defaultColor`.
 
 The main-value formatter receives `value` instead of `content.current`.
-Copy any application metadata used by the formatter into `value`, renaming
-fields that conflict with the display options `color` and `numberFormat`.
+The new `value` configuration declares `value`, `color`, `formatNumber`, and `numberFormat`.
+In v9, arbitrary formatter metadata remains supported through the legacy
+`content.current` configuration.
 
 `migrateIndicatorDataFromV9ToV10` is internal and is not exported from the package.
 See the [indicator guide](indicator.md) for configuration and formatting options.

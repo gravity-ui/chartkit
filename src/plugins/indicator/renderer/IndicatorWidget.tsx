@@ -61,7 +61,7 @@ export const IndicatorWidget = React.forwardRef<
             },
             secondaryValue: secondaryValue
                 ? {
-                      value: formatValue(secondaryValue, formatNumber),
+                      value: formatValue(secondaryValue),
                       color: secondaryValue.color,
                       caption: secondaryValue.caption,
                       position: secondaryValue.position,

@@ -33,6 +33,6 @@ export type IndicatorItemProps = Pick<
     };
     secondaryValue?: Omit<
         NonNullable<NormalizedIndicatorWidgetConfigItem['secondaryValue']>,
-        'value' | 'numberFormat'
+        'value' | 'formatNumber' | 'numberFormat'
     > & {value: string};
 };

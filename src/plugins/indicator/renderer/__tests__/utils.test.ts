@@ -4,6 +4,23 @@ import {formatValue} from '../utils';
 describe('formatValue', () => {
     afterEach(() => settings.set({lang: 'en'}));
 
+    test('prefers a local callback over options and the widget callback', () => {
+        const localFormatNumber = vi.fn(() => 'local');
+        const formatNumber = vi.fn(() => 'widget');
+        expect(
+            formatValue(
+                {
+                    value: 0.124,
+                    formatNumber: localFormatNumber,
+                    numberFormat: {format: 'percent', precision: 1},
+                },
+                formatNumber,
+            ),
+        ).toBe('local');
+        expect(localFormatNumber).toHaveBeenCalledExactlyOnceWith(0.124);
+        expect(formatNumber).not.toHaveBeenCalled();
+    });
+
     test('selects explicit formats, then the callback, then plain text', () => {
         const formatNumber = vi.fn(() => 'custom');
         expect(
@@ -32,16 +49,19 @@ describe('formatValue', () => {
     });
 
     test('preserves numeric strings without invoking formatters', () => {
+        const localFormatNumber = vi.fn();
         const formatNumber = vi.fn();
         expect(
             formatValue(
                 {
                     value: '0.124',
+                    formatNumber: localFormatNumber,
                     numberFormat: {format: 'percent', precision: 1},
                 },
                 formatNumber,
             ),
         ).toBe('0.124');
+        expect(localFormatNumber).not.toHaveBeenCalled();
         expect(formatNumber).not.toHaveBeenCalled();
     });
 

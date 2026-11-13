@@ -234,7 +234,7 @@ function readLegacyWidget(data: ChartKitWidget['indicator']['data']): string | n
 function forwardLegacyData<T extends keyof ChartKitWidget>(data: ChartKitWidget[T]['data']): ChartKitProps<T>['data'] {
     return data;
 }
-const legacyIndicator: IndicatorWidgetDataItem = {content: {current: {value: 42, numberFormat: 'application metadata'}}};
+const legacyIndicator: IndicatorWidgetDataItem = {content: {current: {value: 42, numberFormat: 'application metadata', formatNumber: 'application metadata', customMetadata: 'legacy'}}};
 const legacyIndicatorValue: string | number = legacyIndicator.content.current.value;
 const legacyIndicatorData: IndicatorWidgetData = {data: [legacyIndicator]};
 ChartKit({type: 'indicator', data: legacyIndicatorData});
@@ -242,6 +242,8 @@ type IndicatorInput = ChartKitProps<'indicator'>['data'];
 type IndicatorInputItem = NonNullable<IndicatorInput['data']>[number];
 const numberFormat = {unitRate: 1, multiplier: 1000, precision: 1};
 const indicatorData: IndicatorInput = {data: [{value: {value: 42, numberFormat}, secondaryValue: {value: 1, arrow: {direction: 'up', ariaLabel: 'Increase'}}}]};
+const indicatorWithCallbacks: IndicatorInput = {data: [{value: {value: 42, formatNumber: (value) => String(value), numberFormat}, secondaryValue: {value: 1, formatNumber: (value) => String(value), numberFormat}}]};
+ChartKit({type: 'indicator', data: indicatorWithCallbacks});
 const publicIndicatorData: ChartKitWidget['indicator']['data'] = legacyIndicatorData;
 const indicatorInput: IndicatorInput = {data: [legacyIndicator, ...indicatorData.data!]};
 const indicatorProps: ChartKitProps<'indicator'> = {type: 'indicator', data: indicatorInput};
@@ -272,6 +274,14 @@ import type {IndicatorWidgetConfigItem} from '${name}/indicator';
 import type {FormatNumberOptions} from '${name}/indicator';
 // @ts-expect-error the indicator value type must not degrade to any
 const invalidIndicator: IndicatorInput = {data: [{value: {value: false}}]};
+// @ts-expect-error the new value configuration does not accept arbitrary metadata
+const invalidValueMetadata: IndicatorInput = {data: [{value: {value: 42, customMetadata: 'new'}}]};
+// @ts-expect-error the new value configuration must reject misspelled display options
+const invalidValueColor: IndicatorInput = {data: [{value: {value: 42, colour: 'green'}}]};
+// @ts-expect-error local callbacks must return strings
+const invalidValueCallback: IndicatorInput = {data: [{value: {value: 42, formatNumber: () => 42}}]};
+// @ts-expect-error secondary callbacks must return strings
+const invalidSecondaryCallback: IndicatorInput = {data: [{value: {value: 42}, secondaryValue: {value: 1, formatNumber: () => 1}}]};
 // @ts-expect-error the legacy value type must retain its original contract
 const invalidLegacyValue: IndicatorWidgetDataItem['content']['current']['value'] = false;
 // @ts-expect-error the legacy item type must keep content required

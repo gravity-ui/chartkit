@@ -5,6 +5,8 @@ import type {FormatNumberOptions} from '../shared';
 type IndicatorValue = {
     /** Numbers can be formatted; strings are displayed as supplied. */
     value: number | string;
+    /** Custom formatter; takes precedence over numberFormat. */
+    formatNumber?: (value: number) => string;
     /** Explicit options take precedence over the widget's formatNumber callback. */
     numberFormat?: Omit<FormatNumberOptions, 'labelMode'>;
     /** Any CSS color, including theme variables. */
@@ -39,7 +41,7 @@ type LegacyIndicatorContent = {
 export type IndicatorWidgetDataItem = IndicatorItemOptions & {
     /** @deprecated Use value in ChartKitProps<'indicator'>['data']. */
     content: LegacyIndicatorContent;
-    value?: IndicatorValue & Record<string, unknown>;
+    value?: IndicatorValue;
     /** @deprecated Use value.color. */
     color?: string;
     secondaryValue?: IndicatorSecondaryValue;

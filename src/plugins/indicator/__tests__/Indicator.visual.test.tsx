@@ -273,7 +273,7 @@ describe('Indicator visual tests', () => {
         );
         const screen = await render(
             renderIndicator({
-                value: {...current, numberFormat: mainNumberFormat},
+                value: {value: current.value, numberFormat: mainNumberFormat},
                 secondaryValue,
             }),
             options,
@@ -294,23 +294,40 @@ describe('Indicator visual tests', () => {
         formatNumber.mockClear();
         await screen.rerender(
             renderIndicator({
-                value: {...current, numberFormat: mainNumberFormat},
+                value: {value: current.value, numberFormat: mainNumberFormat},
                 secondaryValue: {value: secondaryValue.value},
             }),
         );
 
         await expect.element(screen.getByText('1,235 USD', {exact: true})).toBeVisible();
-        await expect.element(screen.getByText('custom result', {exact: true})).toBeVisible();
-        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(secondaryValue.value, {
-            value: secondaryValue.value,
-        });
+        await expect.element(screen.getByText('0.124', {exact: true})).toBeVisible();
+        expect(formatNumber).not.toHaveBeenCalled();
 
         formatNumber.mockClear();
-        const value = {value: 0, customMetadata: 'new value'};
+        const value = {value: 0, color: 'green'};
         await screen.rerender(renderIndicator({value, secondaryValue}));
         await expect.element(screen.getByText('custom result', {exact: true})).toBeVisible();
         expect(formatNumber).toHaveBeenCalledExactlyOnceWith(0, value);
         expect(formatNumber.mock.calls[0][1]).toBe(value);
+
+        formatNumber.mockClear();
+        const localMainFormatter = vi.fn(() => 'main callback');
+        const localSecondaryFormatter = vi.fn(() => 'secondary callback');
+        await screen.rerender(
+            renderIndicator({
+                value: {
+                    value: current.value,
+                    formatNumber: localMainFormatter,
+                    numberFormat: mainNumberFormat,
+                },
+                secondaryValue: {...secondaryValue, formatNumber: localSecondaryFormatter},
+            }),
+        );
+        await expect.element(screen.getByText('main callback', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('secondary callback', {exact: true})).toBeVisible();
+        expect(localMainFormatter).toHaveBeenCalledExactlyOnceWith(current.value);
+        expect(localSecondaryFormatter).toHaveBeenCalledExactlyOnceWith(secondaryValue.value);
+        expect(formatNumber).not.toHaveBeenCalled();
     });
 
     test('legacy formatter metadata does not override the default color', async () => {
@@ -319,6 +336,7 @@ describe('Indicator visual tests', () => {
             value: 42,
             color: 'red',
             numberFormat: 'formatter metadata',
+            formatNumber: vi.fn(() => 'formatter metadata'),
             customMetadata: 'legacy',
         };
         const formatNumber = vi.fn((value: number, _options?: unknown) => String(value));
@@ -338,6 +356,7 @@ describe('Indicator visual tests', () => {
             'color: blue;',
         );
         expect(formatNumber.mock.calls[0][1]).toBe(current);
+        expect(current.formatNumber).not.toHaveBeenCalled();
     });
 
     test('updates when a new configuration reuses the data array', async () => {
@@ -372,7 +391,7 @@ describe('Indicator visual tests', () => {
             options,
         );
         await expect.element(screen.getByText('first:42', {exact: true})).toBeVisible();
-        await expect.element(screen.getByText('first:7', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('7', {exact: true})).toBeVisible();
         expect(firstFormatter.mock.calls[0][1]).toBe(current);
         firstFormatter.mockClear();
 
@@ -381,12 +400,9 @@ describe('Indicator visual tests', () => {
             <ChartKit type="indicator" data={config} formatNumber={nextFormatter} />,
         );
         await expect.element(screen.getByText('next:42', {exact: true})).toBeVisible();
-        await expect.element(screen.getByText('next:7', {exact: true})).toBeVisible();
+        await expect.element(screen.getByText('7', {exact: true})).toBeVisible();
         expect(firstFormatter).not.toHaveBeenCalled();
-        expect(nextFormatter.mock.calls).toEqual([
-            [42, current],
-            [7, {value: 7}],
-        ]);
+        expect(nextFormatter).toHaveBeenCalledExactlyOnceWith(42, current);
         expect(nextFormatter.mock.calls[0][1]).toBe(current);
     });
 });
