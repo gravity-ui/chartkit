@@ -19,9 +19,45 @@ export type YagrWidgetProps = ChartKitProps<'yagr'> & {
     id: string;
 };
 
+export interface YagrDataPoint {
+    value: number | string | null;
+    /** Plain text; null or omitted uses the value, an empty string hides the label. */
+    label?: string | null;
+}
+
+export interface YagrDataLabels {
+    /** Show line data labels. Defaults to false. */
+    enabled?: boolean;
+    /**
+     * Distance from the point center to the label's bottom edge in CSS pixels. Defaults to 5.
+     */
+    padding?: number;
+    /**
+     * Draw labels even when they overlap other labels. Defaults to false.
+     */
+    allowOverlap?: boolean;
+}
+
+export type YagrGraph = Omit<RawSerieData, 'data'> & {
+    dataLabels?: YagrDataLabels;
+} & (
+        | {
+              data: RawSerieData['data'];
+              _data?: undefined;
+          }
+        | {
+              data?: RawSerieData['data'];
+              /**
+               * @experimental
+               * Raw data with labels
+               */
+              _data: YagrDataPoint[];
+          }
+    );
+
 export type YagrWidgetData = {
     data: {
-        graphs: RawSerieData[];
+        graphs: YagrGraph[];
         timeline: number[];
         /**
          * Allow to setup timezone for X axis and tooltip's header.
