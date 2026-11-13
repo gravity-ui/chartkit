@@ -15,7 +15,7 @@ const data: ChartKitProps<'indicator'>['data'] = {
   data: [
     {
       title: 'Revenue',
-      primaryValue: {
+      value: {
         value: 1539577,
         numberFormat: {precision: 0, showRankDelimiter: true},
       },
@@ -47,7 +47,7 @@ The application computes differences, chooses colors and localizes captions.
 ## Configuration
 
 The widget configuration contains a `data` array with one entry per indicator.
-Use `ChartKitProps<'indicator'>['data']` for configurations with `primaryValue`
+Use `ChartKitProps<'indicator'>['data']` for configurations with `value`
 or a mix of new and legacy items. Use `ChartKitProps<'indicator'>` for the props
 of a wrapper around `<ChartKit type="indicator" />`.
 
@@ -57,7 +57,7 @@ can keep using them.
 
 | Item property    | Description                                                               | Default                               |
 | ---------------- | ------------------------------------------------------------------------- | ------------------------------------- |
-| `primaryValue`   | Main value                                                                | Required unless using the legacy form |
+| `value`          | Main value                                                                | Required unless using the legacy form |
 | `secondaryValue` | Additional value                                                          | None                                  |
 | `title`          | Text displayed above the main value                                       | None                                  |
 | `size`           | `s`, `m`, `l`, or `xl`; controls both values                              | `m`                                   |
@@ -67,7 +67,7 @@ Both values accept `value`, `numberFormat`, and `color`. Primary values can also
 carry application metadata for the `formatNumber` callback.
 
 Set the widget's `defaultColor` to provide a fallback color for primary values.
-`primaryValue.color` overrides it. Secondary values have their own `color`.
+`value.color` overrides it. Secondary values have their own `color`.
 
 ## Secondary value
 
@@ -88,7 +88,7 @@ decorative, so its meaning should be conveyed by the value or caption as well.
 
 ## Number formatting
 
-Set `primaryValue.numberFormat` for the main value and
+Set `value.numberFormat` for the main value and
 `secondaryValue.numberFormat` for the secondary value. The two configurations are
 independent and accept the following options:
 
@@ -118,7 +118,7 @@ For each numeric value, formatting priority is:
    the built-in defaults. Its locale defaults to `settings.lang`, with an optional
    `numberFormat.lang` override.
 2. Without explicit options, the widget's `formatNumber` callback is called. For
-   the main value it receives the number and the complete `primaryValue`
+   the main value it receives the number and the complete `value`
    object, including application metadata. For the secondary value it receives the number and `{value}`, where
    `value` is the secondary value. The callback controls formatting, including the sign.
 3. With neither callback nor options, the number is rendered as plain text.
@@ -160,6 +160,6 @@ For a numeric main value, `formatNumber` receives the number and the complete
 `content.current` other than `value`, including `color` and `numberFormat`, are
 formatter metadata and do not configure the display. Strings render as supplied.
 
-When an item supplies both forms, `primaryValue` determines the main value.
-If `primaryValue.color` is omitted, the item-level `color` is used. An explicitly
-empty `primaryValue.color` uses `defaultColor`.
+When an item supplies both forms, `value` determines the main value.
+If `value.color` is omitted, the item-level `color` is used. An explicitly
+empty `value.color` uses `defaultColor`.

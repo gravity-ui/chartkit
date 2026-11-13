@@ -1,5 +1,4 @@
 import type {FormatNumberOptions} from '../../../shared';
-import type {InternalFormatNumberOptions} from '../../../shared/format-number/types';
 import type {DrillDownConfig, HighchartsWidgetData} from '../../types';
 
 export type ConfigOptions = {
@@ -21,5 +20,5 @@ export type ChartKitFormatNumberSettings = {
     chartKitPrefix?: FormatNumberOptions['prefix'];
     chartKitShowRankDelimiter?: FormatNumberOptions['showRankDelimiter'];
     chartKitUnit?: FormatNumberOptions['unit'];
-    chartKitLabelMode?: InternalFormatNumberOptions['labelMode'];
+    chartKitLabelMode?: FormatNumberOptions['labelMode'];
 };

@@ -1,5 +1,5 @@
 import {i18nInstance, makeInstance} from './i18n/i18n';
-import type {FormatOptions, InternalFormatNumberOptions} from './types';
+import type {FormatNumberOptions, FormatOptions} from './types';
 
 import en from './i18n/en.json';
 import ru from './i18n/ru.json';
@@ -55,8 +55,6 @@ const unitFormatter = ({
             useGrouping: showRankDelimiter,
             signDisplay,
         });
-        // Let Intl scale percentages without floating-point multiplication. Keep the existing
-        // trailing-percent convention rather than Intl's locale-specific sign placement/spacing.
         const result = isPercent
             ? formatter
                   .formatToParts(scaledValue)
@@ -68,7 +66,6 @@ const unitFormatter = ({
                   .join('')
             : formatter.format(scaledValue);
 
-        // Number locales can include regions and extensions; unit keysets support en and ru.
         const unitsLang = new Intl.Locale(locale).language === 'ru' ? 'ru' : 'en';
         const i18nLang = i18nInstance.lang as string;
         i18nInstance.setLang(unitsLang);
@@ -121,7 +118,7 @@ const NUMBER_UNIT_RATE_BY_UNIT = {
     t: 4,
 };
 
-export const formatNumber = (value: number | string, options: InternalFormatNumberOptions = {}) => {
+export const formatNumber = (value: number | string, options: FormatNumberOptions = {}) => {
     if (Number.isNaN(value) || Number.isNaN(Number(value))) {
         return new Intl.NumberFormat('en').format(Number(value));
     }

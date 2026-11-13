@@ -241,7 +241,7 @@ ChartKit({type: 'indicator', data: legacyIndicatorData});
 type IndicatorInput = ChartKitProps<'indicator'>['data'];
 type IndicatorInputItem = NonNullable<IndicatorInput['data']>[number];
 const numberFormat = {unitRate: 1, multiplier: 1000, precision: 1};
-const indicatorData: IndicatorInput = {data: [{primaryValue: {value: 42, numberFormat}, secondaryValue: {value: 1, arrow: {direction: 'up', ariaLabel: 'Increase'}}}]};
+const indicatorData: IndicatorInput = {data: [{value: {value: 42, numberFormat}, secondaryValue: {value: 1, arrow: {direction: 'up', ariaLabel: 'Increase'}}}]};
 const publicIndicatorData: ChartKitWidget['indicator']['data'] = legacyIndicatorData;
 const indicatorInput: IndicatorInput = {data: [legacyIndicator, ...indicatorData.data!]};
 const indicatorProps: ChartKitProps<'indicator'> = {type: 'indicator', data: indicatorInput};
@@ -271,12 +271,12 @@ import type {IndicatorWidgetConfigItem} from '${name}/indicator';
 // @ts-expect-error standalone formatting types are internal
 import type {FormatNumberOptions} from '${name}/indicator';
 // @ts-expect-error the indicator value type must not degrade to any
-const invalidIndicator: IndicatorInput = {data: [{primaryValue: {value: false}}]};
+const invalidIndicator: IndicatorInput = {data: [{value: {value: false}}]};
 // @ts-expect-error the legacy value type must retain its original contract
 const invalidLegacyValue: IndicatorWidgetDataItem['content']['current']['value'] = false;
 // @ts-expect-error the legacy item type must keep content required
-const invalidLegacyItem: IndicatorWidgetDataItem = {primaryValue: {value: 42}};
-// @ts-expect-error each indicator requires a primary or legacy value
+const invalidLegacyItem: IndicatorWidgetDataItem = {value: {value: 42}};
+// @ts-expect-error each indicator requires value or content.current
 const emptyIndicator: IndicatorInput = {data: [{}]};
 // @ts-expect-error the extended indicator input must not widen other plugins' data
 const invalidHighchartsInput: ChartKitProps<'highcharts'>['data'] = indicatorData;
@@ -284,8 +284,8 @@ const invalidHighchartsInput: ChartKitProps<'highcharts'>['data'] = indicatorDat
 const invalidArrow: NonNullable<IndicatorWidgetDataItem['secondaryValue']> = {value: 1, arrow: 'up'};
 // @ts-expect-error arrow directions are restricted to up and down
 const invalidDirection: NonNullable<IndicatorWidgetDataItem['secondaryValue']> = {value: 1, arrow: {direction: 'left'}};
-// @ts-expect-error labelMode is not a public formatting option
-const invalidNumberFormat: IndicatorInputItem = {primaryValue: {value: 1, numberFormat: {labelMode: 'percent'}}};
+// @ts-expect-error labelMode is not an indicator formatting option
+const invalidNumberFormat: IndicatorInputItem = {value: {value: 1, numberFormat: {labelMode: 'percent'}}};
 // @ts-expect-error Highcharts tooltip precision must retain its original type
 const invalidTooltipPrecision: TooltipLine['chartKitPrecision'] = true;
 `;

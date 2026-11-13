@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {ChartKitError} from '../libs';
-import type {IndicatorWidgetInput} from '../plugins/indicator/internal-types';
+import type {IndicatorWidgetInput} from '../plugins/indicator/types';
 
 import type {ChartKitWidget} from './widget';
 

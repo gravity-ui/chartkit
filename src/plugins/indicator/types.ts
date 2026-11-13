@@ -1,54 +1,38 @@
-import type {ReactNode} from 'react';
+import type {IndicatorWidgetData, IndicatorWidgetDataItem} from './public-types';
 
-import type {FormatNumberOptions} from '../shared';
+export type IndicatorWidgetInputItem =
+    | IndicatorWidgetDataItem
+    | (Omit<IndicatorWidgetDataItem, 'content' | 'value'> & {
+          value: NonNullable<IndicatorWidgetDataItem['value']>;
+          content?: IndicatorWidgetDataItem['content'];
+      });
 
-type IndicatorValue = {
-    /** Numbers can be formatted; strings are displayed as supplied. */
-    value: number | string;
-    /** Explicit options take precedence over the widget's formatNumber callback. */
-    numberFormat?: FormatNumberOptions;
-    /** Any CSS color, including theme variables. */
-    color?: string;
+export type IndicatorWidgetInput = Omit<IndicatorWidgetData, 'data'> & {
+    data?: IndicatorWidgetInputItem[];
 };
 
-type IndicatorPrimaryValue = IndicatorValue & Record<string, unknown>;
+export type IndicatorFormatOptions = {value: string | number} & Record<string, unknown>;
 
-type IndicatorItemOptions = {
-    size?: 's' | 'm' | 'l' | 'xl';
-    title?: string;
-    nowrap?: boolean;
+export type NormalizedIndicatorWidgetConfigItem = Omit<
+    IndicatorWidgetInputItem,
+    'content' | 'color' | 'value'
+> & {
+    value: NonNullable<IndicatorWidgetDataItem['value']>;
 };
 
-type IndicatorSecondaryValue = IndicatorValue & {
-    caption?: ReactNode;
-    /** Defaults to bottom. */
-    position?: 'bottom' | 'right';
-    /** Badge uses a background derived from color. Defaults to text. */
-    view?: 'text' | 'badge';
-    /** Hidden by default. */
-    arrow?: {
-        direction: 'up' | 'down';
-        /** Localized accessible label, for example "Increase". Omit for a decorative arrow. */
-        ariaLabel?: string;
+export type NormalizedIndicatorWidgetConfig = Omit<IndicatorWidgetInput, 'data'> & {
+    data?: NormalizedIndicatorWidgetConfigItem[];
+};
+
+export type IndicatorItemProps = Pick<
+    NormalizedIndicatorWidgetConfigItem,
+    'title' | 'size' | 'nowrap'
+> & {
+    value: Pick<NormalizedIndicatorWidgetConfigItem['value'], 'color'> & {
+        value: string;
     };
-};
-
-type LegacyIndicatorContent = {
-    /** @deprecated Use primaryValue. */
-    current: {value: string | number} & Record<string, unknown>;
-};
-
-export type IndicatorWidgetDataItem = IndicatorItemOptions & {
-    /** @deprecated Use primaryValue in ChartKitProps<'indicator'>['data']. */
-    content: LegacyIndicatorContent;
-    primaryValue?: IndicatorPrimaryValue;
-    /** @deprecated Use primaryValue.color. */
-    color?: string;
-    secondaryValue?: IndicatorSecondaryValue;
-};
-
-export type IndicatorWidgetData = {
-    data?: IndicatorWidgetDataItem[];
-    /** Fallback color for primary values only. */
-    defaultColor?: string;
+    secondaryValue?: Omit<
+        NonNullable<NormalizedIndicatorWidgetConfigItem['secondaryValue']>,
+        'value' | 'numberFormat'
+    > & {value: string};
 };

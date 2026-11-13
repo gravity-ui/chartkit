@@ -5,36 +5,32 @@ import type {
     IndicatorWidgetInputItem,
     NormalizedIndicatorWidgetConfig,
     NormalizedIndicatorWidgetConfigItem,
-} from '../internal-types';
+} from '../types';
 
 type IndicatorMigrationWarning = MigrationWarning<'indicator-content' | 'indicator-color'>;
 
 /** Return the original formatNumber options, preserving application metadata and object identity. */
-export function getPrimaryValueFormatOptions(
-    item: IndicatorWidgetInputItem,
-): IndicatorFormatOptions {
-    if (item.primaryValue) {
-        return item.primaryValue;
+export function getValueFormatOptions(item: IndicatorWidgetInputItem): IndicatorFormatOptions {
+    if (item.value) {
+        return item.value;
     }
     if (item.content) {
         return item.content.current;
     }
-    throw new TypeError('An indicator item requires primaryValue or content.current.');
+    throw new TypeError('An indicator item requires value or content.current.');
 }
 
-function migratePrimaryValue(
+function migrateValue(
     item: IndicatorWidgetInputItem,
-): NormalizedIndicatorWidgetConfigItem['primaryValue'] {
-    const value = getPrimaryValueFormatOptions(item);
-    if (item.primaryValue) {
+): NormalizedIndicatorWidgetConfigItem['value'] {
+    const value = getValueFormatOptions(item);
+    if (item.value) {
         if (value.color === undefined && item.color !== undefined) {
-            // Spread omits prototype getters and non-enumerable display fields.
-            const {value: rawValue, numberFormat, ...rest} = item.primaryValue;
+            const {value: rawValue, numberFormat, ...rest} = item.value;
             return {...rest, value: rawValue, numberFormat, color: item.color};
         }
         return value;
     }
-    // Reserved display options on legacy current are opaque formatter metadata.
     if (!('color' in value) && !('numberFormat' in value) && item.color === undefined) {
         return value;
     }
@@ -51,14 +47,14 @@ export function normalizeIndicatorData(
     input: IndicatorWidgetInput,
 ): NormalizedIndicatorWidgetConfig {
     const data = input.data?.map((item): NormalizedIndicatorWidgetConfigItem => {
-        const primaryValue = migratePrimaryValue(item);
+        const value = migrateValue(item);
 
-        if (item.primaryValue === primaryValue && !('content' in item) && !('color' in item)) {
+        if (item.value === value && !('content' in item) && !('color' in item)) {
             return item as NormalizedIndicatorWidgetConfigItem;
         }
 
         return {
-            primaryValue,
+            value,
             ...(item.secondaryValue ? {secondaryValue: item.secondaryValue} : {}),
             ...(item.title === undefined ? {} : {title: item.title}),
             ...(item.size === undefined ? {} : {size: item.size}),
@@ -83,8 +79,8 @@ export function migrateIndicatorDataFromV9ToV10(
             warnings.push({
                 code: 'indicator-content',
                 path: ['data', index, 'content'],
-                message: 'Use primaryValue instead of content.current.',
-                replacement: 'primaryValue',
+                message: 'Use value instead of content.current.',
+                replacement: 'value',
                 resolution: 'automatic',
             });
         }
@@ -92,8 +88,8 @@ export function migrateIndicatorDataFromV9ToV10(
             warnings.push({
                 code: 'indicator-color',
                 path: ['data', index, 'color'],
-                message: 'Use primaryValue.color instead of the item color.',
-                replacement: 'primaryValue.color',
+                message: 'Use value.color instead of the item color.',
+                replacement: 'value.color',
                 resolution: 'automatic',
             });
         }

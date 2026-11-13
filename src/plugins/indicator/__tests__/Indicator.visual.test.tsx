@@ -4,8 +4,8 @@ import {render} from '../../../../test-utils/utils.js';
 import {ChartKit} from '../../../components/ChartKit.js';
 import {settings} from '../../../libs/index.js';
 import {IndicatorPlugin} from '../index.js';
-import type {IndicatorWidgetInputItem} from '../internal-types.js';
-import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types.js';
+import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../public-types.js';
+import type {IndicatorWidgetInputItem} from '../types.js';
 
 const indicatorData: IndicatorWidgetData = {
     data: [
@@ -47,7 +47,7 @@ describe('Indicator visual tests', () => {
                     data={{
                         data: [
                             {
-                                primaryValue: {value: 1539577973, color: '#4da2f1'},
+                                value: {value: 1539577973, color: '#4da2f1'},
                                 title: 'Value title',
                                 size: 'm',
                             },
@@ -114,7 +114,7 @@ describe('Indicator visual tests', () => {
         await screen.rerender(
             renderIndicator({
                 title: 'Revenue',
-                primaryValue: {value: 1200},
+                value: {value: 1200},
                 secondaryValue: {
                     value: 0.124,
                     numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
@@ -191,7 +191,7 @@ describe('Indicator visual tests', () => {
                         data: [
                             {
                                 title: 'Revenue',
-                                primaryValue: {value: 1200},
+                                value: {value: 1200},
                                 secondaryValue: {
                                     value: -0.124,
                                     numberFormat: {format: 'percent', precision: 1},
@@ -231,7 +231,7 @@ describe('Indicator visual tests', () => {
                         data: [
                             {
                                 title: 'Revenue',
-                                primaryValue: {value: 1200},
+                                value: {value: 1200},
                                 secondaryValue: {value: '12.4%', view: 'badge'},
                             },
                         ],
@@ -273,7 +273,7 @@ describe('Indicator visual tests', () => {
         );
         const screen = await render(
             renderIndicator({
-                primaryValue: {...current, numberFormat: mainNumberFormat},
+                value: {...current, numberFormat: mainNumberFormat},
                 secondaryValue,
             }),
             options,
@@ -294,7 +294,7 @@ describe('Indicator visual tests', () => {
         formatNumber.mockClear();
         await screen.rerender(
             renderIndicator({
-                primaryValue: {...current, numberFormat: mainNumberFormat},
+                value: {...current, numberFormat: mainNumberFormat},
                 secondaryValue: {value: secondaryValue.value},
             }),
         );
@@ -306,11 +306,11 @@ describe('Indicator visual tests', () => {
         });
 
         formatNumber.mockClear();
-        const primaryValue = {value: 0, customMetadata: 'new value'};
-        await screen.rerender(renderIndicator({primaryValue, secondaryValue}));
+        const value = {value: 0, customMetadata: 'new value'};
+        await screen.rerender(renderIndicator({value, secondaryValue}));
         await expect.element(screen.getByText('custom result', {exact: true})).toBeVisible();
-        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(0, primaryValue);
-        expect(formatNumber.mock.calls[0][1]).toBe(primaryValue);
+        expect(formatNumber).toHaveBeenCalledExactlyOnceWith(0, value);
+        expect(formatNumber.mock.calls[0][1]).toBe(value);
     });
 
     test('legacy formatter metadata does not override the default color', async () => {

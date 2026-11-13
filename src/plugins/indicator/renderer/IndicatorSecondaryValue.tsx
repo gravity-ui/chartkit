@@ -4,7 +4,7 @@ import {ArrowDown as ArrowDownIcon, ArrowUp as ArrowUpIcon} from '@gravity-ui/ic
 import {Icon, Label} from '@gravity-ui/uikit';
 
 import {block} from '../../../utils/cn';
-import type {IndicatorItemProps} from '../internal-types';
+import type {IndicatorItemProps} from '../types';
 
 const b = block('indicator');
 

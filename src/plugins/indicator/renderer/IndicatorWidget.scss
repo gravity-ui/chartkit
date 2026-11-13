@@ -85,7 +85,6 @@
     }
 
     &__secondary-value {
-        // Clipping exposes the bottom edge as the last baseline, aligning with the digits.
         display: block;
         overflow: hidden;
         min-width: min-content;
@@ -93,11 +92,9 @@
     }
 
     &__secondary-value-content {
-        // Preserve the value's width while allowing the caption to shrink.
         display: grid;
         grid-auto-flow: column;
         grid-template-columns: max-content;
-        // Keep an ellipsis visible so a truncated caption can still show its tooltip.
         grid-auto-columns: minmax(1em, 1fr);
         align-items: center;
         gap: calc(var(--g-spacing-1) + var(--g-spacing-half));

@@ -4,10 +4,10 @@
 
 ## Indicator configuration
 
-| v9                | v10                  |
-| ----------------- | -------------------- |
-| `content.current` | `primaryValue`       |
-| Item `color`      | `primaryValue.color` |
+| v9                | v10           |
+| ----------------- | ------------- |
+| `content.current` | `value`       |
+| Item `color`      | `value.color` |
 
 Before:
 
@@ -30,7 +30,7 @@ const data: IndicatorWidgetData = {
   data: [
     {
       title: 'Revenue',
-      primaryValue: {
+      value: {
         value: 1539577,
         color: 'var(--g-color-text-positive)',
       },
@@ -52,18 +52,18 @@ In v9, `IndicatorWidgetData` and `IndicatorWidgetDataItem` keep the legacy
 contract with required `content.current`. Existing interfaces can still extend
 them, and existing code can read `item.content.current` without a guard.
 
-Use `ChartKitProps<'indicator'>['data']` for input containing `primaryValue`
+Use `ChartKitProps<'indicator'>['data']` for input containing `value`
 or a mix of new and legacy items. The types without deprecated fields remain
 internal until the major release.
 
 `title`, `size`, `nowrap`, `defaultColor`, and `formatNumber` use the same options.
 
-In v9 configurations containing both forms, `primaryValue` takes precedence over
-`content.current`. If `primaryValue.color` is omitted, the item-level `color` is
-used; an explicitly empty `primaryValue.color` uses `defaultColor`.
+In v9 configurations containing both forms, `value` takes precedence over
+`content.current`. If `value.color` is omitted, the item-level `color` is
+used; an explicitly empty `value.color` uses `defaultColor`.
 
-The main-value formatter receives `primaryValue` instead of `content.current`.
-Copy any application metadata used by the formatter into `primaryValue`, renaming
+The main-value formatter receives `value` instead of `content.current`.
+Copy any application metadata used by the formatter into `value`, renaming
 fields that conflict with the display options `color` and `numberFormat`.
 
 `migrateIndicatorDataFromV9ToV10` is internal and is not exported from the package.
