@@ -1,5 +1,5 @@
 import {getValueFormatOptions, normalizeIndicatorData} from '../normalize';
-import type {IndicatorWidgetInput} from '../types';
+import type {IndicatorWidgetConfig} from '../types';
 
 describe('normalizeIndicatorData', () => {
     test('converts aliases, preserves metadata and references, and is idempotent', () => {
@@ -23,7 +23,7 @@ describe('normalizeIndicatorData', () => {
         const input = Object.freeze({
             data: [modern, legacy],
             defaultColor: 'black',
-        }) satisfies IndicatorWidgetInput;
+        }) satisfies IndicatorWidgetConfig;
         Object.freeze(input.data);
 
         const data = normalizeIndicatorData(input);

@@ -1,13 +1,13 @@
 import type {
     IndicatorFormatOptions,
-    IndicatorWidgetInput,
-    IndicatorWidgetInputItem,
+    IndicatorWidgetConfig,
+    IndicatorWidgetConfigItem,
     NormalizedIndicatorWidgetConfig,
     NormalizedIndicatorWidgetConfigItem,
 } from './types';
 
 /** Return the original formatNumber options, preserving application metadata and object identity. */
-export function getValueFormatOptions(item: IndicatorWidgetInputItem): IndicatorFormatOptions {
+export function getValueFormatOptions(item: IndicatorWidgetConfigItem): IndicatorFormatOptions {
     if (item.value) {
         return item.value;
     }
@@ -18,7 +18,7 @@ export function getValueFormatOptions(item: IndicatorWidgetInputItem): Indicator
 }
 
 function normalizeValue(
-    item: IndicatorWidgetInputItem,
+    item: IndicatorWidgetConfigItem,
 ): NormalizedIndicatorWidgetConfigItem['value'] {
     const value = getValueFormatOptions(item);
     if (item.value) {
@@ -52,7 +52,7 @@ function normalizeValue(
  * Normalize indicator configuration without mutating input, invoking callbacks or logging.
  */
 export function normalizeIndicatorData(
-    input: IndicatorWidgetInput,
+    input: IndicatorWidgetConfig,
 ): NormalizedIndicatorWidgetConfig {
     const data = input.data?.map((item): NormalizedIndicatorWidgetConfigItem => {
         const value = normalizeValue(item);
