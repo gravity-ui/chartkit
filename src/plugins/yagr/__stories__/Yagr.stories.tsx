@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {dateTime} from '@gravity-ui/date-utils';
-import {Button} from '@gravity-ui/uikit';
+import {Button, Flex} from '@gravity-ui/uikit';
 import {placement} from '@gravity-ui/yagr';
 import type {Meta, StoryObj} from '@storybook/react';
 
@@ -11,6 +11,7 @@ import {settings} from '../../../libs';
 import type {ChartKitRef} from '../../../types';
 import type {YagrWidgetData} from '../types';
 
+import {LABELED_DATA} from './mocks/labels';
 import {getNewConfig, line10, line10WithGrafanaStyle} from './mocks/line10';
 
 import '@gravity-ui/yagr/index.css';
@@ -161,31 +162,19 @@ export const Area: Story = {
     },
 };
 
-const POINT_LABELS_DATA: YagrWidgetData = {
-    data: {
-        timeline: [Date.UTC(2026, 0, 1), Date.UTC(2026, 0, 2)],
-        graphs: [{id: 'revenue', name: 'Revenue', data: [10, 20], pointLabels: ['Plan', 'Actual']}],
-    },
-    libraryConfig: {
-        chart: {series: {type: 'line'}},
-        scales: {y: {min: 0, max: 40}},
-    },
-};
-
-export const PreparedLabels: Story = {
-    name: 'Prepared labels',
+export const DataLabels: Story = {
     render: () => {
-        const [labels, setLabels] = React.useState(['Plan', 'Actual']);
-        const [showLabels, setShowLabels] = React.useState(true);
+        const [enabled, setEnabled] = React.useState(true);
+        const [padding, setPadding] = React.useState(5);
         settings.set({plugins: [YagrPlugin]});
 
         const data: YagrWidgetData = {
-            ...POINT_LABELS_DATA,
+            ...LABELED_DATA,
             data: {
-                ...POINT_LABELS_DATA.data,
-                graphs: POINT_LABELS_DATA.data.graphs.map((graph) => ({
+                ...LABELED_DATA.data,
+                graphs: LABELED_DATA.data.graphs.map((graph) => ({
                     ...graph,
-                    pointLabels: showLabels ? labels : undefined,
+                    dataLabels: {enabled, padding},
                 })),
             },
         };
@@ -193,14 +182,16 @@ export const PreparedLabels: Story = {
         return (
             <div>
                 <div style={{height: 300}}>
-                    <ChartKit id="prepared-labels" type="yagr" data={data} />
+                    <ChartKit id="data-labels" type="yagr" data={data} />
                 </div>
-                <Button onClick={() => setLabels(['Updated plan', 'Updated actual'])}>
-                    Update labels
-                </Button>
-                <Button onClick={() => setShowLabels(!showLabels)}>
-                    {showLabels ? 'Hide labels' : 'Show labels'}
-                </Button>
+                <Flex gap="spacing-2">
+                    <Button onClick={() => setEnabled(!enabled)}>
+                        {enabled ? 'Hide labels' : 'Show labels'}
+                    </Button>
+                    <Button onClick={() => setPadding(padding === 0 ? 8 : 0)}>
+                        Padding: {padding}px
+                    </Button>
+                </Flex>
             </div>
         );
     },

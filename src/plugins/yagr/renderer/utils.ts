@@ -3,10 +3,20 @@ import {defaults} from '@gravity-ui/yagr';
 
 import {settings} from '../../../libs';
 import {merge} from '../../../utils/merge';
-import type {MinimalValidConfig, Yagr, YagrChartOptions, YagrTheme, YagrWidgetData} from '../types';
+import {YagrDataLabelsPlugin} from '../plugins/YagrDataLabelsPlugin';
+import type {
+    MinimalValidConfig,
+    Yagr,
+    YagrChartOptions,
+    YagrConfig,
+    YagrGraph,
+    YagrTheme,
+    YagrWidgetData,
+} from '../types';
 
-import {getLabelHooks} from './labels';
 import {getRenderTooltip} from './tooltip';
+
+const GRAPH_ID_PREFIX = 'chartkit-series';
 
 const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
 const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
@@ -152,12 +162,55 @@ export const getUplotTimezoneAligner =
         return new Date(browserDate.valueOf() - uPlotOffset);
     };
 
+function getGraphId(index: number) {
+    return `${GRAPH_ID_PREFIX}-${index}`;
+}
+
+function prepareSeries(graphs: YagrGraph[]) {
+    const knownIds = new Set<string>();
+    const usedIds = new Set<string>();
+
+    for (const graph of graphs) {
+        const id = graph.id || graph.name;
+        if (id) {
+            knownIds.add(id);
+        }
+
+        if (graph.id) {
+            usedIds.add(graph.id);
+        }
+    }
+
+    return graphs.map((graph, index) => {
+        let id = graph.id || graph.name;
+        if (!id || (!graph.id && usedIds.has(id))) {
+            id = getGraphId(index);
+            while (knownIds.has(id)) {
+                id = `_${id}`;
+            }
+            knownIds.add(id);
+        }
+
+        usedIds.add(id);
+
+        return {
+            ...graph,
+            id,
+            data: graph._data?.length
+                ? graph._data.map((point) => point.value)
+                : (graph.data ?? []).slice(),
+            dataLabels: graph.dataLabels && {...graph.dataLabels},
+        };
+    });
+}
+
 export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig => {
     const {data, libraryConfig, theme} = args;
     const config: MinimalValidConfig = {
         ...libraryConfig,
         timeline: data.timeline,
-        series: data.graphs,
+        series: prepareSeries(data.graphs),
+        plugins: {...libraryConfig.plugins, chartKitDataLabels: YagrDataLabelsPlugin},
     };
 
     const {timeZone} = data;
@@ -194,16 +247,23 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
         config.tooltip.sort = config.tooltip.sort || ((a, b) => b.rowIdx - a.rowIdx);
     }
 
-    config.axes = config.axes || {};
+    config.axes = {...config.axes};
     const xAxis = config.axes[defaults.DEFAULT_X_SCALE];
 
-    config.editUplotOptions = (opts) => ({
-        ...opts,
-        tzDate: timeZone ? getUplotTimezoneAligner(config.chart, timeZone) : undefined,
-    });
+    config.editUplotOptions = (opts) => {
+        const options = {
+            ...opts,
+            tzDate: timeZone ? getUplotTimezoneAligner(config.chart, timeZone) : opts.tzDate,
+        };
+
+        return libraryConfig.editUplotOptions?.(options) ?? options;
+    };
 
     if (xAxis && !xAxis.values) {
-        xAxis.values = getXAxisFormatter(config.chart.timeMultiplier, timeZone);
+        config.axes[defaults.DEFAULT_X_SCALE] = {
+            ...xAxis,
+            values: getXAxisFormatter(config.chart.timeMultiplier, timeZone),
+        };
     }
 
     if (!xAxis) {
@@ -212,7 +272,32 @@ export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig =
         };
     }
 
-    config.hooks = getLabelHooks(config.hooks);
+    config.hooks = getExportCanvasHooks(config.hooks);
 
     return config;
 };
+
+// Yagr can retain a detached canvas after updates, so PNG exports need the current canvas.
+// TODO: Remove in the follow-up Yagr upgrade PR.
+// https://github.com/gravity-ui/chartkit/issues/970
+function getExportCanvasHooks(existingHooks: YagrConfig['hooks'] = {}): YagrConfig['hooks'] {
+    let chart: Yagr | undefined;
+
+    return {
+        ...existingHooks,
+        processed: [
+            ...(existingHooks.processed || []),
+            (event) => {
+                chart = event.chart;
+            },
+        ],
+        draw: [
+            ...(existingHooks.draw || []),
+            (u) => {
+                if (chart) {
+                    chart.canvas = u.ctx.canvas;
+                }
+            },
+        ],
+    };
+}

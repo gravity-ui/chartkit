@@ -1,1 +1,0 @@
-export {getLabelHooks} from './renderLabels';
