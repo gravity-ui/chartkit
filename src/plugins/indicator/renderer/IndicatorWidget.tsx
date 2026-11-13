@@ -8,24 +8,25 @@ import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../../libs';
 import type {ChartKitProps, ChartKitWidgetRef} from '../../../types';
 import {getChartPerformanceDuration, getRandomCKId, markChartPerformance} from '../../../utils';
 import {block} from '../../../utils/cn';
+import {getValueFormatOptions, normalizeIndicatorData} from '../normalize';
+import type {IndicatorItemProps} from '../types';
 
 import {IndicatorItem} from './IndicatorItem';
+import {formatValue} from './utils';
 
 import './IndicatorWidget.scss';
 
 const b = block('indicator');
 
 const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKitProps<'indicator'>>(
-    // _ref needs to avoid this React warning:
-    // "forwardRef render functions accept exactly two parameters: props and ref"
     function IndicatorWidgetInner(props, _ref) {
-        const {
-            onLoad,
-            formatNumber,
-            data: {data = [], defaultColor},
-            id,
-            onRender,
-        } = props;
+        const {onLoad, formatNumber, data: config, id, onRender} = props;
+        const {data = [], defaultColor} = config;
+
+        const normalizedData = React.useMemo(
+            () => normalizeIndicatorData(config).data ?? [],
+            [config],
+        );
 
         const generatedId = React.useMemo(
             () => `${id}_${getRandomCKId()}`,
@@ -49,16 +50,34 @@ const IndicatorWidget = React.forwardRef<ChartKitWidgetRef | undefined, ChartKit
             });
         }
 
+        const items: IndicatorItemProps[] = normalizedData.map((item, index) => {
+            const {value, secondaryValue, title, size, nowrap} = item;
+            return {
+                title,
+                size,
+                nowrap,
+                value: {
+                    value: formatValue(value, formatNumber, getValueFormatOptions(data[index])),
+                    color: value.color || defaultColor,
+                },
+                secondaryValue: secondaryValue
+                    ? {
+                          value: formatValue(secondaryValue),
+                          color: secondaryValue.color,
+                          caption: secondaryValue.caption,
+                          position: secondaryValue.position,
+                          view: secondaryValue.view,
+                          arrow: secondaryValue.arrow,
+                      }
+                    : undefined,
+            };
+        });
+
         return (
             <div className={b()}>
                 <div className={b('content', CHARTKIT_SCROLLABLE_NODE_CLASSNAME)}>
-                    {data.map((item, index) => (
-                        <IndicatorItem
-                            {...item}
-                            key={`${index}-ck-indicator-item`}
-                            defaultColor={defaultColor}
-                            formatNumber={formatNumber}
-                        />
+                    {items.map((item, index) => (
+                        <IndicatorItem {...item} key={`${index}-ck-indicator-item`} />
                     ))}
                 </div>
             </div>

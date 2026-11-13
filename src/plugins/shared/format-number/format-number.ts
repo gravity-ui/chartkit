@@ -10,8 +10,7 @@ function getUnitRate(value: number, exponent: number, unitsI18nKeys: string[]) {
     let resultUnitRate = 1;
     while (
         Math.abs(value / Math.pow(exponent, resultUnitRate)) >= 1 &&
-        resultUnitRate < 10 &&
-        i18n(unitsI18nKeys[resultUnitRate])
+        resultUnitRate < unitsI18nKeys.length
     ) {
         resultUnitRate++;
     }
@@ -28,36 +27,56 @@ const unitFormatter = ({
     unitsI18nKeys: string[];
     unitDelimiterI18nKey: string;
 }) => {
-    return function formatUnit(value: number, options: FormatOptions = {}) {
-        const {precision, unitRate, showRankDelimiter = true, lang} = options;
+    return function formatUnit(
+        value: number,
+        options: FormatOptions = {},
+        format: 'number' | 'percent' = 'number',
+    ) {
+        const {precision, unitRate, showRankDelimiter = true, lang, signDisplay} = options;
 
-        const i18nLang = i18nInstance.lang as string;
-        if (lang) {
-            i18nInstance.setLang(lang);
-        }
-
+        const locale = lang ?? (i18nInstance.lang as string);
+        const isPercent = format === 'percent';
         const resultUnitRate =
-            typeof unitRate === 'number' ? unitRate : getUnitRate(value, exponent, unitsI18nKeys);
+            typeof unitRate === 'number'
+                ? unitRate
+                : getUnitRate(isPercent ? value * 100 : value, exponent, unitsI18nKeys);
 
-        let result: number | string = value / Math.pow(exponent, resultUnitRate);
+        const scaledValue = value / Math.pow(exponent, resultUnitRate);
+        let maximumFractionDigits = 20;
         if (typeof precision === 'number') {
-            result = Number(result.toFixed(precision));
-        } else if (precision === 'auto' && result % 1 !== 0) {
-            result = Number(result.toFixed(Math.abs(result) > 1 ? 2 : 4));
+            maximumFractionDigits = precision;
+        } else if (precision === 'auto') {
+            maximumFractionDigits = Math.abs(scaledValue) > (isPercent ? 0.01 : 1) ? 2 : 4;
         }
-
-        result = new Intl.NumberFormat(lang ?? i18nLang, {
+        const formatter = new Intl.NumberFormat(locale, {
+            style: isPercent ? 'percent' : 'decimal',
             minimumFractionDigits: typeof precision === 'number' ? precision : 0,
-            maximumFractionDigits: 20,
+            maximumFractionDigits,
             useGrouping: showRankDelimiter,
-        }).format(result);
+            signDisplay,
+        });
+        const result = isPercent
+            ? formatter
+                  .formatToParts(scaledValue)
+                  .filter(
+                      ({type, value: part}) =>
+                          type !== 'percentSign' && (type !== 'literal' || part.trim() !== ''),
+                  )
+                  .map(({value: part}) => part)
+                  .join('')
+            : formatter.format(scaledValue);
 
-        const unit = i18n(unitsI18nKeys[resultUnitRate]);
-        const delimiter = i18n(unitDelimiterI18nKey);
+        const unitsLang = new Intl.Locale(locale).language === 'ru' ? 'ru' : 'en';
+        const i18nLang = i18nInstance.lang as string;
+        i18nInstance.setLang(unitsLang);
+        try {
+            const unit = i18n(unitsI18nKeys[resultUnitRate]);
+            const delimiter = i18n(unitDelimiterI18nKey);
 
-        i18nInstance.setLang(i18nLang);
-
-        return `${result}${delimiter}${unit}`;
+            return `${result}${delimiter}${unit}`;
+        } finally {
+            i18nInstance.setLang(i18nLang);
+        }
     };
 };
 
@@ -118,7 +137,7 @@ export const formatNumber = (value: number | string, options: FormatNumberOption
     let prePostfix = '';
 
     if (format === 'percent') {
-        changedMultiplier = 100;
+        changedMultiplier = 1;
         prePostfix = '%';
     }
 
@@ -126,10 +145,14 @@ export const formatNumber = (value: number | string, options: FormatNumberOption
         prePostfix = '%';
     }
 
-    const formattedValue = baseFormatNumber(Number(value) * changedMultiplier, {
-        ...options,
-        unitRate: unitRate ?? NUMBER_UNIT_RATE_BY_UNIT[unit ?? 'default'],
-    });
+    const formattedValue = baseFormatNumber(
+        Number(value) * changedMultiplier,
+        {
+            ...options,
+            unitRate: unitRate ?? NUMBER_UNIT_RATE_BY_UNIT[unit ?? 'default'],
+        },
+        format,
+    );
 
     return `${prefix}${formattedValue}${prePostfix}${postfix}`;
 };
