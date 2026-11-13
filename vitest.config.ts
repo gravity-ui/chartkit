@@ -16,6 +16,7 @@ export default defineConfig({
         },
         browser: {
             enabled: true,
+            testerHtmlPath: 'test-utils/tester.html',
             headless: true,
             provider: playwright({}),
             instances: [
@@ -95,6 +96,9 @@ export default defineConfig({
             {
                 extends: true,
                 plugins: [react()],
+                optimizeDeps: {
+                    include: ['@gravity-ui/icons'],
+                },
                 test: {
                     name: 'visual',
                     include: ['src/**/*.visual.test.ts?(x)'],
