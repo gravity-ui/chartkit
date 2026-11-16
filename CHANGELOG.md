@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.13.0](https://github.com/gravity-ui/chartkit/compare/v8.12.1...v8.13.0) (2026-11-16)
+
+
+### Features
+
+* **indicator:** add secondary values and number formatting ([#972](https://github.com/gravity-ui/chartkit/issues/972)) ([5158032](https://github.com/gravity-ui/chartkit/commit/51580326e9dfe58c65eae12cad7c809077ef731a))
+
 ## [8.12.1](https://github.com/gravity-ui/chartkit/compare/v8.12.0...v8.12.1) (2026-11-10)
 
 
