@@ -1,3 +1,5 @@
+import {CHARTKIT_ERROR_CODE, ChartKitError} from '../../libs';
+
 import type {
     IndicatorFormatOptions,
     IndicatorWidgetConfig,
@@ -14,7 +16,10 @@ export function getValueFormatOptions(item: IndicatorWidgetConfigItem): Indicato
     if (item.content) {
         return item.content.current;
     }
-    throw new TypeError('An indicator item requires value or content.current.');
+    throw new ChartKitError({
+        code: CHARTKIT_ERROR_CODE.INVALID_DATA,
+        message: 'An indicator item requires value or content.current.',
+    });
 }
 
 function normalizeValue(
