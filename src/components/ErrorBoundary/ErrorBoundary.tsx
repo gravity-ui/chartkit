@@ -2,13 +2,13 @@ import React from 'react';
 
 import type {ChartKitError} from '../../libs';
 import {CHARTKIT_ERROR_CODE} from '../../libs';
-import type {ChartKitOnError, ChartKitType, ChartKitWidget, RenderError} from '../../types';
+import type {ChartKitOnError, ChartKitProps, ChartKitType, RenderError} from '../../types';
 import {getErrorMessage} from '../../utils/getErrorMessage';
 
 type Props = {
     children: React.ReactNode;
     onError?: ChartKitOnError;
-    data: ChartKitWidget[ChartKitType]['data'];
+    data: ChartKitProps<ChartKitType>['data'];
     renderError?: RenderError;
 };
 

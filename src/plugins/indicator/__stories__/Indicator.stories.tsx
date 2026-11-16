@@ -2,26 +2,13 @@ import React from 'react';
 
 import {Button} from '@gravity-ui/uikit';
 import {Meta, StoryObj} from '@storybook/react';
-import cloneDeep from 'lodash/cloneDeep';
 import {action} from 'storybook/actions';
 
 import {IndicatorPlugin} from '../';
 import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
-import type {ChartKitRef} from '../../../types';
-import type {IndicatorWidgetData, IndicatorWidgetDataItem} from '../types';
-
-const data: IndicatorWidgetData = {
-    data: [
-        {
-            content: {
-                current: {
-                    value: 1539577973,
-                },
-            },
-        },
-    ],
-};
+import type {ChartKitProps, ChartKitRef} from '../../../types';
+import type {IndicatorWidgetDataItem} from '../public-types';
 
 interface ChartStoryProps {
     color: string;
@@ -33,14 +20,9 @@ interface ChartStoryProps {
 const ChartStory = ({color, size, title, nowrap}: ChartStoryProps) => {
     const [shown, setShown] = React.useState(false);
     const chartkitRef = React.useRef<ChartKitRef | undefined>(undefined);
-    const resultData = cloneDeep(data);
-
-    if (resultData.data) {
-        resultData.data[0].size = size;
-        resultData.data[0].color = color;
-        resultData.data[0].title = title;
-        resultData.data[0].nowrap = nowrap;
-    }
+    const resultData: ChartKitProps<'indicator'>['data'] = {
+        data: [{value: {value: 1539577973, color}, size, title, nowrap}],
+    };
 
     if (!shown) {
         settings.set({plugins: [IndicatorPlugin]});
@@ -79,5 +61,61 @@ export const Showcase: StoryObj<typeof ChartStory> = {
         size: {control: 'radio', options: ['s', 'm', 'l', 'xl']},
         title: {control: 'text'},
         nowrap: {control: 'boolean'},
+    },
+};
+
+interface SecondaryValueStoryProps extends ChartStoryProps {
+    secondaryValuePosition: NonNullable<IndicatorWidgetDataItem['secondaryValue']>['position'];
+    secondaryValue: Omit<NonNullable<IndicatorWidgetDataItem['secondaryValue']>, 'position'>;
+}
+
+export const WithSecondaryValue: StoryObj<SecondaryValueStoryProps> = {
+    render: ({color, size, title, nowrap, secondaryValuePosition, secondaryValue}) => {
+        settings.set({plugins: [IndicatorPlugin]});
+
+        return (
+            <div style={{height: 300, width: '100%'}}>
+                <ChartKit
+                    type="indicator"
+                    data={{
+                        data: [
+                            {
+                                value: {value: 1539577973, color},
+                                size,
+                                title,
+                                nowrap,
+                                secondaryValue: {
+                                    ...secondaryValue,
+                                    position: secondaryValuePosition,
+                                },
+                            },
+                        ],
+                    }}
+                    onLoad={action('onLoad')}
+                />
+            </div>
+        );
+    },
+    args: {
+        ...Showcase.args,
+        secondaryValuePosition: 'bottom',
+        secondaryValue: {
+            value: 0.124,
+            numberFormat: {format: 'percent', precision: 1, signDisplay: 'exceptZero'},
+            caption: 'vs the previous month',
+            arrow: {direction: 'up', ariaLabel: 'Increase'},
+            color: 'var(--g-color-text-positive)',
+            view: 'label',
+        },
+    },
+    argTypes: {
+        ...Showcase.argTypes,
+        secondaryValuePosition: {
+            control: 'radio',
+            options: ['bottom', 'right'],
+        },
+        secondaryValue: {
+            control: 'object',
+        },
     },
 };

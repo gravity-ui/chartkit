@@ -2,7 +2,7 @@ import type {ChartData} from '@gravity-ui/charts';
 
 import type {SplitLayoutType} from '../components/SplitPane/types';
 import type {Highcharts, HighchartsWidgetData, StringParams} from '../plugins/highcharts/types';
-import type {IndicatorWidgetData} from '../plugins/indicator/types';
+import type {IndicatorWidgetData} from '../plugins/indicator/public-types';
 import type {CustomTooltipProps, Yagr, YagrWidgetData} from '../plugins/yagr/types';
 
 export interface ChartKitWidget {

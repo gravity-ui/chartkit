@@ -2,6 +2,7 @@ export type FormatOptions = {
     precision?: number | 'auto';
     unitRate?: number;
     showRankDelimiter?: boolean;
+    signDisplay?: Intl.NumberFormatOptions['signDisplay'];
     lang?: string;
     labelMode?: string;
 };
