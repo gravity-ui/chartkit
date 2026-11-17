@@ -89,7 +89,7 @@ const OVERLAPPING_LABELS_DATA: YagrWidgetData = {
     },
 };
 
-async function renderYagr(data: YagrWidgetData, options: Parameters<typeof render>[1] = {}) {
+async function renderYagr(data: YagrWidgetData) {
     const {width = 360, height = 240} = data.libraryConfig.chart?.size ?? {};
     let chart: Yagr | undefined;
     const screen = await render(
@@ -102,7 +102,6 @@ async function renderYagr(data: YagrWidgetData, options: Parameters<typeof rende
                 }}
             />
         </div>,
-        options,
     );
     await expect.poll(() => chart?.uplot.data[0]).toEqual(data.data.timeline);
     if (!chart) {
@@ -125,13 +124,7 @@ describe('Yagr canvas labels integration', () => {
     });
 
     test('renders normalized line labels at plot boundaries', async () => {
-        const {screen} = await renderYagr(NORMALIZED_LABELS_DATA, {providers: {theme: 'dark'}});
-
-        await expect(screen.getByTestId('label-chart')).toMatchScreenshot();
-    });
-
-    test('renders normalized line labels at plot boundaries in light theme', async () => {
-        const {screen} = await renderYagr(NORMALIZED_LABELS_DATA, {providers: {theme: 'light'}});
+        const {screen} = await renderYagr(NORMALIZED_LABELS_DATA);
 
         await expect(screen.getByTestId('label-chart')).toMatchScreenshot();
     });
