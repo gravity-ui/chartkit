@@ -60,10 +60,7 @@ function drawLabels(yagr: Yagr, u: Yagr['uplot']) {
                 return;
             }
 
-            const type =
-                uplotSeries.type ?? series.type ?? yagr.config.chart.series?.type ?? 'line';
-
-            if (type !== 'line' || !series.dataLabels?.enabled) {
+            if (uplotSeries.type !== 'line' || !series.dataLabels?.enabled) {
                 return;
             }
 

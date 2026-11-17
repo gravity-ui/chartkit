@@ -38,22 +38,11 @@ export interface YagrDataLabels {
     allowOverlap?: boolean;
 }
 
-export type YagrGraph = Omit<RawSerieData, 'data'> & {
+export type YagrGraph = RawSerieData & {
     dataLabels?: YagrDataLabels;
-} & (
-        | {
-              data: RawSerieData['data'];
-              _data?: undefined;
-          }
-        | {
-              data?: RawSerieData['data'];
-              /**
-               * @experimental
-               * Raw data with labels
-               */
-              _data: YagrDataPoint[];
-          }
-    );
+    /** Experimental raw data with labels. */
+    _data?: YagrDataPoint[];
+};
 
 export type YagrWidgetData = {
     data: {

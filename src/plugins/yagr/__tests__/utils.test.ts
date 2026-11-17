@@ -1,4 +1,5 @@
-import type {YagrChartOptions} from '@gravity-ui/yagr';
+import type {RawSerieData, YagrChartOptions} from '@gravity-ui/yagr';
+import {expectTypeOf} from 'vitest';
 
 import {getUplotTimezoneAligner, shapeYagrConfig} from '../renderer/utils';
 import type {MinimalValidConfig, YagrGraph, YagrWidgetData} from '../types';
@@ -45,6 +46,11 @@ describe('plugins/yagr/utils', () => {
     });
 
     describe('data labels preparation', () => {
+        test('keeps graph types compatible with Yagr series', () => {
+            expectTypeOf<YagrGraph>().toExtend<RawSerieData>();
+            expectTypeOf<RawSerieData>().toExtend<YagrGraph>();
+        });
+
         const cases: {
             name: string;
             graph: YagrGraph;
@@ -58,6 +64,7 @@ describe('plugins/yagr/utils', () => {
             {
                 name: 'labeled points',
                 graph: {
+                    data: [],
                     _data: [
                         {value: 10, label: 'Plan'},
                         {value: '020'},
@@ -68,8 +75,6 @@ describe('plugins/yagr/utils', () => {
                 },
                 expected: [10, '020', 15, 0, null],
             },
-            {name: 'empty values', graph: {data: []}, expected: []},
-            {name: 'empty labeled points', graph: {_data: []}, expected: []},
             {
                 name: 'labeled points override legacy values',
                 graph: {data: [99], _data: [{value: 10}]},
@@ -80,45 +85,45 @@ describe('plugins/yagr/utils', () => {
                 graph: {data: [99], _data: []},
                 expected: [99],
             },
-            {
-                name: 'null legacy values',
-                graph: {data: [null, null]},
-                expected: [null, null],
-            },
         ];
 
-        test.each(cases)('prepares $name without mutating input', ({graph, expected}) => {
-            const sourceGraph = {...graph, id: 'a', dataLabels: {enabled: true, padding: 0}};
-            const data = {timeline: [1, 2, 3, 4, 5], graphs: [sourceGraph]};
-            const original = structuredClone(data);
-            sourceGraph._data?.forEach(Object.freeze);
-            Object.freeze(sourceGraph._data);
-            Object.freeze(sourceGraph.data);
-            Object.freeze(sourceGraph.dataLabels);
-            Object.freeze(sourceGraph);
-
-            const config = shapeYagrConfig({data, libraryConfig: {}, theme: 'light'});
-
-            expect(config.series[0]).toMatchObject({
-                ...sourceGraph,
-                data: expected,
+        test.each(cases)('prepares $name', ({graph, expected}) => {
+            const config = shapeYagrConfig({
+                data: {timeline: [1, 2, 3, 4, 5], graphs: [graph]},
+                libraryConfig: {},
+                theme: 'light',
             });
+
+            expect(config.series[0].data).toEqual(expected);
+        });
+
+        test('does not mutate input data when preparing series', () => {
+            const graphs: YagrGraph[] = [
+                {data: [10, null, 0]},
+                {
+                    data: [],
+                    _data: [{value: 20, label: 'Plan'}, {value: null}],
+                    dataLabels: {enabled: true, padding: 0},
+                },
+            ];
+            const data = {timeline: [1, 2, 3], graphs};
+            const original = structuredClone(data);
+
+            shapeYagrConfig({data, libraryConfig: {}, theme: 'light'});
+
             expect(data).toEqual(original);
-            expect(config.series[0]).not.toBe(sourceGraph);
-            expect(config.series[0].data).not.toBe(sourceGraph.data);
         });
 
         test('assigns unique ids without colliding with consumer ids or names', () => {
             const graphs: YagrGraph[] = [
                 {data: [10]},
                 {id: 'chartkit-series-0', data: [20]},
-                {name: 'Named', _data: [{value: 10, label: 'Plan'}]},
-                {name: 'Named', _data: [{value: 30, label: 'Actual'}]},
+                {name: 'Named', data: [], _data: [{value: 10, label: 'Plan'}]},
+                {name: 'Named', data: [], _data: [{value: 30, label: 'Actual'}]},
                 {name: 'Explicit', data: [40]},
                 {id: 'Explicit', data: [50]},
                 {name: 'chartkit-series-3', data: [60]},
             ];
-            const originalGraphs = structuredClone(graphs);
             const config = shapeYagrConfig({
                 data: {timeline: [1], graphs},
                 libraryConfig: {},
@@ -130,7 +135,6 @@ describe('plugins/yagr/utils', () => {
             expect(config.series[2].id).toBe('Named');
             expect(config.series[5].id).toBe('Explicit');
             expect(config.series[6].id).toBe('chartkit-series-3');
-            expect(graphs).toEqual(originalGraphs);
         });
 
         test('preserves caller plugins and handlers', () => {

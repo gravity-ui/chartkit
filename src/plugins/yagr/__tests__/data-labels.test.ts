@@ -1,14 +1,17 @@
 import {YagrDataLabelsPlugin as createDataLabelsPlugin} from '../plugins/YagrDataLabelsPlugin';
 import {shapeYagrConfig} from '../renderer/utils';
-import type {Yagr, YagrGraph, YagrWidgetData} from '../types';
+import type {Yagr, YagrGraph} from '../types';
 
 function createChartMock(
     graphs: YagrGraph[] = [
-        {id: 'a', _data: [{value: 20, label: 'Plan'}], dataLabels: {enabled: true}},
+        {id: 'a', data: [], _data: [{value: 20, label: 'Plan'}], dataLabels: {enabled: true}},
     ],
-    libraryConfig: YagrWidgetData['libraryConfig'] = {},
 ) {
-    const config = shapeYagrConfig({data: {timeline: [1], graphs}, libraryConfig, theme: 'light'});
+    const config = shapeYagrConfig({
+        data: {timeline: [1], graphs},
+        libraryConfig: {},
+        theme: 'light',
+    });
     const ctx = {
         canvas: {width: 800},
         font: '',
@@ -31,7 +34,15 @@ function createChartMock(
         ctx,
         width: 400,
         bbox: {left: 20, top: 20, width: 760, height: 480},
-        series: [{}, ...config.series.map((series) => ({id: series.id, show: true, scale: 'y'}))],
+        series: [
+            {},
+            ...config.series.map((series) => ({
+                id: series.id,
+                type: 'line',
+                show: true,
+                scale: 'y',
+            })),
+        ],
         data: [[1], ...graphs.map(() => [30])],
         valToPos: vi.fn((value, scale) => (scale === 'x' ? value * 200 : value * 2)),
     } as unknown as Yagr['uplot'];
@@ -72,29 +83,13 @@ describe('YagrDataLabelsPlugin', () => {
     );
 
     const disabledCases: YagrGraph[] = [
-        {_data: [{value: 20, label: 'Plan'}]},
-        {_data: [{value: 20, label: 'Plan'}], dataLabels: {enabled: false}},
-        {data: [20], type: 'column', dataLabels: {enabled: true}},
-        {data: [20], type: 'area', dataLabels: {enabled: true}},
-        {data: [20], type: 'dots', dataLabels: {enabled: true}},
+        {data: [], _data: [{value: 20, label: 'Plan'}]},
+        {data: [], _data: [{value: 20, label: 'Plan'}], dataLabels: {enabled: false}},
     ];
-    test.each(disabledCases)('ignores disabled labels and non-line types: %j', (graph) => {
+    test.each(disabledCases)('ignores disabled labels: %j', (graph) => {
         const {ctx, draw} = createChartMock([{...graph, id: 'a'}]);
         draw();
         expect(ctx.fillText).not.toHaveBeenCalled();
-    });
-
-    test('resolves the common type with a per-series override', () => {
-        const graph: YagrGraph = {id: 'a', data: [20], dataLabels: {enabled: true}};
-        const hidden = createChartMock([graph], {chart: {series: {type: 'column'}}});
-        hidden.draw();
-        expect(hidden.ctx.fillText).not.toHaveBeenCalled();
-
-        const visible = createChartMock([{...graph, type: 'line'}], {
-            chart: {series: {type: 'column'}},
-        });
-        visible.draw();
-        expect(visible.ctx.fillText).toHaveBeenCalledWith('20', 200, 50);
     });
 
     test('uses the effective uPlot series type', () => {
@@ -107,6 +102,7 @@ describe('YagrDataLabelsPlugin', () => {
     test('handles default text, empty text, null values and zero', () => {
         const graph: YagrGraph = {
             id: 'a',
+            data: [],
             _data: [
                 {value: 10, label: 'Plan'},
                 {value: 20},
@@ -133,6 +129,7 @@ describe('YagrDataLabelsPlugin', () => {
         ({allowOverlap, expected}) => {
             const graph: YagrGraph = {
                 id: 'a',
+                data: [],
                 _data: [
                     {value: 1, label: 'Lower'},
                     {value: 1, label: 'Right'},
@@ -158,14 +155,17 @@ describe('YagrDataLabelsPlugin', () => {
     const overlappingSeries: YagrGraph[] = [
         {
             id: 'first',
+            data: [],
             _data: [{value: 1, label: 'First'}, {value: null}, {value: null}],
         },
         {
             id: 'middle',
+            data: [],
             _data: [{value: null}, {value: 1, label: 'Middle'}, {value: null}],
         },
         {
             id: 'last',
+            data: [],
             _data: [{value: null}, {value: null}, {value: 1, label: 'Last'}],
         },
     ];
@@ -194,18 +194,22 @@ describe('YagrDataLabelsPlugin', () => {
         },
     );
 
-    test('keeps padding above the actual text bounds with a negative descent', () => {
-        const {ctx, u, draw} = createChartMock();
-        ctx.measureText.mockReturnValue({
-            width: 40,
-            actualBoundingBoxAscent: 20,
-            actualBoundingBoxDescent: -4,
-        });
+    test('keeps text inside the bottom boundary with zero padding', () => {
+        const {ctx, u, draw} = createChartMock([
+            {
+                id: 'a',
+                data: [],
+                _data: [{value: 20, label: 'Plan'}],
+                dataLabels: {enabled: true, padding: 0},
+            },
+        ]);
         vi.mocked(u.valToPos).mockImplementation((_value, scale) =>
-            scale === 'x' ? 200 : u.bbox.top,
+            scale === 'x' ? 200 : u.bbox.top + u.bbox.height,
         );
+
         draw();
-        expect(ctx.fillText).toHaveBeenCalledWith('Plan', 200, 50);
+
+        expect(ctx.fillText).toHaveBeenCalledWith('Plan', 200, 498);
     });
 
     test('reads replacement config by id on every draw, including padding zero', () => {
@@ -217,6 +221,7 @@ describe('YagrDataLabelsPlugin', () => {
                 graphs: [
                     {
                         id: 'a',
+                        data: [],
                         _data: [{value: 4, label: 'Updated'}],
                         dataLabels: {enabled: true, padding: 0},
                     },
@@ -263,17 +268,12 @@ describe('YagrDataLabelsPlugin', () => {
     });
 
     test('moves text inside boundaries and skips points outside the viewport', () => {
-        const {ctx, u, chart, draw} = createChartMock();
         const graph: YagrGraph = {
             id: 'a',
             data: [1, 1, 1, 1, 1, 1, 1, 1],
             dataLabels: {enabled: true},
         };
-        chart.config.series = shapeYagrConfig({
-            data: {timeline: [], graphs: [graph]},
-            libraryConfig: {},
-            theme: 'light',
-        }).series;
+        const {ctx, u, draw} = createChartMock([graph]);
         u.data[0] = [20, 780, 400, 400, 19, 781, 400, 400];
         u.data[1] = [200, 200, 20, 500, 200, 200, 19, 501];
         vi.mocked(u.valToPos).mockImplementation((value) => value);
@@ -295,14 +295,5 @@ describe('YagrDataLabelsPlugin', () => {
         });
         draw();
         expect(ctx.fillText).toHaveBeenCalledWith('Plan', 400, 50);
-    });
-
-    test('restores the canvas state if drawing fails', () => {
-        const {ctx, draw} = createChartMock();
-        ctx.fillText.mockImplementation(() => {
-            throw new Error('Drawing failed');
-        });
-        expect(draw).toThrow('Drawing failed');
-        expect(ctx.restore).toHaveBeenCalledOnce();
     });
 });

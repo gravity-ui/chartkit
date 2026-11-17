@@ -8,7 +8,12 @@ export const LABELED_DATA: YagrWidgetData = {
                 id: 'revenue',
                 name: 'Revenue',
                 type: 'line',
-                _data: [{value: 10, label: 'Plan'}, {value: 20}, {value: 15, label: ''}],
+                data: [],
+                _data: [
+                    {value: 10, label: 'Plan'},
+                    {value: 20, label: 'Actual'},
+                    {value: 15, label: 'Total'},
+                ],
             },
         ],
     },
