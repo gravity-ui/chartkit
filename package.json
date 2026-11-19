@@ -1,6 +1,6 @@
 {
   "name": "@gravity-ui/chartkit",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "description": "Plugin-based React component that renders charts from multiple charting libraries, such as Gravity Charts and Yagr, through a single ChartKit API, with mobile-friendly tooltips and custom plugin support",
   "keywords": [
     "charts",
