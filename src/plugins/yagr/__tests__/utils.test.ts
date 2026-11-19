@@ -1,7 +1,8 @@
-import type {YagrChartOptions} from '@gravity-ui/yagr';
+import type {RawSerieData, YagrChartOptions} from '@gravity-ui/yagr';
+import {expectTypeOf} from 'vitest';
 
-import {getUplotTimezoneAligner, shapeYagrConfig} from '../renderer/utils';
-import type {MinimalValidConfig, YagrWidgetData} from '../types';
+import {getUplotTimezoneAligner, prepareSeries, shapeYagrConfig} from '../renderer/utils';
+import type {MinimalValidConfig, YagrGraph, YagrWidgetData} from '../types';
 
 const DATA: YagrWidgetData['data'] = {
     timeline: [1],
@@ -39,8 +40,125 @@ describe('plugins/yagr/utils', () => {
                 },
             ],
         ])('(args: %j)', (chart, expected) => {
-            const config = shapeYagrConfig({data: DATA, libraryConfig: {chart}, theme: 'dark'});
+            const config = shapeYagrConfig({
+                data: DATA,
+                series: prepareSeries(DATA.graphs),
+                libraryConfig: {chart},
+                theme: 'dark',
+            });
             expect(config.chart).toEqual(expected);
+        });
+    });
+
+    describe('data labels preparation', () => {
+        test('keeps graph types compatible with Yagr series', () => {
+            expectTypeOf<YagrGraph>().toExtend<RawSerieData>();
+            expectTypeOf<RawSerieData>().toExtend<YagrGraph>();
+        });
+
+        const cases: {
+            name: string;
+            graph: YagrGraph;
+            expected: (number | string | null)[];
+        }[] = [
+            {
+                name: 'legacy values',
+                graph: {data: [10, '020', null, 0]},
+                expected: [10, '020', null, 0],
+            },
+            {
+                name: 'labeled points',
+                graph: {
+                    data: [],
+                    _data: [
+                        {value: 10, label: 'Plan'},
+                        {value: '020'},
+                        {value: 15, label: ''},
+                        {value: 0, label: null},
+                        {value: null, label: 'Missing'},
+                    ],
+                },
+                expected: [10, '020', 15, 0, null],
+            },
+            {
+                name: 'labeled points override legacy values',
+                graph: {data: [99], _data: [{value: 10}]},
+                expected: [10],
+            },
+            {
+                name: 'empty labeled points fall back to legacy values',
+                graph: {data: [99], _data: []},
+                expected: [99],
+            },
+        ];
+
+        test.each(cases)('prepares $name', ({graph, expected}) => {
+            const series = prepareSeries([graph]);
+
+            expect(series[0].data).toEqual(expected);
+        });
+
+        test('does not mutate input data when preparing series', () => {
+            const graphs: YagrGraph[] = [
+                {data: [10, null, 0]},
+                {
+                    data: [],
+                    _data: [{value: 20, label: 'Plan'}, {value: null}],
+                    dataLabels: {enabled: true, padding: 0},
+                },
+            ];
+            const original = structuredClone(graphs);
+
+            prepareSeries(graphs);
+
+            expect(graphs).toEqual(original);
+        });
+
+        test('assigns unique ids without colliding with consumer ids or names', () => {
+            const graphs: YagrGraph[] = [
+                {data: [10]},
+                {id: 'chartkit-yagr-series-0', data: [20]},
+                {name: 'Named', data: [], _data: [{value: 10, label: 'Plan'}]},
+                {name: 'Named', data: [], _data: [{value: 30, label: 'Actual'}]},
+                {name: 'Explicit', data: [40]},
+                {id: 'Explicit', data: [50]},
+                {name: 'chartkit-yagr-series-3', data: [60]},
+            ];
+            const series = prepareSeries(graphs);
+
+            expect(new Set(series.map((graph) => graph.id)).size).toBe(graphs.length);
+            expect(series[0].id).toBe('_chartkit-yagr-series-0');
+            expect(series[1].id).toBe('chartkit-yagr-series-0');
+            expect(series[2].id).toBe('Named');
+            expect(series[5].id).toBe('Explicit');
+            expect(series[6].id).toBe('chartkit-yagr-series-3');
+        });
+
+        test('preserves caller plugins and handlers', () => {
+            const draw = vi.fn();
+            const processed = vi.fn();
+            const plugin = vi.fn(() => ({uplot: {hooks: {}}}));
+            const editUplotOptions = vi.fn((options) => options);
+            const libraryConfig = {
+                plugins: {custom: plugin},
+                hooks: {draw: [draw], processed: [processed]},
+                editUplotOptions,
+            };
+            const config = shapeYagrConfig({
+                data: DATA,
+                series: prepareSeries(DATA.graphs),
+                libraryConfig,
+                theme: 'light',
+            });
+
+            expect(config.plugins?.custom).toBe(plugin);
+            expect(config.hooks?.draw).toContain(draw);
+            expect(config.hooks?.processed).toContain(processed);
+            expect(libraryConfig.hooks).toEqual({draw: [draw], processed: [processed]});
+
+            const options = {width: 400, height: 300, series: []};
+            expect(config.editUplotOptions?.(options)).toEqual(options);
+            expect(editUplotOptions).toHaveBeenCalledOnce();
         });
     });
 

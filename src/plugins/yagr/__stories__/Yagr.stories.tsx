@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {dateTime} from '@gravity-ui/date-utils';
-import {Button} from '@gravity-ui/uikit';
+import {Button, Flex} from '@gravity-ui/uikit';
 import {placement} from '@gravity-ui/yagr';
 import type {Meta, StoryObj} from '@storybook/react';
 
@@ -9,7 +9,9 @@ import {CustomTooltipProps, TooltipHandlerData, YagrPlugin} from '../';
 import {ChartKit} from '../../../components/ChartKit';
 import {settings} from '../../../libs';
 import type {ChartKitRef} from '../../../types';
+import type {YagrWidgetData} from '../types';
 
+import {LABELED_DATA} from './mocks/labels';
 import {getNewConfig, line10, line10WithGrafanaStyle} from './mocks/line10';
 
 import '@gravity-ui/yagr/index.css';
@@ -155,6 +157,41 @@ export const Area: Story = {
         return (
             <div style={{height: 300, width: '100%'}}>
                 <ChartKit ref={chartkitRef} id="1" type="yagr" data={line10WithGrafanaStyle} />
+            </div>
+        );
+    },
+};
+
+export const DataLabels: Story = {
+    render: () => {
+        const [enabled, setEnabled] = React.useState(true);
+        const [padding, setPadding] = React.useState(5);
+        settings.set({plugins: [YagrPlugin]});
+
+        const data: YagrWidgetData = {
+            ...LABELED_DATA,
+            data: {
+                ...LABELED_DATA.data,
+                graphs: LABELED_DATA.data.graphs.map((graph) => ({
+                    ...graph,
+                    dataLabels: {enabled, padding},
+                })),
+            },
+        };
+
+        return (
+            <div>
+                <div style={{height: 300}}>
+                    <ChartKit id="data-labels" type="yagr" data={data} />
+                </div>
+                <Flex gap="spacing-2">
+                    <Button onClick={() => setEnabled(!enabled)}>
+                        {enabled ? 'Hide labels' : 'Show labels'}
+                    </Button>
+                    <Button onClick={() => setPadding(padding === 0 ? 8 : 0)}>
+                        Padding: {padding}px
+                    </Button>
+                </Flex>
             </div>
         );
     },
