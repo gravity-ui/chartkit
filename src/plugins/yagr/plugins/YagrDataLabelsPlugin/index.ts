@@ -1,5 +1,7 @@
 import type {RawSerieData, YagrPlugin} from '@gravity-ui/yagr';
 
+import {settings} from '../../../../libs';
+import {formatNumber} from '../../../shared';
 import type {Yagr, YagrGraph} from '../../types';
 
 type LabeledSeries = RawSerieData & Pick<YagrGraph, '_data' | 'dataLabels'>;
@@ -65,16 +67,23 @@ function drawLabels(yagr: Yagr, u: Yagr['uplot']) {
             }
 
             const padding = (series.dataLabels.padding ?? 5) * pixelRatio;
+            const locale = yagr.config.chart.appearance?.locale;
+            const format = series.dataLabels.format && {
+                ...series.dataLabels.format,
+                lang:
+                    series.dataLabels.format.lang ??
+                    (typeof locale === 'string' ? locale : settings.get('lang')),
+            };
             const scale = uplotSeries.scale || 'y';
             const labels: PositionedLabel[] = [];
 
             series.data.forEach((rawValue, pointIndex) => {
-                const label = series._data?.[pointIndex]?.label ?? String(rawValue);
+                const pointLabel = series._data?.[pointIndex]?.label;
                 const time = u.data[0][pointIndex];
                 const value = u.data[seriesIndex][pointIndex];
 
                 if (
-                    !label ||
+                    pointLabel === '' ||
                     rawValue === null ||
                     time === undefined ||
                     value === null ||
@@ -98,6 +107,8 @@ function drawLabels(yagr: Yagr, u: Yagr['uplot']) {
                     return;
                 }
 
+                const label =
+                    pointLabel ?? (format ? formatNumber(rawValue, format) : String(rawValue));
                 const metrics = ctx.measureText(label);
                 const halfWidth = Math.min(metrics.width, bbox.width) / 2;
 

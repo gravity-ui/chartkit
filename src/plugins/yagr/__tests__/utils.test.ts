@@ -1,7 +1,7 @@
 import type {RawSerieData, YagrChartOptions} from '@gravity-ui/yagr';
 import {expectTypeOf} from 'vitest';
 
-import {getUplotTimezoneAligner, shapeYagrConfig} from '../renderer/utils';
+import {getUplotTimezoneAligner, prepareSeries, shapeYagrConfig} from '../renderer/utils';
 import type {MinimalValidConfig, YagrGraph, YagrWidgetData} from '../types';
 
 const DATA: YagrWidgetData['data'] = {
@@ -40,7 +40,12 @@ describe('plugins/yagr/utils', () => {
                 },
             ],
         ])('(args: %j)', (chart, expected) => {
-            const config = shapeYagrConfig({data: DATA, libraryConfig: {chart}, theme: 'dark'});
+            const config = shapeYagrConfig({
+                data: DATA,
+                series: prepareSeries(DATA.graphs),
+                libraryConfig: {chart},
+                theme: 'dark',
+            });
             expect(config.chart).toEqual(expected);
         });
     });
@@ -88,13 +93,9 @@ describe('plugins/yagr/utils', () => {
         ];
 
         test.each(cases)('prepares $name', ({graph, expected}) => {
-            const config = shapeYagrConfig({
-                data: {timeline: [1, 2, 3, 4, 5], graphs: [graph]},
-                libraryConfig: {},
-                theme: 'light',
-            });
+            const series = prepareSeries([graph]);
 
-            expect(config.series[0].data).toEqual(expected);
+            expect(series[0].data).toEqual(expected);
         });
 
         test('does not mutate input data when preparing series', () => {
@@ -106,35 +107,31 @@ describe('plugins/yagr/utils', () => {
                     dataLabels: {enabled: true, padding: 0},
                 },
             ];
-            const data = {timeline: [1, 2, 3], graphs};
-            const original = structuredClone(data);
+            const original = structuredClone(graphs);
 
-            shapeYagrConfig({data, libraryConfig: {}, theme: 'light'});
+            prepareSeries(graphs);
 
-            expect(data).toEqual(original);
+            expect(graphs).toEqual(original);
         });
 
         test('assigns unique ids without colliding with consumer ids or names', () => {
             const graphs: YagrGraph[] = [
                 {data: [10]},
-                {id: 'chartkit-series-0', data: [20]},
+                {id: 'chartkit-yagr-series-0', data: [20]},
                 {name: 'Named', data: [], _data: [{value: 10, label: 'Plan'}]},
                 {name: 'Named', data: [], _data: [{value: 30, label: 'Actual'}]},
                 {name: 'Explicit', data: [40]},
                 {id: 'Explicit', data: [50]},
-                {name: 'chartkit-series-3', data: [60]},
+                {name: 'chartkit-yagr-series-3', data: [60]},
             ];
-            const config = shapeYagrConfig({
-                data: {timeline: [1], graphs},
-                libraryConfig: {},
-                theme: 'light',
-            });
+            const series = prepareSeries(graphs);
 
-            expect(new Set(config.series.map((series) => series.id)).size).toBe(graphs.length);
-            expect(config.series[1].id).toBe('chartkit-series-0');
-            expect(config.series[2].id).toBe('Named');
-            expect(config.series[5].id).toBe('Explicit');
-            expect(config.series[6].id).toBe('chartkit-series-3');
+            expect(new Set(series.map((graph) => graph.id)).size).toBe(graphs.length);
+            expect(series[0].id).toBe('_chartkit-yagr-series-0');
+            expect(series[1].id).toBe('chartkit-yagr-series-0');
+            expect(series[2].id).toBe('Named');
+            expect(series[5].id).toBe('Explicit');
+            expect(series[6].id).toBe('chartkit-yagr-series-3');
         });
 
         test('preserves caller plugins and handlers', () => {
@@ -147,7 +144,12 @@ describe('plugins/yagr/utils', () => {
                 hooks: {draw: [draw], processed: [processed]},
                 editUplotOptions,
             };
-            const config = shapeYagrConfig({data: DATA, libraryConfig, theme: 'light'});
+            const config = shapeYagrConfig({
+                data: DATA,
+                series: prepareSeries(DATA.graphs),
+                libraryConfig,
+                theme: 'light',
+            });
 
             expect(config.plugins?.custom).toBe(plugin);
             expect(config.hooks?.draw).toContain(draw);

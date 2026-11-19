@@ -5,7 +5,7 @@ import type {YagrChartProps} from '@gravity-ui/yagr/react';
 
 import type {MinimalValidConfig, YagrTheme, YagrWidgetProps} from '../types';
 
-import {shapeYagrConfig} from './utils';
+import {prepareSeries, shapeYagrConfig} from './utils';
 
 export const useWidgetData = (
     props: YagrWidgetProps,
@@ -13,15 +13,17 @@ export const useWidgetData = (
 ): {config: MinimalValidConfig; debug: YagrChartProps['debug']} => {
     const {data, sources, libraryConfig} = props.data;
     const theme = useThemeValue() as YagrTheme;
+    const series = React.useMemo(() => prepareSeries(data.graphs), [data.graphs]);
     const config: MinimalValidConfig = React.useMemo(
         () =>
             shapeYagrConfig({
                 data,
+                series,
                 libraryConfig,
                 theme,
                 customTooltip: Boolean(props.tooltip),
             }),
-        [data, libraryConfig, theme, props.tooltip],
+        [data, series, libraryConfig, theme, props.tooltip],
     );
     const debug: YagrChartProps['debug'] = React.useMemo(() => {
         const filename = sources

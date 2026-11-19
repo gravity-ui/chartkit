@@ -1,5 +1,5 @@
 import {YagrDataLabelsPlugin as createDataLabelsPlugin} from '../plugins/YagrDataLabelsPlugin';
-import {shapeYagrConfig} from '../renderer/utils';
+import {prepareSeries, shapeYagrConfig} from '../renderer/utils';
 import type {Yagr, YagrGraph} from '../types';
 
 function createChartMock(
@@ -9,6 +9,7 @@ function createChartMock(
 ) {
     const config = shapeYagrConfig({
         data: {timeline: [1], graphs},
+        series: prepareSeries(graphs),
         libraryConfig: {},
         theme: 'light',
     });
@@ -99,25 +100,40 @@ describe('YagrDataLabelsPlugin', () => {
         expect(ctx.fillText).not.toHaveBeenCalled();
     });
 
-    test('handles default text, empty text, null values and zero', () => {
-        const graph: YagrGraph = {
-            id: 'a',
-            data: [],
-            _data: [
-                {value: 10, label: 'Plan'},
-                {value: 20},
-                {value: 15, label: ''},
-                {value: null, label: 'Missing'},
-                {value: 0, label: null},
-            ],
-            dataLabels: {enabled: true},
-        };
-        const {u, ctx, draw} = createChartMock([graph]);
-        u.data[0] = [1, 1.5, 2, 2.5, 3];
-        u.data[1] = [30, 30, 30, 30, 30];
-        draw();
-        expect(ctx.fillText.mock.calls.map(([text]) => text)).toEqual(['Plan', '20', '0']);
-    });
+    const labelFormatCases = [
+        {format: undefined, expected: ['Plan', '20', '0']},
+        {
+            format: {precision: 2, postfix: ' USD'},
+            expected: ['Plan', '20.00 USD', '0.00 USD'],
+        },
+        {
+            format: {precision: 2, lang: 'ru', postfix: ' USD'},
+            expected: ['Plan', '20,00 USD', '0,00 USD'],
+        },
+    ];
+
+    test.each(labelFormatCases)(
+        'handles explicit labels, missing labels and gaps with format $format',
+        ({format, expected}) => {
+            const graph: YagrGraph = {
+                id: 'a',
+                data: [],
+                _data: [
+                    {value: 10, label: 'Plan'},
+                    {value: 20},
+                    {value: 15, label: ''},
+                    {value: null, label: 'Missing'},
+                    {value: 0, label: null},
+                ],
+                dataLabels: {enabled: true, format},
+            };
+            const {u, ctx, draw} = createChartMock([graph]);
+            u.data[0] = [1, 1.5, 2, 2.5, 3];
+            u.data[1] = [30, 30, 30, 30, 30];
+            draw();
+            expect(ctx.fillText.mock.calls.map(([text]) => text)).toEqual(expected);
+        },
+    );
 
     const pointOverlapCases = [
         {allowOverlap: undefined, expected: ['Upper', 'Left']},
@@ -215,22 +231,15 @@ describe('YagrDataLabelsPlugin', () => {
     test('reads replacement config by id on every draw, including padding zero', () => {
         const {ctx, draw, chart} = createChartMock();
         draw();
-        const replacement = shapeYagrConfig({
-            data: {
-                timeline: [1],
-                graphs: [
-                    {
-                        id: 'a',
-                        data: [],
-                        _data: [{value: 4, label: 'Updated'}],
-                        dataLabels: {enabled: true, padding: 0},
-                    },
-                ],
+        const graphs: YagrGraph[] = [
+            {
+                id: 'a',
+                data: [],
+                _data: [{value: 4, label: 'Updated'}],
+                dataLabels: {enabled: true, padding: 0},
             },
-            libraryConfig: {},
-            theme: 'light',
-        });
-        chart.config.series = replacement.series;
+        ];
+        chart.config.series = prepareSeries(graphs);
         ctx.fillText.mockClear();
         draw();
         expect(ctx.fillText).toHaveBeenCalledWith('Updated', 200, 60);

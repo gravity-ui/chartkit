@@ -16,13 +16,14 @@ import type {
 
 import {getRenderTooltip} from './tooltip';
 
-const GRAPH_ID_PREFIX = 'chartkit-series';
+const GRAPH_ID_PREFIX = 'chartkit-yagr-series';
 
 const TOOLTIP_HEADER_CLASS_NAME = '_tooltip-header';
 const TOOLTIP_LIST_CLASS_NAME = '_tooltip-list';
 
 type ShapeYagrConfigArgs = {
     data: YagrWidgetData['data'];
+    series: YagrConfig['series'];
     libraryConfig: YagrWidgetData['libraryConfig'];
     theme: YagrTheme;
     customTooltip?: boolean;
@@ -166,7 +167,7 @@ function getGraphId(index: number) {
     return `${GRAPH_ID_PREFIX}-${index}`;
 }
 
-function prepareSeries(graphs: YagrGraph[]) {
+export function prepareSeries(graphs: YagrGraph[]) {
     const knownIds = new Set<string>();
     const usedIds = new Set<string>();
 
@@ -205,11 +206,11 @@ function prepareSeries(graphs: YagrGraph[]) {
 }
 
 export const shapeYagrConfig = (args: ShapeYagrConfigArgs): MinimalValidConfig => {
-    const {data, libraryConfig, theme} = args;
+    const {data, series, libraryConfig, theme} = args;
     const config: MinimalValidConfig = {
         ...libraryConfig,
         timeline: data.timeline,
-        series: prepareSeries(data.graphs),
+        series,
         plugins: {...libraryConfig.plugins, chartKitDataLabels: YagrDataLabelsPlugin},
     };
 
