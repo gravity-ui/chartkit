@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.14.0](https://github.com/gravity-ui/chartkit/compare/v8.13.0...v8.14.0) (2026-11-19)
+
+
+### Features
+
+* **Yagr:** add configurable canvas data labels ([#974](https://github.com/gravity-ui/chartkit/issues/974)) ([6f4704a](https://github.com/gravity-ui/chartkit/commit/6f4704a78bdb09c5710e5e5e34cc160f3dbaf091))
+
 ## [8.13.0](https://github.com/gravity-ui/chartkit/compare/v8.12.1...v8.13.0) (2026-11-16)
 
 
