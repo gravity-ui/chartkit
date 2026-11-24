@@ -19,6 +19,7 @@
 // The plugin renderers sit behind `React.lazy`, so a load never evaluates them: every emitted
 // `.js` is also scanned for ESM syntax (CommonJS build) and extensionless relative specifiers
 // (ESM build).
+// The packaged docs must exclude the draft indicator migration guide and links to it.
 import {spawnSync} from 'node:child_process';
 import {
     existsSync,
@@ -210,6 +211,17 @@ scanBuild('esm', (code, file) => {
     return missingFiles(code, file);
 });
 
+const docsDir = join(BUILD, 'docs');
+const draftGuide = 'indicator-migration.md';
+if (existsSync(join(docsDir, 'guides', draftGuide))) {
+    stderr.write(`build/docs/guides/${draftGuide}: draft guide was packaged\n`);
+    failed = true;
+}
+if (readFileSync(join(docsDir, 'INDEX.md'), 'utf8').includes(draftGuide)) {
+    stderr.write(`build/docs/INDEX.md: references draft guide ${draftGuide}\n`);
+    failed = true;
+}
+
 const CONSUMER_BASE = `import ChartKit, {settings} from '${name}';
 import type {ChartKitProps, ChartKitWidget} from '${name}';
 import {GravityChartsPlugin, migrateChartDataV1} from '${name}/gravity-charts';
@@ -260,6 +272,8 @@ const CONSUMER_CHECKS = `
 export const widget: ChartKitWidget['yagr']['widget'] = 123;
 // @ts-expect-error a number is not a charts configuration: the adapter types must not degrade to any
 export const migrated = migrateChartDataV1(123);
+// @ts-expect-error the indicator adapter is internal
+import {migrateIndicatorData} from '${name}/indicator';
 // @ts-expect-error the normalized indicator configuration is internal
 import type {NormalizedIndicatorWidgetConfig} from '${name}/indicator';
 // @ts-expect-error the shared value shape is internal

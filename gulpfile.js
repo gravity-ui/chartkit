@@ -183,8 +183,8 @@ task('styles-components', () => {
         .pipe(dest(path.resolve(BUILD_DIR, 'cjs')));
 });
 
-// Bundles the AI-facing docs tree (cleaned README + docs/ guides) into build/docs so it
-// ships in the npm tarball.
+// Bundles the AI-facing docs tree (cleaned README + docs/ guides) for the npm tarball.
+// Keep unreleased guides in docs-drafts/ outside the source directory.
 task('copy-docs', (done) => {
     const {buildDocs} = require('@gravity-ui/readme-validator');
     buildDocs({
