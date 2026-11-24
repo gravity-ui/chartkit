@@ -1,5 +1,5 @@
 import type {MigrationResult, MigrationWarning} from '../../shared/migration';
-import {normalizeIndicatorData} from '../normalize';
+import {LEGACY_FORMATTER_METADATA_FIELDS, normalizeIndicatorData} from '../normalize';
 import type {IndicatorWidgetConfig, NormalizedIndicatorWidgetConfig} from '../types';
 
 type IndicatorMigrationWarning = MigrationWarning<
@@ -22,7 +22,7 @@ export function migrateIndicatorData(
                 resolution: 'automatic',
             });
             if (!item.value && item.content) {
-                for (const field of ['color', 'formatNumber', 'numberFormat']) {
+                for (const field of LEGACY_FORMATTER_METADATA_FIELDS) {
                     if (field in item.content.current) {
                         warnings.push({
                             code: 'indicator-formatter-metadata',

@@ -6,6 +6,9 @@ import type {
     NormalizedIndicatorWidgetConfigItem,
 } from './types';
 
+// These legacy metadata keys have display semantics on a modern value.
+export const LEGACY_FORMATTER_METADATA_FIELDS = ['color', 'formatNumber', 'numberFormat'] as const;
+
 /** Return the original formatNumber options, preserving application metadata and object identity. */
 export function getValueFormatOptions(item: IndicatorWidgetConfigItem): IndicatorFormatOptions {
     if (item.value) {
@@ -29,23 +32,18 @@ function normalizeValue(
         return value;
     }
     if (
-        !('color' in value) &&
-        !('formatNumber' in value) &&
-        !('numberFormat' in value) &&
+        !LEGACY_FORMATTER_METADATA_FIELDS.some((field) => field in value) &&
         item.color === undefined
     ) {
         return value;
     }
-    const {
-        value: rawValue,
-        color: _color,
-        formatNumber: _formatNumber,
-        numberFormat: _numberFormat,
-        ...rest
-    } = value;
+    const {value: rawValue, ...metadata} = value;
+    for (const field of LEGACY_FORMATTER_METADATA_FIELDS) {
+        delete metadata[field];
+    }
     return item.color === undefined
-        ? {...rest, value: rawValue}
-        : {...rest, value: rawValue, color: item.color};
+        ? {...metadata, value: rawValue}
+        : {...metadata, value: rawValue, color: item.color};
 }
 
 /**

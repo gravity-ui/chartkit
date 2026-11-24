@@ -10,11 +10,13 @@ configuration and align `ChartKitWidget['indicator']['data']` with
 `ChartKitProps<'indicator'>['data']` without a compatibility union.
 
 Clean up all indicator types, including duplicate config/normalized shapes,
-value types, formatter contracts, and exports. Keep legacy types and conversion
-in migration tooling, separate from the renderer. Update the adapter, stories,
-[indicator guide](../../docs/indicator.md), and
-[migration guide](../../docs/indicator-migration.md); verify public declarations,
-migration, and rendering before release.
+value types, formatter contracts, and exports. Use the planned names
+`LegacyIndicatorWidgetData` and `LegacyIndicatorWidgetDataItem` for migration
+tooling input. Keep the legacy types and conversion in the migration tooling.
+Update the adapter, stories, [indicator guide](../../docs/indicator.md), and
+[migration guide](../../docs-drafts/indicator-migration.md). Document how users
+can access migration diagnostics and verify public declarations, migration, and
+rendering before release.
 
 ## Single indicator configuration — discuss
 

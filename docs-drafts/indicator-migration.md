@@ -45,8 +45,8 @@ Keep `IndicatorWidgetData` and `IndicatorWidgetDataItem` as the public names for
 the configuration without deprecated fields. Their imports from
 `@gravity-ui/chartkit/indicator` do not need to change.
 
-Use `LegacyIndicatorWidgetData` and `LegacyIndicatorWidgetDataItem` for the old
-configuration accepted by the migration adapter.
+The v10 migration tooling plans to use `LegacyIndicatorWidgetData` and
+`LegacyIndicatorWidgetDataItem` for the configuration it accepts as input.
 
 In v9, `IndicatorWidgetData` and `IndicatorWidgetDataItem` keep the legacy
 contract with required `content.current`. Existing interfaces can still extend
@@ -67,10 +67,15 @@ The new `value` configuration declares `value`, `color`, `formatNumber`, and `nu
 In v9, arbitrary formatter metadata remains supported through the legacy
 `content.current` configuration.
 
-When converting legacy data, metadata named `color`, `formatNumber`, or
-`numberFormat` is removed or replaced. The adapter reports `resolution: 'review'`
-for each field; update any widget formatter that depends on it before using the
-migrated configuration. Legacy metadata is ignored when `value` is also supplied.
+When converting an item that uses `content.current`, migration removes or replaces
+metadata named `color`, `formatNumber`, or `numberFormat`. When an item also
+supplies `value`, the legacy metadata is already ignored.
 
-`migrateIndicatorData` is internal and is not exported from the package.
-See the [indicator guide](indicator.md) for configuration and formatting options.
+When migrating in a ChartKit source checkout, call the internal
+[`migrateIndicatorData`](../src/plugins/indicator/migration/migrate-indicator-data.ts)
+adapter and read its `warnings` array. It reports a `resolution: 'review'` warning
+with the path to each affected field. In projects using the v9 npm package, check
+`content.current` for these fields on items that have no `value`. Update any widget
+`formatNumber` callback that reads those fields before using the migrated configuration.
+
+See the [indicator guide](../docs/indicator.md) for configuration and formatting options.
