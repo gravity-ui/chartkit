@@ -62,21 +62,23 @@ describe('Indicator visual tests', () => {
         expect(screen.container.querySelector('.chartkit-indicator')?.innerHTML).toBe(legacyMarkup);
     });
 
-    test('no data state', async () => {
+    const emptyObjectData: IndicatorWidgetData = {
+        // @ts-expect-error A runtime data source can return an empty object for the item list.
+        data: {},
+    };
+
+    test.each([
+        {name: 'missing data', config: {}},
+        {name: 'an empty array', config: {data: []}},
+        {name: 'an empty object', config: emptyObjectData},
+    ])('shows No data for $name and recovers when values arrive', async ({config}) => {
         settings.set({plugins: [IndicatorPlugin]});
 
-        const emptyData: IndicatorWidgetData = {
-            data: [],
-        };
-
-        const screen = await render(
-            <div style={{height: 300, width: '100%'}}>
-                <ChartKit id="indicator-empty" type="indicator" data={emptyData} />
-            </div>,
-            options,
-        );
+        const screen = await render(<ChartKit type="indicator" data={config} />, options);
 
         await expect.element(screen.getByText('No data')).toBeVisible();
+        await screen.rerender(<ChartKit type="indicator" data={{data: [{value: {value: 42}}]}} />);
+        await expect.element(screen.getByText('42')).toBeVisible();
     });
 
     test('secondary value formatting and overflow', async () => {

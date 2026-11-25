@@ -25,7 +25,16 @@ export const IndicatorWidget = React.forwardRef<
     const {onLoad, formatNumber, data: config, id, onRender} = props;
     const {data = [], defaultColor} = config;
 
-    const normalizedData = React.useMemo(() => normalizeIndicatorData(config).data ?? [], [config]);
+    const normalizedData = React.useMemo(() => {
+        if (isEmpty(config.data)) {
+            throw new ChartKitError({
+                code: CHARTKIT_ERROR_CODE.NO_DATA,
+                message: i18n('error', 'label_no-data'),
+            });
+        }
+
+        return normalizeIndicatorData(config).data ?? [];
+    }, [config]);
 
     const generatedId = React.useMemo(
         () => `${id}_${getRandomCKId()}`,
@@ -41,13 +50,6 @@ export const IndicatorWidget = React.forwardRef<
         }
         onLoad?.({widgetRendering: getChartPerformanceDuration(generatedId)});
     }, [onLoad, onRender, generatedId]);
-
-    if (isEmpty(data)) {
-        throw new ChartKitError({
-            code: CHARTKIT_ERROR_CODE.NO_DATA,
-            message: i18n('error', 'label_no-data'),
-        });
-    }
 
     const items: IndicatorItemProps[] = normalizedData.map((item, index) => {
         const {value, secondaryValue, title, size, nowrap} = item;
