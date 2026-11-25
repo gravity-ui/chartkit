@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.14.1](https://github.com/gravity-ui/chartkit/compare/v8.14.0...v8.14.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **indicator:** restore the no-data state for empty objects in v8 ([#977](https://github.com/gravity-ui/chartkit/issues/977)) ([f3cb367](https://github.com/gravity-ui/chartkit/commit/f3cb367ab7373288d59f09ac137228276fedca01))
+
 ## [8.14.0](https://github.com/gravity-ui/chartkit/compare/v8.13.0...v8.14.0) (2026-11-19)
 
 
